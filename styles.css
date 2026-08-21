@@ -2566,7 +2566,11 @@ textarea.campo {
 
 
 @media (max-width: 900px) {
-    body {
+    html,
+    body,
+    .app,
+    main,
+    .vista.activa {
         background: red !important;
     }
 }
