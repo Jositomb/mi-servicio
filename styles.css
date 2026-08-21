@@ -1,0 +1,2572 @@
+/* =========================================================
+   MI SERVICIO WEB
+   styles.css
+   ========================================================= */
+
+:root {
+    --primary: #3478f6;
+    --primary-soft: rgba(52, 120, 246, 0.12);
+
+    --ministry: #3478f6;
+    --ldc: #af52de;
+    --assembly: #ff9500;
+    --other: #8e8e93;
+
+    --success: #34c759;
+    --success-soft: rgba(52, 199, 89, 0.12);
+
+    --danger: #ff3b30;
+    --danger-soft: rgba(255, 59, 48, 0.10);
+
+    --background: #f2f2f7;
+    --card: rgba(255, 255, 255, 0.94);
+
+    --text-primary: #1c1c1e;
+    --text-secondary: #6e6e73;
+    --text-tertiary: #8e8e93;
+
+    --divider: rgba(60, 60, 67, 0.12);
+
+    --radius-large: 22px;
+    --radius-medium: 16px;
+    --radius-small: 12px;
+
+    --shadow:
+        0 8px 30px rgba(0, 0, 0, 0.06);
+
+    --max-width: 720px;
+}
+
+
+/* =========================================================
+   BASE
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+
+    min-height: 100vh;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "SF Pro Display",
+        "SF Pro Text",
+        system-ui,
+        sans-serif;
+
+    background: var(--background);
+    color: var(--text-primary);
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+
+button {
+    -webkit-tap-highlight-color: transparent;
+}
+
+button,
+select,
+input[type="date"] {
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   APP
+   ========================================================= */
+
+.app {
+    width: 100%;
+    max-width: var(--max-width);
+
+    min-height: 100vh;
+
+    margin: 0 auto;
+
+    padding:
+        max(24px, env(safe-area-inset-top))
+        18px
+        calc(110px + env(safe-area-inset-bottom));
+}
+
+
+/* =========================================================
+   CABECERA
+   ========================================================= */
+
+.cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 28px;
+}
+
+.saludo {
+    margin: 0 0 3px;
+
+    color: var(--text-secondary);
+
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.cabecera h1 {
+    margin: 0;
+
+    font-size: 34px;
+    line-height: 1.05;
+    letter-spacing: -0.8px;
+}
+
+.avatar {
+    width: 48px;
+    height: 48px;
+
+    flex: 0 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 15px;
+
+    background: var(--primary-soft);
+    color: var(--primary);
+
+    font-size: 15px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   VISTAS
+   ========================================================= */
+
+.vista {
+    display: none;
+}
+
+.vista.activa {
+    display: block;
+}
+
+
+/* =========================================================
+   BIENVENIDA
+   ========================================================= */
+
+.bienvenida {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 18px;
+    margin-bottom: 30px;
+
+    border-radius: var(--radius-large);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(52, 120, 246, 0.15),
+            rgba(52, 120, 246, 0.05)
+        );
+}
+
+.icono-bienvenida {
+    width: 44px;
+    height: 44px;
+
+    flex: 0 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background: var(--primary);
+    color: white;
+
+    font-size: 21px;
+    font-weight: 700;
+}
+
+.bienvenida h2 {
+    margin: 0 0 4px;
+
+    font-size: 17px;
+}
+
+.bienvenida p {
+    margin: 0;
+
+    color: var(--text-secondary);
+
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   SECCIONES
+   ========================================================= */
+
+.seccion {
+    margin-bottom: 30px;
+}
+
+.titulo-seccion {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 10px;
+    padding: 0 3px;
+}
+
+.titulo-seccion h2 {
+    margin: 0;
+
+    font-size: 20px;
+    letter-spacing: -0.3px;
+}
+
+.titulo-seccion span {
+    color: var(--text-secondary);
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   TARJETAS
+   ========================================================= */
+
+.tarjeta {
+    padding: 20px;
+
+    border: 1px solid var(--divider);
+    border-radius: var(--radius-large);
+
+    background: var(--card);
+
+    box-shadow: var(--shadow);
+
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.tarjeta-principal,
+.tarjeta-estadisticas-principal {
+    padding: 22px;
+}
+
+.fila-superior {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.etiqueta {
+    margin: 0 0 5px;
+
+    color: var(--text-secondary);
+
+    font-size: 14px;
+}
+
+.valor-principal {
+    margin: 0;
+
+    font-size: 38px;
+    font-weight: 700;
+
+    letter-spacing: -1.2px;
+
+    font-variant-numeric: tabular-nums;
+}
+
+.valor-secundario {
+    margin: 0;
+
+    font-size: 25px;
+    font-weight: 700;
+
+    font-variant-numeric: tabular-nums;
+}
+
+.icono-tarjeta {
+    width: 50px;
+    height: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 16px;
+
+    background: var(--primary-soft);
+    color: var(--primary);
+
+    font-size: 25px;
+}
+
+.separador {
+    height: 1px;
+
+    margin: 20px 0;
+
+    background: var(--divider);
+}
+
+.fila-dato {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding: 8px 0;
+
+    font-size: 15px;
+}
+
+.fila-dato span {
+    color: var(--text-secondary);
+}
+
+.fila-dato strong {
+    color: var(--primary);
+
+    font-variant-numeric: tabular-nums;
+}
+
+
+/* =========================================================
+   OBJETIVO
+   ========================================================= */
+
+.objetivo-cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 18px;
+}
+
+.porcentaje {
+    color: var(--primary);
+
+    font-size: 21px;
+
+    font-variant-numeric: tabular-nums;
+}
+
+.barra {
+    width: 100%;
+    height: 9px;
+
+    overflow: hidden;
+
+    border-radius: 999px;
+
+    background: rgba(120, 120, 128, 0.16);
+}
+
+.barra-progreso {
+    width: 0;
+    height: 100%;
+
+    border-radius: inherit;
+
+    background: var(--primary);
+
+    transition: width 0.35s ease;
+}
+
+.texto-secundario {
+    margin: 14px 0 0;
+
+    color: var(--text-secondary);
+
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   REGISTRAR
+   ========================================================= */
+
+.intro-pantalla {
+    margin: -8px 2px 26px;
+
+    color: var(--text-secondary);
+
+    font-size: 15px;
+    line-height: 1.45;
+}
+
+.grupo-formulario {
+    margin-bottom: 26px;
+}
+
+.titulo-campo {
+    display: block;
+
+    margin: 0 3px 10px;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+    font-weight: 600;
+
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+
+/* =========================================================
+   SELECTOR DE ACTIVIDAD
+   ========================================================= */
+
+.selector-actividad {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+}
+
+.actividad-boton {
+    appearance: none;
+    -webkit-appearance: none;
+
+    min-width: 0;
+    min-height: 78px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 14px;
+
+    border: 1px solid var(--divider);
+    border-radius: var(--radius-medium);
+
+    background: var(--card);
+    color: var(--text-primary);
+
+    text-align: left;
+
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.035);
+
+    transition:
+        transform 0.15s ease,
+        border-color 0.15s ease,
+        background 0.15s ease;
+}
+
+.actividad-icono {
+    width: 40px;
+    height: 40px;
+
+    flex: 0 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: var(--primary-soft);
+    color: var(--primary);
+
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.actividad-nombre {
+    min-width: 0;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.actividad-boton.seleccionada {
+    border-color: var(--primary);
+
+    background: var(--primary-soft);
+}
+
+.actividad-boton.seleccionada .actividad-icono {
+    background: var(--primary);
+    color: white;
+}
+
+
+/* LDC */
+
+.actividad-boton[data-tipo="ldc"] .actividad-icono {
+    background: rgba(175, 82, 222, 0.12);
+    color: var(--ldc);
+}
+
+.actividad-boton[data-tipo="ldc"].seleccionada {
+    border-color: var(--ldc);
+
+    background: rgba(175, 82, 222, 0.10);
+}
+
+.actividad-boton[data-tipo="ldc"].seleccionada
+.actividad-icono {
+    background: var(--ldc);
+    color: white;
+}
+
+
+/* ASAMBLEAS */
+
+.actividad-boton[data-tipo="asambleas"]
+.actividad-icono {
+    background: rgba(255, 149, 0, 0.13);
+    color: var(--assembly);
+}
+
+.actividad-boton[data-tipo="asambleas"].seleccionada {
+    border-color: var(--assembly);
+
+    background: rgba(255, 149, 0, 0.10);
+}
+
+.actividad-boton[data-tipo="asambleas"].seleccionada
+.actividad-icono {
+    background: var(--assembly);
+    color: white;
+}
+
+
+/* OTRAS */
+
+.actividad-boton[data-tipo="otras"]
+.actividad-icono {
+    background: rgba(142, 142, 147, 0.13);
+    color: var(--other);
+}
+
+.actividad-boton[data-tipo="otras"].seleccionada {
+    border-color: var(--other);
+
+    background: rgba(142, 142, 147, 0.10);
+}
+
+.actividad-boton[data-tipo="otras"].seleccionada
+.actividad-icono {
+    background: var(--other);
+    color: white;
+}
+
+
+/* =========================================================
+   CAMPOS
+   ========================================================= */
+
+.campo {
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 100%;
+
+    padding: 15px 16px;
+
+    border: 1px solid var(--divider);
+    border-radius: var(--radius-medium);
+
+    outline: none;
+
+    background: var(--card);
+    color: var(--text-primary);
+
+    font-size: 16px;
+
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.campo:focus {
+    border-color: var(--primary);
+
+    box-shadow:
+        0 0 0 3px var(--primary-soft);
+}
+
+textarea.campo {
+    min-height: 110px;
+
+    resize: vertical;
+
+    line-height: 1.45;
+}
+
+
+/* =========================================================
+   TIEMPO
+   ========================================================= */
+
+.selector-tiempo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 12px;
+}
+
+.campo-tiempo {
+    padding: 16px;
+
+    border: 1px solid var(--divider);
+    border-radius: var(--radius-medium);
+
+    background: var(--card);
+
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.025);
+}
+
+.campo-tiempo label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+}
+
+.campo-tiempo input {
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 100%;
+
+    padding: 0;
+
+    border: 0;
+    outline: none;
+
+    background: transparent;
+    color: var(--text-primary);
+
+    font-size: 28px;
+    font-weight: 700;
+
+    font-variant-numeric: tabular-nums;
+}
+
+
+/* =========================================================
+   BOTONES
+   ========================================================= */
+
+.boton-guardar,
+.boton-principal {
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 100%;
+
+    min-height: 54px;
+
+    padding: 12px 18px;
+
+    border: 0;
+    border-radius: 17px;
+
+    background: var(--primary);
+    color: white;
+
+    font-size: 17px;
+    font-weight: 700;
+
+    box-shadow:
+        0 8px 20px rgba(52, 120, 246, 0.22);
+
+    transition:
+        transform 0.15s ease,
+        opacity 0.15s ease;
+}
+
+.boton-secundario {
+    appearance: none;
+    -webkit-appearance: none;
+
+    margin-top: 20px;
+
+    padding: 11px 18px;
+
+    border: 0;
+    border-radius: 14px;
+
+    background: var(--primary-soft);
+    color: var(--primary);
+
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.boton-guardar:active,
+.boton-principal:active,
+.boton-secundario:active {
+    transform: scale(0.985);
+}
+
+
+/* =========================================================
+   MENSAJES
+   ========================================================= */
+
+.mensaje-formulario {
+    display: none;
+
+    margin: 14px 0 0;
+
+    padding: 13px 15px;
+
+    border-radius: var(--radius-medium);
+
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.mensaje-formulario.visible {
+    display: block;
+}
+
+.mensaje-formulario.error {
+    background: var(--danger-soft);
+    color: var(--danger);
+}
+
+.mensaje-formulario.exito {
+    background: var(--success-soft);
+    color: var(--success);
+}
+
+
+/* =========================================================
+   FILTROS HISTORIAL
+   ========================================================= */
+
+.filtros-historial {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    margin: 4px -18px 18px;
+
+    padding:
+        4px
+        18px
+        8px;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    scrollbar-width: none;
+
+    -webkit-overflow-scrolling: touch;
+}
+
+.filtros-historial::-webkit-scrollbar {
+    display: none;
+}
+
+.filtro-historial {
+    appearance: none;
+    -webkit-appearance: none;
+
+    flex: 0 0 auto;
+
+    min-height: 38px;
+
+    padding: 8px 15px;
+
+    border: 1px solid var(--divider);
+    border-radius: 999px;
+
+    background: var(--card);
+    color: var(--text-secondary);
+
+    font-size: 14px;
+    font-weight: 600;
+
+    white-space: nowrap;
+
+    transition:
+        color 0.15s ease,
+        background 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.15s ease;
+}
+
+.filtro-historial.activo {
+    border-color: var(--primary);
+
+    background: var(--primary);
+    color: white;
+
+    box-shadow:
+        0 5px 14px rgba(52, 120, 246, 0.20);
+}
+
+.filtro-historial:active {
+    transform: scale(0.96);
+}
+
+
+/* =========================================================
+   HISTORIAL
+   ========================================================= */
+
+.lista-historial {
+    display: grid;
+
+    gap: 12px;
+}
+
+.grupo-historial {
+    display: grid;
+
+    gap: 10px;
+
+    margin-bottom: 24px;
+}
+
+.grupo-historial-cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 16px;
+
+    padding: 0 3px;
+}
+
+.grupo-historial-titulo {
+    margin: 0;
+
+    font-size: 17px;
+    font-weight: 700;
+
+    letter-spacing: -0.2px;
+}
+
+.grupo-historial-total {
+    flex: 0 0 auto;
+
+    color: var(--text-secondary);
+
+    font-size: 14px;
+    font-weight: 600;
+
+    font-variant-numeric: tabular-nums;
+}
+
+.grupo-historial-registros {
+    display: grid;
+
+    gap: 10px;
+}
+
+.registro-card {
+    display: grid;
+    grid-template-columns:
+        auto
+        minmax(0, 1fr)
+        auto;
+
+    align-items: center;
+
+    gap: 13px;
+
+    padding: 16px;
+
+    border: 1px solid var(--divider);
+    border-radius: var(--radius-large);
+
+    background: var(--card);
+
+    box-shadow:
+        0 5px 20px rgba(0, 0, 0, 0.04);
+}
+
+.registro-icono {
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background: var(--primary-soft);
+    color: var(--primary);
+
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.registro-icono.ldc {
+    background: rgba(175, 82, 222, 0.12);
+    color: var(--ldc);
+}
+
+.registro-icono.asambleas {
+    background: rgba(255, 149, 0, 0.13);
+    color: var(--assembly);
+}
+
+.registro-icono.otras {
+    background: rgba(142, 142, 147, 0.13);
+    color: var(--other);
+}
+
+.registro-contenido {
+    min-width: 0;
+}
+
+.registro-cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+}
+
+.registro-tipo {
+    margin: 0;
+
+    font-size: 16px;
+    font-weight: 650;
+}
+
+.registro-tiempo {
+    flex: 0 0 auto;
+
+    color: var(--primary);
+
+    font-size: 15px;
+    font-weight: 700;
+
+    font-variant-numeric: tabular-nums;
+}
+
+.registro-fecha {
+    margin: 4px 0 0;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+}
+
+.registro-notas {
+    margin: 7px 0 0;
+
+    color: var(--text-secondary);
+
+    font-size: 14px;
+    line-height: 1.4;
+
+    overflow-wrap: anywhere;
+}
+
+.boton-borrar {
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 0;
+    border-radius: 12px;
+
+    background: var(--danger-soft);
+    color: var(--danger);
+
+    font-size: 18px;
+}
+
+
+/* =========================================================
+   ESTADÍSTICAS
+   SELECTOR SEMANA / MES / AÑO
+   ========================================================= */
+
+.selector-periodo {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 4px;
+
+    margin-bottom: 20px;
+    padding: 4px;
+
+    border-radius: 14px;
+
+    background: rgba(120, 120, 128, 0.12);
+}
+
+.periodo-boton {
+    appearance: none;
+    -webkit-appearance: none;
+
+    min-height: 38px;
+
+    padding: 7px 12px;
+
+    border: 0;
+    border-radius: 11px;
+
+    background: transparent;
+    color: var(--text-secondary);
+
+    font-size: 14px;
+    font-weight: 600;
+
+    transition:
+        background 0.18s ease,
+        color 0.18s ease,
+        box-shadow 0.18s ease,
+        transform 0.15s ease;
+}
+
+.periodo-boton.activo {
+    background: var(--card);
+    color: var(--text-primary);
+
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.periodo-boton:active {
+    transform: scale(0.97);
+}
+
+
+/* =========================================================
+   NAVEGADOR DEL PERIODO
+   ========================================================= */
+
+.navegador-periodo {
+    display: grid;
+    grid-template-columns:
+        44px
+        minmax(0, 1fr)
+        44px;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 24px;
+}
+
+.boton-periodo {
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 1px solid var(--divider);
+    border-radius: 14px;
+
+    background: var(--card);
+    color: var(--primary);
+
+    font-size: 31px;
+    font-weight: 400;
+    line-height: 1;
+
+    box-shadow:
+        0 3px 12px rgba(0, 0, 0, 0.035);
+
+    transition:
+        transform 0.15s ease,
+        background 0.15s ease;
+}
+
+.boton-periodo:active {
+    transform: scale(0.94);
+
+    background: var(--primary-soft);
+}
+
+.periodo-centro {
+    min-width: 0;
+
+    text-align: center;
+}
+
+.titulo-periodo-estadisticas {
+    margin: 0;
+
+    color: var(--text-primary);
+
+    font-size: 18px;
+    font-weight: 700;
+
+    letter-spacing: -0.25px;
+}
+
+.rango-periodo-estadisticas {
+    margin: 4px 0 0;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+    line-height: 1.3;
+}
+
+
+/* =========================================================
+   RESUMEN DE ESTADÍSTICAS
+   ========================================================= */
+
+.resumen-estadisticas {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+}
+
+.mini-estadistica {
+    min-width: 0;
+
+    padding: 18px;
+
+    text-align: center;
+}
+
+.mini-estadistica-icono {
+    width: 42px;
+    height: 42px;
+
+    margin: 0 auto 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background: var(--primary-soft);
+    color: var(--primary);
+
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.mini-estadistica-valor {
+    margin: 0;
+
+    color: var(--text-primary);
+
+    font-size: 28px;
+    font-weight: 750;
+
+    letter-spacing: -0.6px;
+
+    font-variant-numeric: tabular-nums;
+}
+
+.mini-estadistica-etiqueta {
+    margin: 5px 0 0;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   GRÁFICO
+   SEMANA / MES / AÑO
+   ========================================================= */
+
+.tarjeta-grafico {
+    position: relative;
+
+    min-height: 270px;
+
+    padding:
+        22px
+        14px
+        18px;
+
+    overflow: hidden;
+}
+
+
+/*
+   app.js genera las columnas dentro de este elemento.
+
+   Semana: 7 columnas
+   Mes:    4 o 5 columnas
+   Año:    12 columnas
+*/
+
+.grafico-actividad {
+    position: relative;
+
+    width: 100%;
+    height: 230px;
+
+    display: flex;
+    align-items: stretch;
+
+    gap: 7px;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   COLUMNA DEL GRÁFICO
+   ========================================================= */
+
+.grafico-dia {
+    position: relative;
+
+    min-width: 0;
+    flex: 1 1 0;
+
+    display: grid;
+
+    grid-template-rows:
+        30px
+        minmax(0, 1fr)
+        30px;
+
+    align-items: stretch;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   VALOR ENCIMA DE LA BARRA
+   ========================================================= */
+
+.grafico-tiempo {
+    min-width: 0;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+
+    padding-bottom: 6px;
+
+    color: var(--text-secondary);
+
+    font-size: 10px;
+    font-weight: 650;
+    line-height: 1;
+
+    white-space: nowrap;
+
+    font-variant-numeric: tabular-nums;
+}
+
+
+/* =========================================================
+   CONTENEDOR DE BARRA
+   ========================================================= */
+
+.grafico-barra-contenedor {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+
+    overflow: hidden;
+
+    border-radius: 9px;
+
+    background:
+        linear-gradient(
+            to top,
+            rgba(120, 120, 128, 0.075),
+            rgba(120, 120, 128, 0.02)
+        );
+}
+
+.grafico-barra-contenedor::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height: 1px;
+
+    background: var(--divider);
+}
+
+
+/* =========================================================
+   BARRA
+   ========================================================= */
+
+.grafico-barra {
+    position: relative;
+
+    z-index: 1;
+
+    width: min(24px, 70%);
+    height: 0;
+
+    border-radius:
+        8px
+        8px
+        4px
+        4px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #5b9cff,
+            var(--primary)
+        );
+
+    box-shadow:
+        0 5px 12px rgba(52, 120, 246, 0.20);
+
+    transform-origin: bottom;
+
+    animation:
+        aparecerBarra 0.42s ease both;
+
+    transition:
+        height 0.35s ease;
+}
+
+
+/* =========================================================
+   SIN ACTIVIDAD
+   ========================================================= */
+
+.grafico-dia.sin-actividad
+.grafico-barra {
+    height: 0 !important;
+
+    box-shadow: none;
+}
+
+.grafico-dia.sin-actividad
+.grafico-barra-contenedor {
+    background:
+        rgba(120, 120, 128, 0.04);
+}
+
+
+/* =========================================================
+   PERIODO ACTUAL
+   ========================================================= */
+
+.grafico-dia.hoy
+.grafico-barra {
+    background:
+        linear-gradient(
+            180deg,
+            #65d87d,
+            var(--success)
+        );
+
+    box-shadow:
+        0 5px 15px rgba(52, 199, 89, 0.26);
+}
+
+.grafico-dia.hoy
+.grafico-dia-nombre {
+    color: var(--primary);
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   ETIQUETA INFERIOR
+   ========================================================= */
+
+.grafico-dia-nombre {
+    min-width: 0;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+
+    padding-top: 8px;
+
+    color: var(--text-secondary);
+
+    font-size: 11px;
+    font-weight: 650;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   GRÁFICO ANUAL
+   12 MESES COMPLETOS EN PANTALLA
+   ========================================================= */
+
+.grafico-actividad.anio {
+    gap: 3px;
+}
+
+.grafico-actividad.anio
+.grafico-barra {
+    width: min(17px, 72%);
+}
+
+.grafico-actividad.anio
+.grafico-tiempo {
+    font-size: 8px;
+}
+
+.grafico-actividad.anio
+.grafico-dia-nombre {
+    font-size: 9px;
+}
+
+
+/* =========================================================
+   GRÁFICO MENSUAL
+   ========================================================= */
+
+.grafico-actividad.mes {
+    gap: 10px;
+}
+
+.grafico-actividad.mes
+.grafico-barra {
+    width: min(30px, 68%);
+}
+
+
+/* =========================================================
+   ESTADO VACÍO DEL GRÁFICO
+   ========================================================= */
+
+.grafico-vacio {
+    min-height: 210px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 24px;
+
+    text-align: center;
+
+    color: var(--text-secondary);
+}
+
+.grafico-vacio-icono {
+    width: 52px;
+    height: 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 12px;
+
+    border-radius: 16px;
+
+    background: var(--primary-soft);
+    color: var(--primary);
+
+    font-size: 24px;
+}
+
+.grafico-vacio p {
+    margin: 0;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   ANIMACIÓN DEL GRÁFICO
+   ========================================================= */
+
+@keyframes aparecerBarra {
+
+    from {
+        transform: scaleY(0);
+        opacity: 0.35;
+    }
+
+    to {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+}
+
+
+/* =========================================================
+   TRIMESTRES
+   ========================================================= */
+
+.lista-trimestres {
+    display: grid;
+
+    gap: 14px;
+}
+
+.trimestre-card {
+    padding: 18px;
+}
+
+.trimestre-cabecera {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 16px;
+}
+
+.trimestre-titulo {
+    margin: 0;
+
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.trimestre-fechas {
+    margin: 5px 0 0;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+    line-height: 1.35;
+}
+
+.trimestre-total {
+    flex: 0 0 auto;
+
+    color: var(--primary);
+
+    font-size: 20px;
+    font-weight: 700;
+
+    white-space: nowrap;
+
+    font-variant-numeric: tabular-nums;
+}
+
+
+/* =========================================================
+   ESTADO VACÍO GENERAL
+   ========================================================= */
+
+.estado-vacio {
+    padding: 40px 24px;
+
+    border: 1px solid var(--divider);
+    border-radius: var(--radius-large);
+
+    background: var(--card);
+
+    text-align: center;
+
+    box-shadow: var(--shadow);
+}
+
+.estado-vacio-icono {
+    width: 58px;
+    height: 58px;
+
+    margin: 0 auto 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 18px;
+
+    background: var(--primary-soft);
+    color: var(--primary);
+
+    font-size: 27px;
+}
+
+.estado-vacio h2,
+.estado-vacio h3 {
+    margin: 0 0 7px;
+
+    font-size: 19px;
+}
+
+.estado-vacio p {
+    margin: 0;
+
+    color: var(--text-secondary);
+
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+
+.modal {
+    position: fixed;
+
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding:
+        max(20px, env(safe-area-inset-top))
+        20px
+        max(20px, env(safe-area-inset-bottom));
+
+    z-index: 1000;
+}
+
+.modal.oculto {
+    display: none;
+}
+
+.modal-fondo {
+    position: absolute;
+
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.35);
+
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.modal-contenido {
+    position: relative;
+
+    width: 100%;
+    max-width: 340px;
+
+    padding: 24px;
+
+    border-radius: 24px;
+
+    background: var(--card);
+
+    text-align: center;
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.20);
+}
+
+.modal-icono {
+    width: 52px;
+    height: 52px;
+
+    margin: 0 auto 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 16px;
+
+    background: var(--danger-soft);
+    color: var(--danger);
+
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.modal-contenido h2 {
+    margin: 0 0 8px;
+
+    font-size: 21px;
+}
+
+.modal-contenido p {
+    margin: 0;
+
+    color: var(--text-secondary);
+
+    font-size: 14px;
+}
+
+.modal-botones {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+
+    margin-top: 22px;
+}
+
+.boton-modal {
+    appearance: none;
+    -webkit-appearance: none;
+
+    min-height: 46px;
+
+    border: 0;
+    border-radius: 14px;
+
+    font-weight: 650;
+}
+
+.boton-modal.cancelar {
+    background: rgba(120, 120, 128, 0.12);
+    color: var(--text-primary);
+}
+
+.boton-modal.eliminar {
+    background: var(--danger);
+    color: white;
+}
+
+
+/* =========================================================
+   UTILIDADES
+   ========================================================= */
+
+.oculto {
+    display: none !important;
+}
+
+
+/* =========================================================
+   NAVEGACIÓN INFERIOR
+   ========================================================= */
+
+.barra-navegacion {
+    position: fixed;
+
+    left: 50%;
+    bottom: 0;
+
+    transform: translateX(-50%);
+
+    width: 100%;
+    max-width: var(--max-width);
+
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+
+    padding:
+        9px
+        8px
+        max(9px, env(safe-area-inset-bottom));
+
+    border-top: 1px solid var(--divider);
+
+    background: rgba(248, 248, 248, 0.88);
+
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+
+    z-index: 100;
+}
+
+.nav-item {
+    appearance: none;
+    -webkit-appearance: none;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 3px;
+
+    padding: 5px 2px;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--text-tertiary);
+
+    font-size: 10px;
+    font-weight: 500;
+
+    transition:
+        color 0.15s ease,
+        transform 0.15s ease;
+}
+
+.nav-icono {
+    font-size: 22px;
+    line-height: 24px;
+}
+
+.nav-item.activo {
+    color: var(--primary);
+}
+
+
+/* =========================================================
+   INTERACCIÓN
+   ========================================================= */
+
+.nav-item:active,
+.actividad-boton:active,
+.boton-borrar:active,
+.boton-modal:active {
+    transform: scale(0.97);
+}
+
+
+/* =========================================================
+   PANTALLAS GRANDES
+   ========================================================= */
+
+@media (min-width: 760px) {
+
+    .app {
+        padding-left: 28px;
+        padding-right: 28px;
+    }
+
+    .cabecera {
+        margin-top: 12px;
+    }
+}
+
+
+/* =========================================================
+   IPHONE / PANTALLAS PEQUEÑAS
+   ========================================================= */
+
+@media (max-width: 430px) {
+
+    .grafico-actividad {
+        gap: 5px;
+    }
+
+    .grafico-actividad.mes {
+        gap: 7px;
+    }
+
+    .grafico-actividad.anio {
+        gap: 2px;
+    }
+
+    .grafico-actividad.anio
+    .grafico-barra {
+        width: min(15px, 72%);
+    }
+
+    .grafico-actividad.anio
+    .grafico-tiempo {
+        font-size: 7px;
+    }
+
+    .grafico-actividad.anio
+    .grafico-dia-nombre {
+        font-size: 8px;
+    }
+}
+
+
+@media (max-width: 390px) {
+
+    .selector-actividad {
+        gap: 8px;
+    }
+
+    .actividad-boton {
+        padding: 12px 10px;
+
+        gap: 9px;
+    }
+
+    .actividad-icono {
+        width: 36px;
+        height: 36px;
+    }
+
+    .registro-card {
+        gap: 10px;
+
+        padding: 14px;
+    }
+
+    .grupo-historial {
+        margin-bottom: 20px;
+    }
+
+    .grupo-historial-titulo {
+        font-size: 16px;
+    }
+
+    .grupo-historial-total {
+        font-size: 13px;
+    }
+
+    .navegador-periodo {
+        grid-template-columns:
+            40px
+            minmax(0, 1fr)
+            40px;
+
+        gap: 8px;
+    }
+
+    .boton-periodo {
+        width: 40px;
+        height: 40px;
+    }
+
+    .titulo-periodo-estadisticas {
+        font-size: 17px;
+    }
+
+    .rango-periodo-estadisticas {
+        font-size: 12px;
+    }
+
+    .resumen-estadisticas {
+        gap: 9px;
+    }
+
+    .mini-estadistica {
+        padding: 16px;
+    }
+
+    .tarjeta-grafico {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .grafico-tiempo {
+        font-size: 9px;
+    }
+
+    .grafico-dia-nombre {
+        font-size: 10px;
+    }
+
+    .trimestre-cabecera {
+        gap: 10px;
+    }
+
+    .trimestre-total {
+        font-size: 18px;
+    }
+}
+
+
+/* =========================================================
+   IPHONE
+   ADAPTACIÓN COMPLETA DE LA INTERFAZ
+   ========================================================= */
+
+@media (max-width: 430px) {
+
+    /* APP */
+
+    .app {
+        width: 100%;
+        max-width: none;
+
+        padding:
+            max(18px, env(safe-area-inset-top))
+            14px
+            calc(96px + env(safe-area-inset-bottom));
+    }
+
+
+    /* CABECERA */
+
+    .cabecera {
+        margin-bottom: 22px;
+    }
+
+    .saludo {
+        font-size: 14px;
+    }
+
+    .cabecera h1 {
+        font-size: 30px;
+        letter-spacing: -0.6px;
+    }
+
+    .avatar {
+        width: 44px;
+        height: 44px;
+
+        border-radius: 14px;
+
+        font-size: 14px;
+    }
+
+
+    /* BIENVENIDA */
+
+    .bienvenida {
+        gap: 12px;
+
+        padding: 15px;
+
+        margin-bottom: 24px;
+
+        border-radius: 18px;
+    }
+
+    .icono-bienvenida {
+        width: 40px;
+        height: 40px;
+
+        border-radius: 12px;
+
+        font-size: 19px;
+    }
+
+    .bienvenida h2 {
+        font-size: 16px;
+    }
+
+    .bienvenida p {
+        font-size: 13px;
+    }
+
+
+    /* SECCIONES */
+
+    .seccion {
+        margin-bottom: 24px;
+    }
+
+    .titulo-seccion h2 {
+        font-size: 19px;
+    }
+
+    .titulo-seccion span {
+        font-size: 13px;
+    }
+
+
+    /* TARJETAS */
+
+    .tarjeta {
+        padding: 17px;
+
+        border-radius: 19px;
+    }
+
+    .tarjeta-principal,
+    .tarjeta-estadisticas-principal {
+        padding: 18px;
+    }
+
+    .valor-principal {
+        font-size: 34px;
+    }
+
+    .valor-secundario {
+        font-size: 23px;
+    }
+
+    .icono-tarjeta {
+        width: 46px;
+        height: 46px;
+
+        border-radius: 14px;
+
+        font-size: 22px;
+    }
+
+    .separador {
+        margin: 17px 0;
+    }
+
+    .fila-dato {
+        padding: 7px 0;
+
+        font-size: 14px;
+    }
+
+
+    /* OBJETIVO */
+
+    .objetivo-cabecera {
+        margin-bottom: 15px;
+    }
+
+    .porcentaje {
+        font-size: 19px;
+    }
+
+
+    /* REGISTRAR */
+
+    .intro-pantalla {
+        margin-bottom: 22px;
+
+        font-size: 14px;
+    }
+
+    .grupo-formulario {
+        margin-bottom: 22px;
+    }
+
+
+    /* ACTIVIDADES */
+
+    .selector-actividad {
+        gap: 9px;
+    }
+
+    .actividad-boton {
+        min-height: 70px;
+
+        padding: 12px;
+
+        gap: 10px;
+
+        border-radius: 15px;
+    }
+
+    .actividad-icono {
+        width: 37px;
+        height: 37px;
+
+        border-radius: 11px;
+
+        font-size: 18px;
+    }
+
+    .actividad-nombre {
+        font-size: 13px;
+    }
+
+
+    /* CAMPOS */
+
+    .campo {
+        padding: 14px;
+
+        border-radius: 15px;
+
+        /*
+         16px evita que Safari haga zoom
+         al tocar un campo.
+        */
+        font-size: 16px;
+    }
+
+
+    /* TIEMPO */
+
+    .selector-tiempo {
+        gap: 9px;
+    }
+
+    .campo-tiempo {
+        padding: 14px;
+
+        border-radius: 15px;
+    }
+
+    .campo-tiempo input {
+        font-size: 26px;
+    }
+
+
+    /* BOTÓN GUARDAR */
+
+    .boton-guardar,
+    .boton-principal {
+        min-height: 52px;
+
+        border-radius: 15px;
+
+        font-size: 16px;
+    }
+
+
+    /* HISTORIAL */
+
+    .filtros-historial {
+        margin-left: -14px;
+        margin-right: -14px;
+
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .registro-card {
+        gap: 10px;
+
+        padding: 14px;
+
+        border-radius: 18px;
+    }
+
+    .registro-icono {
+        width: 40px;
+        height: 40px;
+
+        border-radius: 12px;
+    }
+
+    .registro-tipo {
+        font-size: 15px;
+    }
+
+    .registro-tiempo {
+        font-size: 14px;
+    }
+
+    .registro-fecha {
+        font-size: 12px;
+    }
+
+    .boton-borrar {
+        width: 36px;
+        height: 36px;
+    }
+
+
+    /* ESTADÍSTICAS */
+
+    .selector-periodo {
+        margin-bottom: 17px;
+    }
+
+    .navegador-periodo {
+        grid-template-columns:
+            40px
+            minmax(0, 1fr)
+            40px;
+
+        gap: 8px;
+
+        margin-bottom: 20px;
+    }
+
+    .boton-periodo {
+        width: 40px;
+        height: 40px;
+    }
+
+    .titulo-periodo-estadisticas {
+        font-size: 17px;
+    }
+
+    .rango-periodo-estadisticas {
+        font-size: 12px;
+    }
+
+
+    /* RESUMEN */
+
+    .resumen-estadisticas {
+        gap: 9px;
+    }
+
+    .mini-estadistica {
+        padding: 15px;
+    }
+
+    .mini-estadistica-icono {
+        width: 38px;
+        height: 38px;
+
+        margin-bottom: 9px;
+    }
+
+    .mini-estadistica-valor {
+        font-size: 25px;
+    }
+
+
+    /* GRÁFICO */
+
+    .tarjeta-grafico {
+        min-height: 245px;
+
+        padding:
+            18px
+            8px
+            14px;
+    }
+
+    .grafico-actividad,
+    .grafico-semana {
+        height: 210px;
+
+        gap: 5px;
+    }
+
+    .grafico-actividad.mes {
+        gap: 7px;
+    }
+
+    .grafico-actividad.anio {
+        gap: 2px;
+    }
+
+    .grafico-tiempo {
+        font-size: 9px;
+    }
+
+    .grafico-dia-nombre {
+        font-size: 10px;
+    }
+
+    .grafico-actividad.anio
+    .grafico-barra {
+        width: min(15px, 72%);
+    }
+
+    .grafico-actividad.anio
+    .grafico-tiempo {
+        font-size: 7px;
+    }
+
+    .grafico-actividad.anio
+    .grafico-dia-nombre {
+        font-size: 8px;
+    }
+
+
+    /* TRIMESTRES */
+
+    .lista-trimestres {
+        gap: 11px;
+    }
+
+    .trimestre-card {
+        padding: 16px;
+    }
+
+    .trimestre-cabecera {
+        gap: 10px;
+    }
+
+    .trimestre-titulo {
+        font-size: 16px;
+    }
+
+    .trimestre-fechas {
+        font-size: 12px;
+    }
+
+    .trimestre-total {
+        font-size: 18px;
+    }
+
+
+    /* ESTADO VACÍO */
+
+    .estado-vacio {
+        padding: 32px 18px;
+    }
+
+
+    /* BARRA INFERIOR */
+
+    .barra-navegacion {
+        width: 100%;
+        max-width: none;
+
+        padding:
+            7px
+            4px
+            max(7px, env(safe-area-inset-bottom));
+    }
+
+    .nav-item {
+        min-width: 0;
+
+        padding: 5px 1px;
+
+        font-size: 9px;
+    }
+
+    .nav-icono {
+        font-size: 21px;
+        line-height: 23px;
+    }
+}
+
+
+/* =========================================================
+   IPHONE ESTRECHO
+   ========================================================= */
+
+@media (max-width: 375px) {
+
+    .app {
+        padding-left: 11px;
+        padding-right: 11px;
+    }
+
+    .cabecera h1 {
+        font-size: 28px;
+    }
+
+    .actividad-boton {
+        padding-left: 9px;
+        padding-right: 9px;
+
+        gap: 7px;
+    }
+
+    .actividad-icono {
+        width: 34px;
+        height: 34px;
+    }
+
+    .actividad-nombre {
+        font-size: 12px;
+    }
+
+    .tarjeta {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .registro-card {
+        padding: 12px;
+    }
+
+    .registro-icono {
+        width: 37px;
+        height: 37px;
+    }
+
+    .nav-item {
+        font-size: 8px;
+    }
+}
+
+
+/* =========================================================
+   MODO OSCURO
+   ========================================================= */
+
+@media (prefers-color-scheme: dark) {
+
+    :root {
+        --background: #000000;
+
+        --card: rgba(28, 28, 30, 0.94);
+
+        --text-primary: #f5f5f7;
+        --text-secondary: #aeaeb2;
+        --text-tertiary: #8e8e93;
+
+        --divider: rgba(255, 255, 255, 0.10);
+
+        --shadow:
+            0 8px 30px rgba(0, 0, 0, 0.30);
+    }
+
+    .barra-navegacion {
+        background: rgba(20, 20, 22, 0.90);
+    }
+
+    input[type="date"] {
+        color-scheme: dark;
+    }
+
+    .periodo-boton.activo {
+        background: rgba(58, 58, 60, 0.95);
+
+        box-shadow:
+            0 2px 8px rgba(0, 0, 0, 0.28);
+    }
+
+    .grafico-barra-contenedor {
+        background:
+            linear-gradient(
+                to top,
+                rgba(255, 255, 255, 0.07),
+                rgba(255, 255, 255, 0.02)
+            );
+    }
+
+    .grafico-dia.sin-actividad
+    .grafico-barra-contenedor {
+        background:
+            rgba(255, 255, 255, 0.035);
+    }
+}
+
+
+/* =========================================================
+   ACCESIBILIDAD
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    * {
+        scroll-behavior: auto !important;
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+
+@media (max-width: 430px) {
+    body {
+        background: red !important;
+    }
+}
