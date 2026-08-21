@@ -2565,12 +2565,12 @@ textarea.campo {
 }
 
 
-@media (max-width: 900px) {
+
     html,
-    body,
+    
     .app,
     main,
     .vista.activa {
-        background: red !important;
+        
     }
 }
