@@ -6498,3 +6498,103 @@ function normalizarTipoSincronizacion(
 // =========================================================
 // FIN BLOQUE 7
 // =========================================================
+// =========================================================
+// GRÁFICO DE PROGRESO EN INICIO
+// =========================================================
+
+function actualizarGraficoInicio() {
+    const grafico = document.getElementById("graficoInicio");
+    const leyenda = document.getElementById("leyendaGraficoInicio");
+
+    if (!grafico || !leyenda) return;
+
+    const ahora = new Date();
+    const mesActual = ahora.getMonth();
+    const anioActual = ahora.getFullYear();
+
+    const registrosMes = estado.registros.filter(registro => {
+        const fecha = new Date(registro.fecha + "T12:00:00");
+
+        return (
+            fecha.getMonth() === mesActual &&
+            fecha.getFullYear() === anioActual
+        );
+    });
+
+    const tipos = [
+        { id: "ministerio", nombre: "Ministerio" },
+        { id: "ldc", nombre: "LDC" },
+        { id: "asambleas", nombre: "Asambleas" },
+        { id: "otras", nombre: "Otras" }
+    ];
+
+    const datos = tipos.map(tipo => {
+        const minutos = registrosMes
+            .filter(registro =>
+                normalizarTipoSincronizacion(registro.tipo) === tipo.id
+            )
+            .reduce((total, registro) => {
+                return total + Number(registro.minutos || 0);
+            }, 0);
+
+        return {
+            ...tipo,
+            minutos
+        };
+    });
+
+    // Ministerio siempre aparece.
+    // Las demás actividades solo aparecen si tienen tiempo registrado.
+    const visibles = datos.filter(
+        dato => dato.id === "ministerio" || dato.minutos > 0
+    );
+
+    const maximo = Math.max(
+        ...visibles.map(dato => dato.minutos),
+        1
+    );
+
+    grafico.innerHTML = "";
+    leyenda.innerHTML = "";
+
+    visibles.forEach(dato => {
+        const barra = document.createElement("div");
+        barra.className = "grafico-inicio-barra";
+
+        const altura =
+            dato.minutos === 0
+                ? 6
+                : Math.max(12, (dato.minutos / maximo) * 150);
+
+        barra.style.height = `${altura}px`;
+        barra.title = `${dato.nombre}: ${formatoTiempo(dato.minutos)}`;
+
+        grafico.appendChild(barra);
+
+        const texto = document.createElement("div");
+        texto.innerHTML =
+            `<strong>${formatoTiempo(dato.minutos)}</strong><br>${dato.nombre}`;
+
+        leyenda.appendChild(texto);
+    });
+}
+
+// =========================================================
+// FORMATO DE TIEMPO PARA GRÁFICO DE INICIO
+// =========================================================
+
+function formatoTiempo(minutos) {
+    const total = Math.max(0, Number(minutos) || 0);
+    const horas = Math.floor(total / 60);
+    const mins = total % 60;
+
+    if (horas === 0) {
+        return `${mins} min`;
+    }
+
+    if (mins === 0) {
+        return `${horas} h`;
+    }
+
+    return `${horas} h ${mins} min`;
+}
