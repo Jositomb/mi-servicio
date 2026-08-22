@@ -2571,3 +2571,42 @@ textarea.campo {
 
 
    
+/* =========================================================
+   GRÁFICO DE PROGRESO EN INICIO
+   ========================================================= */
+
+.tarjeta-grafico-inicio {
+    padding: 20px;
+}
+
+.grafico-inicio {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    gap: 10px;
+    height: 180px;
+    padding: 20px 8px 10px;
+}
+
+.grafico-inicio-barra {
+    flex: 1;
+    max-width: 54px;
+    min-height: 6px;
+    border-radius: 12px 12px 5px 5px;
+    background: var(--primary);
+    transition: height 0.35s ease;
+}
+
+.leyenda-grafico-inicio {
+    display: flex;
+    justify-content: space-around;
+    gap: 8px;
+    margin-top: 12px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    text-align: center;
+}
+
+.leyenda-grafico-inicio > * {
+    flex: 1;
+}
