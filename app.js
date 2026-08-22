@@ -6599,3 +6599,8 @@ function formatoTiempo(minutos) {
 
     return `${horas} h ${mins} min`;
 }
+document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(() => {
+        actualizarGraficoInicio();
+    }, 300);
+});
