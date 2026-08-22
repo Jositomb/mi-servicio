@@ -2429,6 +2429,7 @@ function actualizarInicio() {
     actualizarObjetivo(
         ministerio
     );
+    actualizarGraficoInicio();
 }
 
 
