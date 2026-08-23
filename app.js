@@ -115,8 +115,48 @@ const estado = {
         fechaReferencia: new Date()
     }
 };
+// =========================================================
+// NAVEGACIÓN ENTRE PANTALLAS
+// =========================================================
 
+function configurarNavegacion() {
+    const botones = document.querySelectorAll(".nav-item");
 
+    botones.forEach((boton) => {
+        boton.addEventListener("click", () => {
+            const vista = boton.dataset.vista;
+
+            if (!vista) return;
+
+            cambiarVista(vista);
+        });
+    });
+}
+
+function cambiarVista(vista) {
+    document.querySelectorAll(".vista").forEach((elemento) => {
+        elemento.classList.remove("activa");
+    });
+
+    document.querySelectorAll(".nav-item").forEach((boton) => {
+        boton.classList.remove("activo");
+    });
+
+    const nuevaVista = document.getElementById(`vista-${vista}`);
+
+    if (nuevaVista) {
+        nuevaVista.classList.add("activa");
+        estado.vistaActual = vista;
+    }
+
+    const botonActivo = document.querySelector(
+        `.nav-item[data-vista="${vista}"]`
+    );
+
+    if (botonActivo) {
+        botonActivo.classList.add("activo");
+    }
+}
 // =========================================================
 // INICIO DE LA APLICACIÓN
 // =========================================================
