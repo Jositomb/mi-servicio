@@ -6325,3 +6325,268 @@ function actualizarTodaLaInterfaz() {
 // =========================================================
 // FIN PARTE 4/4
 // =========================================================
+// =========================================================
+// CURSOS BÍBLICOS
+// =========================================================
+
+function configurarCursosBiblicos() {
+
+    const grupo =
+        document.getElementById(
+            "grupoCursosBiblicos"
+        );
+
+    const botonMenos =
+        document.getElementById(
+            "restarCurso"
+        );
+
+    const botonMas =
+        document.getElementById(
+            "sumarCurso"
+        );
+
+
+    if (!grupo) {
+        return;
+    }
+
+
+    // Evita configurar los botones dos veces.
+    if (
+        grupo.dataset.configurado ===
+        "si"
+    ) {
+
+        actualizarCursosBiblicos();
+        actualizarVisibilidadCursosBiblicos();
+
+        return;
+    }
+
+
+    grupo.dataset.configurado =
+        "si";
+
+
+    // -----------------------------------------
+    // BOTÓN MENOS
+    // -----------------------------------------
+
+    if (botonMenos) {
+
+        botonMenos.addEventListener(
+            "click",
+            () => {
+
+                cambiarCursosBiblicos(
+                    -1
+                );
+            }
+        );
+    }
+
+
+    // -----------------------------------------
+    // BOTÓN MÁS
+    // -----------------------------------------
+
+    if (botonMas) {
+
+        botonMas.addEventListener(
+            "click",
+            () => {
+
+                cambiarCursosBiblicos(
+                    1
+                );
+            }
+        );
+    }
+
+
+    // -----------------------------------------
+    // CAMBIO DE ACTIVIDAD
+    // -----------------------------------------
+
+    document
+        .querySelectorAll(
+            ".actividad-boton"
+        )
+        .forEach(
+            boton => {
+
+                boton.addEventListener(
+                    "click",
+                    () => {
+
+                        setTimeout(
+                            actualizarVisibilidadCursosBiblicos,
+                            0
+                        );
+                    }
+                );
+            }
+        );
+
+
+    actualizarCursosBiblicos();
+
+    actualizarVisibilidadCursosBiblicos();
+}
+
+
+// =========================================================
+// CAMBIAR CANTIDAD
+// =========================================================
+
+function cambiarCursosBiblicos(
+    diferencia
+) {
+
+    const actual =
+        Math.max(
+            0,
+            Number(
+                estado.cursosBiblicos
+            ) || 0
+        );
+
+
+    estado.cursosBiblicos =
+        Math.max(
+            0,
+            actual +
+            diferencia
+        );
+
+
+    guardarJSON(
+        STORAGE_KEYS.cursosBiblicos,
+        estado.cursosBiblicos
+    );
+
+
+    actualizarCursosBiblicos();
+
+
+    if (
+        navigator.vibrate &&
+        typeof navigator.vibrate ===
+            "function"
+    ) {
+
+        navigator.vibrate(
+            20
+        );
+    }
+}
+
+
+// =========================================================
+// MOSTRAR CANTIDAD
+// =========================================================
+
+function actualizarCursosBiblicos() {
+
+    const cantidad =
+        document.getElementById(
+            "cantidadCursosBiblicos"
+        );
+
+
+    if (!cantidad) {
+        return;
+    }
+
+
+    cantidad.textContent =
+        String(
+            Math.max(
+                0,
+                Number(
+                    estado.cursosBiblicos
+                ) || 0
+            )
+        );
+}
+
+
+// =========================================================
+// MOSTRAR SOLO EN MINISTERIO
+// =========================================================
+
+function actualizarVisibilidadCursosBiblicos() {
+
+    const grupo =
+        document.getElementById(
+            "grupoCursosBiblicos"
+        );
+
+    const campoTipo =
+        document.getElementById(
+            "tipoRegistro"
+        );
+
+
+    if (
+        !grupo ||
+        !campoTipo
+    ) {
+
+        return;
+    }
+
+
+    grupo.classList.toggle(
+        "oculto",
+        campoTipo.value !==
+            "ministerio"
+    );
+}
+
+
+// =========================================================
+// INICIAR CURSOS BÍBLICOS
+// =========================================================
+
+function iniciarCursosBiblicos() {
+
+    if (
+        typeof estado.cursosBiblicos ===
+            "undefined"
+    ) {
+
+        estado.cursosBiblicos =
+            Number(
+                leerJSON(
+                    STORAGE_KEYS.cursosBiblicos,
+                    0
+                )
+            ) || 0;
+    }
+
+
+    configurarCursosBiblicos();
+}
+
+
+if (
+    document.readyState ===
+    "loading"
+) {
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        iniciarCursosBiblicos
+    );
+
+} else {
+
+    iniciarCursosBiblicos();
+}
+
+
+// =========================================================
+// FIN CURSOS BÍBLICOS
+// =========================================================
