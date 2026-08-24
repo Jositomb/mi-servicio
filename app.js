@@ -1089,15 +1089,17 @@ function registrarActividad() {
 
         notas,
 
-    cursosBiblicos:
-        tipo === "ministerio"
-            ? Math.max(
-                0,
+cursosBiblicos:
+    tipo === "ministerio"
+        ? Math.max(
+            0,
+            Math.floor(
                 Number(
                     estado.cursosBiblicos
                 ) || 0
             )
-            : 0,        
+        )
+        : 0,
         
     creadoEn:
             ahora,
