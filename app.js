@@ -581,16 +581,6 @@ function cambiarCursosBiblicos(
 }
 
 
-function actualizarCursosBiblicos() {
-
-    ponerTexto(
-        "cantidadCursosBiblicos",
-        String(
-            estado.cursosBiblicos
-        )
-    );
-}
-
 
 // =========================================================
 // NAVEGACIÓN
