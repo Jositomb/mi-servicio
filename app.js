@@ -3092,17 +3092,6 @@ function actualizarEstadisticas() {
             rango.inicio,
             rango.fin
         );
-
-    console.log("RANGO:", rango);
-console.log("REGISTROS ESTADÍSTICAS:", registros);
-console.log(
-    "CURSOS:",
-    registros.map(registro => ({
-        tipo: registro.tipo,
-        fecha: registro.fecha,
-        cursosBiblicos: registro.cursosBiblicos
-    }))
-);
     
     const total =
         sumarMinutos(
