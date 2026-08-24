@@ -2015,8 +2015,37 @@ function crearTarjetaHistorial(
             notas
         );
     }
+// -----------------------------------------
+// Cursos bíblicos
+// -----------------------------------------
 
+if (
+    registro.tipo === "ministerio" &&
+    Number(registro.cursosBiblicos) > 0
+) {
 
+    const cursos =
+        document.createElement(
+            "p"
+        );
+
+    cursos.className =
+        "registro-cursos-biblicos";
+
+    const cantidad =
+        Number(
+            registro.cursosBiblicos
+        );
+
+    cursos.textContent =
+        cantidad === 1
+            ? "📖 1 curso bíblico"
+            : `📖 ${cantidad} cursos bíblicos`;
+
+    contenido.appendChild(
+        cursos
+    );
+}
     const botonBorrar =
         document.createElement(
             "button"
