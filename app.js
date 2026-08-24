@@ -1149,7 +1149,11 @@ cursosBiblicos:
     campoNotas.value =
         "";
 
+    estado.cursosBiblicos = 0;
 
+guardarCursosBiblicos();
+
+actualizarCursosBiblicos();    
     establecerFechaActual();
 
     seleccionarActividad(
