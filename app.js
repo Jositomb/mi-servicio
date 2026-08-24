@@ -6644,3 +6644,292 @@ document.addEventListener("DOMContentLoaded", () => {
         actualizarGraficoInicio();
     }, 300);
 });
+
+// =========================================================
+// GRÁFICO CIRCULAR DE PROGRESO - INICIO
+// =========================================================
+
+function actualizarGraficoInicio() {
+
+    const grafico =
+        document.getElementById("graficoInicio");
+
+    const leyenda =
+        document.getElementById("leyendaGraficoInicio");
+
+
+    if (
+        !grafico ||
+        !leyenda
+    ) {
+        return;
+    }
+
+
+    // -----------------------------------------------------
+    // Registros del mes actual
+    // -----------------------------------------------------
+
+    const hoy =
+        new Date();
+
+
+    const registrosMes =
+        estado.registros.filter(
+            registro => {
+
+                const fecha =
+                    fechaDesdeISO(
+                        registro.fecha
+                    );
+
+
+                return (
+                    fecha.getFullYear() ===
+                        hoy.getFullYear()
+                    &&
+                    fecha.getMonth() ===
+                        hoy.getMonth()
+                );
+            }
+        );
+
+
+    // -----------------------------------------------------
+    // Totales por actividad
+    // -----------------------------------------------------
+
+    const datos = [
+
+        {
+            id: "ministerio",
+            nombre: "Ministerio",
+            minutos: sumarMinutos(
+                registrosMes.filter(
+                    registro =>
+                        registro.tipo ===
+                        "ministerio"
+                )
+            ),
+            clase: "grafico-color-ministerio"
+        },
+
+        {
+            id: "ldc",
+            nombre: "LDC",
+            minutos: sumarMinutos(
+                registrosMes.filter(
+                    registro =>
+                        registro.tipo ===
+                        "ldc"
+                )
+            ),
+            clase: "grafico-color-ldc"
+        },
+
+        {
+            id: "asambleas",
+            nombre: "Asambleas",
+            minutos: sumarMinutos(
+                registrosMes.filter(
+                    registro =>
+                        registro.tipo ===
+                        "asambleas"
+                )
+            ),
+            clase: "grafico-color-asambleas"
+        },
+
+        {
+            id: "otras",
+            nombre: "Otras",
+            minutos: sumarMinutos(
+                registrosMes.filter(
+                    registro =>
+                        registro.tipo ===
+                        "otras"
+                )
+            ),
+            clase: "grafico-color-otras"
+        }
+    ];
+
+
+    // -----------------------------------------------------
+    // Ocultar actividades sin horas
+    // Ministerio sí aparece siempre
+    // -----------------------------------------------------
+
+    const visibles =
+        datos.filter(
+            dato =>
+                dato.id === "ministerio" ||
+                dato.minutos > 0
+        );
+
+
+    const total =
+        sumarMinutos(
+            registrosMes
+        );
+
+
+    // -----------------------------------------------------
+    // Crear segmentos del círculo
+    // -----------------------------------------------------
+
+    let gradosAcumulados = 0;
+
+    const segmentos = [];
+
+
+    visibles.forEach(
+        dato => {
+
+            const grados =
+                total > 0
+                    ? (
+                        dato.minutos /
+                        total
+                    ) * 360
+                    : 0;
+
+
+            const inicio =
+                gradosAcumulados;
+
+
+            const fin =
+                gradosAcumulados +
+                grados;
+
+
+            let color = "var(--primary)";
+
+
+            switch (
+                dato.id
+            ) {
+
+                case "ldc":
+                    color = "var(--ldc)";
+                    break;
+
+                case "asambleas":
+                    color = "var(--assembly)";
+                    break;
+
+                case "otras":
+                    color = "var(--other)";
+                    break;
+            }
+
+
+            if (
+                dato.minutos > 0
+            ) {
+
+                segmentos.push(
+                    `${color} ${inicio}deg ${fin}deg`
+                );
+            }
+
+
+            gradosAcumulados =
+                fin;
+        }
+    );
+
+
+    // -----------------------------------------------------
+    // Estado sin actividad
+    // -----------------------------------------------------
+
+    if (
+        segmentos.length === 0
+    ) {
+
+        segmentos.push(
+            "rgba(120,120,128,0.15) 0deg 360deg"
+        );
+    }
+
+
+    // -----------------------------------------------------
+    // Dibujar gráfico
+    // -----------------------------------------------------
+
+    grafico.innerHTML = `
+        <div
+            class="grafico-inicio-anillo"
+            style="background: conic-gradient(${segmentos.join(",")});"
+        ></div>
+
+        <div class="grafico-inicio-centro">
+
+            <p class="grafico-inicio-total">
+                ${formatearTiempo(total)}
+            </p>
+
+            <span class="grafico-inicio-texto">
+                Total del mes
+            </span>
+
+        </div>
+    `;
+
+
+    // -----------------------------------------------------
+    // Leyenda
+    // -----------------------------------------------------
+
+    leyenda.innerHTML =
+        "";
+
+
+    visibles.forEach(
+        dato => {
+
+            if (
+                dato.id !== "ministerio" &&
+                dato.minutos <= 0
+            ) {
+                return;
+            }
+
+
+            const fila =
+                document.createElement(
+                    "div"
+                );
+
+
+            fila.className =
+                "leyenda-grafico-fila";
+
+
+            fila.innerHTML = `
+                <div class="leyenda-grafico-nombre">
+
+                    <span
+                        class="leyenda-grafico-punto ${dato.clase}"
+                    ></span>
+
+                    <span>
+                        ${dato.nombre}
+                    </span>
+
+                </div>
+
+                <strong class="leyenda-grafico-tiempo">
+                    ${formatearTiempo(dato.minutos)}
+                </strong>
+            `;
+
+
+            leyenda.appendChild(
+                fila
+            );
+        }
+    );
+}
