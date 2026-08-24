@@ -136,8 +136,6 @@ document.addEventListener(
 
         configurarFormulario();
 
-        configurarCursosBiblicos();
-
         configurarHistorial();
 
         configurarFiltrosHistorial();
