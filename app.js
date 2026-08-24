@@ -6423,49 +6423,6 @@ function configurarCursosBiblicos() {
 // CAMBIAR CANTIDAD
 // =========================================================
 
-function cambiarCursosBiblicos(
-    diferencia
-) {
-
-    const actual =
-        Math.max(
-            0,
-            Number(
-                estado.cursosBiblicos
-            ) || 0
-        );
-
-
-    estado.cursosBiblicos =
-        Math.max(
-            0,
-            actual +
-            diferencia
-        );
-
-
-    guardarJSON(
-        STORAGE_KEYS.cursosBiblicos,
-        estado.cursosBiblicos
-    );
-
-
-    actualizarCursosBiblicos();
-
-
-    if (
-        navigator.vibrate &&
-        typeof navigator.vibrate ===
-            "function"
-    ) {
-
-        navigator.vibrate(
-            20
-        );
-    }
-}
-
-
 // =========================================================
 // MOSTRAR CANTIDAD
 // =========================================================
