@@ -5499,9 +5499,11 @@ function fechaISOValida(
 // =========================================================
 
 function actualizarTodaLaInterfaz() {
-
+    
     actualizarInicio();
 
+    actualizarGraficoInicio();
+    
     renderizarHistorial();
 
     actualizarEstadisticas();
