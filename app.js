@@ -505,52 +505,6 @@ function guardarCursosBiblicos() {
     );
 }
 
-
-function configurarCursosBiblicos() {
-
-    const botonMenos =
-        document.getElementById(
-            "cursoBiblicoMenos"
-        );
-
-    const botonMas =
-        document.getElementById(
-            "cursoBiblicoMas"
-        );
-
-
-    if (botonMenos) {
-
-        botonMenos.addEventListener(
-            "click",
-            () => {
-
-                cambiarCursosBiblicos(
-                    -1
-                );
-            }
-        );
-    }
-
-
-    if (botonMas) {
-
-        botonMas.addEventListener(
-            "click",
-            () => {
-
-                cambiarCursosBiblicos(
-                    1
-                );
-            }
-        );
-    }
-
-
-    actualizarCursosBiblicos();
-}
-
-
 function cambiarCursosBiblicos(
     cantidad
 ) {
