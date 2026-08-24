@@ -12,7 +12,8 @@
 
 const STORAGE_KEYS = {
     registros: "miServicio.registros",
-    preferencias: "miServicio.preferencias"
+    preferencias: "miServicio.preferencias",
+    cursosBiblicos: "miServicio.cursosBiblicos"
 };
 
 
@@ -103,6 +104,8 @@ const estado = {
 
     registros: [],
 
+    cursosBiblicos: 0,
+
     preferencias: {
         tipoPublicador: "publicador",
         objetivoMensualMinutos: 0
@@ -115,48 +118,8 @@ const estado = {
         fechaReferencia: new Date()
     }
 };
-// =========================================================
-// NAVEGACIÓN ENTRE PANTALLAS
-// =========================================================
 
-function configurarNavegacion() {
-    const botones = document.querySelectorAll(".nav-item");
 
-    botones.forEach((boton) => {
-        boton.addEventListener("click", () => {
-            const vista = boton.dataset.vista;
-
-            if (!vista) return;
-
-            cambiarVista(vista);
-        });
-    });
-}
-
-function cambiarVista(vista) {
-    document.querySelectorAll(".vista").forEach((elemento) => {
-        elemento.classList.remove("activa");
-    });
-
-    document.querySelectorAll(".nav-item").forEach((boton) => {
-        boton.classList.remove("activo");
-    });
-
-    const nuevaVista = document.getElementById(`vista-${vista}`);
-
-    if (nuevaVista) {
-        nuevaVista.classList.add("activa");
-        estado.vistaActual = vista;
-    }
-
-    const botonActivo = document.querySelector(
-        `.nav-item[data-vista="${vista}"]`
-    );
-
-    if (botonActivo) {
-        botonActivo.classList.add("activo");
-    }
-}
 // =========================================================
 // INICIO DE LA APLICACIÓN
 // =========================================================
@@ -173,6 +136,8 @@ document.addEventListener(
 
         configurarFormulario();
 
+        configurarCursosBiblicos();
+
         configurarHistorial();
 
         configurarFiltrosHistorial();
@@ -184,9 +149,7 @@ document.addEventListener(
         configurarSincronizacionIPhone();
 
         establecerFechaActual();
-        
-        establecerFechaActual();
-        
+
         seleccionarActividad(
             "ministerio"
         );
@@ -230,6 +193,19 @@ function cargarDatos() {
             }
         );
 
+    estado.cursosBiblicos =
+        Math.max(
+            0,
+            Math.round(
+                Number(
+                    leerJSON(
+                        STORAGE_KEYS.cursosBiblicos,
+                        0
+                    )
+                ) || 0
+            )
+        );
+
 
     // -----------------------------------------
     // Comprobar registros
@@ -265,10 +241,6 @@ function cargarDatos() {
         };
     }
 
-
-    // -----------------------------------------
-    // Completar preferencias antiguas
-    // -----------------------------------------
 
     if (
         !estado.preferencias
@@ -329,9 +301,7 @@ function normalizarRegistros() {
                     };
 
 
-                    // -----------------------------------------
                     // ID
-                    // -----------------------------------------
 
                     if (
                         !normalizado.id
@@ -345,9 +315,7 @@ function normalizarRegistros() {
                     }
 
 
-                    // -----------------------------------------
                     // Fecha
-                    // -----------------------------------------
 
                     if (
                         !normalizado.fecha
@@ -363,9 +331,7 @@ function normalizarRegistros() {
                     }
 
 
-                    // -----------------------------------------
                     // Tipo
-                    // -----------------------------------------
 
                     const tiposValidos = [
                         "ministerio",
@@ -389,9 +355,7 @@ function normalizarRegistros() {
                     }
 
 
-                    // -----------------------------------------
                     // Minutos
-                    // -----------------------------------------
 
                     const minutos =
                         Math.max(
@@ -404,23 +368,11 @@ function normalizarRegistros() {
                         );
 
 
-                    if (
-                        minutos !==
-                        normalizado.minutos
-                    ) {
-
-                        huboCambios =
-                            true;
-                    }
-
-
                     normalizado.minutos =
                         minutos;
 
 
-                    // -----------------------------------------
                     // Notas
-                    // -----------------------------------------
 
                     normalizado.notas =
                         String(
@@ -429,9 +381,7 @@ function normalizarRegistros() {
                         );
 
 
-                    // -----------------------------------------
                     // Fecha de creación
-                    // -----------------------------------------
 
                     if (
                         !normalizado.creadoEn
@@ -446,9 +396,7 @@ function normalizarRegistros() {
                     }
 
 
-                    // -----------------------------------------
                     // Última modificación
-                    // -----------------------------------------
 
                     if (
                         !normalizado.modificadoEn
@@ -462,9 +410,7 @@ function normalizarRegistros() {
                     }
 
 
-                    // -----------------------------------------
-                    // Información de sincronización
-                    // -----------------------------------------
+                    // Sincronización
 
                     if (
                         !normalizado
@@ -502,7 +448,7 @@ function normalizarRegistros() {
 
 
 // =========================================================
-// LEER JSON
+// LEER / GUARDAR JSON
 // =========================================================
 
 function leerJSON(
@@ -517,10 +463,6 @@ function leerJSON(
 }
 
 
-// =========================================================
-// GUARDAR JSON
-// =========================================================
-
 function guardarJSON(
     clave,
     valor
@@ -533,10 +475,6 @@ function guardarJSON(
 }
 
 
-// =========================================================
-// GUARDAR REGISTROS
-// =========================================================
-
 function guardarRegistros() {
 
     return guardarJSON(
@@ -546,15 +484,110 @@ function guardarRegistros() {
 }
 
 
-// =========================================================
-// GUARDAR PREFERENCIAS
-// =========================================================
-
 function guardarPreferencias() {
 
     return guardarJSON(
         STORAGE_KEYS.preferencias,
         estado.preferencias
+    );
+}
+
+
+// =========================================================
+// CURSOS BÍBLICOS
+// =========================================================
+
+function guardarCursosBiblicos() {
+
+    return guardarJSON(
+        STORAGE_KEYS.cursosBiblicos,
+        estado.cursosBiblicos
+    );
+}
+
+
+function configurarCursosBiblicos() {
+
+    const botonMenos =
+        document.getElementById(
+            "cursoBiblicoMenos"
+        );
+
+    const botonMas =
+        document.getElementById(
+            "cursoBiblicoMas"
+        );
+
+
+    if (botonMenos) {
+
+        botonMenos.addEventListener(
+            "click",
+            () => {
+
+                cambiarCursosBiblicos(
+                    -1
+                );
+            }
+        );
+    }
+
+
+    if (botonMas) {
+
+        botonMas.addEventListener(
+            "click",
+            () => {
+
+                cambiarCursosBiblicos(
+                    1
+                );
+            }
+        );
+    }
+
+
+    actualizarCursosBiblicos();
+}
+
+
+function cambiarCursosBiblicos(
+    cantidad
+) {
+
+    estado.cursosBiblicos =
+        Math.max(
+            0,
+            estado.cursosBiblicos +
+                cantidad
+        );
+
+
+    guardarCursosBiblicos();
+
+    actualizarCursosBiblicos();
+
+
+    if (
+        navigator.vibrate &&
+        typeof navigator.vibrate ===
+            "function"
+    ) {
+
+        navigator.vibrate(
+            20
+        );
+    }
+}
+
+
+function actualizarCursosBiblicos() {
+
+    ponerTexto(
+        "cantidadCursosBiblicos",
+        String(
+            estado.cursosBiblicos
+        )
     );
 }
 
@@ -621,17 +654,9 @@ function seleccionarVista(
     }
 
 
-    // -----------------------------------------
-    // Guardamos la vista activa
-    // -----------------------------------------
-
     estado.vistaActual =
         vista;
 
-
-    // -----------------------------------------
-    // Ocultar todas las vistas
-    // -----------------------------------------
 
     document
         .querySelectorAll(
@@ -647,20 +672,12 @@ function seleccionarVista(
         );
 
 
-    // -----------------------------------------
-    // Mostrar la seleccionada
-    // -----------------------------------------
-
     vistaElemento
         .classList
         .add(
             "activa"
         );
 
-
-    // -----------------------------------------
-    // Actualizar barra inferior
-    // -----------------------------------------
 
     document
         .querySelectorAll(
@@ -677,10 +694,6 @@ function seleccionarVista(
             }
         );
 
-
-    // -----------------------------------------
-    // Título
-    // -----------------------------------------
 
     const titulos = {
 
@@ -708,10 +721,6 @@ function seleccionarVista(
     );
 
 
-    // -----------------------------------------
-    // Actualizar contenido de la vista
-    // -----------------------------------------
-
     switch (vista) {
 
         case "inicio":
@@ -724,6 +733,8 @@ function seleccionarVista(
         case "registrar":
 
             prepararPantallaRegistrar();
+
+            actualizarCursosBiblicos();
 
             break;
 
@@ -749,10 +760,6 @@ function seleccionarVista(
             break;
     }
 
-
-    // -----------------------------------------
-    // Volver arriba
-    // -----------------------------------------
 
     window.scrollTo({
         top: 0,
@@ -853,21 +860,28 @@ function seleccionarActividad(
                 );
             }
         );
+
+
+    // Cursos bíblicos solo pertenecen al Ministerio.
+
+    const seccionCursos =
+        document.getElementById(
+            "seccionCursosBiblicos"
+        );
+
+
+    if (seccionCursos) {
+
+        seccionCursos.classList.toggle(
+            "oculto",
+            tipo !== "ministerio"
+        );
+    }
 }
 
 
 // =========================================================
-// FIN BLOQUE 1
-// =========================================================
-
-// =========================================================
-// BLOQUE 2
-// FORMULARIO + REGISTRO + HISTORIAL + BORRADO
-// =========================================================
-
-
-// =========================================================
-// CONFIGURAR FORMULARIO
+// FORMULARIO
 // =========================================================
 
 function configurarFormulario() {
@@ -877,9 +891,11 @@ function configurarFormulario() {
             "formRegistro"
         );
 
+
     if (!formulario) {
         return;
     }
+
 
     formulario.addEventListener(
         "submit",
@@ -893,16 +909,13 @@ function configurarFormulario() {
 }
 
 
-// =========================================================
-// PREPARAR PANTALLA REGISTRAR
-// =========================================================
-
 function prepararPantallaRegistrar() {
 
     const fecha =
         document.getElementById(
             "fechaRegistro"
         );
+
 
     if (
         fecha &&
@@ -911,12 +924,20 @@ function prepararPantallaRegistrar() {
 
         establecerFechaActual();
     }
+
+
+    const tipo =
+        document.getElementById(
+            "tipoRegistro"
+        )?.value ||
+        "ministerio";
+
+
+    seleccionarActividad(
+        tipo
+    );
 }
 
-
-// =========================================================
-// ESTABLECER FECHA ACTUAL
-// =========================================================
 
 function establecerFechaActual() {
 
@@ -925,9 +946,11 @@ function establecerFechaActual() {
             "fechaRegistro"
         );
 
+
     if (!campoFecha) {
         return;
     }
+
 
     campoFecha.value =
         fechaLocalISO(
@@ -973,10 +996,6 @@ function registrarActividad() {
         );
 
 
-    // -----------------------------------------
-    // Comprobar formulario
-    // -----------------------------------------
-
     if (
         !campoFecha ||
         !campoTipo ||
@@ -998,10 +1017,6 @@ function registrarActividad() {
     );
 
 
-    // -----------------------------------------
-    // Obtener valores
-    // -----------------------------------------
-
     const fecha =
         campoFecha.value;
 
@@ -1022,10 +1037,6 @@ function registrarActividad() {
         campoNotas.value.trim();
 
 
-    // -----------------------------------------
-    // Validar fecha
-    // -----------------------------------------
-
     if (!fecha) {
 
         mostrarMensajeFormulario(
@@ -1038,16 +1049,13 @@ function registrarActividad() {
     }
 
 
-    // -----------------------------------------
-    // Validar tipo
-    // -----------------------------------------
-
     const tiposValidos = [
         "ministerio",
         "ldc",
         "asambleas",
         "otras"
     ];
+
 
     if (
         !tiposValidos.includes(
@@ -1064,10 +1072,6 @@ function registrarActividad() {
         return;
     }
 
-
-    // -----------------------------------------
-    // Validar horas
-    // -----------------------------------------
 
     if (
         !Number.isFinite(horas) ||
@@ -1086,10 +1090,6 @@ function registrarActividad() {
     }
 
 
-    // -----------------------------------------
-    // Validar minutos
-    // -----------------------------------------
-
     if (
         !Number.isFinite(minutos) ||
         minutos < 0 ||
@@ -1107,10 +1107,6 @@ function registrarActividad() {
     }
 
 
-    // -----------------------------------------
-    // Calcular total
-    // -----------------------------------------
-
     const totalMinutos =
         minutosTotales(
             horas,
@@ -1118,7 +1114,9 @@ function registrarActividad() {
         );
 
 
-    if (totalMinutos <= 0) {
+    if (
+        totalMinutos <= 0
+    ) {
 
         mostrarMensajeFormulario(
             mensaje,
@@ -1129,10 +1127,6 @@ function registrarActividad() {
         return;
     }
 
-
-    // -----------------------------------------
-    // Crear registro
-    // -----------------------------------------
 
     const ahora =
         new Date()
@@ -1170,10 +1164,6 @@ function registrarActividad() {
     };
 
 
-    // -----------------------------------------
-    // Guardar
-    // -----------------------------------------
-
     estado.registros.push(
         registro
     );
@@ -1185,6 +1175,7 @@ function registrarActividad() {
 
         estado.registros.pop();
 
+
         mostrarMensajeFormulario(
             mensaje,
             "No se pudo guardar el registro.",
@@ -1194,10 +1185,6 @@ function registrarActividad() {
         return;
     }
 
-
-    // -----------------------------------------
-    // Limpiar formulario
-    // -----------------------------------------
 
     campoHoras.value =
         "0";
@@ -1216,10 +1203,6 @@ function registrarActividad() {
     );
 
 
-    // -----------------------------------------
-    // Confirmación
-    // -----------------------------------------
-
     mostrarMensajeFormulario(
         mensaje,
         "Actividad guardada ✓",
@@ -1227,16 +1210,8 @@ function registrarActividad() {
     );
 
 
-    // -----------------------------------------
-    // Actualizar aplicación
-    // -----------------------------------------
-
     actualizarTodaLaInterfaz();
 
-
-    // -----------------------------------------
-    // Vibración suave si está disponible
-    // -----------------------------------------
 
     if (
         navigator.vibrate &&
@@ -1265,8 +1240,10 @@ function mostrarMensajeFormulario(
         return;
     }
 
+
     elemento.textContent =
         texto;
+
 
     elemento.classList.remove(
         "error",
@@ -1274,9 +1251,11 @@ function mostrarMensajeFormulario(
         "visible"
     );
 
+
     elemento.classList.add(
         "visible"
     );
+
 
     elemento.classList.add(
         esError
@@ -1294,8 +1273,10 @@ function limpiarMensajeFormulario(
         return;
     }
 
+
     elemento.textContent =
         "";
+
 
     elemento.classList.remove(
         "error",
@@ -1303,6 +1284,15 @@ function limpiarMensajeFormulario(
         "visible"
     );
 }
+
+
+// =========================================================
+// FIN PARTE 1/4
+// =========================================================
+// =========================================================
+// PARTE 2/4
+// HISTORIAL + INICIO + OBJETIVO
+// =========================================================
 
 
 // =========================================================
@@ -1330,10 +1320,6 @@ function configurarHistorial() {
         );
     }
 
-
-    // -----------------------------------------
-    // Modal de borrado
-    // -----------------------------------------
 
     const cancelar =
         document.getElementById(
@@ -1377,10 +1363,6 @@ function configurarHistorial() {
         );
     }
 
-
-    // -----------------------------------------
-    // Escape cierra el modal
-    // -----------------------------------------
 
     document.addEventListener(
         "keydown",
@@ -1547,10 +1529,6 @@ function renderizarHistorial() {
     }
 
 
-    // -----------------------------------------
-    // Filtrar y ordenar
-    // -----------------------------------------
-
     const registros =
         obtenerRegistrosFiltrados()
             .sort(
@@ -1564,10 +1542,6 @@ function renderizarHistorial() {
         );
 
 
-    // -----------------------------------------
-    // Estado vacío
-    // -----------------------------------------
-
     if (
         registros.length === 0
     ) {
@@ -1575,14 +1549,17 @@ function renderizarHistorial() {
         lista.innerHTML =
             "";
 
+
         vacio.classList.remove(
             "oculto"
         );
+
 
         actualizarEstadoVacioHistorial(
             tituloVacio,
             textoVacio
         );
+
 
         return;
     }
@@ -1596,10 +1573,6 @@ function renderizarHistorial() {
     lista.innerHTML =
         "";
 
-
-    // -----------------------------------------
-    // Agrupar por fecha
-    // -----------------------------------------
 
     const grupos =
         agruparRegistrosPorFecha(
@@ -1615,18 +1588,16 @@ function renderizarHistorial() {
                     "section"
                 );
 
+
             seccion.className =
                 "grupo-historial";
 
-
-            // ---------------------------------
-            // Cabecera del día
-            // ---------------------------------
 
             const encabezado =
                 document.createElement(
                     "div"
                 );
+
 
             encabezado.className =
                 "grupo-historial-cabecera";
@@ -1637,8 +1608,10 @@ function renderizarHistorial() {
                     "h3"
                 );
 
+
             titulo.className =
                 "grupo-historial-titulo";
+
 
             titulo.textContent =
                 tituloFechaHistorial(
@@ -1651,8 +1624,10 @@ function renderizarHistorial() {
                     "span"
                 );
 
+
             total.className =
                 "grupo-historial-total";
+
 
             total.textContent =
                 formatearTiempo(
@@ -1668,14 +1643,11 @@ function renderizarHistorial() {
             );
 
 
-            // ---------------------------------
-            // Registros del día
-            // ---------------------------------
-
             const contenido =
                 document.createElement(
                     "div"
                 );
+
 
             contenido.className =
                 "grupo-historial-registros";
@@ -1759,7 +1731,9 @@ function agruparRegistrosPorFecha(
             ) => {
 
                 return {
+
                     fecha,
+
                     registros:
                         registrosGrupo
                 };
@@ -1781,8 +1755,10 @@ function tituloFechaHistorial(
             fechaISO
         );
 
+
     const hoy =
         new Date();
+
 
     const ayer =
         new Date();
@@ -1793,10 +1769,6 @@ function tituloFechaHistorial(
     );
 
 
-    // -----------------------------------------
-    // Hoy
-    // -----------------------------------------
-
     if (
         fechaLocalISO(fecha) ===
         fechaLocalISO(hoy)
@@ -1806,10 +1778,6 @@ function tituloFechaHistorial(
     }
 
 
-    // -----------------------------------------
-    // Ayer
-    // -----------------------------------------
-
     if (
         fechaLocalISO(fecha) ===
         fechaLocalISO(ayer)
@@ -1818,10 +1786,6 @@ function tituloFechaHistorial(
         return "Ayer";
     }
 
-
-    // -----------------------------------------
-    // Fecha normal
-    // -----------------------------------------
 
     const mismoAnio =
         fecha.getFullYear() ===
@@ -1923,10 +1887,6 @@ function crearTarjetaHistorial(
         "registro-card";
 
 
-    // -----------------------------------------
-    // Icono
-    // -----------------------------------------
-
     const icono =
         document.createElement(
             "div"
@@ -1943,10 +1903,6 @@ function crearTarjetaHistorial(
         );
 
 
-    // -----------------------------------------
-    // Contenido
-    // -----------------------------------------
-
     const contenido =
         document.createElement(
             "div"
@@ -1956,10 +1912,6 @@ function crearTarjetaHistorial(
     contenido.className =
         "registro-contenido";
 
-
-    // -----------------------------------------
-    // Cabecera
-    // -----------------------------------------
 
     const cabecera =
         document.createElement(
@@ -2009,10 +1961,6 @@ function crearTarjetaHistorial(
     );
 
 
-    // -----------------------------------------
-    // Fecha
-    // -----------------------------------------
-
     const fecha =
         document.createElement(
             "p"
@@ -2034,10 +1982,6 @@ function crearTarjetaHistorial(
         fecha
     );
 
-
-    // -----------------------------------------
-    // Notas
-    // -----------------------------------------
 
     if (
         registro.notas
@@ -2062,10 +2006,6 @@ function crearTarjetaHistorial(
         );
     }
 
-
-    // -----------------------------------------
-    // Botón borrar
-    // -----------------------------------------
 
     const botonBorrar =
         document.createElement(
@@ -2114,7 +2054,7 @@ function crearTarjetaHistorial(
 
 
 // =========================================================
-// ABRIR MODAL DE BORRADO
+// MODAL DE BORRADO
 // =========================================================
 
 function abrirModalBorrado(
@@ -2148,10 +2088,6 @@ function abrirModalBorrado(
 }
 
 
-// =========================================================
-// CERRAR MODAL DE BORRADO
-// =========================================================
-
 function cerrarModalBorrado() {
 
     estado.registroPendienteBorrar =
@@ -2181,10 +2117,6 @@ function cerrarModalBorrado() {
 }
 
 
-// =========================================================
-// CONFIRMAR BORRADO
-// =========================================================
-
 function confirmarEliminarRegistro() {
 
     const id =
@@ -2198,8 +2130,6 @@ function confirmarEliminarRegistro() {
         return;
     }
 
-
-    // Guardamos una copia por seguridad.
 
     const anteriores =
         [
@@ -2219,10 +2149,6 @@ function confirmarEliminarRegistro() {
         );
 
 
-    // -----------------------------------------
-    // Guardar cambio
-    // -----------------------------------------
-
     if (
         !guardarRegistros()
     ) {
@@ -2230,11 +2156,14 @@ function confirmarEliminarRegistro() {
         estado.registros =
             anteriores;
 
+
         cerrarModalBorrado();
+
 
         console.error(
             "No se pudo eliminar el registro."
         );
+
 
         return;
     }
@@ -2261,6 +2190,7 @@ function compararRegistrosPorFecha(
             a.fecha
         );
 
+
     const fechaB =
         fechaDesdeISO(
             b.fecha
@@ -2280,9 +2210,6 @@ function compararRegistrosPorFecha(
     }
 
 
-    // Si son del mismo día,
-    // el último creado aparece primero.
-
     return (
         new Date(
             b.creadoEn || 0
@@ -2296,30 +2223,17 @@ function compararRegistrosPorFecha(
 
 
 // =========================================================
-// FIN BLOQUE 2
-// =========================================================
-
-// =========================================================
-// BLOQUE 3
-// INICIO + RESUMEN MENSUAL + OBJETIVO
-// =========================================================
-
-
-// =========================================================
-// ACTUALIZAR INICIO
+// INICIO
 // =========================================================
 
 function actualizarInicio() {
 
     actualizarNombreMes();
 
+
     const registrosMes =
         obtenerRegistrosMesActual();
 
-
-    // -----------------------------------------
-    // Total del mes
-    // -----------------------------------------
 
     const total =
         sumarMinutos(
@@ -2327,81 +2241,45 @@ function actualizarInicio() {
         );
 
 
-    // -----------------------------------------
-    // Ministerio
-    // -----------------------------------------
-
     const ministerio =
         sumarMinutos(
             registrosMes.filter(
-                registro => {
-
-                    return (
-                        registro.tipo ===
-                        "ministerio"
-                    );
-                }
+                registro =>
+                    registro.tipo ===
+                    "ministerio"
             )
         );
 
-
-    // -----------------------------------------
-    // LDC
-    // -----------------------------------------
 
     const ldc =
         sumarMinutos(
             registrosMes.filter(
-                registro => {
-
-                    return (
-                        registro.tipo ===
-                        "ldc"
-                    );
-                }
+                registro =>
+                    registro.tipo ===
+                    "ldc"
             )
         );
 
-
-    // -----------------------------------------
-    // Asambleas
-    // -----------------------------------------
 
     const asambleas =
         sumarMinutos(
             registrosMes.filter(
-                registro => {
-
-                    return (
-                        registro.tipo ===
-                        "asambleas"
-                    );
-                }
+                registro =>
+                    registro.tipo ===
+                    "asambleas"
             )
         );
 
-
-    // -----------------------------------------
-    // Otras
-    // -----------------------------------------
 
     const otras =
         sumarMinutos(
             registrosMes.filter(
-                registro => {
-
-                    return (
-                        registro.tipo ===
-                        "otras"
-                    );
-                }
+                registro =>
+                    registro.tipo ===
+                    "otras"
             )
         );
 
-
-    // -----------------------------------------
-    // Mostrar resultados
-    // -----------------------------------------
 
     ponerTexto(
         "totalMes",
@@ -2443,10 +2321,6 @@ function actualizarInicio() {
     );
 
 
-    // -----------------------------------------
-    // Mostrar "Otras" solamente si hay datos
-    // -----------------------------------------
-
     const filaOtras =
         document.getElementById(
             "filaOtras"
@@ -2462,19 +2336,29 @@ function actualizarInicio() {
     }
 
 
-    // -----------------------------------------
-    // Objetivo mensual
-    // -----------------------------------------
-
     actualizarObjetivo(
         ministerio
     );
+
+
     actualizarGraficoInicio();
+
+
+    // Si en Inicio hemos añadido posteriormente
+    // un indicador de cursos bíblicos, también
+    // quedará actualizado automáticamente.
+
+    ponerTexto(
+        "totalCursosBiblicos",
+        String(
+            estado.cursosBiblicos
+        )
+    );
 }
 
 
 // =========================================================
-// NOMBRE DEL MES ACTUAL
+// NOMBRE DEL MES
 // =========================================================
 
 function actualizarNombreMes() {
@@ -2505,7 +2389,7 @@ function actualizarNombreMes() {
 
 
 // =========================================================
-// OBTENER REGISTROS DEL MES ACTUAL
+// REGISTROS DEL MES ACTUAL
 // =========================================================
 
 function obtenerRegistrosMesActual() {
@@ -2537,15 +2421,7 @@ function obtenerRegistrosMesActual() {
 
 // =========================================================
 // OBJETIVO MENSUAL
-// =========================================================
-//
-// IMPORTANTE:
-// El objetivo se calcula únicamente con las horas
-// de MINISTERIO.
-//
-// LDC, Asambleas y Otras actividades continúan
-// apareciendo en los totales, pero no incrementan
-// el objetivo mensual de ministerio.
+// Solo cuenta MINISTERIO
 // =========================================================
 
 function actualizarObjetivo(
@@ -2562,10 +2438,6 @@ function actualizarObjetivo(
         );
 
 
-    // -----------------------------------------
-    // Porcentaje
-    // -----------------------------------------
-
     const porcentaje =
         objetivo > 0
             ? Math.round(
@@ -2577,10 +2449,6 @@ function actualizarObjetivo(
             : 0;
 
 
-    // -----------------------------------------
-    // Valor registrado
-    // -----------------------------------------
-
     ponerTexto(
         "valorObjetivo",
         formatearTiempo(
@@ -2589,19 +2457,11 @@ function actualizarObjetivo(
     );
 
 
-    // -----------------------------------------
-    // Porcentaje
-    // -----------------------------------------
-
     ponerTexto(
         "porcentajeObjetivo",
         `${porcentaje}%`
     );
 
-
-    // -----------------------------------------
-    // Barra de progreso
-    // -----------------------------------------
 
     const barra =
         document.getElementById(
@@ -2626,10 +2486,6 @@ function actualizarObjetivo(
     }
 
 
-    // -----------------------------------------
-    // Mensaje
-    // -----------------------------------------
-
     const mensaje =
         document.getElementById(
             "mensajeObjetivo"
@@ -2641,24 +2497,19 @@ function actualizarObjetivo(
     }
 
 
-    // -----------------------------------------
-    // Sin objetivo configurado
-    // -----------------------------------------
-
-    if (objetivo <= 0) {
+    if (
+        objetivo <= 0
+    ) {
 
         mensaje.textContent =
             totalMinisterioMes > 0
                 ? "Configura un objetivo mensual en Ajustes."
                 : "Empieza registrando tu primera actividad de ministerio.";
 
+
         return;
     }
 
-
-    // -----------------------------------------
-    // Objetivo alcanzado
-    // -----------------------------------------
 
     if (
         totalMinisterioMes >=
@@ -2670,7 +2521,9 @@ function actualizarObjetivo(
             objetivo;
 
 
-        if (superado > 0) {
+        if (
+            superado > 0
+        ) {
 
             mensaje.textContent =
                 `Objetivo alcanzado. Lo superas por ${formatearTiempo(superado)}.`;
@@ -2686,10 +2539,6 @@ function actualizarObjetivo(
     }
 
 
-    // -----------------------------------------
-    // Objetivo pendiente
-    // -----------------------------------------
-
     const restante =
         objetivo -
         totalMinisterioMes;
@@ -2701,11 +2550,349 @@ function actualizarObjetivo(
 
 
 // =========================================================
-// FIN BLOQUE 3
+// GRÁFICO CIRCULAR DEL INICIO
 // =========================================================
 
+function actualizarGraficoInicio() {
+
+    const grafico =
+        document.getElementById(
+            "graficoInicio"
+        );
+
+
+    const leyenda =
+        document.getElementById(
+            "leyendaGraficoInicio"
+        );
+
+
+    if (
+        !grafico ||
+        !leyenda
+    ) {
+
+        return;
+    }
+
+
+    const registrosMes =
+        obtenerRegistrosMesActual();
+
+
+    const datos = [
+
+        {
+            id:
+                "ministerio",
+
+            nombre:
+                "Ministerio",
+
+            minutos:
+                sumarMinutos(
+                    registrosMes.filter(
+                        registro =>
+                            registro.tipo ===
+                            "ministerio"
+                    )
+                ),
+
+            clase:
+                "grafico-color-ministerio"
+        },
+
+
+        {
+            id:
+                "ldc",
+
+            nombre:
+                "LDC",
+
+            minutos:
+                sumarMinutos(
+                    registrosMes.filter(
+                        registro =>
+                            registro.tipo ===
+                            "ldc"
+                    )
+                ),
+
+            clase:
+                "grafico-color-ldc"
+        },
+
+
+        {
+            id:
+                "asambleas",
+
+            nombre:
+                "Asambleas",
+
+            minutos:
+                sumarMinutos(
+                    registrosMes.filter(
+                        registro =>
+                            registro.tipo ===
+                            "asambleas"
+                    )
+                ),
+
+            clase:
+                "grafico-color-asambleas"
+        },
+
+
+        {
+            id:
+                "otras",
+
+            nombre:
+                "Otras",
+
+            minutos:
+                sumarMinutos(
+                    registrosMes.filter(
+                        registro =>
+                            registro.tipo ===
+                            "otras"
+                    )
+                ),
+
+            clase:
+                "grafico-color-otras"
+        }
+    ];
+
+
+    // Ministerio aparece siempre.
+    // Las demás solo cuando tienen tiempo.
+
+    const visibles =
+        datos.filter(
+            dato =>
+                dato.id ===
+                    "ministerio"
+                ||
+                dato.minutos > 0
+        );
+
+
+    const total =
+        sumarMinutos(
+            registrosMes
+        );
+
+
+    let gradosAcumulados =
+        0;
+
+
+    const segmentos =
+        [];
+
+
+    visibles.forEach(
+        dato => {
+
+            const grados =
+                total > 0
+                    ? (
+                        dato.minutos /
+                        total
+                    ) * 360
+                    : 0;
+
+
+            const inicio =
+                gradosAcumulados;
+
+
+            const fin =
+                gradosAcumulados +
+                grados;
+
+
+            let color =
+                "var(--primary)";
+
+
+            switch (
+                dato.id
+            ) {
+
+                case "ldc":
+
+                    color =
+                        "var(--ldc)";
+
+                    break;
+
+
+                case "asambleas":
+
+                    color =
+                        "var(--assembly)";
+
+                    break;
+
+
+                case "otras":
+
+                    color =
+                        "var(--other)";
+
+                    break;
+            }
+
+
+            if (
+                dato.minutos > 0
+            ) {
+
+                segmentos.push(
+                    `${color} ${inicio}deg ${fin}deg`
+                );
+            }
+
+
+            gradosAcumulados =
+                fin;
+        }
+    );
+
+
+    if (
+        segmentos.length === 0
+    ) {
+
+        segmentos.push(
+            "rgba(120,120,128,0.15) 0deg 360deg"
+        );
+    }
+
+
+    grafico.innerHTML = `
+        <div
+            class="grafico-inicio-anillo"
+            style="background: conic-gradient(${segmentos.join(",")});"
+        ></div>
+
+        <div class="grafico-inicio-centro">
+
+            <p class="grafico-inicio-total">
+                ${formatearTiempo(total)}
+            </p>
+
+            <span class="grafico-inicio-texto">
+                Total del mes
+            </span>
+
+        </div>
+    `;
+
+
+    leyenda.innerHTML =
+        "";
+
+
+    visibles.forEach(
+        dato => {
+
+            if (
+                dato.id !==
+                    "ministerio"
+                &&
+                dato.minutos <= 0
+            ) {
+
+                return;
+            }
+
+
+            const fila =
+                document.createElement(
+                    "div"
+                );
+
+
+            fila.className =
+                "leyenda-grafico-fila";
+
+
+            const nombre =
+                document.createElement(
+                    "div"
+                );
+
+
+            nombre.className =
+                "leyenda-grafico-nombre";
+
+
+            const punto =
+                document.createElement(
+                    "span"
+                );
+
+
+            punto.className =
+                `leyenda-grafico-punto ${dato.clase}`;
+
+
+            const etiqueta =
+                document.createElement(
+                    "span"
+                );
+
+
+            etiqueta.textContent =
+                dato.nombre;
+
+
+            nombre.append(
+                punto,
+                etiqueta
+            );
+
+
+            const tiempo =
+                document.createElement(
+                    "strong"
+                );
+
+
+            tiempo.className =
+                "leyenda-grafico-tiempo";
+
+
+            tiempo.textContent =
+                formatearTiempo(
+                    dato.minutos
+                );
+
+
+            fila.append(
+                nombre,
+                tiempo
+            );
+
+
+            leyenda.appendChild(
+                fila
+            );
+        }
+    );
+}
+
+
 // =========================================================
-// BLOQUE 4
+// FIN PARTE 2/4
+// =========================================================
+// =========================================================
+// PARTE 3/4
 // ESTADÍSTICAS + PERIODOS + GRÁFICOS + TRIMESTRES
 // =========================================================
 
@@ -2717,22 +2904,26 @@ function actualizarObjetivo(
 function configurarEstadisticas() {
 
     document
-        .querySelectorAll(".periodo-boton")
-        .forEach(boton => {
+        .querySelectorAll(
+            ".periodo-boton"
+        )
+        .forEach(
+            boton => {
 
-            boton.addEventListener(
-                "click",
-                () => {
+                boton.addEventListener(
+                    "click",
+                    () => {
 
-                    const periodo =
-                        boton.dataset.periodo;
+                        const periodo =
+                            boton.dataset.periodo;
 
-                    seleccionarPeriodoEstadisticas(
-                        periodo
-                    );
-                }
-            );
-        });
+                        seleccionarPeriodoEstadisticas(
+                            periodo
+                        );
+                    }
+                );
+            }
+        );
 
 
     const anterior =
@@ -2796,6 +2987,7 @@ function seleccionarPeriodoEstadisticas(
             periodo
         )
     ) {
+
         return;
     }
 
@@ -2804,23 +2996,24 @@ function seleccionarPeriodoEstadisticas(
         periodo;
 
 
-    // Al cambiar de Semana/Mes/Año
-    // volvemos al periodo actual.
-
     estado.estadisticas.fechaReferencia =
         new Date();
 
 
     document
-        .querySelectorAll(".periodo-boton")
-        .forEach(boton => {
+        .querySelectorAll(
+            ".periodo-boton"
+        )
+        .forEach(
+            boton => {
 
-            boton.classList.toggle(
-                "activo",
-                boton.dataset.periodo ===
-                    periodo
-            );
-        });
+                boton.classList.toggle(
+                    "activo",
+                    boton.dataset.periodo ===
+                        periodo
+                );
+            }
+        );
 
 
     actualizarEstadisticas();
@@ -2858,7 +3051,9 @@ function moverPeriodoEstadisticas(
 
         case "mes":
 
-            fecha.setDate(1);
+            fecha.setDate(
+                1
+            );
 
             fecha.setMonth(
                 fecha.getMonth() +
@@ -2870,8 +3065,13 @@ function moverPeriodoEstadisticas(
 
         case "anio":
 
-            fecha.setMonth(0);
-            fecha.setDate(1);
+            fecha.setMonth(
+                0
+            );
+
+            fecha.setDate(
+                1
+            );
 
             fecha.setFullYear(
                 fecha.getFullYear() +
@@ -2954,7 +3154,7 @@ function actualizarEstadisticas() {
 
 
     // -----------------------------------------------------
-    // Totales
+    // TOTALES
     // -----------------------------------------------------
 
     ponerTexto(
@@ -2998,7 +3198,7 @@ function actualizarEstadisticas() {
 
 
     // -----------------------------------------------------
-    // Resumen
+    // RESUMEN
     // -----------------------------------------------------
 
     ponerTexto(
@@ -3020,7 +3220,7 @@ function actualizarEstadisticas() {
 
 
     // -----------------------------------------------------
-    // Periodo
+    // PERIODO
     // -----------------------------------------------------
 
     actualizarTextoPeriodoEstadisticas(
@@ -3029,7 +3229,7 @@ function actualizarEstadisticas() {
 
 
     // -----------------------------------------------------
-    // Gráfico
+    // GRÁFICO
     // -----------------------------------------------------
 
     actualizarGraficoEstadisticas(
@@ -3038,32 +3238,12 @@ function actualizarEstadisticas() {
 
 
     // -----------------------------------------------------
-    // Trimestres
-    // Solo aparecen cuando estamos viendo AÑO
+    // TRIMESTRES
     // -----------------------------------------------------
 
     actualizarTrimestres(
         rango
     );
-
-
-    // -----------------------------------------------------
-    // Estado vacío
-    // -----------------------------------------------------
-
-    const vacio =
-        document.getElementById(
-            "estadisticasVacias"
-        );
-
-
-    if (vacio) {
-
-        vacio.classList.toggle(
-            "oculto",
-            registros.length !== 0
-        );
-    }
 }
 
 
@@ -3155,7 +3335,8 @@ function rangoSemana(
 
 
     fin.setDate(
-        fin.getDate() + 6
+        fin.getDate() +
+        6
     );
 
 
@@ -3323,7 +3504,8 @@ function actualizarTextoPeriodoEstadisticas(
     // -----------------------------------------------------
 
     if (
-        periodo === "semana"
+        periodo ===
+        "semana"
     ) {
 
         titulo =
@@ -3348,7 +3530,8 @@ function actualizarTextoPeriodoEstadisticas(
     // -----------------------------------------------------
 
     if (
-        periodo === "mes"
+        periodo ===
+        "mes"
     ) {
 
         const nombreMes =
@@ -3356,7 +3539,8 @@ function actualizarTextoPeriodoEstadisticas(
                 new Intl.DateTimeFormat(
                     "es-ES",
                     {
-                        month: "long"
+                        month:
+                            "long"
                     }
                 ).format(
                     rango.inicio
@@ -3377,8 +3561,11 @@ function actualizarTextoPeriodoEstadisticas(
                 new Intl.DateTimeFormat(
                     "es-ES",
                     {
-                        month: "long",
-                        year: "numeric"
+                        month:
+                            "long",
+
+                        year:
+                            "numeric"
                     }
                 ).format(
                     rango.inicio
@@ -3392,7 +3579,8 @@ function actualizarTextoPeriodoEstadisticas(
     // -----------------------------------------------------
 
     if (
-        periodo === "anio"
+        periodo ===
+        "anio"
     ) {
 
         const anio =
@@ -3445,13 +3633,16 @@ function formatearRangoSemana(
             fin.getFullYear();
 
 
-    if (mismoMes) {
+    if (
+        mismoMes
+    ) {
 
         const mes =
             new Intl.DateTimeFormat(
                 "es-ES",
                 {
-                    month: "long"
+                    month:
+                        "long"
                 }
             ).format(
                 inicio
@@ -3471,8 +3662,11 @@ function formatearRangoSemana(
         new Intl.DateTimeFormat(
             "es-ES",
             {
-                day: "numeric",
-                month: "short"
+                day:
+                    "numeric",
+
+                month:
+                    "short"
             }
         );
 
@@ -3536,7 +3730,7 @@ function esAnioActual(
 
 
 // =========================================================
-// ACTUALIZAR GRÁFICO
+// ACTUALIZAR GRÁFICO DE ESTADÍSTICAS
 // =========================================================
 
 function actualizarGraficoEstadisticas(
@@ -3560,7 +3754,8 @@ function actualizarGraficoEstadisticas(
     }
 
 
-    let datos = [];
+    let datos =
+        [];
 
 
     switch (
@@ -3617,7 +3812,8 @@ function actualizarGraficoEstadisticas(
     }
 
 
-    grafico.innerHTML = "";
+    grafico.innerHTML =
+        "";
 
 
     const tieneActividad =
@@ -3642,7 +3838,10 @@ function actualizarGraficoEstadisticas(
     );
 
 
-    if (!tieneActividad) {
+    if (
+        !tieneActividad
+    ) {
+
         return;
     }
 
@@ -3679,7 +3878,8 @@ function obtenerDatosGraficoSemana(
         );
 
 
-    const datos = [];
+    const datos =
+        [];
 
 
     for (
@@ -3695,7 +3895,8 @@ function obtenerDatosGraficoSemana(
 
 
         fecha.setDate(
-            fecha.getDate() + i
+            fecha.getDate() +
+            i
         );
 
 
@@ -3724,7 +3925,8 @@ function obtenerDatosGraficoSemana(
                 ),
 
             destacado:
-                fechaISO === hoy
+                fechaISO ===
+                hoy
         });
     }
 
@@ -3748,7 +3950,8 @@ function obtenerDatosGraficoMes(
     finMes
 ) {
 
-    const datos = [];
+    const datos =
+        [];
 
 
     const ultimoDia =
@@ -3759,7 +3962,8 @@ function obtenerDatosGraficoMes(
         new Date();
 
 
-    let numeroSemana = 1;
+    let numeroSemana =
+        1;
 
 
     for (
@@ -3875,7 +4079,8 @@ function obtenerDatosGraficoAnio(
             .getFullYear();
 
 
-    const datos = [];
+    const datos =
+        [];
 
 
     for (
@@ -3948,7 +4153,8 @@ function renderizarColumnasGrafico(
     datos
 ) {
 
-    grafico.innerHTML = "";
+    grafico.innerHTML =
+        "";
 
 
     const maximo =
@@ -3994,10 +4200,6 @@ function renderizarColumnasGrafico(
             }
 
 
-            // ---------------------------------------------
-            // Tiempo
-            // ---------------------------------------------
-
             const tiempo =
                 document.createElement(
                     "div"
@@ -4016,10 +4218,6 @@ function renderizarColumnasGrafico(
                     : "";
 
 
-            // ---------------------------------------------
-            // Contenedor
-            // ---------------------------------------------
-
             const contenedor =
                 document.createElement(
                     "div"
@@ -4029,10 +4227,6 @@ function renderizarColumnasGrafico(
             contenedor.className =
                 "grafico-barra-contenedor";
 
-
-            // ---------------------------------------------
-            // Barra
-            // ---------------------------------------------
 
             const barra =
                 document.createElement(
@@ -4061,10 +4255,6 @@ function renderizarColumnasGrafico(
                 barra
             );
 
-
-            // ---------------------------------------------
-            // Nombre
-            // ---------------------------------------------
 
             const nombre =
                 document.createElement(
@@ -4194,6 +4384,27 @@ function actualizarTrimestres(
     );
 
 
+    // Compatible con las dos versiones que hemos usado:
+    // 1. Tarjetas ya creadas en HTML.
+    // 2. Contenedor listaTrimestres generado por JS.
+
+    const lista =
+        document.getElementById(
+            "listaTrimestres"
+        );
+
+
+    if (lista) {
+
+        renderizarListaTrimestres(
+            lista,
+            anio
+        );
+
+        return;
+    }
+
+
     for (
         let trimestre = 1;
         trimestre <= 4;
@@ -4209,10 +4420,218 @@ function actualizarTrimestres(
 
 
 // =========================================================
-// ACTUALIZAR TRIMESTRE
+// RENDERIZAR LISTA DE TRIMESTRES
 // =========================================================
 
-function actualizarTrimestre(
+function renderizarListaTrimestres(
+    contenedor,
+    anio
+) {
+
+    contenedor.innerHTML =
+        "";
+
+
+    const etiquetas = [
+        "1 de enero – 31 de marzo",
+        "1 de abril – 30 de junio",
+        "1 de julio – 30 de septiembre",
+        "1 de octubre – 31 de diciembre"
+    ];
+
+
+    for (
+        let numero = 1;
+        numero <= 4;
+        numero++
+    ) {
+
+        const datos =
+            obtenerDatosTrimestre(
+                numero,
+                anio
+            );
+
+
+        const tarjeta =
+            document.createElement(
+                "article"
+            );
+
+
+        tarjeta.className =
+            "tarjeta trimestre-card";
+
+
+        const cabecera =
+            document.createElement(
+                "div"
+            );
+
+
+        cabecera.className =
+            "trimestre-cabecera";
+
+
+        const bloqueTitulo =
+            document.createElement(
+                "div"
+            );
+
+
+        const titulo =
+            document.createElement(
+                "p"
+            );
+
+
+        titulo.className =
+            "trimestre-titulo";
+
+
+        titulo.textContent =
+            `${numero}.º trimestre`;
+
+
+        const fechas =
+            document.createElement(
+                "p"
+            );
+
+
+        fechas.className =
+            "trimestre-fechas";
+
+
+        fechas.textContent =
+            etiquetas[
+                numero - 1
+            ];
+
+
+        bloqueTitulo.append(
+            titulo,
+            fechas
+        );
+
+
+        const total =
+            document.createElement(
+                "strong"
+            );
+
+
+        total.className =
+            "trimestre-total";
+
+
+        total.textContent =
+            formatearTiempo(
+                datos.total
+            );
+
+
+        cabecera.append(
+            bloqueTitulo,
+            total
+        );
+
+
+        const separador =
+            document.createElement(
+                "div"
+            );
+
+
+        separador.className =
+            "separador";
+
+
+        const filaMinisterio =
+            crearFilaTrimestre(
+                "Ministerio",
+                datos.ministerio
+            );
+
+
+        const filaOtras =
+            crearFilaTrimestre(
+                "Otras actividades",
+                datos.otrasActividades
+            );
+
+
+        tarjeta.append(
+            cabecera,
+            separador,
+            filaMinisterio,
+            filaOtras
+        );
+
+
+        contenedor.appendChild(
+            tarjeta
+        );
+    }
+}
+
+
+// =========================================================
+// CREAR FILA DE TRIMESTRE
+// =========================================================
+
+function crearFilaTrimestre(
+    nombre,
+    minutos
+) {
+
+    const fila =
+        document.createElement(
+            "div"
+        );
+
+
+    fila.className =
+        "fila-dato";
+
+
+    const etiqueta =
+        document.createElement(
+            "span"
+        );
+
+
+    etiqueta.textContent =
+        nombre;
+
+
+    const valor =
+        document.createElement(
+            "strong"
+        );
+
+
+    valor.textContent =
+        formatearTiempo(
+            minutos
+        );
+
+
+    fila.append(
+        etiqueta,
+        valor
+    );
+
+
+    return fila;
+}
+
+
+// =========================================================
+// DATOS DE UN TRIMESTRE
+// =========================================================
+
+function obtenerDatosTrimestre(
     numero,
     anio
 ) {
@@ -4252,8 +4671,6 @@ function actualizarTrimestre(
         );
 
 
-    // Ministerio separado
-
     const ministerio =
         sumarMinutos(
             registros.filter(
@@ -4263,8 +4680,6 @@ function actualizarTrimestre(
             )
         );
 
-
-    // LDC + Asambleas + Otras
 
     const otrasActividades =
         sumarMinutos(
@@ -4276,15 +4691,40 @@ function actualizarTrimestre(
         );
 
 
-    const total =
-        ministerio +
-        otrasActividades;
+    return {
+
+        ministerio,
+
+        otrasActividades,
+
+        total:
+            ministerio +
+            otrasActividades
+    };
+}
+
+
+// =========================================================
+// ACTUALIZAR TRIMESTRE
+// Compatibilidad con HTML anterior
+// =========================================================
+
+function actualizarTrimestre(
+    numero,
+    anio
+) {
+
+    const datos =
+        obtenerDatosTrimestre(
+            numero,
+            anio
+        );
 
 
     ponerTexto(
         `trimestre${numero}Total`,
         formatearTiempo(
-            total
+            datos.total
         )
     );
 
@@ -4292,7 +4732,7 @@ function actualizarTrimestre(
     ponerTexto(
         `trimestre${numero}Ministerio`,
         formatearTiempo(
-            ministerio
+            datos.ministerio
         )
     );
 
@@ -4300,19 +4740,18 @@ function actualizarTrimestre(
     ponerTexto(
         `trimestre${numero}Otras`,
         formatearTiempo(
-            otrasActividades
+            datos.otrasActividades
         )
     );
 }
 
 
 // =========================================================
-// FIN BLOQUE 4
+// FIN PARTE 3/4
 // =========================================================
-
 // =========================================================
-// BLOQUE 5
-// AJUSTES + COPIAS DE SEGURIDAD
+// PARTE 4/4
+// AJUSTES + COPIAS + IPHONE + CURSOS BÍBLICOS + UTILIDADES
 // =========================================================
 
 
@@ -4327,6 +4766,32 @@ function configurarAjustes() {
             "guardarAjustes"
         );
 
+    const tipoPublicador =
+        document.getElementById(
+            "tipoPublicador"
+        );
+
+    const botonExportar =
+        document.getElementById(
+            "exportarDatos"
+        );
+
+    const botonExportarIPhone =
+        document.getElementById(
+            "exportarIPhone"
+        );
+
+    const botonImportar =
+        document.getElementById(
+            "importarDatos"
+        );
+
+    const archivoImportacion =
+        document.getElementById(
+            "archivoImportacion"
+        );
+
+
     if (botonGuardar) {
 
         botonGuardar.addEventListener(
@@ -4336,38 +4801,13 @@ function configurarAjustes() {
     }
 
 
-    const tipo =
-        document.getElementById(
-            "tipoPublicador"
-        );
+    if (tipoPublicador) {
 
-    if (tipo) {
-
-        tipo.addEventListener(
+        tipoPublicador.addEventListener(
             "change",
             aplicarObjetivoSugerido
         );
     }
-
-
-    // -----------------------------------------------------
-    // COPIAS DE SEGURIDAD
-    // -----------------------------------------------------
-
-    const botonExportar =
-        document.getElementById(
-            "exportarDatos"
-        );
-
-    const botonImportar =
-        document.getElementById(
-            "importarDatos"
-        );
-    
-    const archivoImportacion =
-        document.getElementById(
-            "archivoImportacion"
-        );
 
 
     if (botonExportar) {
@@ -4375,6 +4815,15 @@ function configurarAjustes() {
         botonExportar.addEventListener(
             "click",
             exportarCopiaSeguridad
+        );
+    }
+
+
+    if (botonExportarIPhone) {
+
+        botonExportarIPhone.addEventListener(
+            "click",
+            exportarSincronizacionIPhone
         );
     }
 
@@ -4388,11 +4837,8 @@ function configurarAjustes() {
             "click",
             () => {
 
-                // Reiniciamos el input.
-                // Así permite volver a seleccionar
-                // el mismo archivo si fuera necesario.
-
-                archivoImportacion.value = "";
+                archivoImportacion.value =
+                    "";
 
                 archivoImportacion.click();
             }
@@ -4410,6 +4856,7 @@ function configurarAjustes() {
                     return;
                 }
 
+
                 importarCopiaSeguridad(
                     archivo
                 );
@@ -4420,7 +4867,7 @@ function configurarAjustes() {
 
 
 // =========================================================
-// CARGAR AJUSTES EN EL FORMULARIO
+// CARGAR AJUSTES
 // =========================================================
 
 function cargarFormularioAjustes() {
@@ -4429,7 +4876,6 @@ function cargarFormularioAjustes() {
         document.getElementById(
             "tipoPublicador"
         );
-
 
     const objetivo =
         document.getElementById(
@@ -4449,18 +4895,19 @@ function cargarFormularioAjustes() {
     if (objetivo) {
 
         const minutos =
-            Number(
-                estado.preferencias
-                    .objetivoMensualMinutos
-            ) || 0;
+            Math.max(
+                Number(
+                    estado.preferencias
+                        .objetivoMensualMinutos
+                ) || 0,
+                0
+            );
 
 
         objetivo.value =
-            minutos > 0
-                ? String(
-                    minutos / 60
-                )
-                : "0";
+            String(
+                minutos / 60
+            );
     }
 }
 
@@ -4476,7 +4923,6 @@ function aplicarObjetivoSugerido() {
             "tipoPublicador"
         );
 
-
     const objetivo =
         document.getElementById(
             "objetivoMensual"
@@ -4491,20 +4937,20 @@ function aplicarObjetivoSugerido() {
     }
 
 
-    switch (
-        tipo.value
-    ) {
+    switch (tipo.value) {
 
         case "precursorRegular":
 
-            objetivo.value = "50";
+            objetivo.value =
+                "50";
 
             break;
 
 
         case "precursorAuxiliar":
 
-            objetivo.value = "15";
+            objetivo.value =
+                "15";
 
             break;
 
@@ -4513,19 +4959,19 @@ function aplicarObjetivoSugerido() {
 
         default:
 
-            // Para publicador no imponemos
-            // ningún objetivo.
+            const actual =
+                Number(
+                    objetivo.value
+                );
+
 
             if (
-                Number(
-                    objetivo.value
-                ) === 50 ||
-                Number(
-                    objetivo.value
-                ) === 15
+                actual === 50 ||
+                actual === 15
             ) {
 
-                objetivo.value = "0";
+                objetivo.value =
+                    "0";
             }
 
             break;
@@ -4544,12 +4990,10 @@ function guardarAjustesDesdeFormulario() {
             "tipoPublicador"
         );
 
-
     const objetivo =
         document.getElementById(
             "objetivoMensual"
         );
-
 
     const mensaje =
         document.getElementById(
@@ -4600,9 +5044,7 @@ function guardarAjustesDesdeFormulario() {
 
 
     if (
-        !Number.isFinite(
-            horas
-        ) ||
+        !Number.isFinite(horas) ||
         horas < 0 ||
         horas > 200
     ) {
@@ -4617,12 +5059,9 @@ function guardarAjustesDesdeFormulario() {
     }
 
 
-    const preferenciasAnteriores = {
-        ...estado.preferencias
-    };
-
-
     estado.preferencias = {
+
+        ...estado.preferencias,
 
         tipoPublicador:
             tipo.value,
@@ -4637,10 +5076,6 @@ function guardarAjustesDesdeFormulario() {
     if (
         !guardarPreferencias()
     ) {
-
-        estado.preferencias =
-            preferenciasAnteriores;
-
 
         mostrarMensajeFormulario(
             mensaje,
@@ -4662,272 +5097,123 @@ function guardarAjustesDesdeFormulario() {
     actualizarInicio();
 }
 
-// =========================================================
-// SINCRONIZACIÓN WEB → IOS
-// =========================================================
-
 
 // =========================================================
-// CREAR PAQUETE DE SINCRONIZACIÓN
+// CURSOS BÍBLICOS
 // =========================================================
-
-function crearPaqueteSincronizacionIOS() {
-
-    const registros =
-        estado.registros
-            .filter(
-                registro => {
-
-                    // Por ahora sincronizamos las
-                    // actividades estándar.
-                    //
-                    // "Otras" se incorporará en el
-                    // siguiente paso con su nombre
-                    // personalizado.
-
-                    return (
-                        registro.tipo === "ministerio" ||
-                        registro.tipo === "ldc" ||
-                        registro.tipo === "asambleas"
-                    );
-                }
-            )
-            .map(
-                registro => {
-
-                    return {
-
-                        id:
-                            registro.id,
-
-                        fecha:
-                            fechaSyncIOS(
-                                registro.fecha
-                            ),
-
-                        minutos:
-                            Math.max(
-                                Math.round(
-                                    Number(
-                                        registro.minutos
-                                    ) || 0
-                                ),
-                                0
-                            ),
-
-                        tipo:
-                            registro.tipo,
-
-                        notas:
-                            String(
-                                registro.notas || ""
-                            ),
-
-                        actividadPersonalizadaID:
-                            null,
-
-                        nombreActividadPersonalizada:
-                            null,
-
-                        creadoEn:
-                            fechaISO8601Valida(
-                                registro.creadoEn
-                            ),
-
-                        modificadoEn:
-                            fechaISO8601Valida(
-                                registro.modificadoEn
-                            ),
-
-                        estado:
-                            "pendiente"
-                    };
-                }
-            );
-
-
-    return {
-
-        version:
-            2,
-
-        generadoEn:
-            new Date()
-                .toISOString(),
-
-        registros
-    };
-}
-
-
-// =========================================================
-// EXPORTAR SINCRONIZACIÓN PARA IOS
-// =========================================================
-
-function exportarSincronizacionIOS() {
-
-    try {
-
-        const paquete =
-            crearPaqueteSincronizacionIOS();
-
-
-        const contenido =
-            JSON.stringify(
-                paquete,
-                null,
-                2
-            );
-
-
-        const blob =
-            new Blob(
-                [contenido],
-                {
-                    type:
-                        "application/json;charset=utf-8"
-                }
-            );
-
-
-        const url =
-            URL.createObjectURL(
-                blob
-            );
-
-
-        const enlace =
-            document.createElement(
-                "a"
-            );
-
-
-        const fecha =
-            fechaLocalISO(
-                new Date()
-            );
-
-
-        enlace.href =
-            url;
-
-
-        enlace.download =
-            `Mi-Servicio-Sync-${fecha}.json`;
-
-
-        enlace.style.display =
-            "none";
-
-
-        document.body.appendChild(
-            enlace
-        );
-
-
-        enlace.click();
-
-
-        window.setTimeout(
-            () => {
-
-                URL.revokeObjectURL(
-                    url
-                );
-
-                enlace.remove();
-
-            },
-            1500
-        );
-
-
-        console.log(
-            `Paquete de sincronización creado: ${paquete.registros.length} registros`
-        );
-
-
-        return true;
-
-    } catch (error) {
-
-        console.error(
-            "No se pudo crear el paquete de sincronización:",
-            error
-        );
-
-
-        return false;
-    }
-}
-
-
-// =========================================================
-// CONVERTIR FECHA DEL REGISTRO PARA IOS
 //
-// Swift utiliza Date con ISO 8601.
-// El registro web guarda YYYY-MM-DD.
-// Lo convertimos a las 12:00 UTC para evitar
-// cambios accidentales de día por zona horaria.
+// Esta parte guarda el número de cursos dirigidos
+// junto con cada registro.
+// Si el HTML contiene el campo "cursosBiblicos",
+// se recogerá automáticamente.
 // =========================================================
 
-function fechaSyncIOS(
-    fecha
-) {
+function obtenerCursosBiblicosFormulario() {
+
+    const campo =
+        document.getElementById(
+            "cursosBiblicos"
+        );
+
+
+    if (!campo) {
+        return 0;
+    }
+
+
+    const cantidad =
+        Number(
+            campo.value
+        );
+
 
     if (
-        typeof fecha !== "string" ||
-        !/^\d{4}-\d{2}-\d{2}$/
-            .test(
-                fecha
-            )
+        !Number.isFinite(cantidad) ||
+        cantidad < 0
     ) {
 
-        return new Date()
-            .toISOString();
+        return 0;
     }
 
 
-    return `${fecha}T12:00:00Z`;
+    return Math.floor(
+        cantidad
+    );
 }
 
 
 // =========================================================
-// NORMALIZAR FECHA ISO 8601
+// TOTAL DE CURSOS BÍBLICOS DEL MES
 // =========================================================
 
-function fechaISO8601Valida(
-    valor
-) {
+function obtenerCursosBiblicosMesActual() {
 
-    if (valor) {
-
-        const fecha =
-            new Date(
-                valor
-            );
+    const hoy =
+        new Date();
 
 
-        if (
-            !Number.isNaN(
-                fecha.getTime()
-            )
-        ) {
+    return estado.registros
+        .filter(
+            registro => {
 
-            return fecha
-                .toISOString();
-        }
-    }
+                const fecha =
+                    fechaDesdeISO(
+                        registro.fecha
+                    );
 
 
-    return new Date()
-        .toISOString();
+                return (
+                    fecha.getFullYear() ===
+                        hoy.getFullYear()
+                    &&
+                    fecha.getMonth() ===
+                        hoy.getMonth()
+                );
+            }
+        )
+        .reduce(
+            (
+                total,
+                registro
+            ) => {
+
+                return (
+                    total +
+                    Math.max(
+                        Number(
+                            registro.cursosBiblicos
+                        ) || 0,
+                        0
+                    )
+                );
+            },
+            0
+        );
 }
 
 
 // =========================================================
-// FIN SINCRONIZACIÓN WEB → IOS
+// ACTUALIZAR CURSOS BÍBLICOS EN INICIO
 // =========================================================
+
+function actualizarCursosBiblicosInicio() {
+
+    const elemento =
+        document.getElementById(
+            "totalCursosBiblicos"
+        );
+
+
+    if (!elemento) {
+        return;
+    }
+
+
+    elemento.textContent =
+        String(
+            obtenerCursosBiblicosMesActual()
+        );
+}
 
 
 // =========================================================
@@ -4942,10 +5228,11 @@ function crearDatosCopiaSeguridad() {
             "mi-servicio-backup",
 
         version:
-            1,
+            2,
 
         exportadoEn:
-            new Date().toISOString(),
+            new Date()
+                .toISOString(),
 
         registros:
             estado.registros,
@@ -4957,27 +5244,15 @@ function crearDatosCopiaSeguridad() {
 
 
 // =========================================================
-// EXPORTAR COPIA DE SEGURIDAD
+// DESCARGAR ARCHIVO JSON
 // =========================================================
 
-function exportarCopiaSeguridad() {
-
-    const mensaje =
-        document.getElementById(
-            "mensajeDatos"
-        );
-
-
-    limpiarMensajeFormulario(
-        mensaje
-    );
-
+function descargarJSON(
+    datos,
+    nombreArchivo
+) {
 
     try {
-
-        const datos =
-            crearDatosCopiaSeguridad();
-
 
         const contenido =
             JSON.stringify(
@@ -5009,19 +5284,11 @@ function exportarCopiaSeguridad() {
             );
 
 
-        const fecha =
-            fechaLocalISO(
-                new Date()
-            );
-
-
         enlace.href =
             url;
 
-
         enlace.download =
-            `Mi-Servicio-${fecha}.json`;
-
+            nombreArchivo;
 
         enlace.style.display =
             "none";
@@ -5035,45 +5302,361 @@ function exportarCopiaSeguridad() {
         enlace.click();
 
 
-        // Dejamos un pequeño margen antes
-        // de destruir la URL.
-        // Es más fiable en Safari/iPhone.
-
-        window.setTimeout(
+        setTimeout(
             () => {
 
                 URL.revokeObjectURL(
                     url
                 );
 
-
                 enlace.remove();
 
             },
-            1500
+            2000
         );
 
 
-        mostrarMensajeFormulario(
-            mensaje,
-            "Copia de seguridad preparada ✓",
-            false
-        );
+        return true;
 
     } catch (error) {
 
         console.error(
-            "Error al exportar:",
+            "Error al descargar:",
+            error
+        );
+
+
+        return false;
+    }
+}
+
+
+// =========================================================
+// EXPORTAR COPIA DE SEGURIDAD
+// =========================================================
+
+function exportarCopiaSeguridad() {
+
+    const mensaje =
+        document.getElementById(
+            "mensajeDatos"
+        );
+
+
+    limpiarMensajeFormulario(
+        mensaje
+    );
+
+
+    const datos =
+        crearDatosCopiaSeguridad();
+
+
+    const correcto =
+        descargarJSON(
+            datos,
+            `Mi-Servicio-${fechaLocalISO(new Date())}.json`
+        );
+
+
+    mostrarMensajeFormulario(
+        mensaje,
+        correcto
+            ? "Copia de seguridad preparada ✓"
+            : "No se pudo crear la copia de seguridad.",
+        !correcto
+    );
+}
+
+
+// =========================================================
+// EXPORTAR PARA IPHONE
+// =========================================================
+
+function exportarSincronizacionIPhone() {
+
+    const mensaje =
+        document.getElementById(
+            "mensajeDatos"
+        );
+
+
+    limpiarMensajeFormulario(
+        mensaje
+    );
+
+
+    try {
+
+        const ahora =
+            new Date()
+                .toISOString();
+
+
+        const registros =
+            estado.registros
+                .filter(
+                    registro =>
+                        Number(
+                            registro.minutos
+                        ) > 0
+                )
+                .map(
+                    registro => {
+
+                        const tipo =
+                            normalizarTipoSincronizacion(
+                                registro.tipo
+                            );
+
+
+                        const resultado = {
+
+                            id:
+                                String(
+                                    registro.id ||
+                                    crearID()
+                                ),
+
+                            fecha:
+                                convertirFechaWebAISO8601(
+                                    registro.fecha
+                                ),
+
+                            minutos:
+                                Math.max(
+                                    Math.round(
+                                        Number(
+                                            registro.minutos
+                                        ) || 0
+                                    ),
+                                    0
+                                ),
+
+                            tipo,
+
+                            notas:
+                                String(
+                                    registro.notas ||
+                                    ""
+                                ),
+
+                            actividadPersonalizadaID:
+                                null,
+
+                            nombreActividadPersonalizada:
+                                null,
+
+                            creadoEn:
+                                normalizarFechaSincronizacion(
+                                    registro.creadoEn
+                                ) ||
+                                ahora,
+
+                            modificadoEn:
+                                normalizarFechaSincronizacion(
+                                    registro.modificadoEn
+                                ) ||
+                                normalizarFechaSincronizacion(
+                                    registro.creadoEn
+                                ) ||
+                                ahora,
+
+                            estado:
+                                "pendiente",
+
+                            cursosBiblicos:
+                                Math.max(
+                                    Math.floor(
+                                        Number(
+                                            registro.cursosBiblicos
+                                        ) || 0
+                                    ),
+                                    0
+                                )
+                        };
+
+
+                        if (
+                            tipo ===
+                            "otras"
+                        ) {
+
+                            resultado
+                                .actividadPersonalizadaID =
+                                    registro
+                                        .actividadPersonalizadaID ||
+                                    null;
+
+
+                            resultado
+                                .nombreActividadPersonalizada =
+                                    String(
+                                        registro
+                                            .nombreActividadPersonalizada ||
+                                        registro
+                                            .nombreActividad ||
+                                        "Otra actividad"
+                                    )
+                                    .trim() ||
+                                    "Otra actividad";
+                        }
+
+
+                        return resultado;
+                    }
+                )
+                .filter(
+                    registro =>
+                        Boolean(
+                            registro.fecha
+                        )
+                );
+
+
+        const paquete = {
+
+            version:
+                2,
+
+            generadoEn:
+                ahora,
+
+            registros
+        };
+
+
+        const correcto =
+            descargarJSON(
+                paquete,
+                `Mi-Servicio-iPhone-${fechaLocalISO(new Date())}.json`
+            );
+
+
+        mostrarMensajeFormulario(
+            mensaje,
+            correcto
+                ? `Archivo para iPhone preparado: ${textoCantidadRegistros(registros.length)} ✓`
+                : "No se pudo preparar el archivo para iPhone.",
+            !correcto
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Error al exportar para iPhone:",
             error
         );
 
 
         mostrarMensajeFormulario(
             mensaje,
-            "No se pudo crear la copia de seguridad.",
+            "No se pudo preparar el archivo para iPhone.",
             true
         );
     }
+}
+
+
+// =========================================================
+// CONVERTIR FECHA WEB A ISO8601
+// =========================================================
+
+function convertirFechaWebAISO8601(
+    fechaTexto
+) {
+
+    if (
+        !fechaISOValida(
+            fechaTexto
+        )
+    ) {
+
+        return null;
+    }
+
+
+    const [
+        anio,
+        mes,
+        dia
+    ] =
+        fechaTexto
+            .split("-")
+            .map(Number);
+
+
+    return new Date(
+        Date.UTC(
+            anio,
+            mes - 1,
+            dia,
+            12,
+            0,
+            0,
+            0
+        )
+    )
+    .toISOString();
+}
+
+
+// =========================================================
+// NORMALIZAR FECHA DE SINCRONIZACIÓN
+// =========================================================
+
+function normalizarFechaSincronizacion(
+    valor
+) {
+
+    if (!valor) {
+        return null;
+    }
+
+
+    const fecha =
+        new Date(
+            valor
+        );
+
+
+    if (
+        Number.isNaN(
+            fecha.getTime()
+        )
+    ) {
+
+        return null;
+    }
+
+
+    return fecha
+        .toISOString();
+}
+
+
+// =========================================================
+// NORMALIZAR TIPO PARA IPHONE
+// =========================================================
+
+function normalizarTipoSincronizacion(
+    tipo
+) {
+
+    const tipos = [
+        "ministerio",
+        "ldc",
+        "asambleas",
+        "otras"
+    ];
+
+
+    return tipos.includes(
+        tipo
+    )
+        ? tipo
+        : "ministerio";
 }
 
 
@@ -5109,98 +5692,151 @@ async function importarCopiaSeguridad(
 
 
         if (
-            !validarCopiaSeguridad(
-                datos
+            !datos ||
+            typeof datos !==
+                "object" ||
+            !Array.isArray(
+                datos.registros
             )
         ) {
 
-            mostrarMensajeFormulario(
-                mensaje,
-                "El archivo no es una copia válida de Mi Servicio.",
-                true
+            throw new Error(
+                "Formato incorrecto"
             );
-
-            return;
         }
 
 
-        const registrosImportados =
-            normalizarRegistrosImportados(
-                datos.registros
-            );
+        const registros =
+            datos.registros
+                .filter(
+                    registro =>
+                        registro &&
+                        typeof registro ===
+                            "object"
+                )
+                .map(
+                    registro => {
+
+                        const ahora =
+                            new Date()
+                                .toISOString();
 
 
-        const preferenciasImportadas =
-            normalizarPreferenciasImportadas(
-                datos.preferencias
-            );
+                        return {
 
+                            ...registro,
 
-        // Guardamos una copia temporal
-        // por si falla localStorage.
+                            id:
+                                registro.id ||
+                                crearID(),
 
-        const registrosAnteriores =
-            estado.registros;
+                            fecha:
+                                fechaISOValida(
+                                    registro.fecha
+                                )
+                                    ? registro.fecha
+                                    : fechaLocalISO(
+                                        new Date()
+                                    ),
 
+                            tipo:
+                                normalizarTipoSincronizacion(
+                                    registro.tipo
+                                ),
 
-        const preferenciasAnteriores =
-            estado.preferencias;
+                            minutos:
+                                Math.max(
+                                    Math.round(
+                                        Number(
+                                            registro.minutos
+                                        ) || 0
+                                    ),
+                                    0
+                                ),
+
+                            notas:
+                                String(
+                                    registro.notas ||
+                                    ""
+                                ),
+
+                            cursosBiblicos:
+                                Math.max(
+                                    Math.floor(
+                                        Number(
+                                            registro.cursosBiblicos
+                                        ) || 0
+                                    ),
+                                    0
+                                ),
+
+                            creadoEn:
+                                registro.creadoEn ||
+                                ahora,
+
+                            modificadoEn:
+                                registro.modificadoEn ||
+                                registro.creadoEn ||
+                                ahora
+                        };
+                    }
+                );
 
 
         estado.registros =
-            registrosImportados;
-
-
-        estado.preferencias =
-            preferenciasImportadas;
-
-
-        const registrosGuardados =
-            guardarRegistros();
-
-
-        const preferenciasGuardadas =
-            guardarPreferencias();
+            registros;
 
 
         if (
-            !registrosGuardados ||
-            !preferenciasGuardadas
+            datos.preferencias &&
+            typeof datos.preferencias ===
+                "object"
         ) {
 
-            estado.registros =
-                registrosAnteriores;
+            estado.preferencias = {
 
+                tipoPublicador:
+                    [
+                        "publicador",
+                        "precursorAuxiliar",
+                        "precursorRegular"
+                    ].includes(
+                        datos.preferencias
+                            .tipoPublicador
+                    )
+                        ? datos.preferencias
+                            .tipoPublicador
+                        : "publicador",
 
-            estado.preferencias =
-                preferenciasAnteriores;
-
-
-            guardarRegistros();
-            guardarPreferencias();
-
-
-            mostrarMensajeFormulario(
-                mensaje,
-                "No se pudieron guardar los datos importados.",
-                true
-            );
-
-            return;
+                objetivoMensualMinutos:
+                    Math.max(
+                        Math.round(
+                            Number(
+                                datos.preferencias
+                                    .objetivoMensualMinutos
+                            ) || 0
+                        ),
+                        0
+                    )
+            };
         }
 
 
-        cargarFormularioAjustes();
+        guardarRegistros();
+        guardarPreferencias();
 
+
+        cargarFormularioAjustes();
 
         actualizarTodaLaInterfaz();
 
 
         mostrarMensajeFormulario(
             mensaje,
-            `Copia importada correctamente: ${textoCantidadRegistros(registrosImportados.length)} ✓`,
+            `Copia importada correctamente: ${textoCantidadRegistros(registros.length)} ✓`,
             false
         );
+
 
     } catch (error) {
 
@@ -5220,239 +5856,7 @@ async function importarCopiaSeguridad(
 
 
 // =========================================================
-// VALIDAR COPIA DE SEGURIDAD
-// =========================================================
-
-function validarCopiaSeguridad(
-    datos
-) {
-
-    if (
-        !datos ||
-        typeof datos !==
-            "object"
-    ) {
-
-        return false;
-    }
-
-
-    if (
-        !Array.isArray(
-            datos.registros
-        )
-    ) {
-
-        return false;
-    }
-
-
-    if (
-        !datos.preferencias ||
-        typeof datos.preferencias !==
-            "object"
-    ) {
-
-        return false;
-    }
-
-
-    // Si es una copia nueva comprobamos
-    // también el identificador del formato.
-    //
-    // Si no existe, permitimos copias antiguas.
-
-    if (
-        datos.formato &&
-        datos.formato !==
-            "mi-servicio-backup"
-    ) {
-
-        return false;
-    }
-
-
-    return true;
-}
-
-
-// =========================================================
-// NORMALIZAR REGISTROS IMPORTADOS
-// =========================================================
-
-function normalizarRegistrosImportados(
-    registros
-) {
-
-    const resultado = [];
-
-
-    registros.forEach(
-        registro => {
-
-            if (
-                !registro ||
-                typeof registro !==
-                    "object"
-            ) {
-
-                return;
-            }
-
-
-            const fecha =
-                String(
-                    registro.fecha || ""
-                );
-
-
-            if (
-                !fechaISOValida(
-                    fecha
-                )
-            ) {
-
-                return;
-            }
-
-
-            const tiposValidos = [
-                "ministerio",
-                "ldc",
-                "asambleas",
-                "otras"
-            ];
-
-
-            const tipo =
-                tiposValidos.includes(
-                    registro.tipo
-                )
-                    ? registro.tipo
-                    : "ministerio";
-
-
-            const minutos =
-                Math.max(
-                    Math.round(
-                        Number(
-                            registro.minutos
-                        ) || 0
-                    ),
-                    0
-                );
-
-
-            if (
-                minutos <= 0
-            ) {
-                return;
-            }
-
-
-            const ahora =
-                new Date()
-                    .toISOString();
-
-
-            resultado.push({
-
-                id:
-                    registro.id ||
-                    crearID(),
-
-                fecha,
-
-                tipo,
-
-                minutos,
-
-                notas:
-                    typeof registro.notas ===
-                        "string"
-                        ? registro.notas
-                        : "",
-
-                creadoEn:
-                    registro.creadoEn ||
-                    ahora,
-
-                modificadoEn:
-                    registro.modificadoEn ||
-                    registro.creadoEn ||
-                    ahora,
-
-                sincronizacion: {
-
-                    estado:
-                        "pendiente",
-
-                    ultimaSincronizacion:
-                        registro
-                            .sincronizacion
-                            ?.ultimaSincronizacion ||
-                        null
-                }
-            });
-        }
-    );
-
-
-    return resultado;
-}
-
-
-// =========================================================
-// NORMALIZAR PREFERENCIAS IMPORTADAS
-// =========================================================
-
-function normalizarPreferenciasImportadas(
-    preferencias
-) {
-
-    const tiposValidos = [
-        "publicador",
-        "precursorAuxiliar",
-        "precursorRegular"
-    ];
-
-
-    const tipo =
-        tiposValidos.includes(
-            preferencias
-                ?.tipoPublicador
-        )
-            ? preferencias
-                .tipoPublicador
-            : "publicador";
-
-
-    const objetivo =
-        Math.max(
-            Math.round(
-                Number(
-                    preferencias
-                        ?.objetivoMensualMinutos
-                ) || 0
-            ),
-            0
-        );
-
-
-    return {
-
-        tipoPublicador:
-            tipo,
-
-        objetivoMensualMinutos:
-            objetivo
-    };
-}
-
-
-// =========================================================
-// VALIDAR FECHA ISO LOCAL
-// YYYY-MM-DD
+// VALIDAR FECHA YYYY-MM-DD
 // =========================================================
 
 function fechaISOValida(
@@ -5460,10 +5864,16 @@ function fechaISOValida(
 ) {
 
     if (
+        typeof texto !==
+            "string"
+    ) {
+        return false;
+    }
+
+
+    if (
         !/^\d{4}-\d{2}-\d{2}$/
-            .test(
-                texto
-            )
+            .test(texto)
     ) {
 
         return false;
@@ -5476,17 +5886,11 @@ function fechaISOValida(
         );
 
 
-    if (
-        Number.isNaN(
+    return (
+        !Number.isNaN(
             fecha.getTime()
         )
-    ) {
-
-        return false;
-    }
-
-
-    return (
+        &&
         fechaLocalISO(
             fecha
         ) === texto
@@ -5495,33 +5899,7 @@ function fechaISOValida(
 
 
 // =========================================================
-// ACTUALIZACIÓN GENERAL
-// =========================================================
-
-function actualizarTodaLaInterfaz() {
-    
-    actualizarInicio();
-
-    actualizarGraficoInicio();
-    
-    renderizarHistorial();
-
-    actualizarEstadisticas();
-}
-
-
-// =========================================================
-// FIN BLOQUE 5
-// =========================================================
-
-// =========================================================
-// BLOQUE 6
-// UTILIDADES GENERALES
-// =========================================================
-
-
-// =========================================================
-// CONVERTIR HORAS + MINUTOS A MINUTOS
+// UTILIDADES
 // =========================================================
 
 function minutosTotales(
@@ -5529,30 +5907,19 @@ function minutosTotales(
     minutos
 ) {
 
-    const horasValidas =
+    return Math.round(
         Math.max(
             Number(horas) || 0,
             0
-        );
-
-
-    const minutosValidos =
+        ) * 60
+        +
         Math.max(
             Number(minutos) || 0,
             0
-        );
-
-
-    return Math.round(
-        horasValidas * 60 +
-        minutosValidos
+        )
     );
 }
 
-
-// =========================================================
-// SUMAR MINUTOS DE REGISTROS
-// =========================================================
 
 function sumarMinutos(
     registros
@@ -5563,44 +5930,26 @@ function sumarMinutos(
             registros
         )
     ) {
-
         return 0;
     }
 
 
     return registros.reduce(
         (
-            acumulado,
+            total,
             registro
-        ) => {
-
-            const minutos =
-                Math.max(
-                    Number(
-                        registro?.minutos
-                    ) || 0,
-                    0
-                );
-
-
-            return (
-                acumulado +
-                minutos
-            );
-        },
+        ) =>
+            total +
+            Math.max(
+                Number(
+                    registro?.minutos
+                ) || 0,
+                0
+            ),
         0
     );
 }
 
-
-// =========================================================
-// FORMATEAR TIEMPO
-//
-// 0       → 0 min
-// 45      → 45 min
-// 60      → 1 h
-// 135     → 2 h 15 min
-// =========================================================
 
 function formatearTiempo(
     totalMinutos
@@ -5622,7 +5971,6 @@ function formatearTiempo(
             total / 60
         );
 
-
     const minutos =
         total % 60;
 
@@ -5643,15 +5991,140 @@ function formatearTiempo(
     }
 
 
-    return (
-        `${horas} h ${minutos} min`
+    return `${horas} h ${minutos} min`;
+}
+
+
+function formatearTiempoGrafico(
+    totalMinutos
+) {
+
+    const total =
+        Math.max(
+            Math.round(
+                Number(
+                    totalMinutos
+                ) || 0
+            ),
+            0
+        );
+
+
+    const horas =
+        Math.floor(
+            total / 60
+        );
+
+    const minutos =
+        total % 60;
+
+
+    if (horas === 0) {
+
+        return `${minutos}m`;
+    }
+
+
+    if (minutos === 0) {
+
+        return `${horas}h`;
+    }
+
+
+    return `${horas}h${minutos}`;
+}
+
+
+function fechaDesdeISO(
+    fechaISO
+) {
+
+    const partes =
+        String(
+            fechaISO || ""
+        )
+        .split("-")
+        .map(Number);
+
+
+    if (
+        partes.length !== 3
+    ) {
+
+        return new Date(
+            fechaISO
+        );
+    }
+
+
+    const [
+        anio,
+        mes,
+        dia
+    ] = partes;
+
+
+    return new Date(
+        anio,
+        mes - 1,
+        dia,
+        12,
+        0,
+        0,
+        0
     );
 }
 
 
-// =========================================================
-// FORMATEAR FECHA
-// =========================================================
+function fechaLocalISO(
+    fecha
+) {
+
+    if (
+        !(fecha instanceof Date) ||
+        Number.isNaN(
+            fecha.getTime()
+        )
+    ) {
+        return "";
+    }
+
+
+    const anio =
+        fecha.getFullYear();
+
+    const mes =
+        String(
+            fecha.getMonth() + 1
+        )
+        .padStart(
+            2,
+            "0"
+        );
+
+    const dia =
+        String(
+            fecha.getDate()
+        )
+        .padStart(
+            2,
+            "0"
+        );
+
+
+    return `${anio}-${mes}-${dia}`;
+}
+
+
+function copiarFecha(
+    fecha
+) {
+
+    return new Date(
+        fecha.getTime()
+    );
+}
+
 
 function formatearFecha(
     fechaISO
@@ -5682,217 +6155,66 @@ function formatearFecha(
                 month: "long",
                 year: "numeric"
             }
-        ).format(
+        )
+        .format(
             fecha
         )
     );
 }
 
 
-// =========================================================
-// CONVERTIR YYYY-MM-DD A DATE
-//
-// Usamos las 12:00 para evitar problemas de zona horaria
-// y cambios de horario de verano.
-// =========================================================
-
-function fechaDesdeISO(
-    fechaISO
-) {
-
-    const partes =
-        String(
-            fechaISO || ""
-        )
-            .split("-")
-            .map(
-                Number
-            );
-
-
-    if (
-        partes.length !== 3 ||
-        partes.some(
-            numero =>
-                !Number.isFinite(
-                    numero
-                )
-        )
-    ) {
-
-        return new Date(
-            fechaISO
-        );
-    }
-
-
-    const [
-        anio,
-        mes,
-        dia
-    ] = partes;
-
-
-    return new Date(
-        anio,
-        mes - 1,
-        dia,
-        12,
-        0,
-        0,
-        0
-    );
-}
-
-
-// =========================================================
-// CONVERTIR DATE A YYYY-MM-DD
-// EN HORA LOCAL
-// =========================================================
-
-function fechaLocalISO(
-    fecha
-) {
-
-    if (
-        !(fecha instanceof Date) ||
-        Number.isNaN(
-            fecha.getTime()
-        )
-    ) {
-
-        return "";
-    }
-
-
-    const anio =
-        fecha.getFullYear();
-
-
-    const mes =
-        String(
-            fecha.getMonth() + 1
-        ).padStart(
-            2,
-            "0"
-        );
-
-
-    const dia =
-        String(
-            fecha.getDate()
-        ).padStart(
-            2,
-            "0"
-        );
-
-
-    return (
-        `${anio}-${mes}-${dia}`
-    );
-}
-
-
-// =========================================================
-// COPIAR FECHA
-// =========================================================
-
-function copiarFecha(
-    fecha
-) {
-
-    return new Date(
-        fecha.getTime()
-    );
-}
-
-
-// =========================================================
-// NOMBRE DE ACTIVIDAD
-// =========================================================
-
 function nombreActividad(
     tipo
 ) {
 
-    switch (
-        tipo
-    ) {
+    const nombres = {
 
-        case "ministerio":
+        ministerio:
+            "Ministerio",
 
-            return "Ministerio";
+        ldc:
+            "LDC",
 
+        asambleas:
+            "Asambleas",
 
-        case "ldc":
+        otras:
+            "Otras",
 
-            return "LDC";
-
-
-        case "asambleas":
-
-            return "Asambleas";
-
-
-        case "otras":
-
-            return "Otras";
+        todos:
+            "actividad"
+    };
 
 
-        case "todos":
-
-            return "actividad";
-
-
-        default:
-
-            return "Actividad";
-    }
+    return nombres[tipo] ||
+        "Actividad";
 }
 
-
-// =========================================================
-// ICONO DE ACTIVIDAD
-// =========================================================
 
 function iconoActividad(
     tipo
 ) {
 
-    switch (
-        tipo
-    ) {
+    const iconos = {
 
-        case "ministerio":
+        ministerio:
+            "✦",
 
-            return "✦";
+        ldc:
+            "⌂",
 
+        asambleas:
+            "◆",
 
-        case "ldc":
-
-            return "⌂";
-
-
-        case "asambleas":
-
-            return "◆";
+        otras:
+            "＋"
+    };
 
 
-        case "otras":
-
-            return "＋";
-
-
-        default:
-
-            return "•";
-    }
+    return iconos[tipo] ||
+        "•";
 }
 
-
-// =========================================================
-// TEXTO NÚMERO DE REGISTROS
-// =========================================================
 
 function textoCantidadRegistros(
     cantidad
@@ -5912,10 +6234,6 @@ function textoCantidadRegistros(
         : `${numero} registros`;
 }
 
-
-// =========================================================
-// PONER TEXTO DE FORMA SEGURA
-// =========================================================
 
 function ponerTexto(
     id,
@@ -5937,10 +6255,6 @@ function ponerTexto(
         texto ?? "";
 }
 
-
-// =========================================================
-// CAPITALIZAR PRIMERA LETRA
-// =========================================================
 
 function capitalizar(
     texto
@@ -5966,10 +6280,6 @@ function capitalizar(
 }
 
 
-// =========================================================
-// CREAR IDENTIFICADOR ÚNICO
-// =========================================================
-
 function crearID() {
 
     if (
@@ -5978,9 +6288,8 @@ function crearID() {
             "function"
     ) {
 
-        return (
-            window.crypto.randomUUID()
-        );
+        return window.crypto
+            .randomUUID();
     }
 
 
@@ -5993,945 +6302,26 @@ function crearID() {
         Math.random()
             .toString(36)
             .slice(2)
-        +
-        "-"
-        +
-        Math.random()
-            .toString(36)
-            .slice(2)
     );
 }
 
 
 // =========================================================
-// COMPROBAR DISPONIBILIDAD DE LOCALSTORAGE
+// ACTUALIZACIÓN GENERAL
 // =========================================================
 
-function almacenamientoDisponible() {
+function actualizarTodaLaInterfaz() {
 
-    const clavePrueba =
-        "__miServicioPrueba__";
+    actualizarInicio();
 
+    actualizarCursosBiblicosInicio();
 
-    try {
+    renderizarHistorial();
 
-        localStorage.setItem(
-            clavePrueba,
-            "1"
-        );
-
-
-        localStorage.removeItem(
-            clavePrueba
-        );
-
-
-        return true;
-
-    } catch (error) {
-
-        console.error(
-            "localStorage no está disponible:",
-            error
-        );
-
-
-        return false;
-    }
+    actualizarEstadisticas();
 }
 
 
 // =========================================================
-// INFORMACIÓN DE DIAGNÓSTICO
+// FIN PARTE 4/4
 // =========================================================
-
-function diagnosticoMiServicio() {
-
-    const resultado = {
-
-        almacenamiento:
-            almacenamientoDisponible(),
-
-        registros:
-            estado.registros.length,
-
-        vista:
-            estado.vistaActual,
-
-        periodoEstadisticas:
-            estado.estadisticas.periodo,
-
-        objetivoMensualMinutos:
-            estado.preferencias
-                .objetivoMensualMinutos,
-
-        version:
-            "1.0"
-    };
-
-
-    console.table(
-        resultado
-    );
-
-
-    return resultado;
-}
-
-
-// =========================================================
-// FIN BLOQUE 6
-// =========================================================
-// =========================================================
-// BLOQUE 7
-// SINCRONIZACIÓN CON IPHONE
-// =========================================================
-
-
-// =========================================================
-// CONFIGURAR SINCRONIZACIÓN IPHONE
-// =========================================================
-
-function configurarSincronizacionIPhone() {
-
-    const boton =
-        document.getElementById(
-            "exportarIPhone"
-        );
-
-
-    if (!boton) {
-
-        console.warn(
-            "No se encontró el botón exportarIPhone."
-        );
-
-        return;
-    }
-
-
-    boton.addEventListener(
-        "click",
-        exportarSincronizacionIPhone
-    );
-
-
-    console.log(
-        "Exportación para iPhone preparada."
-    );
-}
-
-
-// =========================================================
-// EXPORTAR PARA IPHONE
-// =========================================================
-
-function exportarSincronizacionIPhone() {
-
-    const mensaje =
-        document.getElementById(
-            "mensajeDatos"
-        );
-
-
-    limpiarMensajeFormulario(
-        mensaje
-    );
-
-
-    try {
-
-        const registros =
-            estado.registros
-                .filter(
-                    registro => {
-
-                        return (
-                            Number(
-                                registro.minutos
-                            ) > 0
-                        );
-                    }
-                )
-                .map(
-                    registro => {
-
-                        const ahora =
-                            new Date()
-                                .toISOString();
-
-
-                        const registroSync = {
-
-                            id:
-                                String(
-                                    registro.id ||
-                                    crearID()
-                                ),
-
-                            fecha:
-                                convertirFechaWebAISO8601(
-                                    registro.fecha
-                                ),
-
-                            minutos:
-                                Math.max(
-                                    Math.round(
-                                        Number(
-                                            registro.minutos
-                                        ) || 0
-                                    ),
-                                    0
-                                ),
-
-                            tipo:
-                                normalizarTipoSincronizacion(
-                                    registro.tipo
-                                ),
-
-                            notas:
-                                String(
-                                    registro.notas ||
-                                    ""
-                                ),
-
-                            actividadPersonalizadaID:
-                                null,
-
-                            nombreActividadPersonalizada:
-                                null,
-
-                            creadoEn:
-                                normalizarFechaSincronizacion(
-                                    registro.creadoEn
-                                ) ||
-                                ahora,
-
-                            modificadoEn:
-                                normalizarFechaSincronizacion(
-                                    registro.modificadoEn
-                                ) ||
-                                normalizarFechaSincronizacion(
-                                    registro.creadoEn
-                                ) ||
-                                ahora,
-
-                            estado:
-                                "pendiente"
-                        };
-
-
-                        // -----------------------------------------
-                        // OTRAS ACTIVIDADES
-                        // -----------------------------------------
-
-                        if (
-                            registro.tipo ===
-                            "otras"
-                        ) {
-
-                            registroSync
-                                .actividadPersonalizadaID =
-                                    registro
-                                        .actividadPersonalizadaID
-                                    || null;
-
-
-                            const nombre =
-                                String(
-                                    registro
-                                        .nombreActividadPersonalizada
-                                    ||
-                                    registro
-                                        .nombreActividad
-                                    ||
-                                    "Otra actividad"
-                                )
-                                .trim();
-
-
-                            registroSync
-                                .nombreActividadPersonalizada =
-                                    nombre ||
-                                    "Otra actividad";
-                        }
-
-
-                        return registroSync;
-                    }
-                )
-                .filter(
-                    registro => {
-
-                        return Boolean(
-                            registro.fecha
-                        );
-                    }
-                );
-
-
-        // =====================================================
-        // PAQUETE COMPATIBLE CON SyncPackage DE SWIFT
-        // =====================================================
-
-        const paquete = {
-
-            version:
-                2,
-
-            generadoEn:
-                new Date()
-                    .toISOString(),
-
-            registros:
-                registros
-        };
-
-
-        // =====================================================
-        // CONVERTIR A JSON
-        // =====================================================
-
-        const contenido =
-            JSON.stringify(
-                paquete,
-                null,
-                2
-            );
-
-
-        // =====================================================
-        // CREAR ARCHIVO
-        // =====================================================
-
-        const blob =
-            new Blob(
-                [
-                    contenido
-                ],
-                {
-                    type:
-                        "application/json;charset=utf-8"
-                }
-            );
-
-
-        const url =
-            URL.createObjectURL(
-                blob
-            );
-
-
-        const enlace =
-            document.createElement(
-                "a"
-            );
-
-
-        enlace.href =
-            url;
-
-
-        enlace.download =
-            `Mi-Servicio-iPhone-${fechaLocalISO(new Date())}.json`;
-
-
-        enlace.style.display =
-            "none";
-
-
-        document.body.appendChild(
-            enlace
-        );
-
-
-        // =====================================================
-        // DESCARGAR
-        // =====================================================
-
-        enlace.click();
-
-
-        // =====================================================
-        // LIMPIAR
-        // =====================================================
-
-        window.setTimeout(
-            () => {
-
-                URL.revokeObjectURL(
-                    url
-                );
-
-
-                enlace.remove();
-
-            },
-            1500
-        );
-
-
-        // =====================================================
-        // CONFIRMACIÓN
-        // =====================================================
-
-        mostrarMensajeFormulario(
-            mensaje,
-            `Archivo para iPhone preparado: ${textoCantidadRegistros(registros.length)} ✓`,
-            false
-        );
-
-
-        console.log(
-            "Archivo de sincronización creado:",
-            paquete
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "Error al exportar para iPhone:",
-            error
-        );
-
-
-        mostrarMensajeFormulario(
-            mensaje,
-            "No se pudo preparar el archivo para iPhone.",
-            true
-        );
-    }
-}
-
-
-// =========================================================
-// CONVERTIR FECHA WEB A ISO 8601
-//
-// Web:
-// 2026-08-21
-//
-// iPhone:
-// 2026-08-21T12:00:00.000Z
-// =========================================================
-
-function convertirFechaWebAISO8601(
-    fechaTexto
-) {
-
-    if (
-        !fechaISOValida(
-            fechaTexto
-        )
-    ) {
-
-        return null;
-    }
-
-
-    const partes =
-        fechaTexto
-            .split("-")
-            .map(
-                Number
-            );
-
-
-    const anio =
-        partes[0];
-
-
-    const mes =
-        partes[1];
-
-
-    const dia =
-        partes[2];
-
-
-    return new Date(
-        Date.UTC(
-            anio,
-            mes - 1,
-            dia,
-            12,
-            0,
-            0,
-            0
-        )
-    )
-    .toISOString();
-}
-
-
-// =========================================================
-// NORMALIZAR FECHAS DE SINCRONIZACIÓN
-// =========================================================
-
-function normalizarFechaSincronizacion(
-    valor
-) {
-
-    if (!valor) {
-
-        return null;
-    }
-
-
-    const fecha =
-        new Date(
-            valor
-        );
-
-
-    if (
-        Number.isNaN(
-            fecha.getTime()
-        )
-    ) {
-
-        return null;
-    }
-
-
-    return fecha
-        .toISOString();
-}
-
-
-// =========================================================
-// NORMALIZAR TIPO
-// =========================================================
-
-function normalizarTipoSincronizacion(
-    tipo
-) {
-
-    switch (
-        tipo
-    ) {
-
-        case "ministerio":
-
-            return "ministerio";
-
-
-        case "ldc":
-
-            return "ldc";
-
-
-        case "asambleas":
-
-            return "asambleas";
-
-
-        case "otras":
-
-            return "otras";
-
-
-        default:
-
-            return "ministerio";
-    }
-}
-
-
-// =========================================================
-// FIN BLOQUE 7
-// =========================================================
-// =========================================================
-// GRÁFICO DE PROGRESO EN INICIO
-// =========================================================
-
-function actualizarGraficoInicio() {
-    const grafico = document.getElementById("graficoInicio");
-    const leyenda = document.getElementById("leyendaGraficoInicio");
-
-    if (!grafico || !leyenda) return;
-
-    const ahora = new Date();
-    const mesActual = ahora.getMonth();
-    const anioActual = ahora.getFullYear();
-
-    const registrosMes = estado.registros.filter(registro => {
-        const fecha = new Date(registro.fecha + "T12:00:00");
-
-        return (
-            fecha.getMonth() === mesActual &&
-            fecha.getFullYear() === anioActual
-        );
-    });
-
-    const tipos = [
-        { id: "ministerio", nombre: "Ministerio" },
-        { id: "ldc", nombre: "LDC" },
-        { id: "asambleas", nombre: "Asambleas" },
-        { id: "otras", nombre: "Otras" }
-    ];
-
-    const datos = tipos.map(tipo => {
-        const minutos = registrosMes
-            .filter(registro =>
-                normalizarTipoSincronizacion(registro.tipo) === tipo.id
-            )
-            .reduce((total, registro) => {
-                return total + Number(registro.minutos || 0);
-            }, 0);
-
-        return {
-            ...tipo,
-            minutos
-        };
-    });
-
-    // Ministerio siempre aparece.
-    // Las demás actividades solo aparecen si tienen tiempo registrado.
-    const visibles = datos.filter(
-        dato => dato.id === "ministerio" || dato.minutos > 0
-    );
-
-    const maximo = Math.max(
-        ...visibles.map(dato => dato.minutos),
-        1
-    );
-
-    grafico.innerHTML = "";
-    leyenda.innerHTML = "";
-
-    visibles.forEach(dato => {
-        const barra = document.createElement("div");
-        barra.className = "grafico-inicio-barra";
-
-        const altura =
-            dato.minutos === 0
-                ? 6
-                : Math.max(12, (dato.minutos / maximo) * 150);
-
-        barra.style.height = `${altura}px`;
-        barra.title = `${dato.nombre}: ${formatoTiempo(dato.minutos)}`;
-
-        grafico.appendChild(barra);
-
-        const texto = document.createElement("div");
-        texto.innerHTML =
-            `<strong>${formatoTiempo(dato.minutos)}</strong><br>${dato.nombre}`;
-
-        leyenda.appendChild(texto);
-    });
-}
-
-// =========================================================
-// FORMATO DE TIEMPO PARA GRÁFICO DE INICIO
-// =========================================================
-
-function formatoTiempo(minutos) {
-    const total = Math.max(0, Number(minutos) || 0);
-    const horas = Math.floor(total / 60);
-    const mins = total % 60;
-
-    if (horas === 0) {
-        return `${mins} min`;
-    }
-
-    if (mins === 0) {
-        return `${horas} h`;
-    }
-
-    return `${horas} h ${mins} min`;
-}
-document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(() => {
-        actualizarGraficoInicio();
-    }, 300);
-});
-
-// =========================================================
-// GRÁFICO CIRCULAR DE PROGRESO - INICIO
-// =========================================================
-
-function actualizarGraficoInicio() {
-
-    const grafico =
-        document.getElementById("graficoInicio");
-
-    const leyenda =
-        document.getElementById("leyendaGraficoInicio");
-
-
-    if (
-        !grafico ||
-        !leyenda
-    ) {
-        return;
-    }
-
-
-    // -----------------------------------------------------
-    // Registros del mes actual
-    // -----------------------------------------------------
-
-    const hoy =
-        new Date();
-
-
-    const registrosMes =
-        estado.registros.filter(
-            registro => {
-
-                const fecha =
-                    fechaDesdeISO(
-                        registro.fecha
-                    );
-
-
-                return (
-                    fecha.getFullYear() ===
-                        hoy.getFullYear()
-                    &&
-                    fecha.getMonth() ===
-                        hoy.getMonth()
-                );
-            }
-        );
-
-
-    // -----------------------------------------------------
-    // Totales por actividad
-    // -----------------------------------------------------
-
-    const datos = [
-
-        {
-            id: "ministerio",
-            nombre: "Ministerio",
-            minutos: sumarMinutos(
-                registrosMes.filter(
-                    registro =>
-                        registro.tipo ===
-                        "ministerio"
-                )
-            ),
-            clase: "grafico-color-ministerio"
-        },
-
-        {
-            id: "ldc",
-            nombre: "LDC",
-            minutos: sumarMinutos(
-                registrosMes.filter(
-                    registro =>
-                        registro.tipo ===
-                        "ldc"
-                )
-            ),
-            clase: "grafico-color-ldc"
-        },
-
-        {
-            id: "asambleas",
-            nombre: "Asambleas",
-            minutos: sumarMinutos(
-                registrosMes.filter(
-                    registro =>
-                        registro.tipo ===
-                        "asambleas"
-                )
-            ),
-            clase: "grafico-color-asambleas"
-        },
-
-        {
-            id: "otras",
-            nombre: "Otras",
-            minutos: sumarMinutos(
-                registrosMes.filter(
-                    registro =>
-                        registro.tipo ===
-                        "otras"
-                )
-            ),
-            clase: "grafico-color-otras"
-        }
-    ];
-
-
-    // -----------------------------------------------------
-    // Ocultar actividades sin horas
-    // Ministerio sí aparece siempre
-    // -----------------------------------------------------
-
-    const visibles =
-        datos.filter(
-            dato =>
-                dato.id === "ministerio" ||
-                dato.minutos > 0
-        );
-
-
-    const total =
-        sumarMinutos(
-            registrosMes
-        );
-
-
-    // -----------------------------------------------------
-    // Crear segmentos del círculo
-    // -----------------------------------------------------
-
-    let gradosAcumulados = 0;
-
-    const segmentos = [];
-
-
-    visibles.forEach(
-        dato => {
-
-            const grados =
-                total > 0
-                    ? (
-                        dato.minutos /
-                        total
-                    ) * 360
-                    : 0;
-
-
-            const inicio =
-                gradosAcumulados;
-
-
-            const fin =
-                gradosAcumulados +
-                grados;
-
-
-            let color = "var(--primary)";
-
-
-            switch (
-                dato.id
-            ) {
-
-                case "ldc":
-                    color = "var(--ldc)";
-                    break;
-
-                case "asambleas":
-                    color = "var(--assembly)";
-                    break;
-
-                case "otras":
-                    color = "var(--other)";
-                    break;
-            }
-
-
-            if (
-                dato.minutos > 0
-            ) {
-
-                segmentos.push(
-                    `${color} ${inicio}deg ${fin}deg`
-                );
-            }
-
-
-            gradosAcumulados =
-                fin;
-        }
-    );
-
-
-    // -----------------------------------------------------
-    // Estado sin actividad
-    // -----------------------------------------------------
-
-    if (
-        segmentos.length === 0
-    ) {
-
-        segmentos.push(
-            "rgba(120,120,128,0.15) 0deg 360deg"
-        );
-    }
-
-
-    // -----------------------------------------------------
-    // Dibujar gráfico
-    // -----------------------------------------------------
-
-    grafico.innerHTML = `
-        <div
-            class="grafico-inicio-anillo"
-            style="background: conic-gradient(${segmentos.join(",")});"
-        ></div>
-
-        <div class="grafico-inicio-centro">
-
-            <p class="grafico-inicio-total">
-                ${formatearTiempo(total)}
-            </p>
-
-            <span class="grafico-inicio-texto">
-                Total del mes
-            </span>
-
-        </div>
-    `;
-
-
-    // -----------------------------------------------------
-    // Leyenda
-    // -----------------------------------------------------
-
-    leyenda.innerHTML =
-        "";
-
-
-    visibles.forEach(
-        dato => {
-
-            if (
-                dato.id !== "ministerio" &&
-                dato.minutos <= 0
-            ) {
-                return;
-            }
-
-
-            const fila =
-                document.createElement(
-                    "div"
-                );
-
-
-            fila.className =
-                "leyenda-grafico-fila";
-
-
-            fila.innerHTML = `
-                <div class="leyenda-grafico-nombre">
-
-                    <span
-                        class="leyenda-grafico-punto ${dato.clase}"
-                    ></span>
-
-                    <span>
-                        ${dato.nombre}
-                    </span>
-
-                </div>
-
-                <strong class="leyenda-grafico-tiempo">
-                    ${formatearTiempo(dato.minutos)}
-                </strong>
-            `;
-
-
-            leyenda.appendChild(
-                fila
-            );
-        }
-    );
-}
