@@ -3139,7 +3139,32 @@ function actualizarEstadisticas() {
             )
         );
 
+const cursosBiblicos =
+    registros.reduce(
+        (total, registro) => {
 
+            if (
+                registro.tipo !==
+                "ministerio"
+            ) {
+                return total;
+            }
+
+            return (
+                total +
+                Math.max(
+                    0,
+                    Math.floor(
+                        Number(
+                            registro.cursosBiblicos
+                        ) || 0
+                    )
+                )
+            );
+        },
+        0
+    );
+    
     // -----------------------------------------------------
     // TOTALES
     // -----------------------------------------------------
@@ -3206,6 +3231,13 @@ function actualizarEstadisticas() {
     );
 
 
+    ponerTexto(
+    "estadisticasCursosBiblicos",
+    String(
+        cursosBiblicos
+    )
+);
+    
     // -----------------------------------------------------
     // PERIODO
     // -----------------------------------------------------
