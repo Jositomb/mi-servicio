@@ -175,7 +175,8 @@ document.addEventListener(
 // CARGAR DATOS
 // =========================================================
 
-estado.preferencias =
+function cargarDatos() {
+    estado.preferencias =
     leerJSON(
         STORAGE_KEYS.preferencias,
         {
