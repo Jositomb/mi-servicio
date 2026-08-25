@@ -5102,32 +5102,21 @@ function aplicarObjetivoSugerido() {
 function guardarAjustesDesdeFormulario() {
 
     const tipo =
-        document.getElementById(
-            "tipoPublicador"
-        );
+        document.getElementById("tipoPublicador");
 
     const objetivo =
-        document.getElementById(
-            "objetivoMensual"
-        );
+        document.getElementById("objetivoMensual");
 
     const mensaje =
-        document.getElementById(
-            "mensajeAjustes"
-        );
+        document.getElementById("mensajeAjustes");
 
 
-    if (
-        !tipo ||
-        !objetivo
-    ) {
+    if (!tipo || !objetivo) {
         return;
     }
 
 
-    limpiarMensajeFormulario(
-        mensaje
-    );
+    limpiarMensajeFormulario(mensaje);
 
 
     const tiposValidos = [
@@ -5137,11 +5126,7 @@ function guardarAjustesDesdeFormulario() {
     ];
 
 
-    if (
-        !tiposValidos.includes(
-            tipo.value
-        )
-    ) {
+    if (!tiposValidos.includes(tipo.value)) {
 
         mostrarMensajeFormulario(
             mensaje,
@@ -5154,9 +5139,7 @@ function guardarAjustesDesdeFormulario() {
 
 
     const horas =
-        Number(
-            objetivo.value
-        );
+        Number(objetivo.value);
 
 
     if (
@@ -5183,41 +5166,26 @@ function guardarAjustesDesdeFormulario() {
             tipo.value,
 
         objetivoMensualMinutos:
-            Math.round(
-                horas * 60
-            )
-        estado.preferencias = {
+            Math.round(horas * 60),
 
-    ...estado.preferencias,
+        mostrarLDC:
+            document.getElementById(
+                "mostrarLDC"
+            )?.checked ?? true,
 
-    tipoPublicador:
-        tipo.value,
+        mostrarAsambleas:
+            document.getElementById(
+                "mostrarAsambleas"
+            )?.checked ?? true,
 
-    objetivoMensualMinutos:
-        Math.round(
-            horas * 60
-        ),
-
-    mostrarLDC:
-        document.getElementById(
-            "mostrarLDC"
-        )?.checked ?? true,
-
-    mostrarAsambleas:
-        document.getElementById(
-            "mostrarAsambleas"
-        )?.checked ?? true,
-
-    mostrarOtras:
-        document.getElementById(
-            "mostrarOtras"
-        )?.checked ?? true
-};
+        mostrarOtras:
+            document.getElementById(
+                "mostrarOtras"
+            )?.checked ?? true
+    };
 
 
-    if (
-        !guardarPreferencias()
-    ) {
+    if (!guardarPreferencias()) {
 
         mostrarMensajeFormulario(
             mensaje,
@@ -5237,13 +5205,13 @@ function guardarAjustesDesdeFormulario() {
 
 
     actualizarInicio();
-    seleccionarActividad(
-    document.getElementById(
-        "tipoRegistro"
-    )?.value || "ministerio"
-);
-}
 
+    seleccionarActividad(
+        document.getElementById(
+            "tipoRegistro"
+        )?.value || "ministerio"
+    );
+}
 
 // =========================================================
 // CURSOS BÍBLICOS
