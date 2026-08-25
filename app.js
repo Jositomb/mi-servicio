@@ -830,8 +830,34 @@ function seleccionarActividad(
         tipo =
             "ministerio";
     }
+const actividadesDisponibles = {
+
+    ministerio:
+        true,
+
+    ldc:
+        estado.preferencias
+            .mostrarLDC !== false,
+
+    asambleas:
+        estado.preferencias
+            .mostrarAsambleas !== false,
+
+    otras:
+        estado.preferencias
+            .mostrarOtras !== false
+};
 
 
+if (
+    !actividadesDisponibles[
+        tipo
+    ]
+) {
+
+    tipo =
+        "ministerio";
+}
     const campoTipo =
         document.getElementById(
             "tipoRegistro"
