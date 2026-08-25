@@ -5177,7 +5177,33 @@ function guardarAjustesDesdeFormulario() {
             Math.round(
                 horas * 60
             )
-    };
+        estado.preferencias = {
+
+    ...estado.preferencias,
+
+    tipoPublicador:
+        tipo.value,
+
+    objetivoMensualMinutos:
+        Math.round(
+            horas * 60
+        ),
+
+    mostrarLDC:
+        document.getElementById(
+            "mostrarLDC"
+        )?.checked ?? true,
+
+    mostrarAsambleas:
+        document.getElementById(
+            "mostrarAsambleas"
+        )?.checked ?? true,
+
+    mostrarOtras:
+        document.getElementById(
+            "mostrarOtras"
+        )?.checked ?? true
+};
 
 
     if (
