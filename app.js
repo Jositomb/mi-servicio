@@ -175,15 +175,7 @@ document.addEventListener(
 // CARGAR DATOS
 // =========================================================
 
-function cargarDatos() {
-
-    estado.registros =
-        leerJSON(
-            STORAGE_KEYS.registros,
-            []
-        );
-
-    estado.preferencias =
+estado.preferencias =
     leerJSON(
         STORAGE_KEYS.preferencias,
         {
@@ -196,6 +188,13 @@ function cargarDatos() {
             mostrarLDC:
                 true,
 
+            mostrarAsambleas:
+                true,
+
+            mostrarOtras:
+                true
+        }
+    );
             mostrarAsambleas:
                 true,
 
