@@ -107,10 +107,14 @@ const estado = {
     cursosBiblicos: 0,
 
     preferencias: {
-        tipoPublicador: "publicador",
-        objetivoMensualMinutos: 0
-    },
+    tipoPublicador: "publicador",
+    objetivoMensualMinutos: 0,
 
+    mostrarLDC: true,
+    mostrarAsambleas: true,
+    mostrarOtras: true
+},
+    
     registroPendienteBorrar: null,
 
     estadisticas: {
