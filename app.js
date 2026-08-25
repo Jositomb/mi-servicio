@@ -238,6 +238,16 @@ if (
         .mostrarOtras =
             true;
 }
+    
+    // Compatibilidad con preferencias guardadas anteriormente
+
+estado.preferencias = {
+    mostrarLDC: true,
+    mostrarAsambleas: true,
+    mostrarOtras: true,
+    ...estado.preferencias
+};    
+    
     estado.cursosBiblicos =
         Math.max(
             0,
