@@ -187,12 +187,22 @@ function cargarDatos() {
         leerJSON(
             STORAGE_KEYS.preferencias,
             {
-                tipoPublicador:
-                    "publicador",
+                {
+    tipoPublicador:
+        "publicador",
 
-                objetivoMensualMinutos:
-                    0
-            }
+    objetivoMensualMinutos:
+        0,
+
+    mostrarLDC:
+        true,
+
+    mostrarAsambleas:
+        true,
+
+    mostrarOtras:
+        true
+}
         );
 
     estado.cursosBiblicos =
