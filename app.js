@@ -176,78 +176,35 @@ document.addEventListener(
 // =========================================================
 
 function cargarDatos() {
+
+    estado.registros =
+        leerJSON(
+            STORAGE_KEYS.registros,
+            []
+        );
+
     estado.preferencias =
-    leerJSON(
-        STORAGE_KEYS.preferencias,
-        {
-            tipoPublicador:
-                "publicador",
+        leerJSON(
+            STORAGE_KEYS.preferencias,
+            {
+                tipoPublicador:
+                    "publicador",
 
-            objetivoMensualMinutos:
-                0,
+                objetivoMensualMinutos:
+                    0,
 
-            mostrarLDC:
-                true,
+                mostrarLDC:
+                    true,
 
-            mostrarAsambleas:
-                true,
+                mostrarAsambleas:
+                    true,
 
-            mostrarOtras:
-                true
-        }
-    );
-            mostrarAsambleas:
-                true,
-
-            mostrarOtras:
-                true
-        }
-    );
-    
-    if (
-    typeof estado.preferencias
-        .mostrarLDC !==
-        "boolean"
-) {
-
-    estado.preferencias
-        .mostrarLDC =
-            true;
-}
+                mostrarOtras:
+                    true
+            }
+        );
 
 
-if (
-    typeof estado.preferencias
-        .mostrarAsambleas !==
-        "boolean"
-) {
-
-    estado.preferencias
-        .mostrarAsambleas =
-            true;
-}
-
-
-if (
-    typeof estado.preferencias
-        .mostrarOtras !==
-        "boolean"
-) {
-
-    estado.preferencias
-        .mostrarOtras =
-            true;
-}
-    
-    // Compatibilidad con preferencias guardadas anteriormente
-
-estado.preferencias = {
-    mostrarLDC: true,
-    mostrarAsambleas: true,
-    mostrarOtras: true,
-    ...estado.preferencias
-};    
-    
     estado.cursosBiblicos =
         Math.max(
             0,
@@ -262,10 +219,6 @@ estado.preferencias = {
         );
 
 
-    // -----------------------------------------
-    // Comprobar registros
-    // -----------------------------------------
-
     if (
         !Array.isArray(
             estado.registros
@@ -275,10 +228,6 @@ estado.preferencias = {
         estado.registros = [];
     }
 
-
-    // -----------------------------------------
-    // Comprobar preferencias
-    // -----------------------------------------
 
     if (
         !estado.preferencias ||
@@ -292,9 +241,33 @@ estado.preferencias = {
                 "publicador",
 
             objetivoMensualMinutos:
-                0
+                0,
+
+            mostrarLDC:
+                true,
+
+            mostrarAsambleas:
+                true,
+
+            mostrarOtras:
+                true
         };
     }
+
+
+    estado.preferencias = {
+
+        mostrarLDC:
+            true,
+
+        mostrarAsambleas:
+            true,
+
+        mostrarOtras:
+            true,
+
+        ...estado.preferencias
+    };
 
 
     if (
@@ -325,8 +298,6 @@ estado.preferencias = {
 
     normalizarRegistros();
 }
-
-
 // =========================================================
 // NORMALIZAR REGISTROS
 // =========================================================
