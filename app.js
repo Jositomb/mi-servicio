@@ -202,7 +202,9 @@ function cargarDatos() {
             mostrarOtras:
                 true
         }
-    );if (
+    );
+    
+    if (
     typeof estado.preferencias
         .mostrarLDC !==
         "boolean"
