@@ -2812,3 +2812,94 @@ textarea.campo {
     font-size: 13px;
     color: var(--text-secondary);
 }
+
+/* =========================================================
+   AJUSTES - ACTIVIDADES DISPONIBLES
+========================================================= */
+
+.ajustes-actividades {
+    overflow: hidden;
+
+    border: 1px solid var(--divider);
+    border-radius: 18px;
+
+    background: var(--card);
+}
+
+.ajuste-actividad {
+    min-height: 58px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 16px;
+
+    padding: 10px 16px;
+
+    color: var(--text-primary);
+
+    font-size: 16px;
+}
+
+.ajuste-actividad + .ajuste-actividad {
+    border-top: 1px solid var(--divider);
+}
+
+
+/* INTERRUPTOR */
+
+.ajuste-actividad input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+
+    position: relative;
+
+    width: 51px;
+    height: 31px;
+
+    flex: 0 0 auto;
+
+    margin: 0;
+
+    border: 0;
+    border-radius: 999px;
+
+    background: rgba(120, 120, 128, 0.22);
+
+    cursor: pointer;
+
+    transition: background 0.2s ease;
+}
+
+.ajuste-actividad input[type="checkbox"]::after {
+    content: "";
+
+    position: absolute;
+
+    width: 27px;
+    height: 27px;
+
+    top: 2px;
+    left: 2px;
+
+    border-radius: 50%;
+
+    background: white;
+
+    box-shadow:
+        0 2px 5px rgba(0, 0, 0, 0.20);
+
+    transition: transform 0.2s ease;
+}
+
+
+/* ACTIVADO */
+
+.ajuste-actividad input[type="checkbox"]:checked {
+    background: var(--success);
+}
+
+.ajuste-actividad input[type="checkbox"]:checked::after {
+    transform: translateX(20px);
+}
