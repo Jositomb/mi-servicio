@@ -5266,6 +5266,11 @@ function guardarAjustesDesdeFormulario() {
 
 
     actualizarInicio();
+    seleccionarActividad(
+    document.getElementById(
+        "tipoRegistro"
+    )?.value || "ministerio"
+);
 }
 
 
