@@ -887,6 +887,23 @@ document
     }
 }
 
+// Nombre personalizado para "Otras"
+
+const grupoOtraActividad =
+    document.getElementById(
+        "grupoNombreOtraActividad"
+    );
+
+
+if (grupoOtraActividad) {
+
+    grupoOtraActividad.classList.toggle(
+        "oculto",
+        tipo !== "otras"
+    );
+}
+
+}
 
 // =========================================================
 // FORMULARIO
