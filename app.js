@@ -4984,6 +4984,38 @@ function cargarFormularioAjustes() {
                 minutos / 60
             );
     }
+        const mostrarLDC =
+        document.getElementById(
+            "mostrarLDC"
+        );
+
+    const mostrarAsambleas =
+        document.getElementById(
+            "mostrarAsambleas"
+        );
+
+    const mostrarOtras =
+        document.getElementById(
+            "mostrarOtras"
+        );
+
+    if (mostrarLDC) {
+        mostrarLDC.checked =
+            estado.preferencias
+                .mostrarLDC !== false;
+    }
+
+    if (mostrarAsambleas) {
+        mostrarAsambleas.checked =
+            estado.preferencias
+                .mostrarAsambleas !== false;
+    }
+
+    if (mostrarOtras) {
+        mostrarOtras.checked =
+            estado.preferencias
+                .mostrarOtras !== false;
+    }
 }
 
 
