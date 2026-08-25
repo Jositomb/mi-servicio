@@ -903,7 +903,7 @@ document
 
     const seccionCursos =
         document.getElementById(
-            "seccionCursosBiblicos"
+            "grupoCursosBiblicos"
         );
 
 
