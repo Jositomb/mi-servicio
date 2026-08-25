@@ -204,7 +204,40 @@ function cargarDatos() {
         true
 }
         );
+if (
+    typeof estado.preferencias
+        .mostrarLDC !==
+        "boolean"
+) {
 
+    estado.preferencias
+        .mostrarLDC =
+            true;
+}
+
+
+if (
+    typeof estado.preferencias
+        .mostrarAsambleas !==
+        "boolean"
+) {
+
+    estado.preferencias
+        .mostrarAsambleas =
+            true;
+}
+
+
+if (
+    typeof estado.preferencias
+        .mostrarOtras !==
+        "boolean"
+) {
+
+    estado.preferencias
+        .mostrarOtras =
+            true;
+}
     estado.cursosBiblicos =
         Math.max(
             0,
