@@ -871,22 +871,34 @@ if (
     }
 
 
-    document
-        .querySelectorAll(
-            ".actividad-boton"
-        )
-        .forEach(
-            boton => {
+document
+    .querySelectorAll(
+        ".actividad-boton"
+    )
+    .forEach(
+        boton => {
 
-                boton.classList.toggle(
-                    "seleccionada",
-                    boton.dataset.tipo ===
-                        tipo
-                );
-            }
-        );
+            const tipoBoton =
+                boton.dataset.tipo;
 
+            const visible =
+                actividadesDisponibles[
+                    tipoBoton
+                ] !== false;
 
+            boton.classList.toggle(
+                "oculto",
+                !visible
+            );
+
+            boton.classList.toggle(
+                "seleccionada",
+                boton.dataset.tipo ===
+                    tipo
+            );
+        }
+    );
+    
     // Cursos bíblicos solo pertenecen al Ministerio.
 
     const seccionCursos =
