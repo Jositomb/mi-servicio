@@ -184,27 +184,25 @@ function cargarDatos() {
         );
 
     estado.preferencias =
-        leerJSON(
-            STORAGE_KEYS.preferencias,
-            {
-                {
-    tipoPublicador:
-        "publicador",
+    leerJSON(
+        STORAGE_KEYS.preferencias,
+        {
+            tipoPublicador:
+                "publicador",
 
-    objetivoMensualMinutos:
-        0,
+            objetivoMensualMinutos:
+                0,
 
-    mostrarLDC:
-        true,
+            mostrarLDC:
+                true,
 
-    mostrarAsambleas:
-        true,
+            mostrarAsambleas:
+                true,
 
-    mostrarOtras:
-        true
-}
-        );
-if (
+            mostrarOtras:
+                true
+        }
+    );if (
     typeof estado.preferencias
         .mostrarLDC !==
         "boolean"
