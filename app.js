@@ -2405,10 +2405,19 @@ function actualizarInicio() {
     }
 
 
-    actualizarObjetivo(
-        ministerio
+    const ldcComputable =
+    Math.min(
+        ldc,
+        55 * 60
     );
 
+const tiempoComputableObjetivo =
+    ministerio +
+    ldcComputable;
+
+actualizarObjetivo(
+    tiempoComputableObjetivo
+);
 
     actualizarGraficoInicio();
 
