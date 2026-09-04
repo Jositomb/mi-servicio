@@ -1,473 +1,336 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
-
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     >
-
     <meta
         name="theme-color"
         content="#F2F2F7"
     >
-
     <title>Mi Servicio</title>
-<link rel="apple-touch-icon" href="./icon-apple.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Mi Servicio">    <!-- CSS externo -->
-<link rel="stylesheet" href="./styles.css?v=7">
-    
+    <link rel="apple-touch-icon" href="./icon-apple.png">
+    <meta
+        name="apple-mobile-web-app-capable"
+        content="yes"
+    >
+    <meta
+        name="apple-mobile-web-app-status-bar-style"
+        content="default"
+    >
+    <meta
+        name="apple-mobile-web-app-title"
+        content="Mi Servicio"
+    >
+    <link
+        rel="stylesheet"
+        href="./styles.css?v=7"
+    >
 </head>
-
 <body>
-
 <div class="app">
-
     <!-- =====================================================
          CABECERA
     ====================================================== -->
-
     <header class="cabecera">
-
         <div>
             <p class="saludo">
                 Mi Servicio
             </p>
-
             <h1 id="tituloVista">
                 Inicio
             </h1>
         </div>
-
         <div class="avatar">
             MS
         </div>
-
     </header>
-
-
     <!-- =====================================================
          CONTENIDO
     ====================================================== -->
-
     <main>
-
-
         <!-- =================================================
              INICIO
         ================================================== -->
-
         <section
             id="vista-inicio"
             class="vista activa"
         >
-
             <section class="bienvenida">
-
                 <div class="icono-bienvenida">
                     ✓
                 </div>
-
                 <div>
                     <h2>
                         Tu servicio, de un vistazo
                     </h2>
-
                     <p>
                         Registra tu actividad y sigue tu progreso
                         durante el mes.
                     </p>
                 </div>
-
             </section>
-
-
             <!-- ESTE MES -->
-
             <section class="seccion">
-
                 <div class="titulo-seccion">
-
                     <h2>
                         Este mes
                     </h2>
-
                     <span id="nombreMes">
                         —
                     </span>
-
                 </div>
-
-
                 <article class="tarjeta">
-
                     <div class="fila-superior">
-
                         <div>
-
                             <p class="etiqueta">
                                 Total registrado
                             </p>
-
                             <p
                                 id="totalMes"
                                 class="valor-principal"
                             >
                                 0 h
                             </p>
-
                         </div>
-
-
                         <div class="icono-tarjeta">
                             ◷
                         </div>
-
                     </div>
-
-
                     <div class="separador"></div>
-
-
                     <div class="fila-dato">
-
                         <span>
                             Ministerio
                         </span>
-
                         <strong id="totalMinisterio">
                             0 h
                         </strong>
-
                     </div>
-
-
                     <div class="fila-dato">
-
                         <span>
                             LDC
                         </span>
-
                         <strong id="totalLDC">
                             0 h
                         </strong>
-
                     </div>
-
-
                     <div class="fila-dato">
-
                         <span>
                             Asambleas
                         </span>
-
                         <strong id="totalAsambleas">
                             0 h
                         </strong>
-
                     </div>
-
-
                     <div
                         id="filaOtras"
                         class="fila-dato oculto"
                     >
-
                         <span>
                             Otras
                         </span>
-
                         <strong id="totalOtras">
                             0 h
                         </strong>
-
                     </div>
-
                 </article>
-
             </section>
-
-
             <!-- PROGRESO DEL MES -->
-
             <section
                 class="seccion"
                 id="seccionGraficoInicio"
             >
-
                 <div class="titulo-seccion">
-
                     <h2>
                         Progreso del mes
                     </h2>
-
                 </div>
-
-
-                <article class="tarjeta tarjeta-grafico-inicio">
-
+                <article
+                    class="tarjeta tarjeta-grafico-inicio"
+                >
                     <div
                         id="graficoInicio"
                         class="grafico-inicio"
                     ></div>
-
                     <div
                         id="leyendaGraficoInicio"
                         class="leyenda-grafico-inicio"
                     ></div>
-
                 </article>
-
             </section>
-
-
             <!-- OBJETIVO -->
-
             <section class="seccion">
-
                 <div class="titulo-seccion">
-
                     <h2>
                         Objetivo
                     </h2>
-
                 </div>
-
-
                 <article class="tarjeta">
-
                     <div class="objetivo-cabecera">
-
                         <div>
-
                             <p class="etiqueta">
                                 Progreso mensual
                             </p>
-
                             <p
                                 id="valorObjetivo"
                                 class="valor-secundario"
                             >
                                 0 h
                             </p>
-
                         </div>
-
-
                         <strong
                             id="porcentajeObjetivo"
                             class="porcentaje"
                         >
                             0%
                         </strong>
-
                     </div>
-
-
                     <div class="barra">
-
                         <div
                             id="barraProgreso"
                             class="barra-progreso"
                         ></div>
-
-            <div
-    id="progresoPersonaje"
-    class="progreso-personaje"
->
-    <div class="progreso-pista"></div>
-
-    <div
-        id="animalProgreso"
-        class="progreso-animal"
-    >
-        🐢
-    </div>
-
-    <div class="progreso-meta">
-        🏁
-    </div>
-</div>
-
-<p
-    id="estadoAnimal"
-    class="progreso-estado"
->
-    Poco a poco, seguimos avanzando
-</p>
-                        
-
+                    </div>
+                    <!-- PERSONAJE ANIMADO -->
+                    <div
+                        id="progresoPersonaje"
+                        class="progreso-personaje"
+                    >
+                        <div
+                            class="progreso-pista"
+                        ></div>
+                        <div
+                            id="animalProgreso"
+                            class="progreso-animal"
+                        >
+                            🐢
+                        </div>
+                        <div class="progreso-meta">
+                            🏁
+                        </div>
+                    </div>
+                    <p
+                        id="estadoAnimal"
+                        class="progreso-estado"
+                    >
+                        Poco a poco, seguimos avanzando
+                    </p>
                     <p
                         id="mensajeObjetivo"
                         class="texto-secundario"
                     ></p>
-
                 </article>
-
             </section>
-
         </section>
-
-
         <!-- =================================================
              REGISTRAR
         ================================================== -->
-
         <section
             id="vista-registrar"
             class="vista"
         >
-
             <p class="intro-pantalla">
                 Añade el tiempo que has dedicado a una actividad.
             </p>
-
-
             <form id="formRegistro">
-
-
                 <!-- ACTIVIDAD -->
-
                 <div class="grupo-formulario">
-
                     <span class="titulo-campo">
                         Actividad
                     </span>
-
-
                     <div class="selector-actividad">
-
-
                         <button
                             class="actividad-boton seleccionada"
                             data-tipo="ministerio"
                             type="button"
                         >
-
                             <span class="actividad-icono">
                                 ✦
                             </span>
-
                             Ministerio
-
                         </button>
-
-
                         <button
                             class="actividad-boton"
                             data-tipo="ldc"
                             type="button"
                         >
-
                             <span class="actividad-icono">
                                 ⌂
                             </span>
-
                             LDC
-
                         </button>
-
-
                         <button
                             class="actividad-boton"
                             data-tipo="asambleas"
                             type="button"
                         >
-
                             <span class="actividad-icono">
                                 ◆
                             </span>
-
                             Asambleas
-
                         </button>
-
-
                         <button
                             class="actividad-boton"
                             data-tipo="otras"
                             type="button"
                         >
-
                             <span class="actividad-icono">
                                 ＋
                             </span>
-
                             Otras
-
                         </button>
-
                     </div>
-
-
                     <input
                         id="tipoRegistro"
                         type="hidden"
                         value="ministerio"
                     >
-<div
-    id="grupoNombreOtraActividad"
-    class="grupo-formulario oculto"
->
-    <label
-        class="titulo-campo"
-        for="nombreOtraActividad"
-    >
-        Nombre de la actividad
-    </label>
-
-    <input
-        id="nombreOtraActividad"
-        class="campo"
-        type="text"
-        maxlength="60"
-        placeholder="Ej. Mantenimiento"
-    >
-</div>
-
+                    <div
+                        id="grupoNombreOtraActividad"
+                        class="grupo-formulario oculto"
+                    >
+                        <label
+                            class="titulo-campo"
+                            for="nombreOtraActividad"
+                        >
+                            Nombre de la actividad
+                        </label>
+                        <input
+                            id="nombreOtraActividad"
+                            class="campo"
+                            type="text"
+                            maxlength="60"
+                            placeholder="Ej. Mantenimiento"
+                        >
+                    </div>
+                </div>
                 <!-- FECHA -->
-
                 <div class="grupo-formulario">
-
                     <label
                         class="titulo-campo"
                         for="fechaRegistro"
                     >
                         Fecha
                     </label>
-
                     <input
                         id="fechaRegistro"
                         class="campo"
                         type="date"
                         required
                     >
-
                 </div>
-
-
                 <!-- TIEMPO -->
-
                 <div class="grupo-formulario">
-
                     <span class="titulo-campo">
                         Tiempo
                     </span>
-
-
                     <div class="selector-tiempo">
-
-
                         <div class="campo-tiempo">
-
                             <label for="horasRegistro">
                                 Horas
                             </label>
-
                             <input
                                 id="horasRegistro"
                                 type="number"
@@ -475,16 +338,11 @@
                                 max="24"
                                 value="0"
                             >
-
                         </div>
-
-
                         <div class="campo-tiempo">
-
                             <label for="minutosRegistro">
                                 Minutos
                             </label>
-
                             <input
                                 id="minutosRegistro"
                                 type="number"
@@ -492,123 +350,85 @@
                                 max="59"
                                 value="0"
                             >
-
                         </div>
-
                     </div>
-
                 </div>
-
-<!-- CURSOS BÍBLICOS -->
-
-<div
-    id="grupoCursosBiblicos"
-    class="grupo-formulario"
->
-
-    <span class="titulo-campo">
-        Cursos bíblicos
-    </span>
-
-    <div class="contador-cursos">
-
-        <button
-            id="restarCurso"
-            class="boton-contador"
-            type="button"
-        >
-            −
-        </button>
-
-        <div class="contador-cursos-centro">
-
-            <strong id="cantidadCursosBiblicos">
-                0
-            </strong>
-
-            <span>
-                que diriges
-            </span>
-
-        </div>
-
-        <button
-            id="sumarCurso"
-            class="boton-contador"
-            type="button"
-        >
-            +
-        </button>
-
-    </div>
-
-</div>
+                <!-- CURSOS BÍBLICOS -->
+                <div
+                    id="grupoCursosBiblicos"
+                    class="grupo-formulario"
+                >
+                    <span class="titulo-campo">
+                        Cursos bíblicos
+                    </span>
+                    <div class="contador-cursos">
+                        <button
+                            id="restarCurso"
+                            class="boton-contador"
+                            type="button"
+                        >
+                            −
+                        </button>
+                        <div class="contador-cursos-centro">
+                            <strong id="cantidadCursosBiblicos">
+                                0
+                            </strong>
+                            <span>
+                                que diriges
+                            </span>
+                        </div>
+                        <button
+                            id="sumarCurso"
+                            class="boton-contador"
+                            type="button"
+                        >
+                            +
+                        </button>
+                    </div>
+                </div>
                 <!-- NOTAS -->
-
                 <div class="grupo-formulario">
-
                     <label
                         class="titulo-campo"
                         for="notasRegistro"
                     >
                         Notas
                     </label>
-
                     <textarea
                         id="notasRegistro"
                         class="campo"
                         rows="4"
                     ></textarea>
-
                 </div>
-
-
                 <button
                     class="boton-guardar"
                     type="submit"
                 >
                     Guardar actividad
                 </button>
-
-
                 <p
                     id="mensajeFormulario"
                     class="mensaje-formulario"
                 ></p>
-
             </form>
-
         </section>
-
-
         <!-- =================================================
              HISTORIAL
         ================================================== -->
-
         <section
             id="vista-historial"
             class="vista"
         >
-
             <section class="seccion">
-
-
                 <div class="titulo-seccion">
-
                     <h2>
                         Actividad registrada
                     </h2>
-
                     <span id="contadorHistorial">
                         0 registros
                     </span>
-
                 </div>
-
-
                 <div class="filtros-historial">
-
-
                     <button
                         class="filtro-historial activo"
                         data-filtro="todos"
@@ -616,8 +436,6 @@
                     >
                         Todos
                     </button>
-
-
                     <button
                         class="filtro-historial"
                         data-filtro="ministerio"
@@ -625,8 +443,6 @@
                     >
                         Ministerio
                     </button>
-
-
                     <button
                         class="filtro-historial"
                         data-filtro="ldc"
@@ -634,8 +450,6 @@
                     >
                         LDC
                     </button>
-
-
                     <button
                         class="filtro-historial"
                         data-filtro="asambleas"
@@ -643,8 +457,6 @@
                     >
                         Asambleas
                     </button>
-
-
                     <button
                         class="filtro-historial"
                         data-filtro="otras"
@@ -652,24 +464,18 @@
                     >
                         Otras
                     </button>
-
                 </div>
-
-
                 <article
                     id="historialVacio"
                     class="tarjeta estado-vacio"
                 >
-
                     <h3>
                         Todavía no hay registros
                     </h3>
-
                     <p>
                         Cuando registres actividad,
                         aparecerá aquí.
                     </p>
-
                     <button
                         id="botonRegistrarDesdeHistorial"
                         class="boton-secundario"
@@ -677,32 +483,21 @@
                     >
                         Registrar actividad
                     </button>
-
                 </article>
-
-
                 <div
                     id="listaHistorial"
                     class="lista-historial"
                 ></div>
-
             </section>
-
         </section>
-
-
         <!-- =================================================
              ESTADÍSTICAS
         ================================================== -->
-
         <section
             id="vista-estadisticas"
             class="vista"
         >
-
-
             <div class="selector-periodo">
-
                 <button
                     class="periodo-boton activo"
                     data-periodo="semana"
@@ -710,7 +505,6 @@
                 >
                     Semana
                 </button>
-
                 <button
                     class="periodo-boton"
                     data-periodo="mes"
@@ -718,7 +512,6 @@
                 >
                     Mes
                 </button>
-
                 <button
                     class="periodo-boton"
                     data-periodo="anio"
@@ -726,12 +519,8 @@
                 >
                     Año
                 </button>
-
             </div>
-
-
             <section class="navegador-periodo">
-
                 <button
                     id="periodoAnterior"
                     class="boton-periodo"
@@ -739,23 +528,16 @@
                 >
                     ‹
                 </button>
-
-
                 <div class="periodo-centro">
-
                     <p
                         id="tituloPeriodoEstadisticas"
                         class="titulo-periodo-estadisticas"
                     ></p>
-
                     <p
                         id="rangoPeriodoEstadisticas"
                         class="rango-periodo-estadisticas"
                     ></p>
-
                 </div>
-
-
                 <button
                     id="periodoSiguiente"
                     class="boton-periodo"
@@ -763,320 +545,219 @@
                 >
                     ›
                 </button>
-
             </section>
-
-
             <!-- TOTALES -->
-
             <section class="seccion">
-
                 <article class="tarjeta">
-
                     <p class="etiqueta">
                         Total registrado
                     </p>
-
                     <p
                         id="estadisticasTotal"
                         class="valor-principal"
                     >
                         0 h
                     </p>
-
-
                     <div class="separador"></div>
-
-
                     <div class="fila-dato">
-
                         <span>
                             Ministerio
                         </span>
-
                         <strong id="estadisticasMinisterio">
                             0 h
                         </strong>
-
                     </div>
-
-
                     <div class="fila-dato">
-
                         <span>
                             LDC
                         </span>
-
                         <strong id="estadisticasLDC">
                             0 h
                         </strong>
-
                     </div>
-
-
                     <div class="fila-dato">
-
                         <span>
                             Asambleas
                         </span>
-
                         <strong id="estadisticasAsambleas">
                             0 h
                         </strong>
-
                     </div>
-
-
                     <div class="fila-dato">
-
                         <span>
                             Otras
                         </span>
-
                         <strong id="estadisticasOtras">
                             0 h
                         </strong>
-
                     </div>
-
                 </article>
-
             </section>
-
-
             <!-- GRÁFICO -->
-
             <section class="seccion">
-
                 <div class="titulo-seccion">
-
                     <h2>
                         Actividad
                     </h2>
-
                     <span id="graficoPeriodoTexto">
                         Semana
                     </span>
-
                 </div>
-
-
                 <article class="tarjeta">
-
                     <div
                         id="graficoActividad"
                         class="grafico-actividad"
                     ></div>
-
                     <div
                         id="graficoVacio"
                         class="grafico-vacio oculto"
                     >
                         No hay actividad para mostrar.
                     </div>
-
                 </article>
-
             </section>
-
-
             <!-- RESUMEN -->
-
             <section class="seccion">
-
                 <div class="resumen-estadisticas">
-
-
-                    <article class="tarjeta mini-estadistica">
-
+                    <article
+                        class="tarjeta mini-estadistica"
+                    >
                         <p
                             id="estadisticasRegistros"
                             class="mini-estadistica-valor"
                         >
                             0
                         </p>
-
                         <p class="mini-estadistica-etiqueta">
                             Registros
                         </p>
-
                     </article>
-
-
-                    <article class="tarjeta mini-estadistica">
-
+                    <article
+                        class="tarjeta mini-estadistica"
+                    >
                         <p
                             id="estadisticasDiasActivos"
                             class="mini-estadistica-valor"
                         >
                             0
                         </p>
-
                         <p class="mini-estadistica-etiqueta">
                             Días activos
                         </p>
-
                     </article>
-                    
-<article class="tarjeta mini-estadistica">
-
-    <p
-        id="estadisticasCursosBiblicos"
-        class="mini-estadistica-valor"
-    >
-        0
-    </p>
-
-    <p class="mini-estadistica-etiqueta">
-        Cursos bíblicos
-    </p>
-
-    </article>  
-                    
- </div>
-
- </section>
-
-  <!-- TRIMESTRES -->
-
+                    <article
+                        class="tarjeta mini-estadistica"
+                    >
+                        <p
+                            id="estadisticasCursosBiblicos"
+                            class="mini-estadistica-valor"
+                        >
+                            0
+                        </p>
+                        <p class="mini-estadistica-etiqueta">
+                            Cursos bíblicos
+                        </p>
+                    </article>
+                </div>
+            </section>
+            <!-- TRIMESTRES -->
             <section
                 id="seccionTrimestres"
                 class="seccion oculto"
             >
-
                 <div class="titulo-seccion">
-
                     <h2>
                         Trimestres
                     </h2>
-
                     <span id="anioTrimestres"></span>
-
                 </div>
-
-
                 <div
                     id="listaTrimestres"
                     class="lista-trimestres"
                 ></div>
-
             </section>
-
         </section>
-
-
         <!-- =================================================
              AJUSTES
         ================================================== -->
-
         <section
             id="vista-ajustes"
             class="vista"
         >
-
-
             <section class="seccion">
-
                 <div class="titulo-seccion">
-
                     <h2>
                         Ajustes
                     </h2>
-
                 </div>
-
-
                 <article class="tarjeta">
-
-
                     <div class="grupo-formulario">
-
                         <label
                             class="titulo-campo"
                             for="tipoPublicador"
                         >
                             Tipo
                         </label>
-
-
                         <select
                             id="tipoPublicador"
                             class="campo"
                         >
-
                             <option value="publicador">
                                 Publicador
                             </option>
-
                             <option value="precursorAuxiliar">
                                 Precursor auxiliar
                             </option>
-
                             <option value="precursorRegular">
                                 Precursor regular
                             </option>
-
                         </select>
-
                     </div>
-<!-- ACTIVIDADES DISPONIBLES -->
-
-<div class="grupo-formulario">
-
-    <span class="titulo-campo">
-        Actividades disponibles
-    </span>
-
-    <div class="ajustes-actividades">
-
-        <label class="ajuste-actividad">
-            <span>
-                LDC
-            </span>
-
-            <input
-                id="mostrarLDC"
-                type="checkbox"
-                checked
-            >
-        </label>
-
-        <label class="ajuste-actividad">
-            <span>
-                Asambleas
-            </span>
-
-            <input
-                id="mostrarAsambleas"
-                type="checkbox"
-                checked
-            >
-        </label>
-
-        <label class="ajuste-actividad">
-            <span>
-                Otras
-            </span>
-
-            <input
-                id="mostrarOtras"
-                type="checkbox"
-                checked
-            >
-        </label>
-
-    </div>
-
-</div>
+                    <!-- ACTIVIDADES DISPONIBLES -->
                     <div class="grupo-formulario">
-
+                        <span class="titulo-campo">
+                            Actividades disponibles
+                        </span>
+                        <div class="ajustes-actividades">
+                            <label class="ajuste-actividad">
+                                <span>
+                                    LDC
+                                </span>
+                                <input
+                                    id="mostrarLDC"
+                                    type="checkbox"
+                                    checked
+                                >
+                            </label>
+                            <label class="ajuste-actividad">
+                                <span>
+                                    Asambleas
+                                </span>
+                                <input
+                                    id="mostrarAsambleas"
+                                    type="checkbox"
+                                    checked
+                                >
+                            </label>
+                            <label class="ajuste-actividad">
+                                <span>
+                                    Otras
+                                </span>
+                                <input
+                                    id="mostrarOtras"
+                                    type="checkbox"
+                                    checked
+                                >
+                            </label>
+                        </div>
+                    </div>
+                    <div class="grupo-formulario">
                         <label
                             class="titulo-campo"
                             for="objetivoMensual"
                         >
                             Objetivo mensual en horas
                         </label>
-
                         <input
                             id="objetivoMensual"
                             class="campo"
@@ -1084,10 +765,7 @@
                             min="0"
                             max="200"
                         >
-
                     </div>
-
-
                     <button
                         id="guardarAjustes"
                         class="boton-guardar"
@@ -1095,34 +773,20 @@
                     >
                         Guardar ajustes
                     </button>
-
-
                     <p
                         id="mensajeAjustes"
                         class="mensaje-formulario"
                     ></p>
-
                 </article>
-
             </section>
-
-
             <!-- DATOS -->
-
             <section class="seccion">
-
                 <div class="titulo-seccion">
-
                     <h2>
                         Datos y copias de seguridad
                     </h2>
-
                 </div>
-
-
                 <article class="tarjeta">
-
-
                     <button
                         id="exportarDatos"
                         class="boton-guardar"
@@ -1130,8 +794,6 @@
                     >
                         Exportar copia de seguridad
                     </button>
-
-
                     <button
                         id="exportarIPhone"
                         class="boton-secundario"
@@ -1139,8 +801,6 @@
                     >
                         Exportar para iPhone
                     </button>
-
-
                     <button
                         id="importarDatos"
                         class="boton-secundario"
@@ -1148,151 +808,102 @@
                     >
                         Importar copia de seguridad
                     </button>
-
-
                     <input
                         id="archivoImportacion"
                         type="file"
                         accept=".json"
                         hidden
                     >
-
-
                     <p
                         id="mensajeDatos"
                         class="mensaje-formulario"
                     ></p>
-
                 </article>
-
             </section>
-
         </section>
-
     </main>
-
-
     <!-- =====================================================
          BARRA DE NAVEGACIÓN
     ====================================================== -->
-
     <nav class="barra-navegacion">
-
-
         <button
             class="nav-item activo"
             data-vista="inicio"
             type="button"
         >
-
             <span class="nav-icono">
                 ⌂
             </span>
-
             <span>
                 Inicio
             </span>
-
         </button>
-
-
         <button
             class="nav-item"
             data-vista="registrar"
             type="button"
         >
-
             <span class="nav-icono">
                 ＋
             </span>
-
             <span>
                 Registrar
             </span>
-
         </button>
-
-
         <button
             class="nav-item"
             data-vista="historial"
             type="button"
         >
-
             <span class="nav-icono">
                 ◷
             </span>
-
             <span>
                 Historial
             </span>
-
         </button>
-
-
         <button
             class="nav-item"
             data-vista="estadisticas"
             type="button"
         >
-
             <span class="nav-icono">
                 ▥
             </span>
-
             <span>
                 Estadísticas
             </span>
-
         </button>
-
-
         <button
             class="nav-item"
             data-vista="ajustes"
             type="button"
         >
-
             <span class="nav-icono">
                 ⚙
             </span>
-
             <span>
                 Ajustes
             </span>
-
         </button>
-
     </nav>
-
 </div>
-
-
 <!-- =========================================================
      MODAL BORRAR
 ========================================================== -->
-
 <div
     id="modalBorrar"
     class="modal oculto"
 >
-
     <div class="modal-fondo"></div>
-
-
     <div class="modal-contenido">
-
         <h2>
             ¿Eliminar registro?
         </h2>
-
         <p>
             Esta acción no se puede deshacer.
         </p>
-
-
         <div class="modal-botones">
-
             <button
                 id="cancelarBorrado"
                 class="boton-modal"
@@ -1300,8 +911,6 @@
             >
                 Cancelar
             </button>
-
-
             <button
                 id="confirmarBorrado"
                 class="boton-modal eliminar"
@@ -1309,19 +918,12 @@
             >
                 Eliminar
             </button>
-
         </div>
-
     </div>
-
 </div>
-
-
 <!-- =========================================================
      JAVASCRIPT
 ========================================================== -->
-
 <script src="./app.js?v=5"></script>
-    
 </body>
 </html>
