@@ -2415,7 +2415,20 @@ const tiempoComputableObjetivo =
     ministerio +
     ldcComputable;
 
-actualizarObjetivo(
+    const desgloseObjetivo =
+    document.getElementById(
+        "desgloseObjetivo"
+    );
+
+if (desgloseObjetivo) {
+
+    desgloseObjetivo.textContent =
+        `${formatearTiempo(ministerio)} Ministerio + ` +
+        `${formatearTiempo(ldcComputable)} LDC = ` +
+        `${formatearTiempo(tiempoComputableObjetivo)} computables`;
+}
+    
+    actualizarObjetivo(
     tiempoComputableObjetivo
 );
 
