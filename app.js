@@ -2790,8 +2790,12 @@ function actualizarObjetivo(
         barra.style.width =
             `${porcentajeVisual}%`;
     }
-
-
+    
+    actualizarPersonajeObjetivo(
+        totalMinisterioMes,
+        objetivo
+    );
+    
     const mensaje =
         document.getElementById(
             "mensajeObjetivo"
