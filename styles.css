@@ -2903,3 +2903,151 @@ textarea.campo {
 .ajuste-actividad input[type="checkbox"]:checked::after {
     transform: translateX(20px);
 }
+
+/* =========================================================
+   ANIMACIÓN DE PROGRESO - TORTUGA / LIEBRE
+========================================================= */
+
+.progreso-personaje {
+    position: relative;
+
+    width: 100%;
+    height: 72px;
+
+    margin-top: 18px;
+
+    overflow: hidden;
+}
+
+.progreso-pista {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: 13px;
+
+    height: 5px;
+
+    border-radius: 999px;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(52, 120, 246, 0.16),
+            rgba(52, 120, 246, 0.34)
+        );
+}
+
+.progreso-meta {
+    position: absolute;
+
+    right: 0;
+    bottom: 20px;
+
+    font-size: 24px;
+
+    transform: translateX(4px);
+}
+
+.progreso-animal {
+    position: absolute;
+
+    left: 0;
+    bottom: 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 44px;
+    height: 44px;
+
+    font-size: 34px;
+    line-height: 1;
+
+    transform: translateX(0);
+
+    transition:
+        left 0.8s cubic-bezier(.22, .8, .28, 1),
+        transform 0.25s ease;
+}
+
+.progreso-animal.moviendo {
+    animation: animalRebote 0.65s ease;
+}
+
+@keyframes animalRebote {
+
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    35% {
+        transform: translateY(-5px) rotate(-4deg);
+    }
+
+    70% {
+        transform: translateY(1px) rotate(3deg);
+    }
+
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+}
+
+
+/* MENSAJE DEL PERSONAJE */
+
+.progreso-estado {
+    margin-top: 8px;
+
+    text-align: center;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+    font-weight: 600;
+
+    line-height: 1.35;
+}
+
+
+/* OBJETIVO CONSEGUIDO */
+
+.progreso-personaje.completado
+.progreso-meta {
+    animation: metaCelebracion 0.7s ease;
+}
+
+@keyframes metaCelebracion {
+
+    0%,
+    100% {
+        transform: translateX(4px) scale(1);
+    }
+
+    45% {
+        transform: translateX(4px) scale(1.25);
+    }
+}
+
+
+/* IPHONE */
+
+@media (max-width: 430px) {
+
+    .progreso-personaje {
+        height: 66px;
+    }
+
+    .progreso-animal {
+        width: 40px;
+        height: 40px;
+
+        font-size: 31px;
+    }
+
+    .progreso-meta {
+        font-size: 22px;
+    }
+}
