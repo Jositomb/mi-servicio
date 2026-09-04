@@ -878,29 +878,30 @@ document
         );
 
 
-    if (seccionCursos) {
+       if (seccionCursos) {
 
         seccionCursos.classList.toggle(
             "oculto",
             tipo !== "ministerio"
         );
     }
-}
-
-// Nombre personalizado para "Otras"
-
-const grupoOtraActividad =
-    document.getElementById(
-        "grupoNombreOtraActividad"
-    );
 
 
-if (grupoOtraActividad) {
+    // Nombre personalizado para "Otras"
 
-    grupoOtraActividad.classList.toggle(
-        "oculto",
-        tipo !== "otras"
-    );
+    const grupoOtraActividad =
+        document.getElementById(
+            "grupoNombreOtraActividad"
+        );
+
+
+    if (grupoOtraActividad) {
+
+        grupoOtraActividad.classList.toggle(
+            "oculto",
+            tipo !== "otras"
+        );
+    }
 }
 
 // =========================================================
