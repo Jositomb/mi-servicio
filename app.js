@@ -2487,6 +2487,243 @@ function obtenerRegistrosMesActual() {
     );
 }
 
+// =========================================================
+// PERSONAJE ANIMADO DEL OBJETIVO
+// 🐢 retrasado
+// 🚶 al ritmo
+// 🐇 adelantado
+// 🚀 objetivo conseguido
+// =========================================================
+
+function actualizarPersonajeObjetivo(
+    totalMinisterioMes,
+    objetivo
+) {
+
+    const contenedor =
+        document.getElementById(
+            "progresoPersonaje"
+        );
+
+    const animal =
+        document.getElementById(
+            "animalProgreso"
+        );
+
+    const estadoAnimal =
+        document.getElementById(
+            "estadoAnimal"
+        );
+
+
+    if (
+        !contenedor ||
+        !animal ||
+        !estadoAnimal
+    ) {
+
+        return;
+    }
+
+
+    // -----------------------------------------------------
+    // SIN OBJETIVO CONFIGURADO
+    // -----------------------------------------------------
+
+    if (
+        objetivo <= 0
+    ) {
+
+        animal.textContent =
+            "🐢";
+
+        animal.style.left =
+            "0px";
+
+        estadoAnimal.textContent =
+            "Configura un objetivo para comenzar la ruta.";
+
+        contenedor.classList.remove(
+            "completado"
+        );
+
+        return;
+    }
+
+
+    // -----------------------------------------------------
+    // POSICIÓN REAL EN LA PISTA
+    // -----------------------------------------------------
+
+    const porcentajeReal =
+        (
+            totalMinisterioMes /
+            objetivo
+        ) * 100;
+
+
+    const porcentajeVisual =
+        Math.min(
+            Math.max(
+                porcentajeReal,
+                0
+            ),
+            100
+        );
+
+
+    /*
+       Compensamos el ancho del animal para que
+       nunca salga de la pista cuando llega al 100%.
+    */
+
+    const compensacion =
+        (
+            porcentajeVisual /
+            100
+        ) * 44;
+
+
+    animal.style.left =
+        `calc(${porcentajeVisual}% - ${compensacion}px)`;
+
+
+    // -----------------------------------------------------
+    // PROGRESO QUE CORRESPONDERÍA AL DÍA DE HOY
+    // -----------------------------------------------------
+
+    const hoy =
+        new Date();
+
+
+    const diaActual =
+        hoy.getDate();
+
+
+    const diasMes =
+        new Date(
+            hoy.getFullYear(),
+            hoy.getMonth() + 1,
+            0
+        )
+        .getDate();
+
+
+    const objetivoEsperadoHoy =
+        objetivo *
+        (
+            diaActual /
+            diasMes
+        );
+
+
+    const relacionRitmo =
+        objetivoEsperadoHoy > 0
+            ? (
+                totalMinisterioMes /
+                objetivoEsperadoHoy
+            )
+            : 0;
+
+
+    // -----------------------------------------------------
+    // OBJETIVO CONSEGUIDO
+    // -----------------------------------------------------
+
+    if (
+        totalMinisterioMes >=
+        objetivo
+    ) {
+
+        animal.textContent =
+            "🚀";
+
+        estadoAnimal.textContent =
+            "¡Objetivo conseguido! Has llegado a la meta.";
+
+        contenedor.classList.add(
+            "completado"
+        );
+
+    }
+
+
+    // -----------------------------------------------------
+    // ADELANTADO
+    // -----------------------------------------------------
+
+    else if (
+        relacionRitmo >= 1.15
+    ) {
+
+        animal.textContent =
+            "🐇";
+
+        estadoAnimal.textContent =
+            "¡Vas adelantado! Llevas un ritmo excelente.";
+
+        contenedor.classList.remove(
+            "completado"
+        );
+
+    }
+
+
+    // -----------------------------------------------------
+    // AL RITMO
+    // -----------------------------------------------------
+
+    else if (
+        relacionRitmo >= 0.75
+    ) {
+
+        animal.textContent =
+            "🚶";
+
+        estadoAnimal.textContent =
+            "Vas a buen ritmo para alcanzar tu objetivo.";
+
+        contenedor.classList.remove(
+            "completado"
+        );
+
+    }
+
+
+    // -----------------------------------------------------
+    // POR DEBAJO DEL RITMO
+    // -----------------------------------------------------
+
+    else {
+
+        animal.textContent =
+            "🐢";
+
+        estadoAnimal.textContent =
+            "Poco a poco. Todavía hay tiempo para avanzar.";
+
+        contenedor.classList.remove(
+            "completado"
+        );
+    }
+
+
+    // -----------------------------------------------------
+    // PEQUEÑO MOVIMIENTO DEL PERSONAJE
+    // -----------------------------------------------------
+
+    animal.classList.remove(
+        "moviendo"
+    );
+
+
+    void animal.offsetWidth;
+
+
+    animal.classList.add(
+        "moviendo"
+    );
+}
 
 // =========================================================
 // OBJETIVO MENSUAL
