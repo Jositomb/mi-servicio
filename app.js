@@ -4712,56 +4712,76 @@ function actualizarTrimestres(
             "seccionTrimestres"
         );
 
-
     if (!seccion) {
         return;
     }
 
-
     const esAnio =
         estado.estadisticas.periodo ===
         "anio";
-
 
     seccion.classList.toggle(
         "oculto",
         !esAnio
     );
 
-
     if (!esAnio) {
         return;
     }
 
 
-    const anio =
-        rangoAnual.inicio
-            .getFullYear();
+    // =====================================================
+    // AÑO DE SERVICIO
+    // Septiembre - agosto
+    // =====================================================
+
+    const referencia =
+        copiarFecha(
+            estado.estadisticas
+                .fechaReferencia
+        );
+
+    const anioNatural =
+        referencia.getFullYear();
+
+    const mes =
+        referencia.getMonth();
+
+    // Enero-agosto:
+    // el año de servicio termina ese mismo año.
+    //
+    // Septiembre-diciembre:
+    // el año de servicio termina el año siguiente.
+
+    const anioServicio =
+        mes >= 8
+            ? anioNatural + 1
+            : anioNatural;
 
 
     ponerTexto(
         "anioTrimestres",
-        String(
-            anio
-        )
+        String(anioServicio)
     );
 
 
-    // Compatible con las dos versiones que hemos usado:
+    // Compatible con las dos versiones
+    // que hemos usado:
+    //
     // 1. Tarjetas ya creadas en HTML.
-    // 2. Contenedor listaTrimestres generado por JS.
+    // 2. Contenedor listaTrimestres
+    //    generado por JavaScript.
 
     const lista =
         document.getElementById(
             "listaTrimestres"
         );
 
-
     if (lista) {
 
         renderizarListaTrimestres(
             lista,
-            anio
+            anioServicio
         );
 
         return;
@@ -4776,11 +4796,326 @@ function actualizarTrimestres(
 
         actualizarTrimestre(
             trimestre,
-            anio
+            anioServicio
         );
     }
 }
 
+
+// =========================================================
+// ACTUALIZAR UN TRIMESTRE
+// =========================================================function actualizarTrimestres(
+    rangoAnual
+) {
+
+    const seccion =
+        document.getElementById(
+            "seccionTrimestres"
+        );
+
+    if (!seccion) {
+        return;
+    }
+
+    const esAnio =
+        estado.estadisticas.periodo ===
+        "anio";
+
+    seccion.classList.toggle(
+        "oculto",
+        !esAnio
+    );
+
+    if (!esAnio) {
+        return;
+    }
+
+
+    // =====================================================
+    // AÑO DE SERVICIO
+    // Septiembre - agosto
+    // =====================================================
+
+    const referencia =
+        copiarFecha(
+            estado.estadisticas
+                .fechaReferencia
+        );
+
+    const anioNatural =
+        referencia.getFullYear();
+
+    const mes =
+        referencia.getMonth();
+
+    // Enero-agosto:
+    // el año de servicio termina ese mismo año.
+    //
+    // Septiembre-diciembre:
+    // el año de servicio termina el año siguiente.
+
+    const anioServicio =
+        mes >= 8
+            ? anioNatural + 1
+            : anioNatural;
+
+
+    ponerTexto(
+        "anioTrimestres",
+        String(anioServicio)
+    );
+
+
+    // Compatible con las dos versiones
+    // que hemos usado:
+    //
+    // 1. Tarjetas ya creadas en HTML.
+    // 2. Contenedor listaTrimestres
+    //    generado por JavaScript.
+
+    const lista =
+        document.getElementById(
+            "listaTrimestres"
+        );
+
+    if (lista) {
+
+        renderizarListaTrimestres(
+            lista,
+            anioServicio
+        );
+
+        return;
+    }
+
+
+    for (
+        let trimestre = 1;
+        trimestre <= 4;
+        trimestre++
+    ) {
+
+        actualizarTrimestre(
+            trimestre,
+            anioServicio
+        );
+    }
+}
+
+
+// =========================================================
+// ACTUALIZAR UN TRIMESTRE
+// =========================================================
+
+function actualizarTrimestres(
+
+    rangoAnual
+
+) {
+
+    const seccion =
+
+        document.getElementById(
+
+            "seccionTrimestres"
+
+        );
+
+    if (!seccion) {
+
+        return;
+
+    }
+
+    const esAnio =
+
+        estado.estadisticas.periodo ===
+
+        "anio";
+
+    seccion.classList.toggle(
+
+        "oculto",
+
+        !esAnio
+
+    );
+
+    if (!esAnio) {
+
+        return;
+
+    }
+
+    // =====================================================
+
+    // AÑO DE SERVICIO
+
+    // Septiembre - agosto
+
+    // =====================================================
+
+    const referencia =
+
+        copiarFecha(
+
+            estado.estadisticas
+
+                .fechaReferencia
+
+        );
+
+    const anioNatural =
+
+        referencia.getFullYear();
+
+    const mes =
+
+        referencia.getMonth();
+
+    // Enero-agosto:
+
+    // el año de servicio termina ese mismo año.
+
+    //
+
+    // Septiembre-diciembre:
+
+    // el año de servicio termina el año siguiente.
+
+    const anioServicio =
+
+        mes >= 8
+
+            ? anioNatural + 1
+
+            : anioNatural;
+
+    ponerTexto(
+
+        "anioTrimestres",
+
+        String(anioServicio)
+
+    );
+
+    // Compatible con las dos versiones
+
+    // que hemos usado:
+
+    //
+
+    // 1. Tarjetas ya creadas en HTML.
+
+    // 2. Contenedor listaTrimestres
+
+    //    generado por JavaScript.
+
+    const lista =
+
+        document.getElementById(
+
+            "listaTrimestres"
+
+        );
+
+    if (lista) {
+
+        renderizarListaTrimestres(
+
+            lista,
+
+            anioServicio
+
+        );
+
+        return;
+
+    }
+
+    for (
+
+        let trimestre = 1;
+
+        trimestre <= 4;
+
+        trimestre++
+
+    ) {
+
+        actualizarTrimestre(
+
+            trimestre,
+
+            anioServicio
+
+        );
+
+    }
+
+}
+
+// =========================================================
+
+// ACTUALIZAR UN TRIMESTRE
+
+// =========================================================
+
+function actualizarTrimestre(
+
+    numero,
+
+    anioServicio
+
+) {
+
+    const datos =
+
+        obtenerDatosTrimestre(
+
+            numero,
+
+            anioServicio
+
+        );
+
+    ponerTexto(
+
+        `trimestre${numero}Total`,
+
+        formatearTiempo(
+
+            datos.total
+
+        )
+
+    );
+
+    ponerTexto(
+
+        `trimestre${numero}Ministerio`,
+
+        formatearTiempo(
+
+            datos.ministerio
+
+        )
+
+    );
+
+    ponerTexto(
+
+        `trimestre${numero}Otras`,
+
+        formatearTiempo(
+
+            datos.otrasActividades
+
+        )
+
+    );
+
+}
 
 // =========================================================
 // RENDERIZAR LISTA DE TRIMESTRES
