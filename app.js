@@ -2882,14 +2882,25 @@ function actualizarPersonajeProgreso(porcentaje) {
             100
         );
 
-    // Posición en porcentaje, sin depender del ancho medido.
-    // Así funciona también cuando Safari ha renderizado la vista
-    // desde la pantalla de inicio o la sección estaba oculta.
-    animal.style.left = `${progreso}%`;
-    animal.style.transform =
-        `translateX(-${progreso}%)`;
+    // Safari/iOS: desplazamos la tortuga con una variable CSS sobre
+    // toda la anchura útil de la pista. Esto evita depender de
+    // mediciones del contenedor y funciona también en modo pantalla
+    // de inicio (standalone).
+    contenedor.style.setProperty(
+        "--progreso-animal",
+        `${progreso / 100}`
+    );
+
+    animal.style.left = "";
+    animal.style.marginLeft = "";
+    animal.style.transform = "";
 
     animal.classList.remove("moviendo");
+    // Reinicia la animación visual cuando cambia el progreso.
+    void animal.offsetWidth;
+    if (progreso > 0 && progreso < 100) {
+        animal.classList.add("moviendo");
+    }
 
     contenedor.classList.toggle(
         "completado",
