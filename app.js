@@ -4173,123 +4173,35 @@ function actualizarTrimestres(
 
 function actualizarTrimestre(
     numero,
-    anioServicio
+    anio
 ) {
 
-    // -----------------------------------------------------
-    // TRIMESTRES DEL AÑO DE SERVICIO
-    // El año de servicio termina en agosto del año indicado.
-    // Ejemplo: año de servicio 2027 = septiembre 2026 → agosto 2027.
-    //
-    // 1.er trimestre: septiembre → noviembre
-    // 2.º trimestre: diciembre → febrero
-    // 3.er trimestre: marzo → mayo
-    // 4.º trimestre: junio → agosto
-    // -----------------------------------------------------
-
-    const anioInicioServicio =
-        anioServicio - 1;
-
-
-    const rangos = [
-        {
-            inicio: new Date(
-                anioInicioServicio,
-                8,
-                1,
-                0,
-                0,
-                0,
-                0
-            ),
-            fin: new Date(
-                anioInicioServicio,
-                11,
-                0,
-                23,
-                59,
-                59,
-                999
-            )
-        },
-        {
-            inicio: new Date(
-                anioInicioServicio,
-                11,
-                1,
-                0,
-                0,
-                0,
-                0
-            ),
-            fin: new Date(
-                anioServicio,
-                2,
-                0,
-                23,
-                59,
-                59,
-                999
-            )
-        },
-        {
-            inicio: new Date(
-                anioServicio,
-                2,
-                1,
-                0,
-                0,
-                0,
-                0
-            ),
-            fin: new Date(
-                anioServicio,
-                5,
-                0,
-                23,
-                59,
-                59,
-                999
-            )
-        },
-        {
-            inicio: new Date(
-                anioServicio,
-                5,
-                1,
-                0,
-                0,
-                0,
-                0
-            ),
-            fin: new Date(
-                anioServicio,
-                8,
-                0,
-                23,
-                59,
-                59,
-                999
-            )
-        }
-    ];
-
-
-    const rango =
-        rangos[numero - 1];
-
-
-    if (!rango) {
-        return;
-    }
+    const mesInicio =
+        (numero - 1) * 3;
 
 
     const inicio =
-        rango.inicio;
+        new Date(
+            anio,
+            mesInicio,
+            1,
+            0,
+            0,
+            0,
+            0
+        );
 
 
     const fin =
-        rango.fin;
+        new Date(
+            anio,
+            mesInicio + 3,
+            0,
+            23,
+            59,
+            59,
+            999
+        );
 
 
     const registros =
@@ -6583,10 +6495,6 @@ function normalizarTipoSincronizacion(
 }
 
 
-// 
-=========================================================
-========
+// =========================================================
 // FIN BLOQUE 7
-// 
-=========================================================
-========
+// =========================================================
