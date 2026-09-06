@@ -2758,6 +2758,19 @@ function actualizarObjetivo(
 
         barra.style.width =
             `${porcentajeVisual}%`;
+
+        // Mantener sincronizado también el personaje
+        // con el mismo porcentaje del progreso mensual.
+        actualizarPersonajeProgreso(
+            porcentajeVisual
+        );
+    } else {
+        actualizarPersonajeProgreso(
+            Math.min(
+                Math.max(porcentaje, 0),
+                100
+            )
+        );
     }
 
 
@@ -2832,6 +2845,99 @@ function actualizarObjetivo(
 
     mensaje.textContent =
         `Te faltan ${formatearTiempo(restante)} para alcanzar tu objetivo.`;
+}
+
+
+// =========================================================
+// PERSONAJE DEL PROGRESO MENSUAL
+// =========================================================
+
+function actualizarPersonajeProgreso(porcentaje) {
+
+    const contenedor =
+        document.getElementById(
+            "progresoPersonaje"
+        );
+
+    const animal =
+        document.getElementById(
+            "animalProgreso"
+        );
+
+    const estadoAnimal =
+        document.getElementById(
+            "estadoAnimal"
+        );
+
+    if (!contenedor || !animal) {
+        return;
+    }
+
+    const progreso =
+        Math.min(
+            Math.max(
+                Number(porcentaje) || 0,
+                0
+            ),
+            100
+        );
+
+    // Esperamos al siguiente frame para asegurarnos de que
+    // Safari ya conoce el ancho real del contenedor.
+    requestAnimationFrame(() => {
+
+        const anchoDisponible =
+            Math.max(
+                contenedor.clientWidth -
+                    animal.offsetWidth -
+                    8,
+                0
+            );
+
+        const posicion =
+            anchoDisponible *
+            (progreso / 100);
+
+        animal.style.left =
+            `${posicion}px`;
+
+        animal.classList.remove(
+            "moviendo"
+        );
+
+        void animal.offsetWidth;
+
+        if (progreso > 0 && progreso < 100) {
+            animal.classList.add(
+                "moviendo"
+            );
+        }
+
+        contenedor.classList.toggle(
+            "completado",
+            progreso >= 100
+        );
+    });
+
+    if (estadoAnimal) {
+
+        if (progreso >= 100) {
+            estadoAnimal.textContent =
+                "¡Objetivo conseguido!";
+
+        } else if (progreso >= 75) {
+            estadoAnimal.textContent =
+                "¡Ya queda muy poco!";
+
+        } else if (progreso >= 40) {
+            estadoAnimal.textContent =
+                "Buen ritmo, seguimos avanzando";
+
+        } else {
+            estadoAnimal.textContent =
+                "Poco a poco, seguimos avanzando";
+        }
+    }
 }
 
 
