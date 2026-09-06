@@ -4176,13 +4176,21 @@ function actualizarTrimestre(
     anio
 ) {
 
-    const mesInicio =
-        (numero - 1) * 3;
+    // Año de servicio: septiembre → agosto
+    // 1.º: sep-nov | 2.º: dic-feb | 3.º: mar-may | 4.º: jun-ago
+    const mesesInicio = [8, 11, 2, 5];
+    const mesInicio = mesesInicio[numero - 1];
 
+    // El año mostrado corresponde al año de servicio que termina en agosto.
+    // Por ejemplo, año de servicio 2027 = septiembre 2026 → agosto 2027.
+    const anioInicio =
+        numero <= 2
+            ? anio - 1
+            : anio;
 
     const inicio =
         new Date(
-            anio,
+            anioInicio,
             mesInicio,
             1,
             0,
@@ -4191,10 +4199,9 @@ function actualizarTrimestre(
             0
         );
 
-
     const fin =
         new Date(
-            anio,
+            anioInicio,
             mesInicio + 3,
             0,
             23,
