@@ -148,8 +148,6 @@ document.addEventListener(
 
         configurarAjustes();
 
-        configurarSincronizacionIPhone();
-
         establecerFechaActual();
 
         seleccionarActividad(
