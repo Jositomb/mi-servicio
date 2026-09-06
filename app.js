@@ -2882,18 +2882,35 @@ function actualizarPersonajeProgreso(porcentaje) {
             100
         );
 
-    // Safari/iOS: desplazamos la tortuga con una variable CSS sobre
-    // toda la anchura útil de la pista. Esto evita depender de
-    // mediciones del contenedor y funciona también en modo pantalla
-    // de inicio (standalone).
-    contenedor.style.setProperty(
-        "--progreso-animal",
-        `${progreso / 100}`
-    );
+    // Safari/iOS: no usamos multiplicaciones dentro de calc(), porque
+    // WebKit puede ignorarlas. Calculamos en JavaScript la corrección
+    // necesaria para que el personaje recorra toda la pista sin salirse.
+    const anchoPersonaje =
+        window.matchMedia("(max-width: 430px)").matches
+            ? 40
+            : 44;
 
-    animal.style.left = "";
-    animal.style.marginLeft = "";
+    const correccionPx =
+        (progreso / 100) * anchoPersonaje;
+
+    animal.style.left =
+        `calc(${progreso}% - ${correccionPx}px)`;
+
+    animal.style.marginLeft = "0";
     animal.style.transform = "";
+
+    // El personaje cambia según el avance mensual.
+    // Inicio: tortuga · avance medio: persona · tramo final: liebre.
+    if (progreso >= 70) {
+        animal.textContent = "🐇";
+        animal.setAttribute("aria-label", "Liebre");
+    } else if (progreso >= 25) {
+        animal.textContent = "🚶";
+        animal.setAttribute("aria-label", "Persona avanzando");
+    } else {
+        animal.textContent = "🐢";
+        animal.setAttribute("aria-label", "Tortuga");
+    }
 
     animal.classList.remove("moviendo");
     // Reinicia la animación visual cuando cambia el progreso.
