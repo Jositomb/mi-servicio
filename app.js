@@ -105,7 +105,10 @@ const estado = {
 
     preferencias: {
         tipoPublicador: "publicador",
-        objetivoMensualMinutos: 0
+        objetivoMensualMinutos: 0,
+        mostrarLDC: true,
+        mostrarAsambleas: true,
+        mostrarOtras: true
     },
 
     registroPendienteBorrar: null,
@@ -186,7 +189,10 @@ function cargarDatos() {
                     "publicador",
 
                 objetivoMensualMinutos:
-                    0
+                    0,
+                mostrarLDC: true,
+                mostrarAsambleas: true,
+                mostrarOtras: true
             }
         );
 
@@ -221,7 +227,10 @@ function cargarDatos() {
                 "publicador",
 
             objetivoMensualMinutos:
-                0
+                0,
+            mostrarLDC: true,
+            mostrarAsambleas: true,
+            mostrarOtras: true
         };
     }
 
@@ -254,6 +263,16 @@ function cargarDatos() {
             .objetivoMensualMinutos =
                 0;
     }
+
+    [
+        "mostrarLDC",
+        "mostrarAsambleas",
+        "mostrarOtras"
+    ].forEach(clave => {
+        if (typeof estado.preferencias[clave] !== "boolean") {
+            estado.preferencias[clave] = true;
+        }
+    });
 
 
     normalizarRegistros();
@@ -1447,9 +1466,9 @@ function obtenerRegistrosFiltrados() {
         "todos"
     ) {
 
-        return [
-            ...estado.registros
-        ];
+        return estado.registros.filter(
+            registro => actividadVisible(registro.tipo)
+        );
     }
 
 
@@ -1457,6 +1476,7 @@ function obtenerRegistrosFiltrados() {
         registro => {
 
             return (
+                actividadVisible(registro.tipo) &&
                 registro.tipo ===
                 estado.filtroHistorial
             );
@@ -2359,6 +2379,12 @@ function actualizarInicio() {
         );
 
 
+    const totalVisible =
+        ministerio +
+        (actividadVisible("ldc") ? ldc : 0) +
+        (actividadVisible("asambleas") ? asambleas : 0) +
+        (actividadVisible("otras") ? otras : 0);
+
     // -----------------------------------------
     // Mostrar resultados
     // -----------------------------------------
@@ -2366,7 +2392,7 @@ function actualizarInicio() {
     ponerTexto(
         "totalMes",
         formatearTiempo(
-            total
+            totalVisible
         )
     );
 
@@ -2417,7 +2443,7 @@ function actualizarInicio() {
 
         filaOtras.classList.toggle(
             "oculto",
-            otras === 0
+            !actividadVisible("otras") || otras === 0
         );
     }
 
@@ -2440,7 +2466,7 @@ function actualizarInicio() {
     // -----------------------------------------
 
     actualizarObjetivo(
-        ministerio
+        total
     );
 }
 
@@ -2475,37 +2501,46 @@ function actualizarGraficoInicio({
 
     const actividades = [
         {
+            tipo: "ministerio",
             nombre: "Ministerio",
             minutos: ministerio,
             color: "var(--primary)",
             clase: "grafico-color-ministerio"
         },
         {
+            tipo: "ldc",
             nombre: "LDC",
             minutos: ldc,
             color: "var(--ldc)",
             clase: "grafico-color-ldc"
         },
         {
+            tipo: "asambleas",
             nombre: "Asambleas",
             minutos: asambleas,
             color: "var(--assembly)",
             clase: "grafico-color-asambleas"
         },
         {
+            tipo: "otras",
             nombre: "Otras",
             minutos: otras,
             color: "var(--other)",
             clase: "grafico-color-otras"
         }
-    ];
+    ].filter(actividad => actividadVisible(actividad.tipo));
 
+
+    const totalVisible = actividades.reduce(
+        (suma, actividad) => suma + actividad.minutos,
+        0
+    );
 
     let fondoAnillo =
         "rgba(120, 120, 128, 0.16)";
 
 
-    if (total > 0) {
+    if (totalVisible > 0) {
 
         let acumulado = 0;
 
@@ -2519,13 +2554,13 @@ function actualizarGraficoInicio({
                     actividad => {
 
                         const inicio =
-                            (acumulado / total) * 360;
+                            (acumulado / totalVisible) * 360;
 
                         acumulado +=
                             actividad.minutos;
 
                         const fin =
-                            (acumulado / total) * 360;
+                            (acumulado / totalVisible) * 360;
 
                         return (
                             `${actividad.color} ` +
@@ -2547,7 +2582,7 @@ function actualizarGraficoInicio({
         ></div>
         <div class="grafico-inicio-centro">
             <p class="grafico-inicio-total">
-                ${formatearTiempo(total)}
+                ${formatearTiempo(totalVisible)}
             </p>
             <span class="grafico-inicio-texto">
                 este mes
@@ -2644,16 +2679,12 @@ function obtenerRegistrosMesActual() {
 // =========================================================
 //
 // IMPORTANTE:
-// El objetivo se calcula únicamente con las horas
-// de MINISTERIO.
-//
-// LDC, Asambleas y Otras actividades continúan
-// apareciendo en los totales, pero no incrementan
-// el objetivo mensual de ministerio.
+// Para el objetivo mensual computa TODO el tiempo
+// registrado: Ministerio, LDC, Asambleas y Otras.
 // =========================================================
 
 function actualizarObjetivo(
-    totalMinisterioMes
+    totalComputableMes
 ) {
 
     const objetivo =
@@ -2674,7 +2705,7 @@ function actualizarObjetivo(
         objetivo > 0
             ? Math.round(
                 (
-                    totalMinisterioMes /
+                    totalComputableMes /
                     objetivo
                 ) * 100
             )
@@ -2688,7 +2719,7 @@ function actualizarObjetivo(
     ponerTexto(
         "valorObjetivo",
         formatearTiempo(
-            totalMinisterioMes
+            totalComputableMes
         )
     );
 
@@ -2752,7 +2783,7 @@ function actualizarObjetivo(
     if (objetivo <= 0) {
 
         mensaje.textContent =
-            totalMinisterioMes > 0
+            totalComputableMes > 0
                 ? "Configura un objetivo mensual en Ajustes."
                 : "Empieza registrando tu primera actividad de ministerio.";
 
@@ -2765,12 +2796,12 @@ function actualizarObjetivo(
     // -----------------------------------------
 
     if (
-        totalMinisterioMes >=
+        totalComputableMes >=
         objetivo
     ) {
 
         const superado =
-            totalMinisterioMes -
+            totalComputableMes -
             objetivo;
 
 
@@ -2796,7 +2827,7 @@ function actualizarObjetivo(
 
     const restante =
         objetivo -
-        totalMinisterioMes;
+        totalComputableMes;
 
 
     mensaje.textContent =
@@ -3015,6 +3046,8 @@ function actualizarEstadisticas() {
         obtenerRegistrosEntreFechas(
             rango.inicio,
             rango.fin
+        ).filter(
+            registro => actividadVisible(registro.tipo)
         );
 
 
@@ -4614,6 +4647,14 @@ function cargarFormularioAjustes() {
                 )
                 : "0";
     }
+
+    const mostrarLDC = document.getElementById("mostrarLDC");
+    const mostrarAsambleas = document.getElementById("mostrarAsambleas");
+    const mostrarOtras = document.getElementById("mostrarOtras");
+
+    if (mostrarLDC) mostrarLDC.checked = estado.preferencias.mostrarLDC !== false;
+    if (mostrarAsambleas) mostrarAsambleas.checked = estado.preferencias.mostrarAsambleas !== false;
+    if (mostrarOtras) mostrarOtras.checked = estado.preferencias.mostrarOtras !== false;
 }
 
 
@@ -4774,7 +4815,13 @@ function guardarAjustesDesdeFormulario() {
     };
 
 
+    const mostrarLDC = document.getElementById("mostrarLDC");
+    const mostrarAsambleas = document.getElementById("mostrarAsambleas");
+    const mostrarOtras = document.getElementById("mostrarOtras");
+
     estado.preferencias = {
+
+        ...estado.preferencias,
 
         tipoPublicador:
             tipo.value,
@@ -4782,7 +4829,11 @@ function guardarAjustesDesdeFormulario() {
         objetivoMensualMinutos:
             Math.round(
                 horas * 60
-            )
+            ),
+
+        mostrarLDC: mostrarLDC ? mostrarLDC.checked : true,
+        mostrarAsambleas: mostrarAsambleas ? mostrarAsambleas.checked : true,
+        mostrarOtras: mostrarOtras ? mostrarOtras.checked : true
     };
 
 
@@ -4811,7 +4862,8 @@ function guardarAjustesDesdeFormulario() {
     );
 
 
-    actualizarInicio();
+    aplicarVisibilidadActividades();
+    actualizarTodaLaInterfaz();
 }
 
 // =========================================================
@@ -5597,7 +5649,16 @@ function normalizarPreferenciasImportadas(
             tipo,
 
         objetivoMensualMinutos:
-            objetivo
+            objetivo,
+
+        mostrarLDC:
+            preferencias?.mostrarLDC !== false,
+
+        mostrarAsambleas:
+            preferencias?.mostrarAsambleas !== false,
+
+        mostrarOtras:
+            preferencias?.mostrarOtras !== false
     };
 }
 
@@ -5647,11 +5708,70 @@ function fechaISOValida(
 
 
 // =========================================================
+// VISIBILIDAD DE ACTIVIDADES
+// =========================================================
+
+function actividadVisible(tipo) {
+    switch (tipo) {
+        case "ldc": return estado.preferencias.mostrarLDC !== false;
+        case "asambleas": return estado.preferencias.mostrarAsambleas !== false;
+        case "otras": return estado.preferencias.mostrarOtras !== false;
+        default: return true;
+    }
+}
+
+function filtrarRegistrosVisibles(registros) {
+    return registros.filter(registro => actividadVisible(registro.tipo));
+}
+
+function aplicarVisibilidadActividades() {
+    ["ldc", "asambleas", "otras"].forEach(tipo => {
+        const visible = actividadVisible(tipo);
+
+        document.querySelectorAll(`.actividad-boton[data-tipo="${tipo}"]`).forEach(el =>
+            el.classList.toggle("oculto", !visible)
+        );
+
+        document.querySelectorAll(`.filtro-historial[data-filtro="${tipo}"]`).forEach(el =>
+            el.classList.toggle("oculto", !visible)
+        );
+    });
+
+    const pares = [
+        ["totalLDC", "ldc"],
+        ["totalAsambleas", "asambleas"],
+        ["totalOtras", "otras"],
+        ["estadisticasLDC", "ldc"],
+        ["estadisticasAsambleas", "asambleas"],
+        ["estadisticasOtras", "otras"]
+    ];
+
+    pares.forEach(([id, tipo]) => {
+        const el = document.getElementById(id);
+        const fila = el?.closest(".fila-dato");
+        if (fila) fila.classList.toggle("oculto", !actividadVisible(tipo));
+    });
+
+    if (!actividadVisible(estado.filtroHistorial) && estado.filtroHistorial !== "todos") {
+        estado.filtroHistorial = "todos";
+        document.querySelectorAll(".filtro-historial").forEach(boton =>
+            boton.classList.toggle("activo", boton.dataset.filtro === "todos")
+        );
+    }
+
+    const tipoActual = document.getElementById("tipoRegistro")?.value;
+    if (tipoActual && !actividadVisible(tipoActual)) {
+        seleccionarActividad("ministerio");
+    }
+}
+
+// =========================================================
 // ACTUALIZACIÓN GENERAL
 // =========================================================
 
 function actualizarTodaLaInterfaz() {
 
+    aplicarVisibilidadActividades();
     actualizarInicio();
 
     renderizarHistorial();
