@@ -2882,42 +2882,19 @@ function actualizarPersonajeProgreso(porcentaje) {
             100
         );
 
-    // Esperamos al siguiente frame para asegurarnos de que
-    // Safari ya conoce el ancho real del contenedor.
-    requestAnimationFrame(() => {
+    // Posición en porcentaje, sin depender del ancho medido.
+    // Así funciona también cuando Safari ha renderizado la vista
+    // desde la pantalla de inicio o la sección estaba oculta.
+    animal.style.left = `${progreso}%`;
+    animal.style.transform =
+        `translateX(-${progreso}%)`;
 
-        const anchoDisponible =
-            Math.max(
-                contenedor.clientWidth -
-                    animal.offsetWidth -
-                    8,
-                0
-            );
+    animal.classList.remove("moviendo");
 
-        const posicion =
-            anchoDisponible *
-            (progreso / 100);
-
-        animal.style.left =
-            `${posicion}px`;
-
-        animal.classList.remove(
-            "moviendo"
-        );
-
-        void animal.offsetWidth;
-
-        if (progreso > 0 && progreso < 100) {
-            animal.classList.add(
-                "moviendo"
-            );
-        }
-
-        contenedor.classList.toggle(
-            "completado",
-            progreso >= 100
-        );
-    });
+    contenedor.classList.toggle(
+        "completado",
+        progreso >= 100
+    );
 
     if (estadoAnimal) {
 
