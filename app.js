@@ -2423,12 +2423,157 @@ function actualizarInicio() {
 
 
     // -----------------------------------------
+    // Gráfico circular del mes
+    // -----------------------------------------
+
+    actualizarGraficoInicio({
+        total,
+        ministerio,
+        ldc,
+        asambleas,
+        otras
+    });
+
+
+    // -----------------------------------------
     // Objetivo mensual
     // -----------------------------------------
 
     actualizarObjetivo(
         ministerio
     );
+}
+
+
+// =========================================================
+// GRÁFICO CIRCULAR DEL MES
+// =========================================================
+
+function actualizarGraficoInicio({
+    total,
+    ministerio,
+    ldc,
+    asambleas,
+    otras
+}) {
+
+    const grafico =
+        document.getElementById(
+            "graficoInicio"
+        );
+
+    const leyenda =
+        document.getElementById(
+            "leyendaGraficoInicio"
+        );
+
+
+    if (!grafico || !leyenda) {
+        return;
+    }
+
+
+    const actividades = [
+        {
+            nombre: "Ministerio",
+            minutos: ministerio,
+            color: "var(--primary)",
+            clase: "grafico-color-ministerio"
+        },
+        {
+            nombre: "LDC",
+            minutos: ldc,
+            color: "var(--ldc)",
+            clase: "grafico-color-ldc"
+        },
+        {
+            nombre: "Asambleas",
+            minutos: asambleas,
+            color: "var(--assembly)",
+            clase: "grafico-color-asambleas"
+        },
+        {
+            nombre: "Otras",
+            minutos: otras,
+            color: "var(--other)",
+            clase: "grafico-color-otras"
+        }
+    ];
+
+
+    let fondoAnillo =
+        "rgba(120, 120, 128, 0.16)";
+
+
+    if (total > 0) {
+
+        let acumulado = 0;
+
+        const segmentos =
+            actividades
+                .filter(
+                    actividad =>
+                        actividad.minutos > 0
+                )
+                .map(
+                    actividad => {
+
+                        const inicio =
+                            (acumulado / total) * 360;
+
+                        acumulado +=
+                            actividad.minutos;
+
+                        const fin =
+                            (acumulado / total) * 360;
+
+                        return (
+                            `${actividad.color} ` +
+                            `${inicio.toFixed(2)}deg ` +
+                            `${fin.toFixed(2)}deg`
+                        );
+                    }
+                );
+
+        fondoAnillo =
+            `conic-gradient(${segmentos.join(", ")})`;
+    }
+
+
+    grafico.innerHTML = `
+        <div
+            class="grafico-inicio-anillo"
+            style="background: ${fondoAnillo};"
+        ></div>
+        <div class="grafico-inicio-centro">
+            <p class="grafico-inicio-total">
+                ${formatearTiempo(total)}
+            </p>
+            <span class="grafico-inicio-texto">
+                este mes
+            </span>
+        </div>
+    `;
+
+
+    leyenda.innerHTML =
+        actividades
+            .map(
+                actividad => `
+                    <div class="leyenda-grafico-fila">
+                        <span class="leyenda-grafico-nombre">
+                            <span
+                                class="leyenda-grafico-punto ${actividad.clase}"
+                            ></span>
+                            ${actividad.nombre}
+                        </span>
+                        <strong class="leyenda-grafico-tiempo">
+                            ${formatearTiempo(actividad.minutos)}
+                        </strong>
+                    </div>
+                `
+            )
+            .join("");
 }
 
 
@@ -2827,10 +2972,16 @@ function moverPeriodoEstadisticas(
             break;
 
 
-        case "anio":
+        case "anio": {
 
-            fecha.setMonth(0);
-            fecha.setDate(1);
+            const rangoActual =
+                rangoAnio(
+                    fecha
+                );
+
+            fecha.setTime(
+                rangoActual.inicio.getTime()
+            );
 
             fecha.setFullYear(
                 fecha.getFullYear() +
@@ -2838,6 +2989,7 @@ function moverPeriodoEstadisticas(
             );
 
             break;
+        }
     }
 
 
@@ -3185,16 +3337,30 @@ function rangoAnio(
     fecha
 ) {
 
-    const anio =
+    const anioNatural =
         fecha.getFullYear();
+
+    const mes =
+        fecha.getMonth();
+
+
+    // El año de servicio comienza el 1 de septiembre
+    // y termina el 31 de agosto del año siguiente.
+    // Ejemplo: septiembre de 2026 pertenece al
+    // año de servicio 2027.
+
+    const anioInicio =
+        mes >= 8
+            ? anioNatural
+            : anioNatural - 1;
 
 
     return {
 
         inicio:
             new Date(
-                anio,
-                0,
+                anioInicio,
+                8,
                 1,
                 0,
                 0,
@@ -3205,8 +3371,8 @@ function rangoAnio(
 
         fin:
             new Date(
-                anio,
-                11,
+                anioInicio + 1,
+                7,
                 31,
                 23,
                 59,
@@ -3215,7 +3381,6 @@ function rangoAnio(
             )
     };
 }
-
 
 // =========================================================
 // REGISTROS ENTRE DOS FECHAS
@@ -3354,8 +3519,8 @@ function actualizarTextoPeriodoEstadisticas(
         periodo === "anio"
     ) {
 
-        const anio =
-            rango.inicio
+        const anioServicio =
+            rango.fin
                 .getFullYear();
 
 
@@ -3363,14 +3528,14 @@ function actualizarTextoPeriodoEstadisticas(
             esAnioActual(
                 rango.inicio
             )
-                ? "Este año"
-                : "Año";
+                ? "Este año de servicio"
+                : "Año de servicio";
 
 
         textoRango =
-            String(
-                anio
-            );
+            `${anioServicio} · ` +
+            `sep ${rango.inicio.getFullYear()} – ` +
+            `ago ${anioServicio}`;
     }
 
 
@@ -3483,13 +3648,21 @@ function esMesActual(
 
 
 function esAnioActual(
-    fecha
+    fechaInicio
 ) {
 
+    const actual =
+        rangoAnio(
+            new Date()
+        );
+
+
     return (
-        new Date()
-            .getFullYear() ===
-        fecha.getFullYear()
+        actual.inicio.getFullYear() ===
+            fechaInicio.getFullYear()
+        &&
+        actual.inicio.getMonth() ===
+            fechaInicio.getMonth()
     );
 }
 
@@ -3810,6 +3983,10 @@ function obtenerDatosGraficoAnio(
 ) {
 
     const nombres = [
+        "S",
+        "O",
+        "N",
+        "D",
         "E",
         "F",
         "M",
@@ -3817,11 +3994,7 @@ function obtenerDatosGraficoAnio(
         "M",
         "J",
         "J",
-        "A",
-        "S",
-        "O",
-        "N",
-        "D"
+        "A"
     ];
 
 
@@ -3829,24 +4002,19 @@ function obtenerDatosGraficoAnio(
         new Date();
 
 
-    const anio =
-        inicioAnio
-            .getFullYear();
-
-
     const datos = [];
 
 
     for (
-        let mes = 0;
-        mes < 12;
-        mes++
+        let indice = 0;
+        indice < 12;
+        indice++
     ) {
 
         const inicio =
             new Date(
-                anio,
-                mes,
+                inicioAnio.getFullYear(),
+                inicioAnio.getMonth() + indice,
                 1,
                 0,
                 0,
@@ -3857,8 +4025,8 @@ function obtenerDatosGraficoAnio(
 
         const fin =
             new Date(
-                anio,
-                mes + 1,
+                inicio.getFullYear(),
+                inicio.getMonth() + 1,
                 0,
                 23,
                 59,
@@ -3877,7 +4045,7 @@ function obtenerDatosGraficoAnio(
         datos.push({
 
             nombre:
-                nombres[mes],
+                nombres[indice],
 
             minutos:
                 sumarMinutos(
@@ -3886,17 +4054,16 @@ function obtenerDatosGraficoAnio(
 
             destacado:
                 hoy.getFullYear() ===
-                    anio
+                    inicio.getFullYear()
                 &&
                 hoy.getMonth() ===
-                    mes
+                    inicio.getMonth()
         });
     }
 
 
     return datos;
 }
-
 
 // =========================================================
 // RENDERIZAR COLUMNAS DEL GRÁFICO
@@ -4118,8 +4285,13 @@ function actualizarTrimestres(
             "seccionTrimestres"
         );
 
+    const lista =
+        document.getElementById(
+            "listaTrimestres"
+        );
 
-    if (!seccion) {
+
+    if (!seccion || !lista) {
         return;
     }
 
@@ -4140,17 +4312,18 @@ function actualizarTrimestres(
     }
 
 
-    const anio =
-        rangoAnual.inicio
+    const anioServicio =
+        rangoAnual.fin
             .getFullYear();
 
 
     ponerTexto(
         "anioTrimestres",
-        String(
-            anio
-        )
+        `Año de servicio ${anioServicio}`
     );
+
+
+    lista.innerHTML = "";
 
 
     for (
@@ -4159,39 +4332,30 @@ function actualizarTrimestres(
         trimestre++
     ) {
 
-        actualizarTrimestre(
-            trimestre,
-            anio
+        lista.appendChild(
+            crearTarjetaTrimestre(
+                trimestre,
+                rangoAnual.inicio
+            )
         );
     }
 }
 
 
 // =========================================================
-// ACTUALIZAR TRIMESTRE
+// CREAR TARJETA DE TRIMESTRE
 // =========================================================
 
-function actualizarTrimestre(
+function crearTarjetaTrimestre(
     numero,
-    anio
+    inicioAnioServicio
 ) {
-
-    // Año de servicio: septiembre → agosto
-    // 1.º: sep-nov | 2.º: dic-feb | 3.º: mar-may | 4.º: jun-ago
-    const mesesInicio = [8, 11, 2, 5];
-    const mesInicio = mesesInicio[numero - 1];
-
-    // El año mostrado corresponde al año de servicio que termina en agosto.
-    // Por ejemplo, año de servicio 2027 = septiembre 2026 → agosto 2027.
-    const anioInicio =
-        numero <= 2
-            ? anio - 1
-            : anio;
 
     const inicio =
         new Date(
-            anioInicio,
-            mesInicio,
+            inicioAnioServicio.getFullYear(),
+            inicioAnioServicio.getMonth() +
+                (numero - 1) * 3,
             1,
             0,
             0,
@@ -4201,8 +4365,8 @@ function actualizarTrimestre(
 
     const fin =
         new Date(
-            anioInicio,
-            mesInicio + 3,
+            inicio.getFullYear(),
+            inicio.getMonth() + 3,
             0,
             23,
             59,
@@ -4218,8 +4382,6 @@ function actualizarTrimestre(
         );
 
 
-    // Ministerio separado
-
     const ministerio =
         sumarMinutos(
             registros.filter(
@@ -4229,8 +4391,6 @@ function actualizarTrimestre(
             )
         );
 
-
-    // LDC + Asambleas + Otras
 
     const otrasActividades =
         sumarMinutos(
@@ -4247,28 +4407,54 @@ function actualizarTrimestre(
         otrasActividades;
 
 
-    ponerTexto(
-        `trimestre${numero}Total`,
-        formatearTiempo(
-            total
-        )
-    );
+    const tarjeta =
+        document.createElement(
+            "article"
+        );
+
+    tarjeta.className =
+        "tarjeta trimestre-card";
 
 
-    ponerTexto(
-        `trimestre${numero}Ministerio`,
-        formatearTiempo(
-            ministerio
-        )
-    );
+    const formatoMes =
+        new Intl.DateTimeFormat(
+            "es-ES",
+            {
+                month: "short",
+                year: "numeric"
+            }
+        );
 
 
-    ponerTexto(
-        `trimestre${numero}Otras`,
-        formatearTiempo(
-            otrasActividades
-        )
-    );
+    tarjeta.innerHTML = `
+        <div class="trimestre-cabecera">
+            <div>
+                <h3 class="trimestre-titulo">
+                    ${numero}.º trimestre
+                </h3>
+                <p class="trimestre-fechas">
+                    ${capitalizar(formatoMes.format(inicio))}
+                    –
+                    ${capitalizar(formatoMes.format(fin))}
+                </p>
+            </div>
+            <strong class="trimestre-total">
+                ${formatearTiempo(total)}
+            </strong>
+        </div>
+        <div class="separador"></div>
+        <div class="fila-dato">
+            <span>Ministerio</span>
+            <strong>${formatearTiempo(ministerio)}</strong>
+        </div>
+        <div class="fila-dato">
+            <span>Otras actividades</span>
+            <strong>${formatearTiempo(otrasActividades)}</strong>
+        </div>
+    `;
+
+
+    return tarjeta;
 }
 
 
