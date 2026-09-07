@@ -5886,7 +5886,7 @@ function crearDatosCopiaSeguridad() {
             "mi-servicio-backup",
 
         version:
-            1,
+            2,
 
         exportadoEn:
             new Date().toISOString(),
@@ -6040,23 +6040,19 @@ async function importarCopiaSeguridad(
             "mensajeDatos"
         );
 
-
     limpiarMensajeFormulario(
         mensaje
     );
-
 
     try {
 
         const contenido =
             await archivo.text();
 
-
         const datos =
             JSON.parse(
                 contenido
             );
-
 
         if (
             !validarCopiaSeguridad(
@@ -6073,45 +6069,67 @@ async function importarCopiaSeguridad(
             return;
         }
 
-
         const registrosImportados =
             normalizarRegistrosImportados(
                 datos.registros
             );
-
 
         const preferenciasImportadas =
             normalizarPreferenciasImportadas(
                 datos.preferencias
             );
 
+        const fechaCopia =
+            datos.exportadoEn
+                ? new Date(datos.exportadoEn)
+                : null;
 
-        // Guardamos una copia temporal
-        // por si falla localStorage.
+        const fechaTexto =
+            fechaCopia && !Number.isNaN(fechaCopia.getTime())
+                ? formatearFechaCopia(fechaCopia)
+                : "fecha desconocida";
 
+        const aceptar = window.confirm(
+            `Vas a restaurar una copia de Mi Servicio.\n\n` +
+            `Fecha de la copia: ${fechaTexto}\n` +
+            `Registros: ${registrosImportados.length}\n\n` +
+            `Antes de restaurarla se descargará automáticamente una copia de seguridad de tus datos actuales.\n\n` +
+            `¿Quieres continuar?`
+        );
+
+        if (!aceptar) {
+            mostrarMensajeFormulario(
+                mensaje,
+                "Restauración cancelada. No se ha cambiado ningún dato.",
+                false
+            );
+            return;
+        }
+
+        // Antes de sustituir nada, descargamos una copia de los datos actuales.
+        // Esta copia no modifica la fecha del recordatorio mensual.
+        descargarCopiaSeguridadActual(
+            "Antes-de-restaurar"
+        );
+
+        // Además conservamos los valores en memoria por si localStorage falla.
         const registrosAnteriores =
             estado.registros;
-
 
         const preferenciasAnteriores =
             estado.preferencias;
 
-
         estado.registros =
             registrosImportados;
-
 
         estado.preferencias =
             preferenciasImportadas;
 
-
         const registrosGuardados =
             guardarRegistros();
 
-
         const preferenciasGuardadas =
             guardarPreferencias();
-
 
         if (
             !registrosGuardados ||
@@ -6121,34 +6139,27 @@ async function importarCopiaSeguridad(
             estado.registros =
                 registrosAnteriores;
 
-
             estado.preferencias =
                 preferenciasAnteriores;
-
 
             guardarRegistros();
             guardarPreferencias();
 
-
             mostrarMensajeFormulario(
                 mensaje,
-                "No se pudieron guardar los datos importados.",
+                "No se pudieron guardar los datos importados. Se han conservado los datos anteriores.",
                 true
             );
 
             return;
         }
 
-
         cargarFormularioAjustes();
-
-
         actualizarTodaLaInterfaz();
-
 
         mostrarMensajeFormulario(
             mensaje,
-            `Copia importada correctamente: ${textoCantidadRegistros(registrosImportados.length)} ✓`,
+            `Copia restaurada correctamente: ${textoCantidadRegistros(registrosImportados.length)} ✓`,
             false
         );
 
@@ -6159,13 +6170,70 @@ async function importarCopiaSeguridad(
             error
         );
 
-
         mostrarMensajeFormulario(
             mensaje,
-            "No se pudo leer la copia de seguridad.",
+            "No se pudo leer la copia de seguridad. Tus datos actuales no se han modificado.",
             true
         );
     }
+}
+
+
+// =========================================================
+// DESCARGAR COPIA PREVIA A UNA RESTAURACIÓN
+// =========================================================
+
+function descargarCopiaSeguridadActual(
+    etiqueta = "Copia"
+) {
+
+    const datos =
+        crearDatosCopiaSeguridad();
+
+    const contenido =
+        JSON.stringify(
+            datos,
+            null,
+            2
+        );
+
+    const blob =
+        new Blob(
+            [contenido],
+            {
+                type:
+                    "application/json;charset=utf-8"
+            }
+        );
+
+    const url =
+        URL.createObjectURL(
+            blob
+        );
+
+    const enlace =
+        document.createElement(
+            "a"
+        );
+
+    enlace.href = url;
+    enlace.download =
+        `Mi-Servicio-${etiqueta}-${fechaLocalISO(new Date())}.json`;
+    enlace.style.display = "none";
+
+    document.body.appendChild(
+        enlace
+    );
+
+    enlace.click();
+
+    window.setTimeout(
+        () => {
+            URL.revokeObjectURL(url);
+            enlace.remove();
+        },
+        1500
+    );
 }
 
 
