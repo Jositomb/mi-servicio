@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles.css?v=7"
+        href="./styles.css?v=8"
     >
 </head>
 <body>
@@ -140,6 +140,29 @@
                     </div>
                 </article>
             </section>
+            <!-- RECORDATORIO DE COPIA DE SEGURIDAD -->
+            <section
+                id="recordatorioCopiaInicio"
+                class="seccion seccion-recordatorio-copia oculto"
+                aria-live="polite"
+            >
+                <article class="tarjeta recordatorio-copia">
+                    <div class="recordatorio-copia-texto">
+                        <strong>📦 Es hora de hacer una copia de seguridad</strong>
+                        <p id="textoRecordatorioCopia">
+                            Te lo recordaremos una vez al mes.
+                        </p>
+                    </div>
+                    <button
+                        id="hacerCopiaDesdeInicio"
+                        class="boton-recordatorio-copia"
+                        type="button"
+                    >
+                        Hacer copia ahora
+                    </button>
+                </article>
+            </section>
+
             <!-- CALENDARIO DEL MES -->
             <section class="seccion seccion-calendario-inicio">
                 <button
@@ -839,6 +862,12 @@
                     </h2>
                 </div>
                 <article class="tarjeta">
+                    <p
+                        id="ultimaCopiaAjustes"
+                        class="estado-ultima-copia"
+                    >
+                        Todavía no hay una copia registrada
+                    </p>
                     <button
                         id="exportarDatos"
                         class="boton-guardar"
@@ -976,6 +1005,6 @@
 <!-- =========================================================
      JAVASCRIPT
 ========================================================== -->
-<script src="./app.js?v=7"></script>
+<script src="./app.js?v=8"></script>
 </body>
 </html>

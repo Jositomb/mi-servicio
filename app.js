@@ -12,7 +12,8 @@
 
 const STORAGE_KEYS = {
     registros: "miServicio.registros",
-    preferencias: "miServicio.preferencias"
+    preferencias: "miServicio.preferencias",
+    ultimaCopiaSeguridad: "miServicio.ultimaCopiaSeguridad"
 };
 
 
@@ -146,6 +147,8 @@ document.addEventListener(
 
         configurarCalendarioInicio();
 
+        configurarRecordatorioCopiaSeguridad();
+
         configurarSincronizacionIPhone();
 
         establecerFechaActual();
@@ -159,6 +162,8 @@ document.addEventListener(
         cargarFormularioAjustes();
 
         actualizarTodaLaInterfaz();
+
+        actualizarRecordatorioCopiaSeguridad();
 
         seleccionarVista(
             "inicio"
@@ -5055,6 +5060,182 @@ function crearTarjetaTrimestre(
 // =========================================================
 
 // =========================================================
+// RECORDATORIO MENSUAL DE COPIA DE SEGURIDAD
+// =========================================================
+
+function configurarRecordatorioCopiaSeguridad() {
+
+    const boton =
+        document.getElementById(
+            "hacerCopiaDesdeInicio"
+        );
+
+    if (boton) {
+
+        boton.addEventListener(
+            "click",
+            exportarCopiaSeguridad
+        );
+    }
+}
+
+
+function leerUltimaCopiaSeguridad() {
+
+    try {
+
+        const valor =
+            localStorage.getItem(
+                STORAGE_KEYS.ultimaCopiaSeguridad
+            );
+
+        if (!valor) {
+            return null;
+        }
+
+        const fecha = new Date(valor);
+
+        return Number.isNaN(fecha.getTime())
+            ? null
+            : fecha;
+
+    } catch (error) {
+
+        console.error(
+            "No se pudo leer la fecha de la última copia:",
+            error
+        );
+
+        return null;
+    }
+}
+
+
+function guardarUltimaCopiaSeguridad(fecha = new Date()) {
+
+    try {
+
+        localStorage.setItem(
+            STORAGE_KEYS.ultimaCopiaSeguridad,
+            fecha.toISOString()
+        );
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            "No se pudo guardar la fecha de la última copia:",
+            error
+        );
+
+        return false;
+    }
+}
+
+
+function sumarUnMesCalendario(fecha) {
+
+    const resultado = new Date(fecha);
+    const diaOriginal = resultado.getDate();
+
+    resultado.setDate(1);
+    resultado.setMonth(
+        resultado.getMonth() + 1
+    );
+
+    const ultimoDiaDelMes =
+        new Date(
+            resultado.getFullYear(),
+            resultado.getMonth() + 1,
+            0
+        ).getDate();
+
+    resultado.setDate(
+        Math.min(
+            diaOriginal,
+            ultimoDiaDelMes
+        )
+    );
+
+    return resultado;
+}
+
+
+function formatearFechaCopia(fecha) {
+
+    return new Intl.DateTimeFormat(
+        "es-ES",
+        {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        }
+    ).format(fecha);
+}
+
+
+function actualizarRecordatorioCopiaSeguridad() {
+
+    const aviso =
+        document.getElementById(
+            "recordatorioCopiaInicio"
+        );
+
+    const textoAviso =
+        document.getElementById(
+            "textoRecordatorioCopia"
+        );
+
+    const ultimaCopiaAjustes =
+        document.getElementById(
+            "ultimaCopiaAjustes"
+        );
+
+    const ultimaCopia =
+        leerUltimaCopiaSeguridad();
+
+    if (ultimaCopiaAjustes) {
+
+        ultimaCopiaAjustes.textContent =
+            ultimaCopia
+                ? `Última copia: ${formatearFechaCopia(ultimaCopia)}`
+                : "Todavía no hay una copia registrada";
+    }
+
+    if (!aviso) {
+        return;
+    }
+
+    const hoy = new Date();
+
+    const tocaHacerCopia =
+        !ultimaCopia ||
+        hoy >= sumarUnMesCalendario(ultimaCopia);
+
+    aviso.classList.toggle(
+        "oculto",
+        !tocaHacerCopia
+    );
+
+    if (!tocaHacerCopia || !textoAviso) {
+        return;
+    }
+
+    if (!ultimaCopia) {
+
+        textoAviso.textContent =
+            "Haz una copia ahora. Después te lo recordaremos una vez al mes.";
+
+        return;
+    }
+
+    textoAviso.textContent =
+        `La última copia fue el ${formatearFechaCopia(ultimaCopia)}.`;
+}
+
+
+// =========================================================
 // BLOQUE 5
 // AJUSTES + COPIAS DE SEGURIDAD
 // =========================================================
@@ -5816,6 +5997,12 @@ function exportarCopiaSeguridad() {
             1500
         );
 
+
+        guardarUltimaCopiaSeguridad(
+            new Date()
+        );
+
+        actualizarRecordatorioCopiaSeguridad();
 
         mostrarMensajeFormulario(
             mensaje,
