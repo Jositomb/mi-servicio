@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles.css?v=10"
+        href="./styles.css?v=11"
     >
 </head>
 <body>
@@ -426,6 +426,14 @@
                                 value="0"
                             >
                         </div>
+                    </div>
+                    <div class="atajos-tiempo" aria-label="Atajos de tiempo">
+                        <button type="button" class="atajo-tiempo" data-minutos="15">15 min</button>
+                        <button type="button" class="atajo-tiempo" data-minutos="30">30 min</button>
+                        <button type="button" class="atajo-tiempo" data-minutos="45">45 min</button>
+                        <button type="button" class="atajo-tiempo" data-minutos="60">1 h</button>
+                        <button type="button" class="atajo-tiempo" data-minutos="90">1 h 30</button>
+                        <button type="button" class="atajo-tiempo" data-minutos="120">2 h</button>
                     </div>
                 </div>
                 <!-- CURSOS BÍBLICOS -->
@@ -1043,6 +1051,15 @@
                 </label>
             </div>
 
+            <div class="atajos-tiempo atajos-tiempo-editar" aria-label="Atajos de tiempo">
+                <button type="button" class="atajo-tiempo atajo-tiempo-edicion" data-minutos="15">15 min</button>
+                <button type="button" class="atajo-tiempo atajo-tiempo-edicion" data-minutos="30">30 min</button>
+                <button type="button" class="atajo-tiempo atajo-tiempo-edicion" data-minutos="45">45 min</button>
+                <button type="button" class="atajo-tiempo atajo-tiempo-edicion" data-minutos="60">1 h</button>
+                <button type="button" class="atajo-tiempo atajo-tiempo-edicion" data-minutos="90">1 h 30</button>
+                <button type="button" class="atajo-tiempo atajo-tiempo-edicion" data-minutos="120">2 h</button>
+            </div>
+
             <label class="campo-editar">
                 <span>Notas</span>
                 <textarea id="editarNotas" maxlength="250" rows="3" placeholder="Opcional"></textarea>
@@ -1061,6 +1078,6 @@
 <!-- =========================================================
      JAVASCRIPT
 ========================================================== -->
-<script src="./app.js?v=10"></script>
+<script src="./app.js?v=11"></script>
 </body>
 </html>

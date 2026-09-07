@@ -871,6 +871,17 @@ function configurarFormulario() {
         return;
     }
 
+    configurarCamposTiempoFaciles(
+        "horasRegistro",
+        "minutosRegistro"
+    );
+
+    configurarAtajosTiempo(
+        ".atajo-tiempo:not(.atajo-tiempo-edicion)",
+        "horasRegistro",
+        "minutosRegistro"
+    );
+
     formulario.addEventListener(
         "submit",
         evento => {
@@ -880,6 +891,88 @@ function configurarFormulario() {
             registrarActividad();
         }
     );
+}
+
+
+// =========================================================
+// CAMPOS Y ATAJOS DE TIEMPO
+// =========================================================
+
+function configurarCamposTiempoFaciles(idHoras, idMinutos) {
+
+    [idHoras, idMinutos].forEach(id => {
+        const campo = document.getElementById(id);
+
+        if (!campo || campo.dataset.seleccionFacil === "1") {
+            return;
+        }
+
+        campo.dataset.seleccionFacil = "1";
+
+        const seleccionarTodo = () => {
+            setTimeout(() => {
+                try {
+                    campo.select();
+                } catch (error) {
+                    // Algunos navegadores móviles no exponen select()
+                    // de forma completa en inputs numéricos.
+                }
+            }, 0);
+        };
+
+        campo.addEventListener("focus", seleccionarTodo);
+        campo.addEventListener("click", seleccionarTodo);
+
+        campo.addEventListener("blur", () => {
+            if (campo.value === "") {
+                campo.value = "0";
+            }
+        });
+    });
+}
+
+
+function configurarAtajosTiempo(selector, idHoras, idMinutos) {
+
+    const horas = document.getElementById(idHoras);
+    const minutos = document.getElementById(idMinutos);
+
+    if (!horas || !minutos) {
+        return;
+    }
+
+    document.querySelectorAll(selector).forEach(boton => {
+
+        if (boton.dataset.atajoConfigurado === "1") {
+            return;
+        }
+
+        boton.dataset.atajoConfigurado = "1";
+
+        boton.addEventListener("click", () => {
+            const total = Math.max(
+                0,
+                Number(boton.dataset.minutos) || 0
+            );
+
+            horas.value = String(Math.floor(total / 60));
+            minutos.value = String(total % 60);
+
+            const grupo = boton.closest(".atajos-tiempo");
+            if (grupo) {
+                grupo.querySelectorAll(".atajo-tiempo").forEach(elemento => {
+                    elemento.classList.toggle(
+                        "seleccionado",
+                        elemento === boton
+                    );
+                });
+            }
+
+            if (typeof vibrar === "function") {
+                vibrar(10);
+            }
+        });
+    });
 }
 
 
@@ -1194,6 +1287,10 @@ function registrarActividad() {
 
     campoMinutos.value =
         "0";
+
+    document
+        .querySelectorAll(".atajo-tiempo:not(.atajo-tiempo-edicion)")
+        .forEach(boton => boton.classList.remove("seleccionado"));
 
     campoNotas.value =
         "";
@@ -2177,6 +2274,17 @@ function crearTarjetaHistorial(
 
 function configurarEdicionRegistros() {
 
+    configurarCamposTiempoFaciles(
+        "editarHoras",
+        "editarMinutos"
+    );
+
+    configurarAtajosTiempo(
+        ".atajo-tiempo-edicion",
+        "editarHoras",
+        "editarMinutos"
+    );
+
     const formulario =
         document.getElementById("formEditarRegistro");
 
@@ -2250,6 +2358,10 @@ function abrirModalEdicion(id) {
     horas.value = String(Math.floor(total / 60));
     minutos.value = String(total % 60);
     notas.value = registro.notas || "";
+
+    document
+        .querySelectorAll(".atajo-tiempo-edicion")
+        .forEach(boton => boton.classList.remove("seleccionado"));
 
     // Solo ofrecemos actividades que estén visibles en Ajustes,
     // manteniendo siempre disponible el tipo actual del registro.

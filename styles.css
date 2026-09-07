@@ -3467,3 +3467,49 @@ textarea.campo {
         min-height: 40px;
     }
 }
+
+/* =========================================================
+   ATAJOS DE TIEMPO · v11
+   ========================================================= */
+
+.atajos-tiempo {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.atajo-tiempo {
+    min-height: 42px;
+    padding: 8px 10px;
+    border: 1px solid var(--divider);
+    border-radius: 12px;
+    background: var(--card);
+    color: var(--text-primary);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 650;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.atajo-tiempo:active {
+    transform: scale(0.98);
+}
+
+.atajo-tiempo.seleccionado {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+    color: var(--primary);
+}
+
+.atajos-tiempo-editar {
+    margin-top: -2px;
+    margin-bottom: 4px;
+}
+
+@media (max-width: 360px) {
+    .atajos-tiempo {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
