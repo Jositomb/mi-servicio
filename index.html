@@ -2,6 +2,9 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0, viewport-fit=cover"
@@ -137,6 +140,51 @@
                     </div>
                 </article>
             </section>
+            <!-- CALENDARIO DEL MES -->
+            <section class="seccion seccion-calendario-inicio">
+                <button
+                    id="botonCalendarioInicio"
+                    class="boton-calendario-inicio"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="panelCalendarioInicio"
+                >
+                    <span>📅 Ver calendario del mes</span>
+                    <span id="iconoCalendarioInicio" class="icono-desplegable">⌄</span>
+                </button>
+
+                <div
+                    id="panelCalendarioInicio"
+                    class="panel-calendario-inicio oculto"
+                >
+                    <article class="tarjeta tarjeta-calendario-inicio">
+                        <div class="calendario-cabecera">
+                            <div>
+                                <p class="etiqueta">Actividad del mes</p>
+                                <h3 id="tituloCalendarioInicio">Mes actual</h3>
+                            </div>
+                            <span id="resumenCalendarioInicio" class="calendario-resumen"></span>
+                        </div>
+
+                        <div class="calendario-semana" aria-hidden="true">
+                            <span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span>
+                        </div>
+
+                        <div
+                            id="calendarioInicio"
+                            class="calendario-mes"
+                            aria-label="Calendario de actividad del mes"
+                        ></div>
+
+                        <div
+                            id="detalleDiaCalendario"
+                            class="detalle-dia-calendario oculto"
+                            aria-live="polite"
+                        ></div>
+                    </article>
+                </div>
+            </section>
+
             <!-- PROGRESO DEL MES -->
             <section
                 class="seccion"
@@ -928,6 +976,6 @@
 <!-- =========================================================
      JAVASCRIPT
 ========================================================== -->
-<script src="./app.js?v=5"></script>
+<script src="./app.js?v=7"></script>
 </body>
 </html>

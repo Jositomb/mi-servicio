@@ -2952,6 +2952,7 @@ textarea.campo {
 .progreso-animal {
     position: absolute;
 
+    /* La posición la calcula JavaScript para máxima compatibilidad con Safari/iOS. */
     left: 0;
     bottom: 22px;
 
@@ -2964,8 +2965,6 @@ textarea.campo {
 
     font-size: 34px;
     line-height: 1;
-
-    transform: translateX(0);
 
     transition:
         left 0.8s cubic-bezier(.22, .8, .28, 1),
@@ -3049,5 +3048,204 @@ textarea.campo {
 
     .progreso-meta {
         font-size: 22px;
+    }
+}
+
+/* =========================================================
+   CALENDARIO DESPLEGABLE EN INICIO
+   ========================================================= */
+
+.seccion-calendario-inicio {
+    margin-top: -8px;
+}
+
+.boton-calendario-inicio {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    border: 1px solid var(--divider);
+    border-radius: 16px;
+
+    background: var(--card);
+    color: var(--text-primary);
+
+    font: inherit;
+    font-weight: 700;
+    text-align: left;
+
+    box-shadow: var(--shadow);
+    cursor: pointer;
+}
+
+.icono-desplegable {
+    flex: 0 0 auto;
+    color: var(--text-secondary);
+    font-size: 20px;
+    line-height: 1;
+}
+
+.panel-calendario-inicio {
+    margin-top: 10px;
+}
+
+.tarjeta-calendario-inicio {
+    padding: 16px;
+}
+
+.calendario-cabecera {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.calendario-cabecera h3 {
+    margin: 0;
+    font-size: 19px;
+    letter-spacing: -0.2px;
+}
+
+.calendario-resumen {
+    color: var(--text-secondary);
+    font-size: 12px;
+    text-align: right;
+}
+
+.calendario-semana,
+.calendario-mes {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 5px;
+}
+
+.calendario-semana {
+    margin-bottom: 5px;
+}
+
+.calendario-semana span {
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.calendario-dia {
+    min-width: 0;
+    min-height: 50px;
+    padding: 5px 2px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 3px;
+
+    border: 1px solid transparent;
+    border-radius: 11px;
+
+    background: transparent;
+    color: var(--text-primary);
+
+    font: inherit;
+    cursor: pointer;
+}
+
+.calendario-dia-vacio {
+    pointer-events: none;
+}
+
+.calendario-dia-numero {
+    width: 27px;
+    height: 27px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.calendario-dia-tiempo {
+    min-height: 13px;
+    color: var(--text-secondary);
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 1.1;
+    white-space: nowrap;
+}
+
+.calendario-dia.con-actividad {
+    border-color: color-mix(in srgb, var(--primary) 24%, transparent);
+    background: color-mix(in srgb, var(--primary) 9%, transparent);
+}
+
+.calendario-dia.con-actividad .calendario-dia-tiempo {
+    color: var(--primary);
+}
+
+.calendario-dia.hoy .calendario-dia-numero {
+    background: var(--primary);
+    color: white;
+}
+
+.detalle-dia-calendario {
+    margin-top: 14px;
+    padding-top: 13px;
+    border-top: 1px solid var(--divider);
+}
+
+.detalle-dia-cabecera,
+.detalle-dia-fila {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.detalle-dia-cabecera {
+    margin-bottom: 9px;
+}
+
+.detalle-dia-cabecera span {
+    color: var(--primary);
+    font-weight: 800;
+}
+
+.detalle-dia-fila {
+    padding: 7px 0;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.detalle-dia-fila strong {
+    color: var(--text-primary);
+}
+
+@media (max-width: 390px) {
+    .tarjeta-calendario-inicio {
+        padding: 13px 10px;
+    }
+
+    .calendario-semana,
+    .calendario-mes {
+        gap: 3px;
+    }
+
+    .calendario-dia {
+        min-height: 47px;
+    }
+
+    .calendario-dia-tiempo {
+        font-size: 8px;
     }
 }

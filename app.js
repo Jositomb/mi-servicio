@@ -144,6 +144,8 @@ document.addEventListener(
 
         configurarAjustes();
 
+        configurarCalendarioInicio();
+
         configurarSincronizacionIPhone();
 
         establecerFechaActual();
@@ -2293,6 +2295,8 @@ function actualizarInicio() {
 
     actualizarNombreMes();
 
+    actualizarCalendarioInicio();
+
     const registrosMes =
         obtenerRegistrosMesActual();
 
@@ -2467,6 +2471,450 @@ function actualizarInicio() {
 
     actualizarObjetivo(
         total
+    );
+}
+
+
+// =========================================================
+// CALENDARIO DEL MES EN INICIO
+// =========================================================
+
+function configurarCalendarioInicio() {
+
+    const boton =
+        document.getElementById(
+            "botonCalendarioInicio"
+        );
+
+    const panel =
+        document.getElementById(
+            "panelCalendarioInicio"
+        );
+
+    const icono =
+        document.getElementById(
+            "iconoCalendarioInicio"
+        );
+
+    if (!boton || !panel) {
+        return;
+    }
+
+    boton.addEventListener(
+        "click",
+        () => {
+
+            const abrir =
+                panel.classList.contains(
+                    "oculto"
+                );
+
+            panel.classList.toggle(
+                "oculto",
+                !abrir
+            );
+
+            boton.setAttribute(
+                "aria-expanded",
+                abrir ? "true" : "false"
+            );
+
+            if (icono) {
+                icono.textContent =
+                    abrir ? "⌃" : "⌄";
+            }
+
+            if (abrir) {
+                actualizarCalendarioInicio();
+            }
+        }
+    );
+}
+
+
+function actualizarCalendarioInicio() {
+
+    const calendario =
+        document.getElementById(
+            "calendarioInicio"
+        );
+
+    const titulo =
+        document.getElementById(
+            "tituloCalendarioInicio"
+        );
+
+    const resumen =
+        document.getElementById(
+            "resumenCalendarioInicio"
+        );
+
+    const detalle =
+        document.getElementById(
+            "detalleDiaCalendario"
+        );
+
+    if (!calendario) {
+        return;
+    }
+
+    const hoy = new Date();
+    const anio = hoy.getFullYear();
+    const mes = hoy.getMonth();
+
+    if (titulo) {
+        titulo.textContent =
+            hoy.toLocaleDateString(
+                "es-ES",
+                {
+                    month: "long",
+                    year: "numeric"
+                }
+            ).replace(
+                /^./,
+                letra => letra.toUpperCase()
+            );
+    }
+
+    const registrosMes =
+        estado.registros.filter(
+            registro => {
+                const fecha =
+                    fechaDesdeISO(
+                        registro.fecha
+                    );
+
+                return (
+                    fecha.getFullYear() === anio
+                    &&
+                    fecha.getMonth() === mes
+                );
+            }
+        );
+
+    const minutosPorDia = new Map();
+    const registrosPorDia = new Map();
+
+    registrosMes.forEach(
+        registro => {
+            const fecha =
+                fechaDesdeISO(
+                    registro.fecha
+                );
+
+            const dia = fecha.getDate();
+            const minutos =
+                Math.max(
+                    Number(registro.minutos) || 0,
+                    0
+                );
+
+            minutosPorDia.set(
+                dia,
+                (minutosPorDia.get(dia) || 0)
+                + minutos
+            );
+
+            if (!registrosPorDia.has(dia)) {
+                registrosPorDia.set(dia, []);
+            }
+
+            registrosPorDia.get(dia).push(registro);
+        }
+    );
+
+    const diasConActividad =
+        Array.from(
+            minutosPorDia.values()
+        ).filter(
+            minutos => minutos > 0
+        ).length;
+
+    if (resumen) {
+        resumen.textContent =
+            diasConActividad === 1
+                ? "1 día con actividad"
+                : `${diasConActividad} días con actividad`;
+    }
+
+    calendario.innerHTML = "";
+
+    if (detalle) {
+        detalle.classList.add("oculto");
+        detalle.innerHTML = "";
+    }
+
+    const primerDia =
+        new Date(anio, mes, 1).getDay();
+
+    const huecosIniciales =
+        (primerDia + 6) % 7;
+
+    const diasMes =
+        new Date(
+            anio,
+            mes + 1,
+            0
+        ).getDate();
+
+    for (
+        let indice = 0;
+        indice < huecosIniciales;
+        indice += 1
+    ) {
+        const hueco =
+            document.createElement("span");
+
+        hueco.className =
+            "calendario-dia calendario-dia-vacio";
+
+        hueco.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+        calendario.appendChild(hueco);
+    }
+
+    for (
+        let dia = 1;
+        dia <= diasMes;
+        dia += 1
+    ) {
+        const minutos =
+            minutosPorDia.get(dia) || 0;
+
+        const botonDia =
+            document.createElement("button");
+
+        botonDia.type = "button";
+        botonDia.className =
+            "calendario-dia";
+
+        if (minutos > 0) {
+            botonDia.classList.add(
+                "con-actividad"
+            );
+        }
+
+        if (
+            dia === hoy.getDate()
+            &&
+            mes === hoy.getMonth()
+            &&
+            anio === hoy.getFullYear()
+        ) {
+            botonDia.classList.add("hoy");
+        }
+
+        const numero =
+            document.createElement("span");
+
+        numero.className =
+            "calendario-dia-numero";
+
+        numero.textContent = dia;
+
+        const tiempo =
+            document.createElement("span");
+
+        tiempo.className =
+            "calendario-dia-tiempo";
+
+        tiempo.textContent =
+            minutos > 0
+                ? formatearTiempoCortoCalendario(
+                    minutos
+                )
+                : "";
+
+        botonDia.appendChild(numero);
+        botonDia.appendChild(tiempo);
+
+        botonDia.setAttribute(
+            "aria-label",
+            minutos > 0
+                ? `${dia}: ${formatearTiempo(minutos)} de actividad`
+                : `${dia}: sin actividad`
+        );
+
+        botonDia.addEventListener(
+            "click",
+            () => {
+                mostrarDetalleDiaCalendario(
+                    dia,
+                    mes,
+                    anio,
+                    registrosPorDia.get(dia) || []
+                );
+            }
+        );
+
+        calendario.appendChild(botonDia);
+    }
+}
+
+
+function formatearTiempoCortoCalendario(minutos) {
+
+    const total =
+        Math.max(
+            Math.round(
+                Number(minutos) || 0
+            ),
+            0
+        );
+
+    const horas =
+        Math.floor(total / 60);
+
+    const resto = total % 60;
+
+    if (horas > 0 && resto > 0) {
+        return `${horas}h ${resto}m`;
+    }
+
+    if (horas > 0) {
+        return `${horas}h`;
+    }
+
+    return resto > 0
+        ? `${resto}m`
+        : "";
+}
+
+
+function mostrarDetalleDiaCalendario(
+    dia,
+    mes,
+    anio,
+    registros
+) {
+
+    const detalle =
+        document.getElementById(
+            "detalleDiaCalendario"
+        );
+
+    if (!detalle) {
+        return;
+    }
+
+    const fecha =
+        new Date(anio, mes, dia);
+
+    const tituloFecha =
+        fecha.toLocaleDateString(
+            "es-ES",
+            {
+                weekday: "long",
+                day: "numeric",
+                month: "long"
+            }
+        );
+
+    const registrosVisibles =
+        registros.filter(
+            registro =>
+                actividadVisible(
+                    registro.tipo
+                )
+        );
+
+    const total =
+        sumarMinutos(
+            registrosVisibles
+        );
+
+    detalle.innerHTML = "";
+    detalle.classList.remove("oculto");
+
+    const cabecera =
+        document.createElement("div");
+
+    cabecera.className =
+        "detalle-dia-cabecera";
+
+    const nombre =
+        document.createElement("strong");
+
+    nombre.textContent =
+        tituloFecha.replace(
+            /^./,
+            letra => letra.toUpperCase()
+        );
+
+    const totalTexto =
+        document.createElement("span");
+
+    totalTexto.textContent =
+        formatearTiempo(total);
+
+    cabecera.appendChild(nombre);
+    cabecera.appendChild(totalTexto);
+    detalle.appendChild(cabecera);
+
+    if (registrosVisibles.length === 0) {
+        const vacio =
+            document.createElement("p");
+
+        vacio.className =
+            "texto-secundario";
+
+        vacio.textContent =
+            "No hubo actividad registrada este día.";
+
+        detalle.appendChild(vacio);
+        return;
+    }
+
+    const agrupado = new Map();
+
+    registrosVisibles.forEach(
+        registro => {
+            const tipo = registro.tipo;
+            agrupado.set(
+                tipo,
+                (agrupado.get(tipo) || 0)
+                + Math.max(
+                    Number(registro.minutos) || 0,
+                    0
+                )
+            );
+        }
+    );
+
+    const nombres = {
+        ministerio: "Ministerio",
+        ldc: "LDC",
+        asambleas: "Asambleas",
+        otras: "Otras"
+    };
+
+    agrupado.forEach(
+        (minutos, tipo) => {
+            const fila =
+                document.createElement("div");
+
+            fila.className =
+                "detalle-dia-fila";
+
+            const etiqueta =
+                document.createElement("span");
+
+            etiqueta.textContent =
+                nombres[tipo] || tipo;
+
+            const valor =
+                document.createElement("strong");
+
+            valor.textContent =
+                formatearTiempo(minutos);
+
+            fila.appendChild(etiqueta);
+            fila.appendChild(valor);
+            detalle.appendChild(fila);
+        }
     );
 }
 
