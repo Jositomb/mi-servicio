@@ -4146,6 +4146,18 @@ function actualizarEstadisticas() {
 
 
     // -----------------------------------------------------
+    // Barras de actividad · v13
+    // -----------------------------------------------------
+
+    actualizarBarrasActividadEstadisticas({
+        ministerio,
+        ldc,
+        asambleas,
+        otras
+    });
+
+
+    // -----------------------------------------------------
     // Resumen
     // -----------------------------------------------------
 
@@ -4212,6 +4224,54 @@ function actualizarEstadisticas() {
             registros.length !== 0
         );
     }
+}
+
+
+// =========================================================
+// BARRAS DE ACTIVIDAD DE ESTADÍSTICAS
+// =========================================================
+
+function actualizarBarrasActividadEstadisticas(valores) {
+
+    const configuracion = [
+        ["ministerio", "Ministerio"],
+        ["ldc", "LDC"],
+        ["asambleas", "Asambleas"],
+        ["otras", "Otras"]
+    ];
+
+    const totalVisible = configuracion.reduce(
+        (suma, [tipo]) =>
+            suma + (actividadVisible(tipo) ? (valores[tipo] || 0) : 0),
+        0
+    );
+
+    configuracion.forEach(([tipo, sufijo]) => {
+        const item = document.querySelector(
+            `[data-estadistica-tipo="${tipo}"]`
+        );
+        if (item) {
+            item.classList.toggle("oculto", !actividadVisible(tipo));
+        }
+
+        const minutos = valores[tipo] || 0;
+        const porcentaje = totalVisible > 0
+            ? Math.round((minutos / totalVisible) * 100)
+            : 0;
+
+        ponerTexto(`porcentaje${sufijo}`, `${porcentaje} %`);
+
+        const barra = document.getElementById(`barra${sufijo}`);
+        if (barra) {
+            // Reinicio breve para que la animación se perciba al cambiar de periodo.
+            barra.style.width = "0%";
+            window.requestAnimationFrame(() => {
+                window.requestAnimationFrame(() => {
+                    barra.style.width = `${porcentaje}%`;
+                });
+            });
+        }
+    });
 }
 
 

@@ -3562,3 +3562,79 @@ textarea.campo {
         transition: none;
     }
 }
+
+/* =========================================================
+   V13 · BARRAS DE ACTIVIDAD ESTILO APPLE
+   ========================================================= */
+.barras-actividad-estadisticas {
+    display: grid;
+    gap: 18px;
+    padding-top: 2px;
+}
+
+.barra-actividad-item {
+    min-width: 0;
+}
+
+.barra-actividad-item.oculto {
+    display: none;
+}
+
+.barra-actividad-cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.barra-actividad-cabecera > span:last-child {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.barra-actividad-cabecera strong {
+    font-size: 15px;
+    color: var(--text-primary);
+}
+
+.barra-actividad-cabecera small {
+    min-width: 38px;
+    text-align: right;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--text-secondary);
+}
+
+.barra-actividad-pista {
+    width: 100%;
+    height: 13px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(120, 120, 128, 0.12);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.barra-actividad-relleno {
+    width: 0;
+    height: 100%;
+    border-radius: inherit;
+    transform-origin: left center;
+    transition: width 0.7s cubic-bezier(.2,.8,.2,1);
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.12);
+}
+
+.barra-actividad-item.ministerio .barra-actividad-relleno { background: var(--ministry); }
+.barra-actividad-item.ldc .barra-actividad-relleno { background: var(--ldc); }
+.barra-actividad-item.asambleas .barra-actividad-relleno { background: var(--assembly); }
+.barra-actividad-item.otras .barra-actividad-relleno { background: var(--other); }
+
+.barra-actividad-item.ministerio small { color: var(--ministry); }
+.barra-actividad-item.ldc small { color: var(--ldc); }
+.barra-actividad-item.asambleas small { color: var(--assembly); }
+.barra-actividad-item.otras small { color: var(--other); }

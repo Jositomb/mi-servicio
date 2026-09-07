@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles.css?v=12"
+        href="./styles.css?v=13"
     >
 </head>
 <body>
@@ -642,37 +642,23 @@
                         0 h
                     </p>
                     <div class="separador"></div>
-                    <div class="fila-dato">
-                        <span>
-                            Ministerio
-                        </span>
-                        <strong id="estadisticasMinisterio">
-                            0 h
-                        </strong>
-                    </div>
-                    <div class="fila-dato">
-                        <span>
-                            LDC
-                        </span>
-                        <strong id="estadisticasLDC">
-                            0 h
-                        </strong>
-                    </div>
-                    <div class="fila-dato">
-                        <span>
-                            Asambleas
-                        </span>
-                        <strong id="estadisticasAsambleas">
-                            0 h
-                        </strong>
-                    </div>
-                    <div class="fila-dato">
-                        <span>
-                            Otras
-                        </span>
-                        <strong id="estadisticasOtras">
-                            0 h
-                        </strong>
+                    <div class="barras-actividad-estadisticas" id="barrasActividadEstadisticas">
+                        <div class="barra-actividad-item ministerio" data-estadistica-tipo="ministerio">
+                            <div class="barra-actividad-cabecera"><span>Ministerio</span><span><strong id="estadisticasMinisterio">0 h</strong><small id="porcentajeMinisterio">0 %</small></span></div>
+                            <div class="barra-actividad-pista"><div id="barraMinisterio" class="barra-actividad-relleno"></div></div>
+                        </div>
+                        <div class="barra-actividad-item ldc" data-estadistica-tipo="ldc">
+                            <div class="barra-actividad-cabecera"><span>LDC</span><span><strong id="estadisticasLDC">0 h</strong><small id="porcentajeLDC">0 %</small></span></div>
+                            <div class="barra-actividad-pista"><div id="barraLDC" class="barra-actividad-relleno"></div></div>
+                        </div>
+                        <div class="barra-actividad-item asambleas" data-estadistica-tipo="asambleas">
+                            <div class="barra-actividad-cabecera"><span>Asambleas</span><span><strong id="estadisticasAsambleas">0 h</strong><small id="porcentajeAsambleas">0 %</small></span></div>
+                            <div class="barra-actividad-pista"><div id="barraAsambleas" class="barra-actividad-relleno"></div></div>
+                        </div>
+                        <div class="barra-actividad-item otras" data-estadistica-tipo="otras">
+                            <div class="barra-actividad-cabecera"><span>Otras</span><span><strong id="estadisticasOtras">0 h</strong><small id="porcentajeOtras">0 %</small></span></div>
+                            <div class="barra-actividad-pista"><div id="barraOtras" class="barra-actividad-relleno"></div></div>
+                        </div>
                     </div>
                 </article>
             </section>
@@ -1078,6 +1064,6 @@
 <!-- =========================================================
      JAVASCRIPT
 ========================================================== -->
-<script src="./app.js?v=12"></script>
+<script src="./app.js?v=13"></script>
 </body>
 </html>
