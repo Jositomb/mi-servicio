@@ -114,6 +114,8 @@ const estado = {
 
     registroPendienteBorrar: null,
 
+    registroPendienteEditar: null,
+
     estadisticas: {
         periodo: "semana",
         fechaReferencia: new Date()
@@ -138,6 +140,8 @@ document.addEventListener(
         configurarFormulario();
 
         configurarHistorial();
+
+        configurarEdicionRegistros();
 
         configurarFiltrosHistorial();
 
@@ -2089,14 +2093,307 @@ function crearTarjetaHistorial(
     );
 
 
-    tarjeta.append(
-        icono,
-        contenido,
+    // -----------------------------------------
+    // Acciones: editar y borrar
+    // -----------------------------------------
+
+    const acciones =
+        document.createElement("div");
+
+    acciones.className =
+        "registro-acciones";
+
+    const botonEditar =
+        document.createElement("button");
+
+    botonEditar.type = "button";
+    botonEditar.className =
+        "boton-editar-registro";
+    botonEditar.textContent = "✎";
+    botonEditar.setAttribute(
+        "aria-label",
+        `Editar registro de ${nombreActividad(registro.tipo)}`
+    );
+
+    botonEditar.addEventListener(
+        "click",
+        evento => {
+            evento.stopPropagation();
+            abrirModalEdicion(registro.id);
+        }
+    );
+
+    botonBorrar.addEventListener(
+        "click",
+        evento => {
+            evento.stopPropagation();
+        },
+        { once: false }
+    );
+
+    acciones.append(
+        botonEditar,
         botonBorrar
     );
 
+    tarjeta.append(
+        icono,
+        contenido,
+        acciones
+    );
+
+    tarjeta.classList.add("registro-card-editable");
+    tarjeta.setAttribute("tabindex", "0");
+    tarjeta.setAttribute(
+        "aria-label",
+        `Editar ${nombreActividad(registro.tipo)}, ${formatearTiempo(registro.minutos)}`
+    );
+
+    tarjeta.addEventListener(
+        "click",
+        evento => {
+            if (evento.target.closest("button")) return;
+            abrirModalEdicion(registro.id);
+        }
+    );
+
+    tarjeta.addEventListener(
+        "keydown",
+        evento => {
+            if (evento.key === "Enter" || evento.key === " ") {
+                evento.preventDefault();
+                abrirModalEdicion(registro.id);
+            }
+        }
+    );
 
     return tarjeta;
+}
+
+
+// =========================================================
+// EDICIÓN DE REGISTROS
+// =========================================================
+
+function configurarEdicionRegistros() {
+
+    const formulario =
+        document.getElementById("formEditarRegistro");
+
+    const cancelar =
+        document.getElementById("cancelarEdicion");
+
+    const fondo =
+        document.querySelector("#modalEditar .modal-fondo");
+
+    if (formulario) {
+        formulario.addEventListener(
+            "submit",
+            guardarEdicionRegistro
+        );
+    }
+
+    if (cancelar) {
+        cancelar.addEventListener(
+            "click",
+            cerrarModalEdicion
+        );
+    }
+
+    if (fondo) {
+        fondo.addEventListener(
+            "click",
+            cerrarModalEdicion
+        );
+    }
+
+    document.addEventListener(
+        "keydown",
+        evento => {
+            if (evento.key === "Escape") {
+                cerrarModalEdicion();
+            }
+        }
+    );
+}
+
+
+function abrirModalEdicion(id) {
+
+    const registro =
+        estado.registros.find(
+            elemento => elemento.id === id
+        );
+
+    if (!registro) {
+        return;
+    }
+
+    estado.registroPendienteEditar = id;
+
+    const modal = document.getElementById("modalEditar");
+    const fecha = document.getElementById("editarFecha");
+    const tipo = document.getElementById("editarTipo");
+    const horas = document.getElementById("editarHoras");
+    const minutos = document.getElementById("editarMinutos");
+    const notas = document.getElementById("editarNotas");
+    const mensaje = document.getElementById("mensajeEditarRegistro");
+
+    if (!modal || !fecha || !tipo || !horas || !minutos || !notas) {
+        return;
+    }
+
+    fecha.value = registro.fecha;
+    tipo.value = registro.tipo;
+
+    const total = Math.max(Number(registro.minutos) || 0, 0);
+    horas.value = String(Math.floor(total / 60));
+    minutos.value = String(total % 60);
+    notas.value = registro.notas || "";
+
+    // Solo ofrecemos actividades que estén visibles en Ajustes,
+    // manteniendo siempre disponible el tipo actual del registro.
+    Array.from(tipo.options).forEach(
+        opcion => {
+            opcion.hidden =
+                opcion.value !== registro.tipo
+                && !actividadVisible(opcion.value);
+        }
+    );
+
+    if (mensaje) {
+        mensaje.textContent = "";
+        mensaje.classList.remove("error");
+    }
+
+    modal.classList.remove("oculto");
+    modal.setAttribute("aria-hidden", "false");
+
+    setTimeout(() => fecha.focus(), 0);
+}
+
+
+function cerrarModalEdicion() {
+
+    estado.registroPendienteEditar = null;
+
+    const modal = document.getElementById("modalEditar");
+
+    if (!modal) {
+        return;
+    }
+
+    modal.classList.add("oculto");
+    modal.setAttribute("aria-hidden", "true");
+}
+
+
+function guardarEdicionRegistro(evento) {
+
+    evento.preventDefault();
+
+    const id = estado.registroPendienteEditar;
+    const indice = estado.registros.findIndex(
+        registro => registro.id === id
+    );
+
+    if (indice < 0) {
+        cerrarModalEdicion();
+        return;
+    }
+
+    const fecha = document.getElementById("editarFecha");
+    const tipo = document.getElementById("editarTipo");
+    const horas = document.getElementById("editarHoras");
+    const minutos = document.getElementById("editarMinutos");
+    const notas = document.getElementById("editarNotas");
+    const mensaje = document.getElementById("mensajeEditarRegistro");
+
+    const valorFecha = fecha ? fecha.value : "";
+    const valorTipo = tipo ? tipo.value : "ministerio";
+    const valorHoras = Number(horas ? horas.value : 0);
+    const valorMinutos = Number(minutos ? minutos.value : 0);
+    const valorNotas = notas ? notas.value.trim() : "";
+
+    const tiposValidos = [
+        "ministerio",
+        "ldc",
+        "asambleas",
+        "otras"
+    ];
+
+    function error(texto) {
+        if (mensaje) {
+            mensaje.textContent = texto;
+            mensaje.classList.add("error");
+        }
+    }
+
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(valorFecha)) {
+        error("Selecciona una fecha válida.");
+        return;
+    }
+
+    if (!tiposValidos.includes(valorTipo)) {
+        error("Selecciona una actividad válida.");
+        return;
+    }
+
+    if (
+        !Number.isInteger(valorHoras)
+        || valorHoras < 0
+        || valorHoras > 24
+    ) {
+        error("Revisa las horas.");
+        return;
+    }
+
+    if (
+        !Number.isInteger(valorMinutos)
+        || valorMinutos < 0
+        || valorMinutos > 59
+    ) {
+        error("Los minutos deben estar entre 0 y 59.");
+        return;
+    }
+
+    const totalMinutos =
+        (valorHoras * 60) + valorMinutos;
+
+    if (totalMinutos <= 0) {
+        error("Introduce un tiempo mayor que cero.");
+        return;
+    }
+
+    const anterior = {
+        ...estado.registros[indice],
+        sincronizacion: {
+            ...(estado.registros[indice].sincronizacion || {})
+        }
+    };
+
+    estado.registros[indice] = {
+        ...estado.registros[indice],
+        fecha: valorFecha,
+        tipo: valorTipo,
+        minutos: totalMinutos,
+        notas: valorNotas,
+        modificadoEn: new Date().toISOString(),
+        sincronizacion: {
+            estado: "pendiente",
+            ultimaSincronizacion:
+                estado.registros[indice].sincronizacion?.ultimaSincronizacion || null
+        }
+    };
+
+    if (!guardarRegistros()) {
+        estado.registros[indice] = anterior;
+        error("No se pudieron guardar los cambios.");
+        return;
+    }
+
+    cerrarModalEdicion();
+    actualizarTodaLaInterfaz();
 }
 
 
@@ -2873,54 +3170,73 @@ function mostrarDetalleDiaCalendario(
         return;
     }
 
-    const agrupado = new Map();
+    const lista =
+        document.createElement("div");
 
-    registrosVisibles.forEach(
-        registro => {
-            const tipo = registro.tipo;
-            agrupado.set(
-                tipo,
-                (agrupado.get(tipo) || 0)
-                + Math.max(
-                    Number(registro.minutos) || 0,
-                    0
-                )
-            );
-        }
-    );
+    lista.className =
+        "detalle-dia-lista-registros";
 
-    const nombres = {
-        ministerio: "Ministerio",
-        ldc: "LDC",
-        asambleas: "Asambleas",
-        otras: "Otras"
-    };
+    registrosVisibles
+        .slice()
+        .sort(compararRegistrosPorFecha)
+        .forEach(
+            registro => {
+                const fila =
+                    document.createElement("div");
 
-    agrupado.forEach(
-        (minutos, tipo) => {
-            const fila =
-                document.createElement("div");
+                fila.className =
+                    "detalle-dia-registro";
 
-            fila.className =
-                "detalle-dia-fila";
+                const datos =
+                    document.createElement("div");
 
-            const etiqueta =
-                document.createElement("span");
+                datos.className =
+                    "detalle-dia-registro-datos";
 
-            etiqueta.textContent =
-                nombres[tipo] || tipo;
+                const etiqueta =
+                    document.createElement("span");
 
-            const valor =
-                document.createElement("strong");
+                etiqueta.textContent =
+                    nombreActividad(registro.tipo);
 
-            valor.textContent =
-                formatearTiempo(minutos);
+                const valor =
+                    document.createElement("strong");
 
-            fila.appendChild(etiqueta);
-            fila.appendChild(valor);
-            detalle.appendChild(fila);
-        }
-    );
+                valor.textContent =
+                    formatearTiempo(registro.minutos);
+
+                datos.append(etiqueta, valor);
+
+                if (registro.notas) {
+                    const nota =
+                        document.createElement("small");
+                    nota.textContent = registro.notas;
+                    datos.appendChild(nota);
+                }
+
+                const editar =
+                    document.createElement("button");
+
+                editar.type = "button";
+                editar.className =
+                    "boton-editar-calendario";
+                editar.textContent = "Editar";
+                editar.setAttribute(
+                    "aria-label",
+                    `Editar ${nombreActividad(registro.tipo)} de ${formatearTiempo(registro.minutos)}`
+                );
+
+                editar.addEventListener(
+                    "click",
+                    () => abrirModalEdicion(registro.id)
+                );
+
+                fila.append(datos, editar);
+                lista.appendChild(fila);
+            }
+        );
+
+    detalle.appendChild(lista);
 }
 
 

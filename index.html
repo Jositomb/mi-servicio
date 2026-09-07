@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles.css?v=9"
+        href="./styles.css?v=10"
     >
 </head>
 <body>
@@ -1002,9 +1002,65 @@
         </div>
     </div>
 </div>
+
+<!-- =========================================================
+     MODAL EDITAR REGISTRO
+========================================================== -->
+<div
+    id="modalEditar"
+    class="modal oculto"
+    aria-hidden="true"
+>
+    <div class="modal-fondo"></div>
+    <div class="modal-contenido modal-editar-contenido">
+        <h2>Editar actividad</h2>
+        <p class="texto-secundario">Modifica los datos y guarda los cambios.</p>
+
+        <form id="formEditarRegistro" class="form-editar-registro">
+            <label class="campo-editar">
+                <span>Fecha</span>
+                <input id="editarFecha" type="date" required>
+            </label>
+
+            <label class="campo-editar">
+                <span>Actividad</span>
+                <select id="editarTipo" required>
+                    <option value="ministerio">Ministerio</option>
+                    <option value="ldc">LDC</option>
+                    <option value="asambleas">Asambleas</option>
+                    <option value="otras">Otras</option>
+                </select>
+            </label>
+
+            <div class="editar-tiempo-grid">
+                <label class="campo-editar">
+                    <span>Horas</span>
+                    <input id="editarHoras" type="number" min="0" max="24" inputmode="numeric" required>
+                </label>
+                <label class="campo-editar">
+                    <span>Minutos</span>
+                    <input id="editarMinutos" type="number" min="0" max="59" inputmode="numeric" required>
+                </label>
+            </div>
+
+            <label class="campo-editar">
+                <span>Notas</span>
+                <textarea id="editarNotas" maxlength="250" rows="3" placeholder="Opcional"></textarea>
+            </label>
+
+            <p id="mensajeEditarRegistro" class="mensaje-formulario" aria-live="polite"></p>
+
+            <div class="modal-botones">
+                <button id="cancelarEdicion" class="boton-modal cancelar" type="button">Cancelar</button>
+                <button class="boton-modal boton-guardar-edicion" type="submit">Guardar cambios</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- =========================================================
      JAVASCRIPT
 ========================================================== -->
-<script src="./app.js?v=9"></script>
+<script src="./app.js?v=10"></script>
 </body>
 </html>
