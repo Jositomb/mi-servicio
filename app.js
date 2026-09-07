@@ -3417,50 +3417,51 @@ function actualizarGraficoInicio({
         0
     );
 
-    let fondoAnillo =
-        "rgba(120, 120, 128, 0.16)";
+    // Anillos concéntricos al estilo de Actividad de Apple.
+    // Cada anillo representa qué parte del tiempo visible del mes
+    // corresponde a esa actividad. Así no inventamos objetivos
+    // individuales que el usuario no haya configurado.
+    const radios = [82, 65, 48, 31];
+    const centro = 100;
 
+    const anillos = actividades
+        .map((actividad, indice) => {
+            const radio = radios[indice] || 31;
+            const circunferencia = 2 * Math.PI * radio;
+            const proporcion = totalVisible > 0
+                ? actividad.minutos / totalVisible
+                : 0;
+            const longitud = Math.max(0, Math.min(proporcion, 1)) * circunferencia;
+            const resto = Math.max(circunferencia - longitud, 0);
 
-    if (totalVisible > 0) {
-
-        let acumulado = 0;
-
-        const segmentos =
-            actividades
-                .filter(
-                    actividad =>
-                        actividad.minutos > 0
-                )
-                .map(
-                    actividad => {
-
-                        const inicio =
-                            (acumulado / totalVisible) * 360;
-
-                        acumulado +=
-                            actividad.minutos;
-
-                        const fin =
-                            (acumulado / totalVisible) * 360;
-
-                        return (
-                            `${actividad.color} ` +
-                            `${inicio.toFixed(2)}deg ` +
-                            `${fin.toFixed(2)}deg`
-                        );
-                    }
-                );
-
-        fondoAnillo =
-            `conic-gradient(${segmentos.join(", ")})`;
-    }
+            return `
+                <circle
+                    class="anillo-pista"
+                    cx="${centro}"
+                    cy="${centro}"
+                    r="${radio}"
+                ></circle>
+                <circle
+                    class="anillo-actividad"
+                    cx="${centro}"
+                    cy="${centro}"
+                    r="${radio}"
+                    style="stroke: ${actividad.color}; stroke-dasharray: ${longitud.toFixed(2)} ${resto.toFixed(2)};"
+                ></circle>
+            `;
+        })
+        .join("");
 
 
     grafico.innerHTML = `
-        <div
-            class="grafico-inicio-anillo"
-            style="background: ${fondoAnillo};"
-        ></div>
+        <svg
+            class="grafico-anillos-svg"
+            viewBox="0 0 200 200"
+            role="img"
+            aria-label="Distribución del tiempo por actividad"
+        >
+            ${anillos}
+        </svg>
         <div class="grafico-inicio-centro">
             <p class="grafico-inicio-total">
                 ${formatearTiempo(totalVisible)}
@@ -3475,19 +3476,30 @@ function actualizarGraficoInicio({
     leyenda.innerHTML =
         actividades
             .map(
-                actividad => `
-                    <div class="leyenda-grafico-fila">
-                        <span class="leyenda-grafico-nombre">
-                            <span
-                                class="leyenda-grafico-punto ${actividad.clase}"
-                            ></span>
-                            ${actividad.nombre}
-                        </span>
-                        <strong class="leyenda-grafico-tiempo">
-                            ${formatearTiempo(actividad.minutos)}
-                        </strong>
-                    </div>
-                `
+                actividad => {
+                    const porcentaje = totalVisible > 0
+                        ? Math.round((actividad.minutos / totalVisible) * 100)
+                        : 0;
+
+                    return `
+                        <div class="leyenda-grafico-fila">
+                            <span class="leyenda-grafico-nombre">
+                                <span
+                                    class="leyenda-grafico-punto ${actividad.clase}"
+                                ></span>
+                                ${actividad.nombre}
+                            </span>
+                            <span class="leyenda-grafico-datos">
+                                <strong class="leyenda-grafico-tiempo">
+                                    ${formatearTiempo(actividad.minutos)}
+                                </strong>
+                                <small class="leyenda-grafico-porcentaje">
+                                    ${porcentaje}%
+                                </small>
+                            </span>
+                        </div>
+                    `;
+                }
             )
             .join("");
 }
