@@ -3858,3 +3858,78 @@ textarea.campo {
         transition: none;
     }
 }
+
+/* =========================================================
+   V17 · MODO OSCURO AUTOMÁTICO — ACABADO iOS
+   Sigue automáticamente la apariencia del dispositivo.
+   ========================================================= */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary: #5e9cff;
+        --primary-soft: rgba(94, 156, 255, 0.16);
+        --ministry: #5e9cff;
+        --ldc: #bf6bea;
+        --assembly: #ff9f0a;
+        --other: #98989d;
+        --success: #30d158;
+        --success-soft: rgba(48, 209, 88, 0.15);
+        --danger: #ff453a;
+        --danger-soft: rgba(255, 69, 58, 0.14);
+        --background: #000000;
+        --card: rgba(28, 28, 30, 0.96);
+        --text-primary: #f5f5f7;
+        --text-secondary: #aeaeb2;
+        --text-tertiary: #8e8e93;
+        --divider: rgba(255, 255, 255, 0.11);
+        --shadow: 0 10px 34px rgba(0, 0, 0, 0.36);
+    }
+
+    html { color-scheme: dark; }
+
+    body {
+        background: #000;
+    }
+
+    .tarjeta,
+    .registro-card,
+    .calendario-contenedor,
+    .modal-contenido {
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .barra-navegacion {
+        background: rgba(18, 18, 20, 0.88);
+        border-top-color: rgba(255, 255, 255, 0.10);
+    }
+
+    input,
+    textarea,
+    select {
+        color-scheme: dark;
+    }
+
+    .registro-card {
+        box-shadow:
+            0 7px 24px rgba(0, 0, 0, 0.30),
+            inset 0 1px 0 rgba(255, 255, 255, 0.035);
+    }
+
+    .registro-card:active {
+        background: rgba(38, 38, 41, 0.98);
+    }
+
+    .registro-nota {
+        background: rgba(255, 255, 255, 0.055);
+        border-color: rgba(255, 255, 255, 0.07);
+    }
+
+    .grafico-barra-contenedor,
+    .barra-actividad-pista {
+        background: rgba(255, 255, 255, 0.075);
+    }
+
+    .ajuste-actividad input[type="checkbox"]::after {
+        background: #f2f2f7;
+    }
+}
