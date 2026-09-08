@@ -3792,17 +3792,58 @@ function actualizarPersonajeProgreso(porcentaje) {
     animal.style.marginLeft = "0";
     animal.style.transform = "";
 
-    // El personaje cambia según el avance mensual.
-    // Inicio: tortuga · avance medio: persona · tramo final: liebre.
-    if (progreso >= 70) {
+    // El personaje ya no depende de porcentajes fijos.
+    // Comparamos el progreso real con el ritmo que correspondería
+    // al día actual del mes. Así, por ejemplo, un 38 % el día 8
+    // se considera adelantado, pero ese mismo 38 % al final del mes no.
+    const hoy = new Date();
+    const diasDelMes =
+        new Date(
+            hoy.getFullYear(),
+            hoy.getMonth() + 1,
+            0
+        ).getDate();
+
+    const ritmoEsperado =
+        (hoy.getDate() / diasDelMes) * 100;
+
+    const diferenciaRitmo =
+        progreso - ritmoEsperado;
+
+    // Margen de 5 puntos porcentuales para considerar que vamos
+    // aproximadamente al ritmo esperado y evitar cambios constantes
+    // de personaje por pequeñas diferencias.
+    const margenRitmo = 5;
+
+    let estadoRitmo = "en-ritmo";
+
+    if (progreso >= 100) {
+        estadoRitmo = "completado";
+        animal.textContent = "🏁";
+        animal.setAttribute(
+            "aria-label",
+            "Objetivo conseguido"
+        );
+    } else if (diferenciaRitmo >= margenRitmo) {
+        estadoRitmo = "adelantado";
         animal.textContent = "🐇";
-        animal.setAttribute("aria-label", "Liebre");
-    } else if (progreso >= 25) {
-        animal.textContent = "🚶";
-        animal.setAttribute("aria-label", "Persona avanzando");
-    } else {
+        animal.setAttribute(
+            "aria-label",
+            "Vas por delante del ritmo del mes"
+        );
+    } else if (diferenciaRitmo <= -margenRitmo) {
+        estadoRitmo = "atrasado";
         animal.textContent = "🐢";
-        animal.setAttribute("aria-label", "Tortuga");
+        animal.setAttribute(
+            "aria-label",
+            "Vas por detrás del ritmo del mes"
+        );
+    } else {
+        animal.textContent = "🚶";
+        animal.setAttribute(
+            "aria-label",
+            "Vas al ritmo del mes"
+        );
     }
 
     animal.classList.remove("moviendo");
@@ -3819,21 +3860,21 @@ function actualizarPersonajeProgreso(porcentaje) {
 
     if (estadoAnimal) {
 
-        if (progreso >= 100) {
+        if (estadoRitmo === "completado") {
             estadoAnimal.textContent =
                 "¡Objetivo conseguido!";
 
-        } else if (progreso >= 75) {
+        } else if (estadoRitmo === "adelantado") {
             estadoAnimal.textContent =
-                "¡Ya queda muy poco!";
+                "¡Vas por delante del ritmo del mes!";
 
-        } else if (progreso >= 40) {
+        } else if (estadoRitmo === "atrasado") {
             estadoAnimal.textContent =
-                "Buen ritmo, seguimos avanzando";
+                "Poco a poco, podemos recuperar ritmo";
 
         } else {
             estadoAnimal.textContent =
-                "Poco a poco, seguimos avanzando";
+                "Buen ritmo, vas al día";
         }
     }
 }
