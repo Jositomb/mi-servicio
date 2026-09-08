@@ -13,7 +13,10 @@
 const STORAGE_KEYS = {
     registros: "miServicio.registros",
     preferencias: "miServicio.preferencias",
-    ultimaCopiaSeguridad: "miServicio.ultimaCopiaSeguridad"
+    ultimaCopiaSeguridad: "miServicio.ultimaCopiaSeguridad",
+    onedriveConectado: "miServicio.onedriveConectado",
+    ultimaSyncOneDrive: "miServicio.ultimaSyncOneDrive",
+    ultimaModificacionLocal: "miServicio.ultimaModificacionLocal"
 };
 
 
@@ -158,6 +161,8 @@ document.addEventListener(
         configurarSincronizacionIPhone();
 
         configurarTransferenciaPantallaInicio();
+
+        configurarOneDrive();
 
         establecerFechaActual();
         
@@ -533,10 +538,17 @@ function guardarJSON(
 
 function guardarRegistros() {
 
-    return guardarJSON(
+    const guardado = guardarJSON(
         STORAGE_KEYS.registros,
         estado.registros
     );
+
+    if (guardado && !aplicandoDatosOneDrive) {
+        marcarModificacionLocalOneDrive();
+        programarSincronizacionOneDrive();
+    }
+
+    return guardado;
 }
 
 
@@ -546,10 +558,17 @@ function guardarRegistros() {
 
 function guardarPreferencias() {
 
-    return guardarJSON(
+    const guardado = guardarJSON(
         STORAGE_KEYS.preferencias,
         estado.preferencias
     );
+
+    if (guardado && !aplicandoDatosOneDrive) {
+        marcarModificacionLocalOneDrive();
+        programarSincronizacionOneDrive();
+    }
+
+    return guardado;
 }
 
 
@@ -8408,3 +8427,330 @@ function normalizarTipoSincronizacion(
 // =========================================================
 // FIN BLOQUE 7
 // =========================================================
+
+
+// =========================================================
+// V20 · SINCRONIZACIÓN CON ONEDRIVE
+// =========================================================
+
+const ONEDRIVE_CONFIG = {
+    clientId: "ec18d1ba-8036-4acf-bf6e-2cb940acf34b",
+    authority: "https://login.microsoftonline.com/common",
+    redirectUri: "https://jositomb.github.io/mi-servicio/",
+    scopes: ["User.Read", "Files.ReadWrite.AppFolder"],
+    archivo: "mi-servicio.json"
+};
+
+let clienteMSALOneDrive = null;
+let aplicandoDatosOneDrive = false;
+let temporizadorSyncOneDrive = null;
+let sincronizandoOneDrive = false;
+
+function configurarOneDrive() {
+    const conectar = document.getElementById("conectarOneDrive");
+    const sincronizar = document.getElementById("sincronizarOneDrive");
+    const desconectar = document.getElementById("desconectarOneDrive");
+
+    if (conectar) conectar.addEventListener("click", conectarConOneDrive);
+    if (sincronizar) sincronizar.addEventListener("click", () => sincronizarConOneDrive(true));
+    if (desconectar) desconectar.addEventListener("click", desconectarOneDrive);
+
+    iniciarOneDrive();
+}
+
+async function iniciarOneDrive() {
+    if (typeof msal === "undefined") {
+        actualizarEstadoOneDrive("No se pudo cargar el acceso a Microsoft", false);
+        return;
+    }
+
+    try {
+        clienteMSALOneDrive = new msal.PublicClientApplication({
+            auth: {
+                clientId: ONEDRIVE_CONFIG.clientId,
+                authority: ONEDRIVE_CONFIG.authority,
+                redirectUri: ONEDRIVE_CONFIG.redirectUri,
+                navigateToLoginRequestUrl: false
+            },
+            cache: {
+                cacheLocation: "localStorage",
+                storeAuthStateInCookie: false
+            }
+        });
+
+        const respuesta = await clienteMSALOneDrive.handleRedirectPromise();
+        const cuentas = clienteMSALOneDrive.getAllAccounts();
+        const cuenta = respuesta?.account || cuentas[0] || null;
+
+        if (cuenta) clienteMSALOneDrive.setActiveAccount(cuenta);
+
+        if (respuesta?.account) {
+            almacenamiento.guardar(STORAGE_KEYS.onedriveConectado, true);
+        }
+
+        const conectado = almacenamiento.leer(STORAGE_KEYS.onedriveConectado, false) && !!cuenta;
+        actualizarInterfazOneDrive(conectado, cuenta);
+
+        if (conectado) {
+            setTimeout(() => sincronizarConOneDrive(false), 650);
+        }
+    } catch (error) {
+        console.error("Error iniciando OneDrive:", error);
+        actualizarEstadoOneDrive("No se pudo iniciar OneDrive", false);
+    }
+}
+
+async function conectarConOneDrive() {
+    if (!clienteMSALOneDrive) {
+        await iniciarOneDrive();
+        if (!clienteMSALOneDrive) return;
+    }
+
+    try {
+        await clienteMSALOneDrive.loginRedirect({
+            scopes: ONEDRIVE_CONFIG.scopes,
+            prompt: "select_account"
+        });
+    } catch (error) {
+        console.error("Error conectando OneDrive:", error);
+        mostrarMensajeOneDrive("No se pudo abrir el inicio de sesión de Microsoft.", true);
+    }
+}
+
+function desconectarOneDrive() {
+    almacenamiento.guardar(STORAGE_KEYS.onedriveConectado, false);
+    actualizarInterfazOneDrive(false, null);
+    mostrarMensajeOneDrive("OneDrive se ha desconectado de Mi Servicio en este dispositivo.", false);
+}
+
+function actualizarInterfazOneDrive(conectado, cuenta) {
+    const conectar = document.getElementById("conectarOneDrive");
+    const sincronizar = document.getElementById("sincronizarOneDrive");
+    const desconectar = document.getElementById("desconectarOneDrive");
+    const estadoEl = document.getElementById("estadoOneDrive");
+    const indicador = document.getElementById("indicadorOneDrive");
+    const ultima = document.getElementById("ultimaSyncOneDrive");
+
+    if (conectar) conectar.hidden = conectado;
+    if (sincronizar) sincronizar.hidden = !conectado;
+    if (desconectar) desconectar.hidden = !conectado;
+
+    if (estadoEl) {
+        estadoEl.textContent = conectado
+            ? `Conectado${cuenta?.username ? ` · ${cuenta.username}` : ""}`
+            : "No conectado";
+    }
+
+    if (indicador) indicador.classList.toggle("conectado", conectado);
+
+    const fecha = almacenamiento.leer(STORAGE_KEYS.ultimaSyncOneDrive, null);
+    if (ultima) {
+        ultima.hidden = !conectado || !fecha;
+        if (fecha) ultima.textContent = `Última sincronización: ${formatearFechaHoraOneDrive(fecha)}`;
+    }
+}
+
+function actualizarEstadoOneDrive(texto, conectado) {
+    const estadoEl = document.getElementById("estadoOneDrive");
+    const indicador = document.getElementById("indicadorOneDrive");
+    if (estadoEl) estadoEl.textContent = texto;
+    if (indicador) indicador.classList.toggle("conectado", !!conectado);
+}
+
+function mostrarMensajeOneDrive(texto, error = false) {
+    const mensaje = document.getElementById("mensajeDatos");
+    if (!mensaje) return;
+    mensaje.textContent = texto;
+    mensaje.classList.toggle("error", error);
+    mensaje.classList.toggle("exito", !error);
+    mensaje.classList.add("visible");
+}
+
+function marcarModificacionLocalOneDrive() {
+    almacenamiento.guardar(STORAGE_KEYS.ultimaModificacionLocal, new Date().toISOString());
+}
+
+function programarSincronizacionOneDrive() {
+    if (aplicandoDatosOneDrive) return;
+    if (!almacenamiento.leer(STORAGE_KEYS.onedriveConectado, false)) return;
+
+    clearTimeout(temporizadorSyncOneDrive);
+    temporizadorSyncOneDrive = setTimeout(() => sincronizarConOneDrive(false), 1200);
+}
+
+async function obtenerTokenOneDrive() {
+    if (!clienteMSALOneDrive) throw new Error("MSAL no iniciado");
+
+    const cuenta = clienteMSALOneDrive.getActiveAccount() || clienteMSALOneDrive.getAllAccounts()[0];
+    if (!cuenta) throw new Error("No hay cuenta Microsoft conectada");
+
+    try {
+        const respuesta = await clienteMSALOneDrive.acquireTokenSilent({
+            scopes: ONEDRIVE_CONFIG.scopes,
+            account: cuenta
+        });
+        return respuesta.accessToken;
+    } catch (error) {
+        if (error instanceof msal.InteractionRequiredAuthError) {
+            await clienteMSALOneDrive.acquireTokenRedirect({
+                scopes: ONEDRIVE_CONFIG.scopes,
+                account: cuenta
+            });
+            return null;
+        }
+        throw error;
+    }
+}
+
+async function sincronizarConOneDrive(mostrarResultado = false) {
+    if (sincronizandoOneDrive) return;
+    if (!almacenamiento.leer(STORAGE_KEYS.onedriveConectado, false)) return;
+    if (!clienteMSALOneDrive) return;
+
+    sincronizandoOneDrive = true;
+    const indicador = document.getElementById("indicadorOneDrive");
+    if (indicador) indicador.classList.add("sincronizando");
+
+    try {
+        const token = await obtenerTokenOneDrive();
+        if (!token) return;
+
+        const remoto = await descargarDatosOneDrive(token);
+        const localMs = obtenerFechaModificacionLocalOneDrive();
+        const remotoMs = remoto?.updatedAt ? Date.parse(remoto.updatedAt) || 0 : 0;
+
+        let accion = "";
+
+        if (!remoto) {
+            await subirDatosOneDrive(token);
+            accion = "subidos";
+        } else if (remotoMs > localMs) {
+            aplicarDatosDesdeOneDrive(remoto);
+            accion = "descargados";
+        } else if (localMs > remotoMs) {
+            await subirDatosOneDrive(token);
+            accion = "subidos";
+        } else {
+            registrarSincronizacionOneDrive(remoto.updatedAt || new Date().toISOString());
+            accion = "al día";
+        }
+
+        const cuenta = clienteMSALOneDrive.getActiveAccount() || clienteMSALOneDrive.getAllAccounts()[0] || null;
+        actualizarInterfazOneDrive(true, cuenta);
+
+        if (mostrarResultado) {
+            mostrarMensajeOneDrive(
+                accion === "al día"
+                    ? "✓ OneDrive ya estaba al día."
+                    : `✓ Datos ${accion} correctamente con OneDrive.`,
+                false
+            );
+        }
+    } catch (error) {
+        console.error("Error sincronizando OneDrive:", error);
+        if (mostrarResultado) {
+            mostrarMensajeOneDrive("No se pudo sincronizar con OneDrive. Comprueba la conexión e inténtalo de nuevo.", true);
+        }
+    } finally {
+        sincronizandoOneDrive = false;
+        if (indicador) indicador.classList.remove("sincronizando");
+    }
+}
+
+function obtenerFechaModificacionLocalOneDrive() {
+    const guardada = almacenamiento.leer(STORAGE_KEYS.ultimaModificacionLocal, null);
+    if (guardada) return Date.parse(guardada) || 0;
+
+    let maximo = 0;
+    for (const registro of estado.registros || []) {
+        const candidata = registro.modificadoEn || registro.creadoEn || registro.fecha;
+        const ms = Date.parse(candidata) || 0;
+        if (ms > maximo) maximo = ms;
+    }
+    return maximo;
+}
+
+async function descargarDatosOneDrive(token) {
+    const url = `https://graph.microsoft.com/v1.0/me/drive/special/approot:/${encodeURIComponent(ONEDRIVE_CONFIG.archivo)}:/content`;
+    const respuesta = await fetch(url, {
+        headers: { Authorization: `Bearer ${token}` },
+        cache: "no-store"
+    });
+
+    if (respuesta.status === 404) return null;
+    if (!respuesta.ok) throw new Error(`Graph download ${respuesta.status}`);
+
+    const datos = await respuesta.json();
+    if (!datos || datos.formato !== "mi-servicio-onedrive" || !datos.copia) {
+        throw new Error("Formato de OneDrive no reconocido");
+    }
+    return datos;
+}
+
+async function subirDatosOneDrive(token) {
+    const ahora = new Date().toISOString();
+    const paquete = {
+        formato: "mi-servicio-onedrive",
+        version: 1,
+        updatedAt: ahora,
+        copia: crearDatosCopiaSeguridad()
+    };
+
+    const url = `https://graph.microsoft.com/v1.0/me/drive/special/approot:/${encodeURIComponent(ONEDRIVE_CONFIG.archivo)}:/content`;
+    const respuesta = await fetch(url, {
+        method: "PUT",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json;charset=utf-8"
+        },
+        body: JSON.stringify(paquete)
+    });
+
+    if (!respuesta.ok) throw new Error(`Graph upload ${respuesta.status}`);
+
+    almacenamiento.guardar(STORAGE_KEYS.ultimaModificacionLocal, ahora);
+    registrarSincronizacionOneDrive(ahora);
+}
+
+function aplicarDatosDesdeOneDrive(remoto) {
+    const copia = remoto.copia;
+    if (!validarCopiaSeguridad(copia)) {
+        throw new Error("La copia de OneDrive no es válida");
+    }
+
+    const registros = normalizarRegistrosImportados(copia.registros);
+    const preferencias = normalizarPreferenciasImportadas(copia.preferencias);
+
+    aplicandoDatosOneDrive = true;
+    try {
+        estado.registros = registros;
+        estado.preferencias = preferencias;
+        guardarJSON(STORAGE_KEYS.registros, estado.registros);
+        guardarJSON(STORAGE_KEYS.preferencias, estado.preferencias);
+        almacenamiento.guardar(STORAGE_KEYS.ultimaModificacionLocal, remoto.updatedAt);
+        registrarSincronizacionOneDrive(remoto.updatedAt);
+    } finally {
+        aplicandoDatosOneDrive = false;
+    }
+
+    cargarFormularioAjustes();
+    actualizarTodaLaInterfaz();
+    actualizarRecordatorioCopiaSeguridad();
+}
+
+function registrarSincronizacionOneDrive(fecha) {
+    const iso = fecha || new Date().toISOString();
+    almacenamiento.guardar(STORAGE_KEYS.ultimaSyncOneDrive, iso);
+}
+
+function formatearFechaHoraOneDrive(fechaISO) {
+    const fecha = new Date(fechaISO);
+    if (Number.isNaN(fecha.getTime())) return "ahora";
+    return new Intl.DateTimeFormat("es-ES", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+    }).format(fecha);
+}

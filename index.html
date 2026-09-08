@@ -13,7 +13,7 @@
     <meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
     <title>Mi Servicio</title>
-    <link rel="apple-touch-icon" href="./icon-apple.png?v=19">
+    <link rel="apple-touch-icon" href="./icon-apple.png?v=20">
     <meta
         name="apple-mobile-web-app-capable"
         content="yes"
@@ -28,7 +28,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles.css?v=19"
+        href="./styles.css?v=20"
     >
 </head>
 <body>
@@ -855,6 +855,20 @@
                     </h2>
                 </div>
                 <article class="tarjeta">
+                    <div class="onedrive-panel" id="onedrivePanel">
+                        <div class="onedrive-cabecera">
+                            <div>
+                                <strong>☁️ OneDrive</strong>
+                                <p id="estadoOneDrive" class="onedrive-estado">No conectado</p>
+                            </div>
+                            <span id="indicadorOneDrive" class="onedrive-indicador" aria-hidden="true"></span>
+                        </div>
+                        <p class="onedrive-ayuda">Sincroniza tus registros entre dispositivos usando solo la carpeta privada de Mi Servicio en tu OneDrive.</p>
+                        <button id="conectarOneDrive" class="boton-guardar" type="button">Conectar con OneDrive</button>
+                        <button id="sincronizarOneDrive" class="boton-secundario" type="button" hidden>↻ Sincronizar ahora</button>
+                        <button id="desconectarOneDrive" class="boton-secundario" type="button" hidden>Desconectar OneDrive</button>
+                        <p id="ultimaSyncOneDrive" class="onedrive-ultima-sync" hidden></p>
+                    </div>
                     <p
                         id="ultimaCopiaAjustes"
                         class="estado-ultima-copia"
@@ -1070,6 +1084,12 @@
 <!-- =========================================================
      JAVASCRIPT
 ========================================================== -->
-<script src="./app.js?v=19"></script>
+<script
+    src="https://alcdn.msauth.net/browser/2.35.0/js/msal-browser.min.js"
+    integrity="sha384-PARf28kmic36Ve+O3DnUerRXFtOQ7ZDqRDGpLcbljly5/N39T2OV3kt3QsWOKeAX"
+    crossorigin="anonymous"
+    defer
+></script>
+<script src="./app.js?v=20" defer></script>
 </body>
 </html>

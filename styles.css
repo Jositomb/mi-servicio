@@ -3933,3 +3933,49 @@ textarea.campo {
         background: #f2f2f7;
     }
 }
+
+/* =========================================================
+   V20 · ONEDRIVE
+========================================================= */
+.onedrive-panel {
+    margin-bottom: 18px;
+    padding: 16px;
+    border-radius: 18px;
+    background: var(--background, #f2f2f7);
+    border: 1px solid rgba(127, 127, 127, 0.18);
+}
+.onedrive-cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+.onedrive-cabecera strong { font-size: 1rem; }
+.onedrive-estado,
+.onedrive-ayuda,
+.onedrive-ultima-sync { margin: 4px 0 0; }
+.onedrive-estado { font-weight: 600; }
+.onedrive-ayuda,
+.onedrive-ultima-sync { font-size: .88rem; opacity: .72; line-height: 1.35; }
+.onedrive-indicador {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #8e8e93;
+    box-shadow: 0 0 0 4px rgba(142,142,147,.12);
+    flex: 0 0 auto;
+}
+.onedrive-indicador.conectado {
+    background: #34c759;
+    box-shadow: 0 0 0 4px rgba(52,199,89,.13);
+}
+.onedrive-indicador.sincronizando {
+    background: #0a84ff;
+    animation: pulsoOneDrive 1s ease-in-out infinite;
+}
+.onedrive-panel button + button { margin-top: 8px; }
+@keyframes pulsoOneDrive { 50% { opacity: .42; transform: scale(.82); } }
+@media (prefers-color-scheme: dark) {
+    .onedrive-panel { background: rgba(255,255,255,.055); border-color: rgba(255,255,255,.10); }
+}
