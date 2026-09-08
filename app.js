@@ -2008,7 +2008,7 @@ function crearTarjetaHistorial(
 
 
     tarjeta.className =
-        "registro-card";
+        `registro-card registro-card-${registro.tipo}`;
 
 
     // -----------------------------------------
