@@ -131,6 +131,8 @@ document.addEventListener(
     "DOMContentLoaded",
     () => {
 
+        importarTransferenciaDesdeURL();
+
         cargarDatos();
 
         configurarNavegacion();
@@ -154,6 +156,8 @@ document.addEventListener(
         configurarRecordatorioCopiaSeguridad();
 
         configurarSincronizacionIPhone();
+
+        configurarTransferenciaPantallaInicio();
 
         establecerFechaActual();
         
@@ -7707,6 +7711,244 @@ function diagnosticoMiServicio() {
 // =========================================================
 // FIN BLOQUE 6
 // =========================================================
+// =========================================================
+// V19 · TRANSFERENCIA SAFARI → PANTALLA DE INICIO
+//
+// iOS puede aislar el almacenamiento de una web abierta en
+// Safari y el de esa misma web instalada en la pantalla de
+// inicio. Para no perder los datos, los transportamos UNA VEZ
+// dentro del fragmento (#) de la URL. El fragmento no se envía
+// al servidor. Al primer arranque desde el icono se importa y
+// se limpia de la dirección.
+// =========================================================
+
+function configurarTransferenciaPantallaInicio() {
+
+    const boton =
+        document.getElementById(
+            "prepararAccesoInicio"
+        );
+
+    if (!boton) {
+        return;
+    }
+
+    boton.addEventListener(
+        "click",
+        prepararTransferenciaPantallaInicio
+    );
+}
+
+
+function prepararTransferenciaPantallaInicio() {
+
+    const mensaje =
+        document.getElementById(
+            "mensajeDatos"
+        );
+
+    try {
+
+        const datos =
+            crearDatosCopiaSeguridad();
+
+        const json =
+            JSON.stringify(datos);
+
+        const codigo =
+            textoABase64URL(json);
+
+        // Evitamos crear una dirección desmesuradamente larga.
+        // Si algún día hay muchísimos registros, la copia JSON
+        // normal sigue siendo el método seguro de transferencia.
+        if (codigo.length > 120000) {
+
+            if (mensaje) {
+                mensaje.textContent =
+                    "Hay demasiados datos para transferirlos en el acceso. Usa Exportar copia de seguridad y después impórtala desde el icono.";
+            }
+
+            return;
+        }
+
+        const url =
+            new URL(window.location.href);
+
+        url.hash =
+            `mi-servicio-transfer=${codigo}`;
+
+        history.replaceState(
+            null,
+            "",
+            url.toString()
+        );
+
+        if (mensaje) {
+            mensaje.textContent =
+                "✓ Datos preparados. Ahora pulsa Compartir → Añadir a pantalla de inicio. No cierres ni recargues esta página antes de añadirlo.";
+        }
+
+        window.alert(
+            "Datos preparados ✓\n\nAhora pulsa Compartir → Añadir a pantalla de inicio.\n\nLa primera vez que abras Mi Servicio desde el nuevo icono, los datos se copiarán automáticamente."
+        );
+
+    } catch (error) {
+
+        console.error(
+            "No se pudo preparar la transferencia:",
+            error
+        );
+
+        if (mensaje) {
+            mensaje.textContent =
+                "No se pudo preparar la transferencia. Haz una copia de seguridad antes de continuar.";
+        }
+    }
+}
+
+
+function importarTransferenciaDesdeURL() {
+
+    try {
+
+        const prefijo =
+            "#mi-servicio-transfer=";
+
+        if (
+            !window.location.hash ||
+            !window.location.hash.startsWith(prefijo)
+        ) {
+            return false;
+        }
+
+        const codigo =
+            window.location.hash.slice(
+                prefijo.length
+            );
+
+        const json =
+            base64URLATexto(codigo);
+
+        const datos =
+            JSON.parse(json);
+
+        validarCopiaSeguridad(datos);
+
+        const registros =
+            normalizarRegistrosImportados(
+                datos.registros
+            );
+
+        const preferencias =
+            normalizarPreferenciasImportadas(
+                datos.preferencias
+            );
+
+        localStorage.setItem(
+            STORAGE_KEYS.registros,
+            JSON.stringify(registros)
+        );
+
+        localStorage.setItem(
+            STORAGE_KEYS.preferencias,
+            JSON.stringify(preferencias)
+        );
+
+        // Una vez importados, retiramos los datos de la URL.
+        history.replaceState(
+            null,
+            "",
+            window.location.pathname +
+                window.location.search
+        );
+
+        sessionStorage.setItem(
+            "miServicio.transferenciaRecibida",
+            String(registros.length)
+        );
+
+        window.setTimeout(
+            () => {
+
+                const cantidad =
+                    sessionStorage.getItem(
+                        "miServicio.transferenciaRecibida"
+                    );
+
+                if (!cantidad) {
+                    return;
+                }
+
+                sessionStorage.removeItem(
+                    "miServicio.transferenciaRecibida"
+                );
+
+                window.alert(
+                    `Datos recuperados ✓\n\nMi Servicio ha recibido ${cantidad} registros desde Safari.`
+                );
+            },
+            450
+        );
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            "No se pudo importar la transferencia desde Safari:",
+            error
+        );
+
+        return false;
+    }
+}
+
+
+function textoABase64URL(texto) {
+
+    const bytes =
+        new TextEncoder()
+            .encode(texto);
+
+    let binario = "";
+
+    for (const byte of bytes) {
+        binario += String.fromCharCode(byte);
+    }
+
+    return btoa(binario)
+        .replace(/\+/g, "-")
+        .replace(/\//g, "_")
+        .replace(/=+$/g, "");
+}
+
+
+function base64URLATexto(codigo) {
+
+    let base64 =
+        codigo
+            .replace(/-/g, "+")
+            .replace(/_/g, "/");
+
+    while (base64.length % 4) {
+        base64 += "=";
+    }
+
+    const binario =
+        atob(base64);
+
+    const bytes =
+        Uint8Array.from(
+            binario,
+            caracter =>
+                caracter.charCodeAt(0)
+        );
+
+    return new TextDecoder()
+        .decode(bytes);
+}
+
+
 // =========================================================
 // BLOQUE 7
 // SINCRONIZACIÓN CON IPHONE
