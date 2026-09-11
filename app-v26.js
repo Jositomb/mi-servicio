@@ -730,6 +730,7 @@ function seleccionarVista(
         case "inicio":
 
             actualizarInicio();
+            setTimeout(refrescarFraseAlVolverAInicio, 30);
 
             break;
 
@@ -866,6 +867,12 @@ function seleccionarActividad(
                 );
             }
         );
+
+    const grupoCursos = document.getElementById("grupoCursosBiblicos");
+    if (grupoCursos) {
+        grupoCursos.classList.toggle("oculto", tipo !== "ministerio");
+        if (tipo !== "ministerio") reiniciarCursosBiblicos();
+    }
 }
 
 
@@ -905,6 +912,8 @@ function configurarFormulario() {
         "minutosRegistro"
     );
 
+    configurarCursosBiblicos();
+
     formulario.addEventListener(
         "submit",
         evento => {
@@ -916,6 +925,53 @@ function configurarFormulario() {
     );
 }
 
+
+// =========================================================
+// CURSOS BÍBLICOS
+// =========================================================
+function configurarCursosBiblicos() {
+    const restar = document.getElementById("restarCurso");
+    const sumar = document.getElementById("sumarCurso");
+    const numero = document.getElementById("cantidadCursosBiblicos");
+
+    if (!numero) return;
+
+    const actualizar = valor => {
+        const siguiente = Math.max(0, Math.min(99, Number(valor) || 0));
+        numero.textContent = String(siguiente);
+        numero.dataset.valor = String(siguiente);
+    };
+
+    actualizar(numero.textContent);
+
+    if (restar && restar.dataset.configuradoCurso !== "1") {
+        restar.dataset.configuradoCurso = "1";
+        restar.addEventListener("click", () => {
+            actualizar((Number(numero.dataset.valor) || 0) - 1);
+            if (typeof vibrar === "function") vibrar(8);
+        });
+    }
+
+    if (sumar && sumar.dataset.configuradoCurso !== "1") {
+        sumar.dataset.configuradoCurso = "1";
+        sumar.addEventListener("click", () => {
+            actualizar((Number(numero.dataset.valor) || 0) + 1);
+            if (typeof vibrar === "function") vibrar(8);
+        });
+    }
+}
+
+function obtenerCursosBiblicosFormulario() {
+    const numero = document.getElementById("cantidadCursosBiblicos");
+    return Math.max(0, Number(numero?.dataset.valor ?? numero?.textContent ?? 0) || 0);
+}
+
+function reiniciarCursosBiblicos() {
+    const numero = document.getElementById("cantidadCursosBiblicos");
+    if (!numero) return;
+    numero.textContent = "0";
+    numero.dataset.valor = "0";
+}
 
 // =========================================================
 // CAMPOS Y ATAJOS DE TIEMPO
@@ -1127,6 +1183,9 @@ function registrarActividad() {
     const notas =
         campoNotas.value.trim();
 
+    const cursosBiblicos =
+        tipo === "ministerio" ? obtenerCursosBiblicosFormulario() : 0;
+
 
     // -----------------------------------------
     // Validar fecha
@@ -1259,6 +1318,8 @@ function registrarActividad() {
 
         notas,
 
+        cursosBiblicos,
+
         creadoEn:
             ahora,
 
@@ -1318,6 +1379,7 @@ function registrarActividad() {
     campoNotas.value =
         "";
 
+    reiniciarCursosBiblicos();
 
     establecerFechaActual();
 
@@ -2917,11 +2979,11 @@ function actualizarInicio() {
 // =========================================================
 // FRASE DE ÁNIMO DINÁMICA EN INICIO
 // =========================================================
-function actualizarFraseAnimoInicio(totalMinutos) {
+function actualizarFraseAnimoInicio(totalMinutos, forzarNueva = false) {
     const elemento = document.getElementById("fraseAnimoInicio");
     if (!elemento) return;
 
-    const objetivo = Number(preferencias?.objetivoMensualMinutos || 0);
+    const objetivo = Number(estado.preferencias?.objetivoMensualMinutos || 0);
     const porcentaje = objetivo > 0 ? Math.max(0, (totalMinutos / objetivo) * 100) : 0;
     const ahora = new Date();
     const diasMes = new Date(ahora.getFullYear(), ahora.getMonth() + 1, 0).getDate();
@@ -2955,8 +3017,10 @@ function actualizarFraseAnimoInicio(totalMinutos) {
         ];
     }
 
-    // Guardamos la última frase en localStorage para que también cambie
-    // al cerrar y volver a abrir el acceso directo.
+    // Si solo estamos refrescando datos de Inicio, mantenemos la frase actual.
+    // Se fuerza una frase nueva únicamente al entrar o volver a la app.
+    if (!forzarNueva && elemento.dataset.ultimaFrase) return;
+
     const claveUltimaFrase = "miServicio.ultimaFraseAnimoInicio";
     let ultimaFrase = "";
 
@@ -2984,28 +3048,35 @@ function actualizarFraseAnimoInicio(totalMinutos) {
 // =========================================================
 // CAMBIAR FRASE AL VOLVER A ENTRAR EN LA APP
 // =========================================================
+let ultimoCambioFraseEntrada = 0;
+
 function refrescarFraseAlVolverAInicio() {
+    const ahora = Date.now();
+    if (ahora - ultimoCambioFraseEntrada < 900) return;
+
     const vistaInicio = document.getElementById("vista-inicio");
     if (!vistaInicio || !vistaInicio.classList.contains("activa")) return;
+
+    ultimoCambioFraseEntrada = ahora;
 
     const totalTexto = document.getElementById("totalMes")?.textContent || "0";
     const coincidencia = totalTexto.match(/(\d+(?:[.,]\d+)?)/);
     const horas = coincidencia ? Number(coincidencia[1].replace(",", ".")) : 0;
-    actualizarFraseAnimoInicio(Math.round(horas * 60));
+    actualizarFraseAnimoInicio(Math.round(horas * 60), true);
 }
 
 document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible") {
-        setTimeout(refrescarFraseAlVolverAInicio, 60);
+        setTimeout(refrescarFraseAlVolverAInicio, 80);
     }
 });
 
 window.addEventListener("pageshow", () => {
-    setTimeout(refrescarFraseAlVolverAInicio, 60);
+    setTimeout(refrescarFraseAlVolverAInicio, 80);
 });
 
 window.addEventListener("focus", () => {
-    setTimeout(refrescarFraseAlVolverAInicio, 60);
+    setTimeout(refrescarFraseAlVolverAInicio, 80);
 });
 
 // =========================================================

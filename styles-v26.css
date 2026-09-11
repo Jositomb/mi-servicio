@@ -4811,3 +4811,136 @@ body:has(#vista-inicio.activa) .avatar {
         flex: 1;
     }
 }
+
+
+/* =========================================================
+   REMATE FINAL · 11 SEP 2026
+   Cursos centrados + pantalla llena + Inicio/Registrar
+   ========================================================= */
+@media (max-width: 430px) {
+    /* El área útil llega visualmente hasta la barra inferior. */
+    body:has(#vista-inicio.activa) .app,
+    body:has(#vista-registrar.activa) .app {
+        height: 100dvh;
+        min-height: 100dvh;
+        overflow: hidden;
+        padding-top: max(10px, env(safe-area-inset-top));
+        padding-bottom: calc(76px + env(safe-area-inset-bottom));
+    }
+
+    body:has(#vista-inicio.activa) main,
+    body:has(#vista-registrar.activa) main {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    #vista-inicio.activa,
+    #vista-registrar.activa {
+        height: 100%;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    /* INICIO: ocupa la pantalla completa sin hueco muerto inferior. */
+    #vista-inicio.activa {
+        display: grid !important;
+        grid-template-rows: auto auto auto auto;
+        align-content: space-between;
+        row-gap: 6px;
+    }
+    #vista-inicio .inicio-resumen-grid,
+    #vista-inicio #seccionGraficoInicio,
+    #vista-inicio .seccion-frase-animo,
+    #vista-inicio .seccion {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+    #vista-inicio .inicio-resumen-grid {
+        grid-auto-rows: 92px;
+    }
+    #vista-inicio .inicio-mini-card {
+        height: 92px !important;
+        min-height: 92px !important;
+        max-height: 92px !important;
+    }
+    #vista-inicio .tarjeta-grafico-inicio {
+        padding: 4px 10px 6px !important;
+    }
+    #vista-inicio .grafico-inicio {
+        transform: scale(.64) !important;
+        margin: -40px auto -48px !important;
+    }
+    #vista-inicio .seccion-frase-animo {
+        margin-top: 0 !important;
+    }
+    #vista-inicio .frase-animo-card {
+        min-height: 40px;
+    }
+
+    /* REGISTRAR: controles funcionales y alineados. */
+    #vista-registrar.activa {
+        display: flex !important;
+        flex-direction: column;
+    }
+    #vista-registrar #formRegistro {
+        flex: 1 1 auto;
+        min-height: 0;
+        display: grid;
+        grid-template-columns: minmax(0,1fr) minmax(0,1fr) !important;
+        grid-template-rows: auto auto auto minmax(72px,1fr) auto auto;
+        gap: 7px;
+        align-content: stretch;
+    }
+    #vista-registrar .grupo-actividad,
+    #vista-registrar .grupo-tiempo,
+    #vista-registrar .grupo-notas,
+    #vista-registrar .boton-guardar,
+    #vista-registrar .mensaje-formulario {
+        grid-column: 1 / -1;
+    }
+    #vista-registrar .grupo-fecha { grid-column: 1 !important; }
+    #vista-registrar .grupo-cursos { grid-column: 2 !important; }
+
+    #vista-registrar .grupo-cursos .contador-cursos {
+        display: grid !important;
+        grid-template-columns: 34px minmax(0,1fr) 34px;
+        align-items: center;
+        gap: 4px;
+        width: 100%;
+    }
+    #vista-registrar .grupo-cursos .contador-cursos-centro {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-width: 0;
+        text-align: center;
+    }
+    #vista-registrar .grupo-cursos .contador-cursos-centro strong {
+        display: block;
+        width: 100%;
+        margin: 0;
+        text-align: center;
+        line-height: 1;
+    }
+    #vista-registrar .grupo-notas {
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+    }
+    #vista-registrar .grupo-notas textarea.campo {
+        flex: 1 1 auto;
+        min-height: 56px;
+        height: auto !important;
+        resize: none;
+    }
+    #vista-registrar .boton-guardar {
+        min-height: 44px;
+    }
+
+    #vista-registrar .atajo-tiempo {
+        font-size: 11.5px;
+        font-weight: 700;
+    }
+}
