@@ -60,89 +60,52 @@
             id="vista-inicio"
             class="vista activa"
         >
-            <section class="bienvenida">
-                <div class="icono-bienvenida">
-                    ✓
-                </div>
-                <div>
-                    <h2>
-                        Tu servicio, de un vistazo
-                    </h2>
-                    <p>
-                        Registra tu actividad y sigue tu progreso
-                        durante el mes.
-                    </p>
-                </div>
-            </section>
-            <!-- ESTE MES -->
-            <section class="seccion">
-                <div class="titulo-seccion">
-                    <h2>
-                        Este mes
-                    </h2>
-                    <span id="nombreMes">
-                        —
-                    </span>
-                </div>
-                <article class="tarjeta tarjeta-mes-desplegable" id="tarjetaMesDesplegable">
+            <!-- RESUMEN SUPERIOR: ESTE MES + CALENDARIO -->
+            <section class="inicio-resumen-grid">
+                <article class="tarjeta tarjeta-mes-desplegable inicio-mini-card" id="tarjetaMesDesplegable">
                     <button type="button" class="mes-resumen-boton" id="botonDesplegarMes" aria-expanded="false" aria-controls="detalleMes">
-                    <div class="fila-superior">
-                        <div>
-                            <p class="etiqueta">
-                                Total registrado
-                            </p>
-                            <p
-                                id="totalMes"
-                                class="valor-principal"
-                            >
-                                0 h
-                            </p>
-                        </div>
-                        <div class="mes-resumen-derecha">
-                            <div class="icono-tarjeta">◷</div>
+                        <div class="inicio-mini-cabecera">
+                            <div>
+                                <p class="inicio-mini-titulo">Este mes</p>
+                                <p id="nombreMes" class="inicio-mini-subtitulo">—</p>
+                            </div>
                             <span class="mes-chevron" aria-hidden="true">⌄</span>
                         </div>
-                    </div>
+                        <p id="totalMes" class="inicio-mini-total">0 h</p>
                     </button>
                     <div id="detalleMes" class="detalle-mes-colapsable" hidden>
-                    <div class="separador"></div>
-                    <div class="fila-dato">
-                        <span>
-                            Ministerio
-                        </span>
-                        <strong id="totalMinisterio">
-                            0 h
-                        </strong>
-                    </div>
-                    <div class="fila-dato">
-                        <span>
-                            LDC
-                        </span>
-                        <strong id="totalLDC">
-                            0 h
-                        </strong>
-                    </div>
-                    <div class="fila-dato">
-                        <span>
-                            Asambleas
-                        </span>
-                        <strong id="totalAsambleas">
-                            0 h
-                        </strong>
-                    </div>
-                    <div
-                        id="filaOtras"
-                        class="fila-dato oculto"
-                    >
-                        <span>
-                            Otras
-                        </span>
-                        <strong id="totalOtras">
-                            0 h
-                        </strong>
-                    </div>
+                        <div class="separador"></div>
+                        <div class="fila-dato"><span>Ministerio</span><strong id="totalMinisterio">0 h</strong></div>
+                        <div class="fila-dato"><span>LDC</span><strong id="totalLDC">0 h</strong></div>
+                        <div class="fila-dato"><span>Asambleas</span><strong id="totalAsambleas">0 h</strong></div>
+                        <div id="filaOtras" class="fila-dato oculto"><span>Otras</span><strong id="totalOtras">0 h</strong></div>
                     </div>
                 </article>
+
+                <button id="botonCalendarioInicio" class="tarjeta inicio-mini-card inicio-calendario-card" type="button" aria-expanded="false" aria-controls="panelCalendarioInicio">
+                    <div class="inicio-mini-cabecera">
+                        <div>
+                            <p class="inicio-mini-titulo">Calendario</p>
+                            <p class="inicio-mini-subtitulo">Actividad</p>
+                        </div>
+                        <span id="iconoCalendarioInicio" class="icono-desplegable">⌄</span>
+                    </div>
+                    <div class="inicio-calendario-icono">📅</div>
+                </button>
+            </section>
+
+            <section class="seccion seccion-calendario-inicio inicio-calendario-panel-wrap">
+                <div id="panelCalendarioInicio" class="panel-calendario-inicio oculto">
+                    <article class="tarjeta tarjeta-calendario-inicio">
+                        <div class="calendario-cabecera">
+                            <div><p class="etiqueta">Actividad del mes</p><h3 id="tituloCalendarioInicio">Mes actual</h3></div>
+                            <span id="resumenCalendarioInicio" class="calendario-resumen"></span>
+                        </div>
+                        <div class="calendario-semana" aria-hidden="true"><span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
+                        <div id="calendarioInicio" class="calendario-mes" aria-label="Calendario de actividad del mes"></div>
+                        <div id="detalleDiaCalendario" class="detalle-dia-calendario oculto" aria-live="polite"></div>
+                    </article>
+                </div>
             </section>
             <!-- RECORDATORIO DE COPIA DE SEGURIDAD -->
             <section
@@ -165,51 +128,6 @@
                         Hacer copia ahora
                     </button>
                 </article>
-            </section>
-
-            <!-- CALENDARIO DEL MES -->
-            <section class="seccion seccion-calendario-inicio">
-                <button
-                    id="botonCalendarioInicio"
-                    class="boton-calendario-inicio"
-                    type="button"
-                    aria-expanded="false"
-                    aria-controls="panelCalendarioInicio"
-                >
-                    <span>📅 Ver calendario del mes</span>
-                    <span id="iconoCalendarioInicio" class="icono-desplegable">⌄</span>
-                </button>
-
-                <div
-                    id="panelCalendarioInicio"
-                    class="panel-calendario-inicio oculto"
-                >
-                    <article class="tarjeta tarjeta-calendario-inicio">
-                        <div class="calendario-cabecera">
-                            <div>
-                                <p class="etiqueta">Actividad del mes</p>
-                                <h3 id="tituloCalendarioInicio">Mes actual</h3>
-                            </div>
-                            <span id="resumenCalendarioInicio" class="calendario-resumen"></span>
-                        </div>
-
-                        <div class="calendario-semana" aria-hidden="true">
-                            <span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span>
-                        </div>
-
-                        <div
-                            id="calendarioInicio"
-                            class="calendario-mes"
-                            aria-label="Calendario de actividad del mes"
-                        ></div>
-
-                        <div
-                            id="detalleDiaCalendario"
-                            class="detalle-dia-calendario oculto"
-                            aria-live="polite"
-                        ></div>
-                    </article>
-                </div>
             </section>
 
             <!-- PROGRESO DEL MES -->
@@ -300,6 +218,14 @@
                         id="mensajeObjetivo"
                         class="texto-secundario"
                     ></p>
+                </article>
+            </section>
+
+            <!-- FRASE DE ÁNIMO DINÁMICA -->
+            <section class="seccion seccion-frase-animo">
+                <article class="tarjeta frase-animo-card">
+                    <span class="frase-animo-icono">✨</span>
+                    <p id="fraseAnimoInicio">Cada paso cuenta. Sigue avanzando.</p>
                 </article>
             </section>
         </section>

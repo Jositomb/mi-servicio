@@ -2909,8 +2909,40 @@ function actualizarInicio() {
     actualizarObjetivo(
         total
     );
+
+    actualizarFraseAnimoInicio(total);
 }
 
+
+// =========================================================
+// FRASE DE ÁNIMO DINÁMICA EN INICIO
+// =========================================================
+function actualizarFraseAnimoInicio(totalMinutos) {
+    const elemento = document.getElementById("fraseAnimoInicio");
+    if (!elemento) return;
+
+    const objetivo = Number(preferencias?.objetivoMensualMinutos || 0);
+    if (objetivo <= 0) {
+        elemento.textContent = "Cada paso cuenta. Sigue avanzando.";
+        return;
+    }
+
+    const porcentaje = Math.max(0, (totalMinutos / objetivo) * 100);
+    const ahora = new Date();
+    const diasMes = new Date(ahora.getFullYear(), ahora.getMonth() + 1, 0).getDate();
+    const ritmoEsperado = (ahora.getDate() / diasMes) * 100;
+    const diferencia = porcentaje - ritmoEsperado;
+
+    if (porcentaje >= 100) {
+        elemento.textContent = "¡Objetivo conseguido! Disfruta de todo lo que has logrado este mes. 🎉";
+    } else if (diferencia >= 5) {
+        elemento.textContent = "¡Muy buen ritmo! Vas por delante y cada esfuerzo suma. 🐇";
+    } else if (diferencia <= -5) {
+        elemento.textContent = "Poco a poco. Un buen día puede cambiar el ritmo del mes. 🐢";
+    } else {
+        elemento.textContent = "Vas al ritmo del mes. Sigue así, paso a paso. 🚶";
+    }
+}
 
 // =========================================================
 // CALENDARIO DEL MES EN INICIO

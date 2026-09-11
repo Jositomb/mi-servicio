@@ -4269,3 +4269,109 @@ textarea.campo {
 #vista-historial .registro-fecha { margin-top: 3px; }
 #vista-historial .registro-notas { margin-top: 5px; }
 #vista-historial .registro-tiempo { padding: 4px 8px; }
+
+/* =========================================================
+   V24 · INICIO SEGÚN BOCETO
+   ========================================================= */
+#vista-inicio .bienvenida { display: none !important; }
+
+#vista-inicio .inicio-resumen-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+    align-items: start;
+}
+#vista-inicio .inicio-mini-card {
+    min-height: 126px;
+    padding: 13px 14px;
+    border-radius: 20px;
+    box-sizing: border-box;
+}
+#vista-inicio .inicio-mini-cabecera {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+}
+#vista-inicio .inicio-mini-titulo {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.15;
+    font-weight: 750;
+    color: var(--text-primary);
+}
+#vista-inicio .inicio-mini-subtitulo {
+    margin: 3px 0 0;
+    font-size: 11.5px;
+    color: var(--text-secondary);
+}
+#vista-inicio .inicio-mini-total {
+    margin: 16px 0 0;
+    font-size: 31px;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -.7px;
+}
+#vista-inicio .inicio-calendario-card {
+    width: 100%;
+    border: 0;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+#vista-inicio .inicio-calendario-icono {
+    margin-top: 14px;
+    font-size: 29px;
+    line-height: 1;
+}
+#vista-inicio .inicio-calendario-panel-wrap {
+    margin-top: -2px;
+    margin-bottom: 12px;
+}
+#vista-inicio .inicio-resumen-grid .detalle-mes-colapsable {
+    padding-top: 2px;
+}
+#vista-inicio .inicio-resumen-grid .fila-dato {
+    font-size: 11.5px;
+    padding: 3px 0;
+}
+#vista-inicio .inicio-resumen-grid .separador { margin: 9px 0 5px; }
+#vista-inicio .tarjeta-mes-desplegable.abierta { grid-column: 1 / -1; }
+
+/* Bloques centrales: compactos pero protagonistas. */
+#vista-inicio #seccionGraficoInicio { margin-bottom: 12px; }
+#vista-inicio #seccionGraficoInicio .titulo-seccion,
+#vista-inicio .seccion-frase-animo + * { margin-top: 0; }
+#vista-inicio .tarjeta-grafico-inicio { padding: 11px 13px 12px; }
+#vista-inicio .grafico-inicio { transform: scale(.88); transform-origin: center; margin: -12px auto -15px; }
+#vista-inicio .leyenda-grafico-inicio { margin-top: 2px; }
+
+/* Objetivo más compacto. */
+#vista-inicio .objetivo-cabecera { margin-bottom: 4px; }
+#vista-inicio .progreso-personaje { height: 38px; margin-top: 3px; }
+#vista-inicio .progreso-pista { bottom: 6px; }
+#vista-inicio .progreso-animal { bottom: 8px; width: 29px; height: 29px; font-size: 22px; }
+#vista-inicio .progreso-meta { bottom: 8px; font-size: 18px; }
+#vista-inicio .progreso-estado { margin-top: 0; }
+#vista-inicio #desgloseObjetivo,
+#vista-inicio #mensajeObjetivo { margin-top: 3px; font-size: 11.5px; }
+
+/* Frase final de ánimo. */
+#vista-inicio .seccion-frase-animo { margin-top: -2px; margin-bottom: 10px; }
+#vista-inicio .frase-animo-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 54px;
+    padding: 10px 13px;
+    background: linear-gradient(135deg, rgba(52,120,246,.10), rgba(243,154,193,.10));
+}
+#vista-inicio .frase-animo-icono { font-size: 20px; }
+#vista-inicio .frase-animo-card p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.3;
+    font-weight: 650;
+}
