@@ -5163,3 +5163,56 @@ body:has(#vista-inicio.activa) .avatar {
         transform: translateY(-50%) !important;
     }
 }
+
+/* =========================================================
+   IPHONE ANCHO REAL · 11 SEP 2026
+   Algunos modelos usan viewport CSS superior a 430 px.
+   ========================================================= */
+@media (max-width: 520px) {
+    #vista-inicio.activa {
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+    }
+    #vista-inicio.activa #seccionGraficoInicio {
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    #vista-inicio.activa #seccionGraficoInicio .tarjeta-grafico-inicio {
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+    }
+    #vista-inicio.activa .seccion-frase-animo {
+        margin-top: auto !important;
+        margin-bottom: 0 !important;
+    }
+    #vista-registrar .grupo-cursos .contador-cursos {
+        display: grid !important;
+        grid-template-columns: 54px 1fr 54px !important;
+        align-items: center !important;
+        padding: 0 7px !important;
+    }
+    #vista-registrar .grupo-cursos .contador-cursos-centro,
+    #vista-registrar .grupo-cursos .contador-cursos-centro strong {
+        position: static !important;
+        transform: none !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        text-align: center !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    #vista-registrar .grupo-cursos #restarCurso,
+    #vista-registrar .grupo-cursos #sumarCurso {
+        position: static !important;
+        transform: none !important;
+        justify-self: center !important;
+    }
+}
