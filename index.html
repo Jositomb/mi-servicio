@@ -30,6 +30,60 @@
         rel="stylesheet"
         href="./styles-v26.css?v=3101"
     >
+
+<style id="ajuste-iphone-final">
+@media (max-width: 430px) {
+  /* Inicio: usar exactamente el hueco real hasta la barra inferior. */
+  #vista-inicio.activa {
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: var(--inicio-altura-util, auto) !important;
+    height: var(--inicio-altura-util, auto) !important;
+    overflow: hidden !important;
+  }
+  #vista-inicio.activa .inicio-resumen-grid,
+  #vista-inicio.activa #seccionGraficoInicio,
+  #vista-inicio.activa > .seccion {
+    flex: 0 0 auto;
+  }
+  #vista-inicio.activa .seccion-frase-animo {
+    margin-top: auto !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Cursos bíblicos: tres columnas iguales en los lados y el 0 en el centro real. */
+  #vista-registrar .grupo-cursos .contador-cursos {
+    display: grid !important;
+    grid-template-columns: 54px minmax(0, 1fr) 54px !important;
+    align-items: center !important;
+    gap: 0 !important;
+    position: static !important;
+    padding: 0 7px !important;
+  }
+  #vista-registrar .grupo-cursos .contador-cursos-centro {
+    position: static !important;
+    transform: none !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+  #vista-registrar .grupo-cursos .contador-cursos-centro strong {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    text-align: center !important;
+  }
+  #vista-registrar .grupo-cursos #restarCurso,
+  #vista-registrar .grupo-cursos #sumarCurso {
+    position: static !important;
+    transform: none !important;
+    justify-self: center !important;
+  }
+}
+</style>
 </head>
 <body data-mi-servicio-version="29.1">
 <div class="app">
@@ -1021,6 +1075,34 @@
     crossorigin="anonymous"
     defer
 ></script>
-<script src="./app-v26.js?v=3101" defer></script>
+<script src="./app-v26.js?v=3201" defer></script>
+
+<script>
+(function () {
+  function ajustarInicioAlIPhone() {
+    const vista = document.getElementById('vista-inicio');
+    const nav = document.querySelector('.barra-navegacion');
+    if (!vista || !nav || !vista.classList.contains('activa')) return;
+    const top = vista.getBoundingClientRect().top;
+    const navTop = nav.getBoundingClientRect().top;
+    const disponible = Math.max(0, Math.floor(navTop - top - 8));
+    vista.style.setProperty('--inicio-altura-util', disponible + 'px');
+  }
+
+  window.addEventListener('load', function () {
+    setTimeout(ajustarInicioAlIPhone, 120);
+  });
+  window.addEventListener('resize', ajustarInicioAlIPhone);
+  window.addEventListener('orientationchange', function () {
+    setTimeout(ajustarInicioAlIPhone, 180);
+  });
+  document.addEventListener('click', function () {
+    setTimeout(ajustarInicioAlIPhone, 80);
+  });
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) setTimeout(ajustarInicioAlIPhone, 120);
+  });
+})();
+</script>
 </body>
 </html>
