@@ -2955,12 +2955,30 @@ function actualizarFraseAnimoInicio(totalMinutos) {
         ];
     }
 
-    let indice = Math.floor(Math.random() * frases.length);
-    if (frases.length > 1 && elemento.dataset.ultimaFrase === frases[indice]) {
-        indice = (indice + 1) % frases.length;
+    // Guardamos la última frase en localStorage para que también cambie
+    // al cerrar y volver a abrir el acceso directo.
+    const claveUltimaFrase = "miServicio.ultimaFraseAnimoInicio";
+    let ultimaFrase = "";
+
+    try {
+        ultimaFrase = localStorage.getItem(claveUltimaFrase) || "";
+    } catch (error) {
+        ultimaFrase = elemento.dataset.ultimaFrase || "";
     }
-    elemento.textContent = frases[indice];
-    elemento.dataset.ultimaFrase = frases[indice];
+
+    const candidatas = frases.filter(frase => frase !== ultimaFrase);
+    const disponibles = candidatas.length ? candidatas : frases;
+    const indice = Math.floor(Math.random() * disponibles.length);
+    const fraseElegida = disponibles[indice];
+
+    elemento.textContent = fraseElegida;
+    elemento.dataset.ultimaFrase = fraseElegida;
+
+    try {
+        localStorage.setItem(claveUltimaFrase, fraseElegida);
+    } catch (error) {
+        // Si el navegador bloquea localStorage, seguimos usando dataset.
+    }
 }
 
 // =========================================================
