@@ -166,6 +166,12 @@ input[type="date"] {
     display: block;
 }
 
+/* Seguridad de navegación: una vista marcada como hidden nunca puede
+   reaparecer por reglas específicas de Inicio o por estilos responsive. */
+.vista[hidden] {
+    display: none !important;
+}
+
 
 /* =========================================================
    BIENVENIDA

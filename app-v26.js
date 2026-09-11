@@ -656,6 +656,16 @@ function seleccionarVista(
                 elemento.classList.remove(
                     "activa"
                 );
+
+                // Ocultamos de forma explícita cada pantalla.
+                // Así ningún ajuste visual de Inicio puede dejarla
+                // visible debajo de Registrar, Historial, etc.
+                elemento.hidden = true;
+                elemento.style.setProperty(
+                    "display",
+                    "none",
+                    "important"
+                );
             }
         );
 
@@ -663,6 +673,11 @@ function seleccionarVista(
     // -----------------------------------------
     // Mostrar la seleccionada
     // -----------------------------------------
+
+    vistaElemento.hidden = false;
+    vistaElemento.style.removeProperty(
+        "display"
+    );
 
     vistaElemento
         .classList
