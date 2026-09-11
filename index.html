@@ -84,7 +84,8 @@
                         —
                     </span>
                 </div>
-                <article class="tarjeta">
+                <article class="tarjeta tarjeta-mes-desplegable" id="tarjetaMesDesplegable">
+                    <button type="button" class="mes-resumen-boton" id="botonDesplegarMes" aria-expanded="false" aria-controls="detalleMes">
                     <div class="fila-superior">
                         <div>
                             <p class="etiqueta">
@@ -97,10 +98,13 @@
                                 0 h
                             </p>
                         </div>
-                        <div class="icono-tarjeta">
-                            ◷
+                        <div class="mes-resumen-derecha">
+                            <div class="icono-tarjeta">◷</div>
+                            <span class="mes-chevron" aria-hidden="true">⌄</span>
                         </div>
                     </div>
+                    </button>
+                    <div id="detalleMes" class="detalle-mes-colapsable" hidden>
                     <div class="separador"></div>
                     <div class="fila-dato">
                         <span>
@@ -136,6 +140,7 @@
                         <strong id="totalOtras">
                             0 h
                         </strong>
+                    </div>
                     </div>
                 </article>
             </section>

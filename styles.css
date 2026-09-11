@@ -4179,3 +4179,93 @@ textarea.campo {
         font-size: 29px;
     }
 }
+
+/* =========================================================
+   V23 · INICIO / HISTORIAL COMPACTOS
+   ========================================================= */
+:root {
+    /* Rosa Pantera Rosa elegido para LDC. */
+    --ldc: #F39AC1;
+}
+
+/* Este mes: por defecto solo muestra el total. */
+.mes-resumen-boton {
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+.mes-resumen-derecha {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.mes-chevron {
+    color: var(--text-secondary);
+    font-size: 22px;
+    line-height: 1;
+    transition: transform .22s ease;
+}
+.tarjeta-mes-desplegable.abierta .mes-chevron { transform: rotate(180deg); }
+.detalle-mes-colapsable[hidden] { display: none !important; }
+.detalle-mes-colapsable { animation: aparecerDetalleMes .2s ease; }
+@keyframes aparecerDetalleMes {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Objetivo: mismo contenido, ocupando menos alto. */
+#vista-inicio .objetivo-cabecera { margin-bottom: 6px; }
+#vista-inicio .barra { height: 6px; }
+#vista-inicio .progreso-personaje { height: 43px; margin-top: 5px; }
+#vista-inicio .progreso-pista { bottom: 7px; height: 4px; }
+#vista-inicio .progreso-animal {
+    bottom: 10px;
+    width: 31px;
+    height: 31px;
+    font-size: 24px;
+}
+#vista-inicio .progreso-meta { bottom: 10px; font-size: 19px; }
+#vista-inicio .progreso-estado { margin-top: 1px; font-size: 11.5px; }
+#vista-inicio #desgloseObjetivo,
+#vista-inicio #mensajeObjetivo { margin-top: 5px; }
+
+/* LDC: rosa Pantera Rosa también en anillo, leyendas y tarjetas. */
+#vista-inicio .grafico-color-ldc,
+.barra-actividad-item.ldc .barra-actividad-relleno { background: var(--ldc); }
+.barra-actividad-item.ldc small { color: var(--ldc); }
+.registro-card-ldc .registro-tiempo {
+    background: rgba(243, 154, 193, .16);
+    color: var(--ldc);
+}
+
+/* Historial: misma forma, menos aire entre días y registros. */
+#vista-historial .lista-historial { gap: 5px; }
+#vista-historial .grupo-historial {
+    gap: 7px;
+    margin-bottom: 11px;
+}
+#vista-historial .grupo-historial-cabecera { padding: 0 4px; }
+#vista-historial .grupo-historial-titulo { font-size: 16.5px; }
+#vista-historial .grupo-historial-total { padding: 4px 8px; }
+#vista-historial .grupo-historial-registros { gap: 7px; }
+#vista-historial .registro-card {
+    padding: 11px 12px 11px 14px;
+    gap: 10px;
+    border-radius: 18px;
+}
+#vista-historial .registro-card::before { top: 10px; bottom: 10px; }
+#vista-historial .registro-icono {
+    width: 39px;
+    height: 39px;
+    border-radius: 13px;
+    font-size: 19px;
+}
+#vista-historial .registro-tipo { font-size: 15px; }
+#vista-historial .registro-fecha { margin-top: 3px; }
+#vista-historial .registro-notas { margin-top: 5px; }
+#vista-historial .registro-tiempo { padding: 4px 8px; }

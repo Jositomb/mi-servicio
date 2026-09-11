@@ -3415,7 +3415,7 @@ function actualizarGraficoInicio({
             tipo: "ldc",
             nombre: "LDC",
             minutos: ldc,
-            color: "var(--ldc-ring)",
+            color: "var(--ldc)",
             clase: "grafico-color-ldc"
         },
         {
@@ -8754,3 +8754,32 @@ function formatearFechaHoraOneDrive(fechaISO) {
         minute: "2-digit"
     }).format(fecha);
 }
+
+// =========================================================
+// V23 · ESTE MES DESPLEGABLE
+// =========================================================
+(function configurarEsteMesDesplegable() {
+    function iniciar() {
+        const boton = document.getElementById("botonDesplegarMes");
+        const detalle = document.getElementById("detalleMes");
+        const tarjeta = document.getElementById("tarjetaMesDesplegable");
+        if (!boton || !detalle || !tarjeta || boton.dataset.configurado === "1") return;
+
+        boton.dataset.configurado = "1";
+        detalle.hidden = true;
+        boton.setAttribute("aria-expanded", "false");
+
+        boton.addEventListener("click", () => {
+            const abrir = detalle.hidden;
+            detalle.hidden = !abrir;
+            boton.setAttribute("aria-expanded", String(abrir));
+            tarjeta.classList.toggle("abierta", abrir);
+        });
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", iniciar);
+    } else {
+        iniciar();
+    }
+})();
