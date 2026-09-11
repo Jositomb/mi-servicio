@@ -28,7 +28,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v26.css?v=3301"
+        href="./styles-v26.css?v=3401"
     >
 
 <style id="ajuste-iphone-final">
@@ -141,7 +141,7 @@
 }
 </style>
 </head>
-<body data-mi-servicio-version="33.0">
+<body data-mi-servicio-version="34.0">
 <div class="app">
     <!-- =====================================================
          CABECERA
@@ -1131,22 +1131,33 @@
     crossorigin="anonymous"
     defer
 ></script>
-<script src="./app-v26.js?v=3301" defer></script>
+<script src="./app-v26.js?v=3401" defer></script>
 
 <script>
 (function () {
   function ajustarInicioAlIPhone() {
     const vista = document.getElementById('vista-inicio');
     const nav = document.querySelector('.barra-navegacion');
-    if (!vista || !nav || !vista.classList.contains('activa')) return;
+    if (!vista || !nav) return;
+
+    // IMPORTANTE: nunca dejar un display inline en Inicio.
+    // Si cambiamos de pestaña, .vista { display:none } debe poder ocultarlo.
+    if (!vista.classList.contains('activa')) {
+      vista.style.removeProperty('--inicio-altura-util');
+      vista.style.removeProperty('height');
+      vista.style.removeProperty('min-height');
+      vista.style.removeProperty('display');
+      vista.style.removeProperty('flex-direction');
+      return;
+    }
+
     const top = vista.getBoundingClientRect().top;
     const navTop = nav.getBoundingClientRect().top;
     const disponible = Math.max(0, Math.floor(navTop - top - 8));
     vista.style.setProperty('--inicio-altura-util', disponible + 'px');
     vista.style.height = disponible + 'px';
     vista.style.minHeight = disponible + 'px';
-    vista.style.display = 'flex';
-    vista.style.flexDirection = 'column';
+    // El display y la dirección los controla el CSS solo mientras Inicio está activo.
   }
 
   window.addEventListener('load', function () {
