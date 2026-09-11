@@ -5053,3 +5053,113 @@ body:has(#vista-inicio.activa) .avatar {
         align-items: center !important;
     }
 }
+
+/* =========================================================
+   REMATE FINAL IPHONE · INICIO A TODA ALTURA + CURSOS CENTRADOS
+   11 SEP 2026
+   ========================================================= */
+@media (max-width: 430px) {
+    /* La vista Inicio ocupa de verdad toda la zona entre cabecera y navegación. */
+    body:has(#vista-inicio.activa) .app {
+        height: 100dvh !important;
+        min-height: 100dvh !important;
+        display: flex !important;
+        flex-direction: column !important;
+        padding-bottom: calc(82px + env(safe-area-inset-bottom)) !important;
+        overflow: hidden !important;
+    }
+
+    body:has(#vista-inicio.activa) main {
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    #vista-inicio.activa {
+        flex: 1 1 auto !important;
+        min-height: calc(100dvh - 205px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
+        height: auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+        overflow: hidden !important;
+    }
+
+    #vista-inicio .inicio-resumen-grid,
+    #vista-inicio > .seccion {
+        flex: 0 0 auto !important;
+        margin: 0 !important;
+    }
+
+    /* El bloque de progreso absorbe el espacio que antes quedaba vacío abajo. */
+    #vista-inicio #seccionGraficoInicio {
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    #vista-inicio #seccionGraficoInicio .tarjeta-grafico-inicio {
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+    }
+
+    /* La frase queda siempre visualmente cerca de la barra inferior. */
+    #vista-inicio .seccion-frase-animo {
+        margin-top: auto !important;
+        margin-bottom: 0 !important;
+    }
+
+    /* Cursos bíblicos: el número queda matemáticamente centrado,
+       independientemente del ancho de los botones laterales. */
+    #vista-registrar .grupo-cursos .contador-cursos {
+        position: relative !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        min-height: 50px !important;
+        padding: 0 42px !important;
+    }
+
+    #vista-registrar .grupo-cursos .contador-cursos-centro {
+        position: absolute !important;
+        left: 50% !important;
+        top: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: auto !important;
+        min-width: 36px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        pointer-events: none !important;
+    }
+
+    #vista-registrar .grupo-cursos .contador-cursos-centro strong {
+        display: block !important;
+        width: auto !important;
+        min-width: 36px !important;
+        margin: 0 !important;
+        text-align: center !important;
+        line-height: 1 !important;
+        font-variant-numeric: tabular-nums;
+    }
+
+    #vista-registrar .grupo-cursos #restarCurso {
+        position: absolute !important;
+        left: 7px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+    }
+
+    #vista-registrar .grupo-cursos #sumarCurso {
+        position: absolute !important;
+        right: 7px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+    }
+}
