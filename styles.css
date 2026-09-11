@@ -4375,3 +4375,159 @@ textarea.campo {
     line-height: 1.3;
     font-weight: 650;
 }
+
+/* =========================================================
+   V25 · AJUSTE FINAL DE HOY
+   Inicio completo + Registrar según boceto
+   ========================================================= */
+
+/* INICIO: aprovechar mejor la altura útil del iPhone. */
+#vista-inicio { margin-top: -2px; }
+body:has(#vista-inicio.activa) .app {
+    padding-top: max(12px, env(safe-area-inset-top));
+}
+body:has(#vista-inicio.activa) .cabecera {
+    margin-bottom: 12px;
+}
+body:has(#vista-inicio.activa) .saludo { font-size: 13px; }
+body:has(#vista-inicio.activa) .cabecera h1 { font-size: 29px; }
+body:has(#vista-inicio.activa) .avatar {
+    width: 42px; height: 42px; border-radius: 13px;
+}
+#vista-inicio .inicio-resumen-grid {
+    align-items: stretch;
+    gap: 9px;
+    margin-bottom: 8px;
+}
+#vista-inicio .inicio-mini-card {
+    height: 108px;
+    min-height: 108px;
+    padding: 11px 12px;
+}
+#vista-inicio .inicio-mini-titulo { font-size: 15px; }
+#vista-inicio .inicio-mini-subtitulo { font-size: 10.5px; }
+#vista-inicio .inicio-mini-total { margin-top: 10px; font-size: 28px; }
+#vista-inicio .inicio-calendario-icono { margin-top: 10px; font-size: 25px; }
+#vista-inicio .seccion { margin-bottom: 9px; }
+#vista-inicio .titulo-seccion { margin-bottom: 5px; }
+#vista-inicio .titulo-seccion h2 { font-size: 17px; }
+#vista-inicio .tarjeta-grafico-inicio { padding: 5px 10px 7px; }
+#vista-inicio .grafico-inicio {
+    transform: scale(.73);
+    transform-origin: center;
+    margin: -30px auto -38px;
+}
+#vista-inicio .leyenda-grafico-inicio {
+    margin-top: 0;
+    gap: 3px 9px;
+    font-size: 11px;
+}
+#vista-inicio .seccion:nth-of-type(5) .tarjeta { padding: 10px 12px; }
+#vista-inicio .objetivo-cabecera { margin-bottom: 2px; }
+#vista-inicio .objetivo-cabecera .etiqueta { font-size: 10.5px; }
+#vista-inicio .valor-secundario { font-size: 19px; }
+#vista-inicio .porcentaje { font-size: 20px; }
+#vista-inicio .barra { height: 5px; }
+#vista-inicio .progreso-personaje { height: 31px; margin-top: 1px; }
+#vista-inicio .progreso-animal { width: 25px; height: 25px; font-size: 19px; bottom: 7px; }
+#vista-inicio .progreso-meta { font-size: 16px; bottom: 7px; }
+#vista-inicio .progreso-estado { font-size: 10.5px; line-height: 1.15; }
+#vista-inicio #desgloseObjetivo,
+#vista-inicio #mensajeObjetivo { margin-top: 2px; font-size: 10.5px; line-height: 1.2; }
+#vista-inicio .seccion-frase-animo { margin: 0 0 5px; }
+#vista-inicio .frase-animo-card { min-height: 42px; padding: 7px 10px; }
+#vista-inicio .frase-animo-icono { font-size: 17px; }
+#vista-inicio .frase-animo-card p { font-size: 11.5px; line-height: 1.2; }
+
+/* REGISTRAR: estructura del boceto, manteniendo todos los campos. */
+#vista-registrar .intro-pantalla { display: none; }
+#vista-registrar #formRegistro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 10px;
+}
+#vista-registrar .grupo-formulario {
+    margin: 0;
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid var(--divider);
+    border-radius: 19px;
+    background: var(--card);
+    box-shadow: 0 5px 18px rgba(0,0,0,.035);
+}
+#vista-registrar .grupo-actividad,
+#vista-registrar .grupo-tiempo,
+#vista-registrar .grupo-notas,
+#vista-registrar .boton-guardar,
+#vista-registrar .mensaje-formulario { grid-column: 1 / -1; }
+#vista-registrar .titulo-campo {
+    margin: 0 2px 8px;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 750;
+    text-transform: none;
+    letter-spacing: 0;
+}
+#vista-registrar .selector-actividad {
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 7px;
+}
+#vista-registrar .actividad-boton {
+    min-height: 53px;
+    padding: 8px 9px;
+    gap: 7px;
+    border-radius: 14px;
+    font-size: 12px;
+}
+#vista-registrar .actividad-icono {
+    width: 30px; height: 30px; border-radius: 9px; font-size: 15px;
+}
+#vista-registrar .grupo-fecha .campo {
+    min-height: 48px;
+    padding: 10px;
+    font-size: 13px;
+    border-radius: 13px;
+    background: var(--background);
+}
+#vista-registrar .grupo-cursos .contador-cursos {
+    min-height: 48px;
+    padding: 5px 6px;
+    border-radius: 13px;
+    background: var(--background);
+}
+#vista-registrar .grupo-cursos .contador-cursos-centro span { display: none; }
+#vista-registrar .grupo-cursos .contador-cursos-centro strong { font-size: 21px; }
+#vista-registrar .grupo-cursos .boton-contador { width: 36px; height: 36px; }
+#vista-registrar .selector-tiempo { gap: 8px; }
+#vista-registrar .campo-tiempo {
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: var(--background);
+}
+#vista-registrar .campo-tiempo label { margin-bottom: 3px; font-size: 11px; }
+#vista-registrar .campo-tiempo input { font-size: 24px; text-align: center; }
+#vista-registrar .atajos-tiempo {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-top: 8px;
+}
+#vista-registrar .atajo-tiempo {
+    min-height: 34px;
+    padding: 6px;
+    border-radius: 10px;
+    font-size: 12px;
+}
+#vista-registrar .grupo-notas textarea.campo {
+    min-height: 68px;
+    padding: 10px 12px;
+    border-radius: 13px;
+    background: var(--background);
+}
+#vista-registrar .boton-guardar { min-height: 48px; margin-top: 0; }
+
+@media (max-width: 390px) {
+    #vista-inicio .inicio-mini-card { height: 102px; min-height: 102px; }
+    #vista-inicio .grafico-inicio { transform: scale(.68); margin: -35px auto -43px; }
+    #vista-registrar #formRegistro { gap: 8px; }
+    #vista-registrar .grupo-formulario { padding: 10px; }
+}

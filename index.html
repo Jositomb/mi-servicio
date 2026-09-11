@@ -13,7 +13,7 @@
     <meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
     <title>Mi Servicio</title>
-    <link rel="apple-touch-icon" href="./icon-apple.png?v=21">
+    <link rel="apple-touch-icon" href="./icon-apple.png?v=25">
     <meta
         name="apple-mobile-web-app-capable"
         content="yes"
@@ -28,7 +28,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles.css?v=24"
+        href="./styles.css?v=25"
     >
 </head>
 <body>
@@ -241,7 +241,7 @@
             </p>
             <form id="formRegistro">
                 <!-- ACTIVIDAD -->
-                <div class="grupo-formulario">
+                <div class="grupo-formulario grupo-actividad">
                     <span class="titulo-campo">
                         Actividad
                     </span>
@@ -312,7 +312,7 @@
                     </div>
                 </div>
                 <!-- FECHA -->
-                <div class="grupo-formulario">
+                <div class="grupo-formulario grupo-fecha">
                     <label
                         class="titulo-campo"
                         for="fechaRegistro"
@@ -327,7 +327,7 @@
                     >
                 </div>
                 <!-- TIEMPO -->
-                <div class="grupo-formulario">
+                <div class="grupo-formulario grupo-tiempo">
                     <span class="titulo-campo">
                         Tiempo
                     </span>
@@ -358,18 +358,18 @@
                         </div>
                     </div>
                     <div class="atajos-tiempo" aria-label="Atajos de tiempo">
-                        <button type="button" class="atajo-tiempo" data-minutos="30">30 min</button>
-                        <button type="button" class="atajo-tiempo" data-minutos="60">1 h</button>
-                        <button type="button" class="atajo-tiempo" data-minutos="120">2 h</button>
-                        <button type="button" class="atajo-tiempo" data-minutos="180">3 h</button>
-                        <button type="button" class="atajo-tiempo" data-minutos="240">4 h</button>
-                        <button type="button" class="atajo-tiempo" data-minutos="300">5 h</button>
+                        <button type="button" class="atajo-tiempo" data-minutos="15">15</button>
+                        <button type="button" class="atajo-tiempo" data-minutos="30">30</button>
+                        <button type="button" class="atajo-tiempo" data-minutos="45">45</button>
+                        <button type="button" class="atajo-tiempo" data-minutos="60">60</button>
+                        <button type="button" class="atajo-tiempo" data-minutos="90">90</button>
+                        <button type="button" class="atajo-tiempo" data-minutos="120">120</button>
                     </div>
                 </div>
                 <!-- CURSOS BÍBLICOS -->
                 <div
                     id="grupoCursosBiblicos"
-                    class="grupo-formulario"
+                    class="grupo-formulario grupo-cursos"
                 >
                     <span class="titulo-campo">
                         Cursos bíblicos
@@ -400,7 +400,7 @@
                     </div>
                 </div>
                 <!-- NOTAS -->
-                <div class="grupo-formulario">
+                <div class="grupo-formulario grupo-notas">
                     <label
                         class="titulo-campo"
                         for="notasRegistro"
@@ -1021,6 +1021,6 @@
     crossorigin="anonymous"
     defer
 ></script>
-<script src="./app.js?v=24" defer></script>
+<script src="./app.js?v=25" defer></script>
 </body>
 </html>

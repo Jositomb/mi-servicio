@@ -2922,26 +2922,45 @@ function actualizarFraseAnimoInicio(totalMinutos) {
     if (!elemento) return;
 
     const objetivo = Number(preferencias?.objetivoMensualMinutos || 0);
-    if (objetivo <= 0) {
-        elemento.textContent = "Cada paso cuenta. Sigue avanzando.";
-        return;
-    }
-
-    const porcentaje = Math.max(0, (totalMinutos / objetivo) * 100);
+    const porcentaje = objetivo > 0 ? Math.max(0, (totalMinutos / objetivo) * 100) : 0;
     const ahora = new Date();
     const diasMes = new Date(ahora.getFullYear(), ahora.getMonth() + 1, 0).getDate();
     const ritmoEsperado = (ahora.getDate() / diasMes) * 100;
     const diferencia = porcentaje - ritmoEsperado;
 
-    if (porcentaje >= 100) {
-        elemento.textContent = "¡Objetivo conseguido! Disfruta de todo lo que has logrado este mes. 🎉";
-    } else if (diferencia >= 5) {
-        elemento.textContent = "¡Muy buen ritmo! Vas por delante y cada esfuerzo suma. 🐇";
-    } else if (diferencia <= -5) {
-        elemento.textContent = "Poco a poco. Un buen día puede cambiar el ritmo del mes. 🐢";
+    let frases;
+    if (objetivo > 0 && porcentaje >= 100) {
+        frases = [
+            "¡Objetivo conseguido! Disfruta de todo lo que has logrado. 🎉",
+            "¡Meta alcanzada! Un mes lleno de buenos esfuerzos. 🏁",
+            "¡Lo conseguiste! Cada pequeño paso ha contado. ✨"
+        ];
+    } else if (objetivo > 0 && diferencia >= 5) {
+        frases = [
+            "¡Muy buen ritmo! Vas por delante y cada esfuerzo suma. 🐇",
+            "Vas con margen. Sigue disfrutando de cada paso. ✨",
+            "¡Qué buen avance! Mantén ese ritmo sin perder la calma. 🌱"
+        ];
+    } else if (objetivo > 0 && diferencia <= -5) {
+        frases = [
+            "Poco a poco. Un buen día puede cambiar el ritmo del mes. 🐢",
+            "No hace falta correr: lo importante es seguir avanzando. 🌱",
+            "Cada rato cuenta. Hoy puede ser un buen día para sumar. ✨"
+        ];
     } else {
-        elemento.textContent = "Vas al ritmo del mes. Sigue así, paso a paso. 🚶";
+        frases = [
+            "Vas al ritmo del mes. Sigue así, paso a paso. 🚶",
+            "Cada paso cuenta. Sigue avanzando. ✨",
+            "Buen ritmo: constancia, calma y a seguir. 🌿"
+        ];
     }
+
+    let indice = Math.floor(Math.random() * frases.length);
+    if (frases.length > 1 && elemento.dataset.ultimaFrase === frases[indice]) {
+        indice = (indice + 1) % frases.length;
+    }
+    elemento.textContent = frases[indice];
+    elemento.dataset.ultimaFrase = frases[indice];
 }
 
 // =========================================================
