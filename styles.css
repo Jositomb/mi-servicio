@@ -8,8 +8,7 @@
     --primary-soft: rgba(52, 120, 246, 0.12);
 
     --ministry: #3478f6;
-    --ldc: #af52de;
-    --ldc-ring: #ff2d55;
+    --ldc: #F48FB1;
     --assembly: #ff9500;
     --other: #8e8e93;
 
@@ -2749,7 +2748,7 @@ textarea.campo {
 }
 
 .grafico-color-ldc {
-    background: var(--ldc-ring);
+    background: var(--ldc);
 }
 
 .grafico-color-asambleas {
@@ -3870,7 +3869,7 @@ textarea.campo {
         --primary: #5e9cff;
         --primary-soft: rgba(94, 156, 255, 0.16);
         --ministry: #5e9cff;
-        --ldc: #bf6bea;
+        --ldc: #F48FB1;
         --assembly: #ff9f0a;
         --other: #98989d;
         --success: #30d158;
@@ -3979,4 +3978,204 @@ textarea.campo {
 @keyframes pulsoOneDrive { 50% { opacity: .42; transform: scale(.82); } }
 @media (prefers-color-scheme: dark) {
     .onedrive-panel { background: rgba(255,255,255,.055); border-color: rgba(255,255,255,.10); }
+}
+
+
+/* =========================================================
+   INICIO COMPACTO + OBJETIVO MÁS DIVERTIDO
+   Ajustes visuales limitados a la pestaña Inicio.
+   ========================================================= */
+
+#vista-inicio .bienvenida {
+    gap: 10px;
+    padding: 13px 14px;
+    margin-bottom: 18px;
+}
+
+#vista-inicio .icono-bienvenida {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    font-size: 18px;
+}
+
+#vista-inicio .bienvenida h2 {
+    font-size: 16px;
+}
+
+#vista-inicio .bienvenida p {
+    font-size: 13px;
+    line-height: 1.3;
+}
+
+#vista-inicio .seccion {
+    margin-bottom: 18px;
+}
+
+#vista-inicio .titulo-seccion {
+    margin-bottom: 7px;
+}
+
+#vista-inicio .titulo-seccion h2 {
+    font-size: 18px;
+}
+
+#vista-inicio .tarjeta {
+    padding: 15px 16px;
+    border-radius: 18px;
+}
+
+#vista-inicio .valor-principal {
+    font-size: 30px;
+}
+
+#vista-inicio .valor-secundario {
+    font-size: 22px;
+}
+
+#vista-inicio .icono-tarjeta {
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+    font-size: 21px;
+}
+
+#vista-inicio .separador {
+    margin: 12px 0;
+}
+
+#vista-inicio .fila-dato {
+    padding: 5px 0;
+    font-size: 14px;
+}
+
+#vista-inicio .tarjeta-grafico-inicio {
+    padding-top: 13px;
+    padding-bottom: 13px;
+}
+
+#vista-inicio .grafico-inicio {
+    margin-top: 0;
+    margin-bottom: 8px;
+}
+
+#vista-inicio .leyenda-grafico-inicio {
+    margin-top: 8px;
+    gap: 7px 10px;
+}
+
+#vista-inicio .objetivo-cabecera {
+    margin-bottom: 10px;
+}
+
+#vista-inicio .texto-secundario {
+    margin-top: 8px;
+    font-size: 13px;
+    line-height: 1.3;
+}
+
+/* La barra principal queda más alegre y con sensación de recorrido. */
+#vista-inicio .barra {
+    height: 8px;
+    background:
+        repeating-linear-gradient(
+            90deg,
+            rgba(120, 120, 128, 0.13) 0 18px,
+            rgba(120, 120, 128, 0.22) 18px 20px
+        );
+}
+
+#vista-inicio .barra-progreso {
+    background:
+        linear-gradient(
+            90deg,
+            var(--primary),
+            #6EA8FF,
+            var(--primary)
+        );
+    background-size: 180% 100%;
+    animation: brilloObjetivo 3.2s linear infinite;
+}
+
+@keyframes brilloObjetivo {
+    from { background-position: 100% 0; }
+    to   { background-position: -80% 0; }
+}
+
+/* Pista del personaje con pequeños hitos de camino. */
+#vista-inicio .progreso-personaje {
+    height: 58px;
+    margin-top: 9px;
+}
+
+#vista-inicio .progreso-pista {
+    bottom: 10px;
+    height: 6px;
+    background:
+        radial-gradient(circle at 25% 50%, rgba(52,120,246,.62) 0 3px, transparent 3.5px),
+        radial-gradient(circle at 50% 50%, rgba(52,120,246,.62) 0 3px, transparent 3.5px),
+        radial-gradient(circle at 75% 50%, rgba(52,120,246,.62) 0 3px, transparent 3.5px),
+        linear-gradient(90deg, rgba(52,120,246,.12), rgba(52,120,246,.38));
+}
+
+#vista-inicio .progreso-animal {
+    bottom: 16px;
+    width: 40px;
+    height: 40px;
+    font-size: 30px;
+}
+
+#vista-inicio .progreso-meta {
+    bottom: 15px;
+    font-size: 23px;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,.12));
+}
+
+#vista-inicio .progreso-estado {
+    margin-top: 3px;
+    font-size: 12px;
+}
+
+#vista-inicio .boton-calendario-inicio {
+    min-height: 42px;
+    padding: 9px 14px;
+}
+
+/* LDC: rosa tipo Pantera Rosa en anillos, leyenda y barras. */
+#vista-inicio .grafico-color-ldc,
+.barra-actividad-item.ldc .barra-actividad-relleno {
+    background: #F48FB1;
+}
+
+.barra-actividad-item.ldc small {
+    color: #F48FB1;
+}
+
+@media (max-width: 430px) {
+    #vista-inicio .bienvenida {
+        padding: 11px 12px;
+        margin-bottom: 15px;
+    }
+
+    #vista-inicio .seccion {
+        margin-bottom: 15px;
+    }
+
+    #vista-inicio .tarjeta {
+        padding: 13px 14px;
+    }
+
+    #vista-inicio .titulo-seccion h2 {
+        font-size: 17px;
+    }
+
+    #vista-inicio .progreso-personaje {
+        height: 54px;
+    }
+
+    #vista-inicio .progreso-animal {
+        width: 38px;
+        height: 38px;
+        font-size: 29px;
+    }
 }
