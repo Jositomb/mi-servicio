@@ -4944,3 +4944,112 @@ body:has(#vista-inicio.activa) .avatar {
         font-weight: 700;
     }
 }
+
+/* =========================================================
+   INICIO · ADAPTACIÓN REAL A LA ALTURA DEL IPHONE
+   11 SEP 2026
+   Reparte el contenido por toda la pantalla sin dejar hueco inferior.
+   ========================================================= */
+@media (max-width: 430px) {
+    body:has(#vista-inicio.activa) .app {
+        height: 100dvh !important;
+        min-height: 100dvh !important;
+        padding-top: max(10px, env(safe-area-inset-top)) !important;
+        padding-bottom: calc(76px + env(safe-area-inset-bottom)) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+    }
+
+    body:has(#vista-inicio.activa) .cabecera {
+        flex: 0 0 auto;
+        margin-bottom: 8px !important;
+    }
+
+    body:has(#vista-inicio.activa) main {
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+    }
+
+    #vista-inicio.activa {
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        height: auto !important;
+        display: grid !important;
+        grid-template-rows: auto minmax(0, 1fr) auto auto !important;
+        gap: clamp(7px, 1.05vh, 12px) !important;
+        align-content: stretch !important;
+        overflow: hidden !important;
+    }
+
+    /* Los paneles cerrados no reservan espacio. */
+    #vista-inicio .inicio-calendario-panel-wrap:has(.panel-calendario-inicio.oculto),
+    #vista-inicio #recordatorioCopiaInicio.oculto {
+        display: none !important;
+    }
+
+    #vista-inicio .inicio-resumen-grid,
+    #vista-inicio #seccionGraficoInicio,
+    #vista-inicio .seccion-frase-animo,
+    #vista-inicio > .seccion:not(#seccionGraficoInicio):not(.seccion-frase-animo) {
+        margin: 0 !important;
+    }
+
+    /* Arriba: ambas tarjetas conservan exactamente la misma altura. */
+    #vista-inicio .inicio-resumen-grid {
+        grid-auto-rows: clamp(96px, 12.8vh, 112px) !important;
+    }
+    #vista-inicio .inicio-mini-card {
+        height: 100% !important;
+        min-height: 0 !important;
+        max-height: none !important;
+    }
+
+    /* El gráfico absorbe el espacio sobrante de forma natural. */
+    #vista-inicio #seccionGraficoInicio {
+        min-height: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    #vista-inicio #seccionGraficoInicio .titulo-seccion {
+        flex: 0 0 auto;
+        margin-bottom: 4px !important;
+    }
+    #vista-inicio .tarjeta-grafico-inicio {
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        padding: 6px 10px 8px !important;
+    }
+    #vista-inicio .grafico-inicio {
+        transform: scale(.74) !important;
+        transform-origin: center !important;
+        margin: -24px auto -31px !important;
+    }
+    #vista-inicio .leyenda-grafico-inicio {
+        margin-top: 0 !important;
+    }
+
+    /* Objetivo: un poco más respirado que antes, pero sigue compacto. */
+    #vista-inicio > .seccion:not(#seccionGraficoInicio):not(.seccion-frase-animo) .tarjeta {
+        padding: clamp(10px, 1.35vh, 13px) 12px !important;
+    }
+    #vista-inicio .progreso-personaje {
+        height: clamp(31px, 4.5vh, 40px) !important;
+    }
+
+    /* La frase queda pegada a la parte baja útil, justo encima de la navegación. */
+    #vista-inicio .seccion-frase-animo {
+        align-self: stretch !important;
+    }
+    #vista-inicio .frase-animo-card {
+        min-height: clamp(44px, 6.2vh, 56px) !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+}
