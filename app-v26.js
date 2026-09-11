@@ -2982,6 +2982,33 @@ function actualizarFraseAnimoInicio(totalMinutos) {
 }
 
 // =========================================================
+// CAMBIAR FRASE AL VOLVER A ENTRAR EN LA APP
+// =========================================================
+function refrescarFraseAlVolverAInicio() {
+    const vistaInicio = document.getElementById("vista-inicio");
+    if (!vistaInicio || !vistaInicio.classList.contains("activa")) return;
+
+    const totalTexto = document.getElementById("totalMes")?.textContent || "0";
+    const coincidencia = totalTexto.match(/(\d+(?:[.,]\d+)?)/);
+    const horas = coincidencia ? Number(coincidencia[1].replace(",", ".")) : 0;
+    actualizarFraseAnimoInicio(Math.round(horas * 60));
+}
+
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+        setTimeout(refrescarFraseAlVolverAInicio, 60);
+    }
+});
+
+window.addEventListener("pageshow", () => {
+    setTimeout(refrescarFraseAlVolverAInicio, 60);
+});
+
+window.addEventListener("focus", () => {
+    setTimeout(refrescarFraseAlVolverAInicio, 60);
+});
+
+// =========================================================
 // CALENDARIO DEL MES EN INICIO
 // =========================================================
 

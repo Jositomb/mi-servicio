@@ -4736,3 +4736,78 @@ body:has(#vista-inicio.activa) .avatar {
         height: 48px;
     }
 }
+
+
+/* =========================================================
+   AJUSTE DEFINITIVO IPHONE · INICIO + REGISTRAR
+   ========================================================= */
+@media (max-width: 430px) {
+    html, body { min-height: 100%; }
+    body { min-height: 100dvh; }
+
+    body:has(#vista-inicio.activa) .app,
+    body:has(#vista-registrar.activa) .app {
+        min-height: 100dvh;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+    }
+
+    body:has(#vista-inicio.activa) main,
+    body:has(#vista-registrar.activa) main {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #vista-inicio.activa,
+    #vista-registrar.activa {
+        flex: 1;
+        min-height: 0;
+        box-sizing: border-box;
+    }
+
+    /* Inicio: tarjetas superiores exactamente iguales. */
+    #vista-inicio .inicio-resumen-grid {
+        align-items: stretch;
+        grid-auto-rows: 96px;
+    }
+    #vista-inicio .inicio-mini-card {
+        height: 96px !important;
+        min-height: 96px !important;
+        max-height: 96px;
+        box-sizing: border-box;
+    }
+
+    /* Registrar: Fecha + Cursos bíblicos en la misma fila. */
+    #vista-registrar #formRegistro {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+        align-content: start;
+    }
+    #vista-registrar .grupo-fecha { grid-column: 1 !important; }
+    #vista-registrar .grupo-cursos { grid-column: 2 !important; }
+    #vista-registrar .grupo-fecha,
+    #vista-registrar .grupo-cursos {
+        width: 100%;
+        box-sizing: border-box;
+        margin: 0 !important;
+    }
+
+    /* Aprovechar el alto del iPhone sin dejar grandes huecos. */
+    #vista-inicio.activa {
+        display: flex;
+        flex-direction: column;
+    }
+    #vista-inicio .seccion-frase-animo {
+        margin-top: auto !important;
+    }
+
+    #vista-registrar.activa {
+        display: flex;
+        flex-direction: column;
+    }
+    #vista-registrar #formRegistro {
+        flex: 1;
+    }
+}
