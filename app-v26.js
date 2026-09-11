@@ -724,6 +724,9 @@ function seleccionarVista(
         estadisticas:
             "Estadísticas",
 
+        meta:
+            "Meta",
+
         ajustes:
             "Ajustes"
     };
@@ -7337,6 +7340,7 @@ function actualizarTodaLaInterfaz() {
     renderizarHistorial();
 
     actualizarEstadisticas();
+    actualizarMeta();
 }
 
 
@@ -8965,3 +8969,152 @@ function formatearFechaHoraOneDrive(fechaISO) {
         iniciar();
     }
 })();
+
+
+// =========================================================
+// META DEL AÑO DE SERVICIO
+// =========================================================
+
+function actualizarMeta() {
+    const contenedor = document.getElementById("vista-meta");
+    if (!contenedor) return;
+
+    const esPrecursorRegular =
+        estado.preferencias?.tipoPublicador === "precursorRegular";
+
+    const principal = contenedor.querySelector(".meta-principal");
+    const bloques = contenedor.querySelectorAll(".meta-dos-columnas, .meta-ritmo, .meta-restante");
+    const sinObjetivo = document.getElementById("metaSinObjetivo");
+
+    if (!esPrecursorRegular) {
+        principal?.classList.add("oculto");
+        bloques.forEach(elemento => elemento.classList.add("oculto"));
+        sinObjetivo?.classList.remove("oculto");
+        return;
+    }
+
+    principal?.classList.remove("oculto");
+    bloques.forEach(elemento => elemento.classList.remove("oculto"));
+    sinObjetivo?.classList.add("oculto");
+
+    const ahora = new Date();
+    const rango = rangoAnio(ahora);
+    const registrosAnio = obtenerRegistrosEntreFechas(rango.inicio, rango.fin);
+    const total = sumarMinutos(registrosAnio);
+    const objetivo = 600 * 60;
+    const pendiente = Math.max(objetivo - total, 0);
+    const progreso = objetivo > 0 ? total / objetivo : 0;
+    const progresoLimitado = Math.min(Math.max(progreso, 0), 1);
+    const porcentaje = Math.round(progreso * 100);
+
+    const duracionAnio = rango.fin.getTime() - rango.inicio.getTime();
+    const transcurrido = Math.min(
+        Math.max(ahora.getTime() - rango.inicio.getTime(), 0),
+        duracionAnio
+    );
+    const progresoTiempo = duracionAnio > 0 ? transcurrido / duracionAnio : 0;
+    const esperado = Math.round(objetivo * progresoTiempo);
+    const diferencia = total - esperado;
+
+    const finExclusivo = new Date(
+        rango.fin.getFullYear(),
+        rango.fin.getMonth(),
+        rango.fin.getDate() + 1
+    );
+    const diasRestantes = Math.max(
+        Math.ceil((finExclusivo.getTime() - ahora.getTime()) / 86400000),
+        0
+    );
+    const mesesEquivalentes = Math.max(diasRestantes / 30.4375, 1 / 30.4375);
+    const ritmoMensual = pendiente > 0
+        ? Math.round(pendiente / mesesEquivalentes)
+        : 0;
+
+    const anioServicio = rango.fin.getFullYear();
+    ponerTexto("metaAnioServicio", `Año de servicio ${anioServicio}`);
+    ponerTexto(
+        "metaPeriodo",
+        `sep ${rango.inicio.getFullYear()} – ago ${anioServicio}`
+    );
+    ponerTexto("metaPorcentaje", `${porcentaje}%`);
+    ponerTexto("metaTotal", formatearTiempo(total));
+    ponerTexto("metaObjetivoTexto", `de ${formatearTiempo(objetivo)}`);
+    ponerTexto("metaLlevas", formatearTiempo(total));
+    ponerTexto("metaQueda", formatearTiempo(pendiente));
+    ponerTexto("metaEsperado", formatearTiempo(esperado));
+
+    const anillo = document.getElementById("metaAnillo");
+    if (anillo) {
+        anillo.style.setProperty(
+            "--meta-progreso",
+            `${progresoLimitado * 360}deg`
+        );
+    }
+
+    const barra = document.getElementById("metaBarraRelleno");
+    if (barra) barra.style.width = `${progresoLimitado * 100}%`;
+
+    const vaPorDelante = diferencia >= 0;
+    ponerTexto(
+        "metaDiferenciaTitulo",
+        vaPorDelante ? "Vas por delante" : "Vas por detrás"
+    );
+    ponerTexto("metaDiferencia", formatearTiempo(Math.abs(diferencia)));
+
+    const diferenciaElemento = document.getElementById("metaDiferencia");
+    diferenciaElemento?.classList.toggle("meta-positivo", vaPorDelante);
+    diferenciaElemento?.classList.toggle("meta-atencion", !vaPorDelante);
+
+    let mensaje;
+    if (pendiente === 0) {
+        mensaje = "Ya has alcanzado la meta del año de servicio.";
+    } else if (diferencia > 0) {
+        mensaje = `Llevas ${formatearTiempo(diferencia)} más de lo necesario para el ritmo de hoy.`;
+    } else if (diferencia < 0) {
+        mensaje = `Con ${formatearTiempo(Math.abs(diferencia))} recuperarías el ritmo esperado para hoy.`;
+    } else {
+        mensaje = "Estás exactamente en el ritmo previsto para alcanzar la meta.";
+    }
+    ponerTexto("metaMensaje", mensaje);
+
+    ponerTexto(
+        "metaTiempoRestante",
+        textoTiempoRestanteMeta(ahora, finExclusivo)
+    );
+    ponerTexto(
+        "metaRitmoNecesario",
+        pendiente === 0 ? "Meta ✓" : `${formatearTiempo(ritmoMensual)}/mes`
+    );
+}
+
+function textoTiempoRestanteMeta(desde, hasta) {
+    if (hasta <= desde) return "0 días";
+
+    let meses =
+        (hasta.getFullYear() - desde.getFullYear()) * 12 +
+        (hasta.getMonth() - desde.getMonth());
+
+    let ancla = new Date(
+        desde.getFullYear(),
+        desde.getMonth() + meses,
+        desde.getDate()
+    );
+
+    if (ancla > hasta) {
+        meses -= 1;
+        ancla = new Date(
+            desde.getFullYear(),
+            desde.getMonth() + meses,
+            desde.getDate()
+        );
+    }
+
+    const dias = Math.max(
+        Math.round((hasta.getTime() - ancla.getTime()) / 86400000),
+        0
+    );
+
+    if (meses > 0 && dias > 0) return `${meses} meses y ${dias} días`;
+    if (meses > 0) return meses === 1 ? "1 mes" : `${meses} meses`;
+    return dias === 1 ? "1 día" : `${dias} días`;
+}

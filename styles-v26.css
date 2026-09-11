@@ -5222,3 +5222,56 @@ body:has(#vista-inicio.activa) .avatar {
         justify-self: center !important;
     }
 }
+
+
+/* =========================================================
+   META DEL AÑO DE SERVICIO
+   ========================================================= */
+
+.meta-web { display: grid; gap: 12px; }
+.meta-cabecera, .meta-progreso-fila { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.meta-titulo { margin: 0; font-size: 17px; font-weight: 700; }
+.meta-subtitulo { margin: 3px 0 0; color: var(--text-secondary); font-size: 12px; }
+.meta-icono { color: var(--primary); font-size: 28px; font-weight: 700; }
+.meta-progreso-fila { margin-top: 16px; justify-content: flex-start; }
+.meta-anillo {
+    --meta-progreso: 0deg;
+    width: 126px; height: 126px; flex: 0 0 126px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: conic-gradient(var(--primary) var(--meta-progreso), color-mix(in srgb, var(--primary) 13%, transparent) 0);
+    position: relative;
+}
+.meta-anillo::after { content: ""; position: absolute; inset: 12px; border-radius: 50%; background: var(--card-background, var(--background-secondary)); }
+.meta-anillo-centro { position: relative; z-index: 1; display: grid; text-align: center; }
+.meta-anillo-centro strong { font-size: 24px; line-height: 1.1; }
+.meta-anillo-centro small, .meta-progreso-datos span, .meta-progreso-datos small, .meta-mini small, .meta-cajita small, .meta-ritmo small { color: var(--text-secondary); }
+.meta-progreso-datos { min-width: 0; flex: 1; display: grid; gap: 7px; }
+.meta-total { font-size: 30px; line-height: 1.05; }
+.meta-barra { height: 5px; overflow: hidden; border-radius: 999px; background: color-mix(in srgb, var(--primary) 13%, transparent); }
+.meta-barra span { display: block; height: 100%; width: 0; border-radius: inherit; background: var(--primary); transition: width .35s ease; }
+.meta-dos-columnas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.meta-mini { display: grid; gap: 6px; min-width: 0; }
+.meta-mini strong { font-size: 18px; white-space: nowrap; }
+.meta-mini-icono { font-size: 20px; font-weight: 800; }
+.meta-azul { color: var(--primary); }
+.meta-naranja, .meta-atencion { color: #ff9500; }
+.meta-positivo { color: #34c759; }
+.meta-ritmo h2, .meta-restante h2 { margin: 0 0 14px; font-size: 17px; }
+.meta-ritmo-datos strong { display: block; margin-top: 5px; font-size: 21px; }
+.meta-derecha { text-align: right; }
+.meta-mensaje { margin: 10px 0 0; color: var(--text-secondary); font-size: 13px; line-height: 1.35; }
+.meta-cajita { padding: 12px; border-radius: 14px; background: var(--background-secondary); min-width: 0; }
+.meta-cajita strong { display: block; margin-top: 5px; font-size: 15px; white-space: nowrap; }
+.meta-sin-objetivo { text-align: center; display: grid; gap: 10px; padding-block: 30px; }
+.meta-sin-objetivo > span { color: var(--primary); font-size: 44px; }
+.meta-sin-objetivo p { margin: 0; color: var(--text-secondary); }
+
+.barra-navegacion { grid-template-columns: repeat(6, 1fr); }
+@media (max-width: 520px) {
+    .barra-navegacion { padding-left: 3px; padding-right: 3px; }
+    .nav-item { font-size: 9px; padding-inline: 0; }
+    .nav-icono { font-size: 20px; }
+    .meta-anillo { width: 112px; height: 112px; flex-basis: 112px; }
+    .meta-anillo::after { inset: 10px; }
+    .meta-total { font-size: 26px; }
+}
