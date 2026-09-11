@@ -9,6 +9,7 @@
 
     --ministry: #3478f6;
     --ldc: #af52de;
+    --ldc-ring: #ff2d55;
     --assembly: #ff9500;
     --other: #8e8e93;
 
@@ -2748,7 +2749,7 @@ textarea.campo {
 }
 
 .grafico-color-ldc {
-    background: var(--ldc);
+    background: var(--ldc-ring);
 }
 
 .grafico-color-asambleas {

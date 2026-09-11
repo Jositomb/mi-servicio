@@ -3415,7 +3415,7 @@ function actualizarGraficoInicio({
             tipo: "ldc",
             nombre: "LDC",
             minutos: ldc,
-            color: "var(--ldc)",
+            color: "var(--ldc-ring)",
             clase: "grafico-color-ldc"
         },
         {
