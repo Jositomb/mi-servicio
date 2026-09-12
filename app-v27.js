@@ -16,7 +16,8 @@ const STORAGE_KEYS = {
     ultimaCopiaSeguridad: "miServicio.ultimaCopiaSeguridad",
     onedriveConectado: "miServicio.onedriveConectado",
     ultimaSyncOneDrive: "miServicio.ultimaSyncOneDrive",
-    ultimaModificacionLocal: "miServicio.ultimaModificacionLocal"
+    ultimaModificacionLocal: "miServicio.ultimaModificacionLocal",
+    agendaSalidas: "miServicio.agendaSalidas"
 };
 
 
@@ -106,6 +107,10 @@ const estado = {
     filtroHistorial: "todos",
 
     registros: [],
+
+    // Planificación del ministerio por fecha:
+    // { "2026-09-18": "Marta", ... }
+    agendaSalidas: {},
 
     preferencias: {
         tipoPublicador: "publicador",
@@ -200,6 +205,20 @@ function cargarDatos() {
             STORAGE_KEYS.registros,
             []
         );
+
+    estado.agendaSalidas =
+        leerJSON(
+            STORAGE_KEYS.agendaSalidas,
+            {}
+        );
+
+    if (
+        !estado.agendaSalidas ||
+        typeof estado.agendaSalidas !== "object" ||
+        Array.isArray(estado.agendaSalidas)
+    ) {
+        estado.agendaSalidas = {};
+    }
 
     estado.preferencias =
         leerJSON(
@@ -3416,19 +3435,61 @@ function actualizarCalendarioInicio() {
                 .filter(Boolean)
         ));
 
-        if (companerosDia.length > 0) {
-            const companeroDia = document.createElement("span");
-            companeroDia.className = "calendario-dia-companero";
-            companeroDia.textContent = companerosDia.join(", ");
-            companeroDia.title = companerosDia.join(", ");
+        const fechaDiaISO =
+            fechaLocalISO(
+                new Date(anio, mes, dia)
+            );
+
+        const companeroAgendado =
+            String(
+                estado.agendaSalidas?.[fechaDiaISO] || ""
+            ).trim();
+
+        // Si hay una salida planificada, la mostramos incluso aunque
+        // todavía no haya horas registradas.
+        if (companeroAgendado) {
+            botonDia.classList.add("con-agenda");
+
+            const agendaDia =
+                document.createElement("span");
+
+            agendaDia.className =
+                "calendario-dia-agenda";
+
+            agendaDia.textContent =
+                `📌 ${companeroAgendado}`;
+
+            agendaDia.title =
+                `Agendado con ${companeroAgendado}`;
+
+            botonDia.appendChild(agendaDia);
+
+        } else if (companerosDia.length > 0) {
+            const companeroDia =
+                document.createElement("span");
+
+            companeroDia.className =
+                "calendario-dia-companero";
+
+            companeroDia.textContent =
+                companerosDia.join(", ");
+
+            companeroDia.title =
+                companerosDia.join(", ");
+
             botonDia.appendChild(companeroDia);
         }
 
-        botonDia.setAttribute(
-            "aria-label",
+        const ariaActividad =
             minutos > 0
                 ? `${dia}: ${formatearTiempo(minutos)} de actividad`
-                : `${dia}: sin actividad`
+                : `${dia}: sin actividad`;
+
+        botonDia.setAttribute(
+            "aria-label",
+            companeroAgendado
+                ? `${ariaActividad}. Salida agendada con ${companeroAgendado}`
+                : ariaActividad
         );
 
         botonDia.addEventListener(
@@ -3547,6 +3608,114 @@ function mostrarDetalleDiaCalendario(
     cabecera.appendChild(totalTexto);
     detalle.appendChild(cabecera);
 
+    const fechaISO =
+        fechaLocalISO(
+            fecha
+        );
+
+    const companeroAgendado =
+        String(
+            estado.agendaSalidas?.[fechaISO] || ""
+        ).trim();
+
+    const bloqueAgenda =
+        document.createElement("div");
+
+    bloqueAgenda.className =
+        "detalle-dia-agenda";
+
+    const textoAgenda =
+        document.createElement("div");
+
+    textoAgenda.className =
+        "detalle-dia-agenda-texto";
+
+    const etiquetaAgenda =
+        document.createElement("span");
+
+    etiquetaAgenda.textContent =
+        companeroAgendado
+            ? "Salida prevista"
+            : "Planificar ministerio";
+
+    const valorAgenda =
+        document.createElement("strong");
+
+    valorAgenda.textContent =
+        companeroAgendado
+            ? companeroAgendado
+            : "Sin planificar";
+
+    textoAgenda.append(
+        etiquetaAgenda,
+        valorAgenda
+    );
+
+    const accionesAgenda =
+        document.createElement("div");
+
+    accionesAgenda.className =
+        "detalle-dia-agenda-acciones";
+
+    const botonAgendar =
+        document.createElement("button");
+
+    botonAgendar.type = "button";
+    botonAgendar.className =
+        "boton-agendar-calendario";
+
+    botonAgendar.textContent =
+        companeroAgendado
+            ? "Cambiar"
+            : "Agendar";
+
+    botonAgendar.addEventListener(
+        "click",
+        () => {
+            agendarSalidaCalendario(
+                fechaISO
+            );
+        }
+    );
+
+    accionesAgenda.appendChild(
+        botonAgendar
+    );
+
+    if (companeroAgendado) {
+        const botonQuitar =
+            document.createElement("button");
+
+        botonQuitar.type = "button";
+        botonQuitar.className =
+            "boton-quitar-agenda";
+
+        botonQuitar.textContent =
+            "Quitar";
+
+        botonQuitar.addEventListener(
+            "click",
+            () => {
+                quitarSalidaAgendada(
+                    fechaISO
+                );
+            }
+        );
+
+        accionesAgenda.appendChild(
+            botonQuitar
+        );
+    }
+
+    bloqueAgenda.append(
+        textoAgenda,
+        accionesAgenda
+    );
+
+    detalle.appendChild(
+        bloqueAgenda
+    );
+
     if (registrosVisibles.length === 0) {
         const vacio =
             document.createElement("p");
@@ -3635,6 +3804,132 @@ function mostrarDetalleDiaCalendario(
         );
 
     detalle.appendChild(lista);
+}
+
+
+
+// =========================================================
+// AGENDA DE SALIDAS DEL MINISTERIO
+// =========================================================
+
+function agendarSalidaCalendario(
+    fechaISO
+) {
+
+    const actual =
+        String(
+            estado.agendaSalidas?.[fechaISO] || ""
+        ).trim();
+
+    const fecha =
+        fechaDesdeISO(
+            fechaISO
+        );
+
+    const fechaTexto =
+        fecha.toLocaleDateString(
+            "es-ES",
+            {
+                weekday: "long",
+                day: "numeric",
+                month: "long"
+            }
+        );
+
+    const respuesta =
+        window.prompt(
+            `¿Con quién tienes previsto salir el ${fechaTexto}?\n\n` +
+            `Puedes escribir uno o varios nombres.`,
+            actual
+        );
+
+    // Cancelar = no cambiar nada.
+    if (respuesta === null) {
+        return;
+    }
+
+    const nombre =
+        String(
+            respuesta
+        ).trim();
+
+    if (!estado.agendaSalidas ||
+        typeof estado.agendaSalidas !== "object") {
+        estado.agendaSalidas = {};
+    }
+
+    if (nombre) {
+        estado.agendaSalidas[fechaISO] =
+            nombre;
+    } else {
+        delete estado.agendaSalidas[fechaISO];
+    }
+
+    if (!guardarAgendaSalidas()) {
+        window.alert(
+            "No se pudo guardar la salida planificada."
+        );
+        return;
+    }
+
+    actualizarCalendarioInicio();
+
+    const fechaActualizada =
+        fechaDesdeISO(
+            fechaISO
+        );
+
+    const registrosDia =
+        estado.registros.filter(
+            registro =>
+                registro.fecha === fechaISO
+        );
+
+    mostrarDetalleDiaCalendario(
+        fechaActualizada.getDate(),
+        fechaActualizada.getMonth(),
+        fechaActualizada.getFullYear(),
+        registrosDia
+    );
+}
+
+
+function quitarSalidaAgendada(
+    fechaISO
+) {
+
+    if (!estado.agendaSalidas?.[fechaISO]) {
+        return;
+    }
+
+    delete estado.agendaSalidas[fechaISO];
+
+    if (!guardarAgendaSalidas()) {
+        window.alert(
+            "No se pudo actualizar la agenda."
+        );
+        return;
+    }
+
+    actualizarCalendarioInicio();
+
+    const fecha =
+        fechaDesdeISO(
+            fechaISO
+        );
+
+    const registrosDia =
+        estado.registros.filter(
+            registro =>
+                registro.fecha === fechaISO
+        );
+
+    mostrarDetalleDiaCalendario(
+        fecha.getDate(),
+        fecha.getMonth(),
+        fecha.getFullYear(),
+        registrosDia
+    );
 }
 
 
@@ -6520,7 +6815,7 @@ function crearPaqueteSincronizacionIOS() {
     return {
 
         version:
-            2,
+            3,
 
         generadoEn:
             new Date()
@@ -6722,7 +7017,10 @@ function crearDatosCopiaSeguridad() {
             estado.registros,
 
         preferencias:
-            estado.preferencias
+            estado.preferencias,
+
+        agendaSalidas:
+            estado.agendaSalidas
     };
 }
 
@@ -6906,6 +7204,22 @@ async function importarCopiaSeguridad(
                 datos.preferencias
             );
 
+        const agendaImportada =
+            (
+                datos.agendaSalidas &&
+                typeof datos.agendaSalidas === "object" &&
+                !Array.isArray(datos.agendaSalidas)
+            )
+                ? Object.fromEntries(
+                    Object.entries(datos.agendaSalidas)
+                        .map(([fecha, nombre]) => [
+                            String(fecha),
+                            String(nombre || "").trim()
+                        ])
+                        .filter(([, nombre]) => Boolean(nombre))
+                )
+                : {};
+
         const fechaCopia =
             datos.exportadoEn
                 ? new Date(datos.exportadoEn)
@@ -6946,11 +7260,17 @@ async function importarCopiaSeguridad(
         const preferenciasAnteriores =
             estado.preferencias;
 
+        const agendaAnterior =
+            estado.agendaSalidas;
+
         estado.registros =
             registrosImportados;
 
         estado.preferencias =
             preferenciasImportadas;
+
+        estado.agendaSalidas =
+            agendaImportada;
 
         const registrosGuardados =
             guardarRegistros();
@@ -6958,9 +7278,13 @@ async function importarCopiaSeguridad(
         const preferenciasGuardadas =
             guardarPreferencias();
 
+        const agendaGuardada =
+            guardarAgendaSalidas();
+
         if (
             !registrosGuardados ||
-            !preferenciasGuardadas
+            !preferenciasGuardadas ||
+            !agendaGuardada
         ) {
 
             estado.registros =
@@ -6969,8 +7293,12 @@ async function importarCopiaSeguridad(
             estado.preferencias =
                 preferenciasAnteriores;
 
+            estado.agendaSalidas =
+                agendaAnterior;
+
             guardarRegistros();
             guardarPreferencias();
+            guardarAgendaSalidas();
 
             mostrarMensajeFormulario(
                 mensaje,
