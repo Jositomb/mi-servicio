@@ -5446,3 +5446,41 @@ body.modo-standalone #vista-inicio.activa {
         margin-bottom: 7px !important;
     }
 }
+
+/* =========================================================
+   V27.3 · CORRECCIÓN REAL DEL INICIO EN MODO STANDALONE iOS
+   El encabezado "Progreso del mes" recibe espacio propio y
+   nunca puede quedar debajo de las tarjetas superiores.
+   Safari y las demás pestañas permanecen sin cambios.
+   ========================================================= */
+body.modo-standalone #vista-inicio.activa #seccionGraficoInicio {
+    padding-top: 18px !important;
+    margin-top: 0 !important;
+}
+
+body.modo-standalone #vista-inicio.activa .inicio-resumen-grid {
+    margin-bottom: 0 !important;
+}
+
+body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion {
+    margin-top: 0 !important;
+    margin-bottom: 7px !important;
+    position: relative !important;
+    z-index: 3 !important;
+}
+
+@media (display-mode: standalone) {
+    #vista-inicio.activa #seccionGraficoInicio {
+        padding-top: 18px !important;
+        margin-top: 0 !important;
+    }
+    #vista-inicio.activa .inicio-resumen-grid {
+        margin-bottom: 0 !important;
+    }
+    #vista-inicio.activa #seccionGraficoInicio .titulo-seccion {
+        margin-top: 0 !important;
+        margin-bottom: 7px !important;
+        position: relative !important;
+        z-index: 3 !important;
+    }
+}
