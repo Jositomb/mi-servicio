@@ -5277,54 +5277,143 @@ body:has(#vista-inicio.activa) .avatar {
 }
 
 /* =========================================================
-   RESPONSIVE FINAL · TODOS LOS IPHONE · 12 SEP 2026
-   Mantiene la navegación aislada y adapta Inicio por altura útil real.
+   V37 · RESPONSIVE ESTABLE PARA TODOS LOS IPHONE
+   La pantalla Inicio crece con el contenido y nunca fuerza
+   una altura fija: en pantallas pequeñas hace scroll y en las
+   grandes aprovecha el espacio libre sin solapamientos.
    ========================================================= */
 @media (max-width: 520px) {
-    #vista-inicio.activa {
-        box-sizing: border-box !important;
-        display: grid !important;
-        grid-template-rows: auto minmax(0, 1fr) auto auto !important;
-        gap: clamp(6px, 1vh, 10px) !important;
-        height: var(--inicio-altura-util, auto) !important;
-        min-height: var(--inicio-altura-util, auto) !important;
-        overflow: hidden !important;
+    body:has(#vista-inicio.activa) .app {
+        height: auto !important;
+        min-height: 100dvh !important;
+        overflow: visible !important;
+        padding-top: max(10px, env(safe-area-inset-top)) !important;
+        padding-bottom: calc(88px + env(safe-area-inset-bottom)) !important;
     }
-    #vista-inicio.activa .inicio-resumen-grid,
-    #vista-inicio.activa #seccionGraficoInicio,
-    #vista-inicio.activa > .seccion {
-        margin: 0 !important;
+
+    body:has(#vista-inicio.activa) main {
+        display: block !important;
+        min-height: 0 !important;
+        overflow: visible !important;
+    }
+
+    #vista-inicio.activa {
+        display: flex !important;
+        flex-direction: column !important;
+        height: auto !important;
+        min-height: calc(100dvh - 185px - env(safe-area-inset-bottom)) !important;
+        overflow: visible !important;
+        gap: 0 !important;
+    }
+
+    /* Si el calendario está cerrado, su envoltorio no reserva espacio. */
+    #vista-inicio .inicio-calendario-panel-wrap:has(#panelCalendarioInicio.oculto) {
+        display: none !important;
+    }
+
+    #vista-inicio .inicio-resumen-grid {
+        flex: 0 0 auto !important;
+        margin-bottom: 12px !important;
+    }
+
+    #vista-inicio #seccionGraficoInicio,
+    #vista-inicio #seccionGraficoInicio .tarjeta-grafico-inicio,
+    #vista-inicio > .seccion {
+        flex: 0 0 auto !important;
         min-height: 0 !important;
     }
-    #vista-inicio.activa .inicio-calendario-panel-wrap:has(.panel-calendario-inicio.oculto),
-    #vista-inicio.activa #recordatorioCopiaInicio.oculto { display:none !important; }
-    #vista-inicio.activa #seccionGraficoInicio {
-        display:flex !important; flex-direction:column !important; min-height:0 !important;
-    }
-    #vista-inicio.activa #seccionGraficoInicio .tarjeta-grafico-inicio {
-        flex:1 1 auto !important; min-height:0 !important;
-        display:flex !important; flex-direction:column !important; justify-content:center !important;
-    }
-    #vista-inicio.activa .seccion-frase-animo { margin:0 !important; align-self:end !important; }
 
-    /* iPhone de altura media (p. ej. 17): compacta sin perder contenido. */
-    #vista-inicio.activa.inicio-compacto { gap:6px !important; }
-    #vista-inicio.activa.inicio-compacto .inicio-resumen-grid { grid-auto-rows:88px !important; }
-    #vista-inicio.activa.inicio-compacto .inicio-mini-card { min-height:0 !important; padding:8px 10px !important; }
-    #vista-inicio.activa.inicio-compacto #seccionGraficoInicio .titulo-seccion { margin-bottom:2px !important; font-size:14px !important; }
-    #vista-inicio.activa.inicio-compacto .tarjeta-grafico-inicio { padding:4px 9px 5px !important; }
-    #vista-inicio.activa.inicio-compacto .grafico-inicio { transform:scale(.68) !important; transform-origin:center !important; margin:-30px auto -37px !important; }
-    #vista-inicio.activa.inicio-compacto > .seccion:not(#seccionGraficoInicio):not(.seccion-frase-animo) .tarjeta { padding:8px 10px !important; }
-    #vista-inicio.activa.inicio-compacto .progreso-personaje { height:28px !important; }
-    #vista-inicio.activa.inicio-compacto .frase-animo-card { min-height:40px !important; padding:8px 10px !important; }
+    #vista-inicio #seccionGraficoInicio {
+        display: block !important;
+        margin-top: 0 !important;
+        margin-bottom: 10px !important;
+    }
 
-    /* Pantallas aún más bajas: segundo nivel automático. */
-    #vista-inicio.activa.inicio-muy-compacto { gap:4px !important; }
-    #vista-inicio.activa.inicio-muy-compacto .inicio-resumen-grid { grid-auto-rows:78px !important; }
-    #vista-inicio.activa.inicio-muy-compacto .inicio-mini-card { padding:6px 8px !important; }
-    #vista-inicio.activa.inicio-muy-compacto .grafico-inicio { transform:scale(.60) !important; margin:-37px auto -44px !important; }
-    #vista-inicio.activa.inicio-muy-compacto .leyenda-grafico-inicio { font-size:10px !important; }
-    #vista-inicio.activa.inicio-muy-compacto > .seccion:not(#seccionGraficoInicio):not(.seccion-frase-animo) .tarjeta { padding:6px 9px !important; }
-    #vista-inicio.activa.inicio-muy-compacto .progreso-personaje { height:24px !important; }
-    #vista-inicio.activa.inicio-muy-compacto .frase-animo-card { min-height:36px !important; padding:6px 9px !important; font-size:11px !important; }
+    #vista-inicio #seccionGraficoInicio .titulo-seccion {
+        position: relative !important;
+        z-index: 2 !important;
+        margin: 0 0 6px !important;
+    }
+
+    #vista-inicio #seccionGraficoInicio .tarjeta-grafico-inicio {
+        display: block !important;
+        height: auto !important;
+        overflow: hidden !important;
+    }
+
+    /* En pantallas grandes la frase baja hasta cerca de la barra;
+       en pequeñas el contenido crece y se puede desplazar sin choque. */
+    #vista-inicio .seccion-frase-animo {
+        margin-top: auto !important;
+        margin-bottom: 4px !important;
+    }
+
+    .barra-navegacion {
+        grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+        padding-left: 2px !important;
+        padding-right: 2px !important;
+    }
+
+    .barra-navegacion .nav-item {
+        min-width: 0 !important;
+        padding-inline: 0 !important;
+        font-size: 9px !important;
+    }
+
+    .barra-navegacion .nav-icono {
+        font-size: 20px !important;
+    }
+}
+
+/* iPhone de altura más contenida: compactar sin superponer. */
+@media (max-width: 520px) and (max-height: 900px) {
+    body:has(#vista-inicio.activa) .cabecera {
+        margin-bottom: 9px !important;
+    }
+
+    #vista-inicio .inicio-mini-card {
+        height: 100px !important;
+        min-height: 100px !important;
+    }
+
+    #vista-inicio .inicio-mini-total {
+        margin-top: 8px !important;
+        font-size: 27px !important;
+    }
+
+    #vista-inicio .inicio-calendario-icono {
+        margin-top: 8px !important;
+        font-size: 24px !important;
+    }
+
+    #vista-inicio .seccion {
+        margin-bottom: 8px !important;
+    }
+
+    #vista-inicio .tarjeta-grafico-inicio {
+        padding-top: 6px !important;
+        padding-bottom: 8px !important;
+    }
+
+    #vista-inicio .grafico-inicio {
+        transform: scale(.72) !important;
+        margin: -28px auto -36px !important;
+    }
+
+    #vista-inicio .frase-animo-card {
+        min-height: 42px !important;
+    }
+}
+
+/* iPhone estrecho: mantener dos tarjetas arriba sin desbordar. */
+@media (max-width: 390px) {
+    #vista-inicio .inicio-resumen-grid {
+        gap: 8px !important;
+    }
+    #vista-inicio .inicio-mini-card {
+        padding-inline: 10px !important;
+    }
+    .barra-navegacion .nav-item {
+        font-size: 8.5px !important;
+    }
 }
