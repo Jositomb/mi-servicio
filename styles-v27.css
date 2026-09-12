@@ -5506,3 +5506,38 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
     font-size: 14px;
     white-space: nowrap;
 }
+
+/* =========================================================
+   V40.1 · ESTE MES DESPLEGADO SIN DESBORDAR
+   La tarjeta puede crecer al mostrar el desglose, incluso en
+   iPhone compactos/standalone donde las mini tarjetas cerradas
+   usan una altura fija.
+   ========================================================= */
+#vista-inicio .tarjeta-mes-desplegable.abierta {
+    grid-column: 1 / -1 !important;
+    height: auto !important;
+    min-height: 126px !important;
+    overflow: visible !important;
+}
+
+#vista-inicio .tarjeta-mes-desplegable.abierta .detalle-mes-colapsable {
+    display: block;
+    position: static !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding-bottom: 4px !important;
+}
+
+#vista-inicio .tarjeta-mes-desplegable.abierta .fila-dato {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+}
+
+@media (max-width: 520px) and (max-height: 900px) {
+    #vista-inicio .tarjeta-mes-desplegable.abierta {
+        height: auto !important;
+        min-height: 100px !important;
+    }
+}
