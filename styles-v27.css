@@ -5275,3 +5275,56 @@ body:has(#vista-inicio.activa) .avatar {
     .meta-anillo::after { inset: 10px; }
     .meta-total { font-size: 26px; }
 }
+
+/* =========================================================
+   RESPONSIVE FINAL · TODOS LOS IPHONE · 12 SEP 2026
+   Mantiene la navegación aislada y adapta Inicio por altura útil real.
+   ========================================================= */
+@media (max-width: 520px) {
+    #vista-inicio.activa {
+        box-sizing: border-box !important;
+        display: grid !important;
+        grid-template-rows: auto minmax(0, 1fr) auto auto !important;
+        gap: clamp(6px, 1vh, 10px) !important;
+        height: var(--inicio-altura-util, auto) !important;
+        min-height: var(--inicio-altura-util, auto) !important;
+        overflow: hidden !important;
+    }
+    #vista-inicio.activa .inicio-resumen-grid,
+    #vista-inicio.activa #seccionGraficoInicio,
+    #vista-inicio.activa > .seccion {
+        margin: 0 !important;
+        min-height: 0 !important;
+    }
+    #vista-inicio.activa .inicio-calendario-panel-wrap:has(.panel-calendario-inicio.oculto),
+    #vista-inicio.activa #recordatorioCopiaInicio.oculto { display:none !important; }
+    #vista-inicio.activa #seccionGraficoInicio {
+        display:flex !important; flex-direction:column !important; min-height:0 !important;
+    }
+    #vista-inicio.activa #seccionGraficoInicio .tarjeta-grafico-inicio {
+        flex:1 1 auto !important; min-height:0 !important;
+        display:flex !important; flex-direction:column !important; justify-content:center !important;
+    }
+    #vista-inicio.activa .seccion-frase-animo { margin:0 !important; align-self:end !important; }
+
+    /* iPhone de altura media (p. ej. 17): compacta sin perder contenido. */
+    #vista-inicio.activa.inicio-compacto { gap:6px !important; }
+    #vista-inicio.activa.inicio-compacto .inicio-resumen-grid { grid-auto-rows:88px !important; }
+    #vista-inicio.activa.inicio-compacto .inicio-mini-card { min-height:0 !important; padding:8px 10px !important; }
+    #vista-inicio.activa.inicio-compacto #seccionGraficoInicio .titulo-seccion { margin-bottom:2px !important; font-size:14px !important; }
+    #vista-inicio.activa.inicio-compacto .tarjeta-grafico-inicio { padding:4px 9px 5px !important; }
+    #vista-inicio.activa.inicio-compacto .grafico-inicio { transform:scale(.68) !important; transform-origin:center !important; margin:-30px auto -37px !important; }
+    #vista-inicio.activa.inicio-compacto > .seccion:not(#seccionGraficoInicio):not(.seccion-frase-animo) .tarjeta { padding:8px 10px !important; }
+    #vista-inicio.activa.inicio-compacto .progreso-personaje { height:28px !important; }
+    #vista-inicio.activa.inicio-compacto .frase-animo-card { min-height:40px !important; padding:8px 10px !important; }
+
+    /* Pantallas aún más bajas: segundo nivel automático. */
+    #vista-inicio.activa.inicio-muy-compacto { gap:4px !important; }
+    #vista-inicio.activa.inicio-muy-compacto .inicio-resumen-grid { grid-auto-rows:78px !important; }
+    #vista-inicio.activa.inicio-muy-compacto .inicio-mini-card { padding:6px 8px !important; }
+    #vista-inicio.activa.inicio-muy-compacto .grafico-inicio { transform:scale(.60) !important; margin:-37px auto -44px !important; }
+    #vista-inicio.activa.inicio-muy-compacto .leyenda-grafico-inicio { font-size:10px !important; }
+    #vista-inicio.activa.inicio-muy-compacto > .seccion:not(#seccionGraficoInicio):not(.seccion-frase-animo) .tarjeta { padding:6px 9px !important; }
+    #vista-inicio.activa.inicio-muy-compacto .progreso-personaje { height:24px !important; }
+    #vista-inicio.activa.inicio-muy-compacto .frase-animo-card { min-height:36px !important; padding:6px 9px !important; font-size:11px !important; }
+}

@@ -13,7 +13,7 @@
     <meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
     <title>Mi Servicio</title>
-    <link rel="apple-touch-icon" href="./icon-apple.png?v=2701">
+    <link rel="apple-touch-icon" href="./icon-apple.png?v=3701">
     <meta
         name="apple-mobile-web-app-capable"
         content="yes"
@@ -28,7 +28,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css"
+        href="./styles-v27.css?v=3701"
     >
 
 <style id="ajuste-iphone-final">
@@ -787,89 +787,6 @@
             </section>
         </section>
         <!-- =================================================
-             META DEL AÑO DE SERVICIO
-        ================================================== -->
-        <section
-            id="vista-meta"
-            class="vista"
-        >
-            <section class="seccion meta-web">
-                <article class="tarjeta meta-principal">
-                    <div class="meta-cabecera">
-                        <div>
-                            <p id="metaAnioServicio" class="meta-titulo">Año de servicio</p>
-                            <p id="metaPeriodo" class="meta-subtitulo"></p>
-                        </div>
-                        <span class="meta-icono">◎</span>
-                    </div>
-                    <div class="meta-progreso-fila">
-                        <div id="metaAnillo" class="meta-anillo" style="--meta-progreso: 0deg">
-                            <div class="meta-anillo-centro">
-                                <strong id="metaPorcentaje">0%</strong>
-                                <small>completado</small>
-                            </div>
-                        </div>
-                        <div class="meta-progreso-datos">
-                            <strong id="metaTotal" class="meta-total">0 h</strong>
-                            <span id="metaObjetivoTexto">de 600 h</span>
-                            <div class="meta-barra"><span id="metaBarraRelleno"></span></div>
-                            <small>Meta del año de servicio</small>
-                        </div>
-                    </div>
-                </article>
-
-                <div class="meta-dos-columnas">
-                    <article class="tarjeta meta-mini">
-                        <span class="meta-mini-icono meta-azul">✓</span>
-                        <small>Llevas</small>
-                        <strong id="metaLlevas">0 h</strong>
-                    </article>
-                    <article class="tarjeta meta-mini">
-                        <span class="meta-mini-icono meta-naranja">⚑</span>
-                        <small>Te queda</small>
-                        <strong id="metaQueda">0 h</strong>
-                    </article>
-                </div>
-
-                <article class="tarjeta meta-ritmo">
-                    <h2 id="metaRitmoTitulo">Cómo vas ahora</h2>
-                    <div class="meta-dos-columnas meta-ritmo-datos">
-                        <div>
-                            <small>A estas alturas<br>Deberías llevar</small>
-                            <strong id="metaEsperado">0 h</strong>
-                        </div>
-                        <div class="meta-derecha">
-                            <small id="metaDiferenciaTitulo">Vas por delante</small>
-                            <strong id="metaDiferencia">0 h</strong>
-                        </div>
-                    </div>
-                    <div class="separador"></div>
-                    <p id="metaMensaje" class="meta-mensaje"></p>
-                </article>
-
-                <article class="tarjeta meta-restante">
-                    <h2>De aquí a agosto</h2>
-                    <div class="meta-dos-columnas">
-                        <div class="meta-cajita">
-                            <small>Tiempo restante</small>
-                            <strong id="metaTiempoRestante">—</strong>
-                        </div>
-                        <div class="meta-cajita">
-                            <small>Ritmo necesario</small>
-                            <strong id="metaRitmoNecesario">—</strong>
-                        </div>
-                    </div>
-                    <p class="meta-mensaje">Manteniendo aproximadamente este promedio mensual desde ahora, llegarías a la meta anual.</p>
-                </article>
-
-                <article id="metaSinObjetivo" class="tarjeta meta-sin-objetivo oculto">
-                    <span>◎</span>
-                    <strong>No hay una meta anual activa</strong>
-                    <p>El seguimiento anual se muestra para el precursor regular.</p>
-                </article>
-            </section>
-        </section>
-        <!-- =================================================
              AJUSTES
         ================================================== -->
         <section
@@ -1095,18 +1012,6 @@
         </button>
         <button
             class="nav-item"
-            data-vista="meta"
-            type="button"
-        >
-            <span class="nav-icono">
-                ◎
-            </span>
-            <span>
-                Meta
-            </span>
-        </button>
-        <button
-            class="nav-item"
             data-vista="ajustes"
             type="button"
         >
@@ -1226,7 +1131,7 @@
     crossorigin="anonymous"
     defer
 ></script>
-<script src="./app-v27.js" defer></script>
+<script src="./app-v27.js?v=3701" defer></script>
 
 <script>
 (function () {
@@ -1243,6 +1148,7 @@
       vista.style.removeProperty('min-height');
       vista.style.removeProperty('display');
       vista.style.removeProperty('flex-direction');
+      vista.classList.remove('inicio-compacto', 'inicio-muy-compacto');
       return;
     }
 
@@ -1252,6 +1158,10 @@
     vista.style.setProperty('--inicio-altura-util', disponible + 'px');
     vista.style.height = disponible + 'px';
     vista.style.minHeight = disponible + 'px';
+
+    // Responsive por ALTURA ÚTIL real, no por modelo de iPhone.
+    vista.classList.toggle('inicio-compacto', disponible < 735);
+    vista.classList.toggle('inicio-muy-compacto', disponible < 650);
     // El display y la dirección los controla el CSS solo mientras Inicio está activo.
   }
 
