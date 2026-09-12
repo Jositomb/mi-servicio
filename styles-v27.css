@@ -5417,3 +5417,32 @@ body:has(#vista-inicio.activa) .avatar {
         font-size: 8.5px !important;
     }
 }
+
+
+/* =========================================================
+   V27.2 · AJUSTE EXCLUSIVO PARA APP AÑADIDA A INICIO (iOS)
+   Safari queda intacto. Corrige la pequeña diferencia de
+   altura/safe-area del modo standalone sin tocar otras vistas.
+   ========================================================= */
+body.modo-standalone #vista-inicio.activa .inicio-resumen-grid {
+    margin-bottom: 14px !important;
+}
+
+body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion {
+    margin-top: 2px !important;
+    margin-bottom: 7px !important;
+}
+
+body.modo-standalone #vista-inicio.activa {
+    padding-top: 1px;
+}
+
+@media (display-mode: standalone) {
+    #vista-inicio.activa .inicio-resumen-grid {
+        margin-bottom: 14px !important;
+    }
+    #vista-inicio.activa #seccionGraficoInicio .titulo-seccion {
+        margin-top: 2px !important;
+        margin-bottom: 7px !important;
+    }
+}
