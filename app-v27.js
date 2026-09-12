@@ -8979,6 +8979,74 @@ function formatearFechaHoraOneDrive(fechaISO) {
 
 
 // =========================================================
+// CÓMPUTO PARA LA META ANUAL
+// =========================================================
+// Regla mensual:
+// - Si en el mes solo hay Ministerio, cuenta todo el Ministerio.
+// - Si hay LDC, Asambleas u Otras, cuenta la suma total del mes
+//   con un máximo de 55 h para la meta anual.
+// - La actividad real nunca se pierde: se conserva por separado.
+
+const LIMITE_MENSUAL_META_MINUTOS = 55 * 60;
+
+function calcularComputoMesMeta(registrosMes) {
+    const registros = Array.isArray(registrosMes) ? registrosMes : [];
+
+    const ministerio = sumarMinutos(
+        registros.filter(registro => registro.tipo === "ministerio")
+    );
+
+    const actividadAdicional = sumarMinutos(
+        registros.filter(registro => registro.tipo !== "ministerio")
+    );
+
+    const actividadTotal = ministerio + actividadAdicional;
+
+    const computable = actividadAdicional > 0
+        ? Math.min(actividadTotal, LIMITE_MENSUAL_META_MINUTOS)
+        : ministerio;
+
+    return {
+        ministerio,
+        actividadAdicional,
+        actividadTotal,
+        computable
+    };
+}
+
+function calcularComputoAnualMeta(registrosAnio, inicioAnio) {
+    const registros = Array.isArray(registrosAnio) ? registrosAnio : [];
+    let actividadTotal = 0;
+    let computable = 0;
+
+    for (let desplazamiento = 0; desplazamiento < 12; desplazamiento += 1) {
+        const inicioMes = new Date(
+            inicioAnio.getFullYear(),
+            inicioAnio.getMonth() + desplazamiento,
+            1, 0, 0, 0, 0
+        );
+
+        const finMes = new Date(
+            inicioAnio.getFullYear(),
+            inicioAnio.getMonth() + desplazamiento + 1,
+            0, 23, 59, 59, 999
+        );
+
+        const registrosMes = registros.filter(registro => {
+            const fecha = fechaDesdeISO(registro.fecha);
+            return fecha >= inicioMes && fecha <= finMes;
+        });
+
+        const resumenMes = calcularComputoMesMeta(registrosMes);
+        actividadTotal += resumenMes.actividadTotal;
+        computable += resumenMes.computable;
+    }
+
+    return { actividadTotal, computable };
+}
+
+
+// =========================================================
 // META DEL AÑO DE SERVICIO
 // =========================================================
 
@@ -9007,10 +9075,12 @@ function actualizarMeta() {
     const ahora = new Date();
     const rango = rangoAnio(ahora);
     const registrosAnio = obtenerRegistrosEntreFechas(rango.inicio, rango.fin);
-    const total = sumarMinutos(registrosAnio);
+    const resumenComputo = calcularComputoAnualMeta(registrosAnio, rango.inicio);
+    const totalActividad = resumenComputo.actividadTotal;
+    const totalComputable = resumenComputo.computable;
     const objetivo = 600 * 60;
-    const pendiente = Math.max(objetivo - total, 0);
-    const progreso = objetivo > 0 ? total / objetivo : 0;
+    const pendiente = Math.max(objetivo - totalComputable, 0);
+    const progreso = objetivo > 0 ? totalComputable / objetivo : 0;
     const progresoLimitado = Math.min(Math.max(progreso, 0), 1);
     const porcentaje = Math.round(progreso * 100);
 
@@ -9021,7 +9091,7 @@ function actualizarMeta() {
     );
     const progresoTiempo = duracionAnio > 0 ? transcurrido / duracionAnio : 0;
     const esperado = Math.round(objetivo * progresoTiempo);
-    const diferencia = total - esperado;
+    const diferencia = totalComputable - esperado;
 
     const finExclusivo = new Date(
         rango.fin.getFullYear(),
@@ -9044,9 +9114,10 @@ function actualizarMeta() {
         `sep ${rango.inicio.getFullYear()} – ago ${anioServicio}`
     );
     ponerTexto("metaPorcentaje", `${porcentaje}%`);
-    ponerTexto("metaTotal", formatearTiempo(total));
+    ponerTexto("metaTotal", formatearTiempo(totalComputable));
     ponerTexto("metaObjetivoTexto", `de ${formatearTiempo(objetivo)}`);
-    ponerTexto("metaLlevas", formatearTiempo(total));
+    ponerTexto("metaActividadTotal", formatearTiempo(totalActividad));
+    ponerTexto("metaLlevas", formatearTiempo(totalComputable));
     ponerTexto("metaQueda", formatearTiempo(pendiente));
     ponerTexto("metaEsperado", formatearTiempo(esperado));
 

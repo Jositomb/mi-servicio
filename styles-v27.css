@@ -5484,3 +5484,25 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
         z-index: 3 !important;
     }
 }
+
+
+/* =========================================================
+   V40 · META: ACTIVIDAD TOTAL VS. HORAS COMPUTABLES
+   ========================================================= */
+.meta-actividad-total {
+    margin-top: 5px;
+    padding-top: 9px;
+    border-top: 1px solid var(--separator, rgba(60, 60, 67, 0.16));
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+}
+.meta-actividad-total span {
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+.meta-actividad-total strong {
+    font-size: 14px;
+    white-space: nowrap;
+}
