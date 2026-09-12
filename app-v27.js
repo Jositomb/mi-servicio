@@ -774,6 +774,13 @@ function seleccionarVista(
             break;
 
 
+        case "meta":
+
+            actualizarMeta();
+
+            break;
+
+
         case "ajustes":
 
             cargarFormularioAjustes();

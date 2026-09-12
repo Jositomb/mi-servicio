@@ -28,7 +28,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=3701"
+        href="./styles-v27.css?v=3801"
     >
 
 <style id="ajuste-iphone-final">
@@ -787,6 +787,84 @@
             </section>
         </section>
         <!-- =================================================
+             META DEL AÑO DE SERVICIO
+        ================================================== -->
+        <section id="vista-meta" class="vista">
+            <section class="seccion meta-web">
+                <article class="tarjeta meta-principal">
+                    <div class="meta-cabecera">
+                        <div>
+                            <h2 id="metaAnioServicio" class="meta-titulo">Año de servicio</h2>
+                            <p id="metaPeriodo" class="meta-subtitulo">septiembre – agosto</p>
+                        </div>
+                        <span class="meta-icono">◎</span>
+                    </div>
+                    <div class="meta-progreso-fila">
+                        <div id="metaAnillo" class="meta-anillo">
+                            <div class="meta-anillo-centro">
+                                <strong id="metaPorcentaje">0%</strong>
+                                <small>completado</small>
+                            </div>
+                        </div>
+                        <div class="meta-progreso-datos">
+                            <strong id="metaTotal" class="meta-total">0 h</strong>
+                            <span id="metaObjetivoTexto">de 600 h</span>
+                            <div class="meta-barra"><span id="metaBarraRelleno"></span></div>
+                            <small>Meta del año de servicio</small>
+                        </div>
+                    </div>
+                </article>
+
+                <div class="meta-dos-columnas">
+                    <article class="tarjeta meta-mini">
+                        <span class="meta-mini-icono meta-azul">↑</span>
+                        <small>Llevas</small>
+                        <strong id="metaLlevas">0 h</strong>
+                    </article>
+                    <article class="tarjeta meta-mini">
+                        <span class="meta-mini-icono meta-naranja">◷</span>
+                        <small>Te queda</small>
+                        <strong id="metaQueda">0 h</strong>
+                    </article>
+                </div>
+
+                <article class="tarjeta meta-ritmo">
+                    <h2>Cómo vas ahora</h2>
+                    <div class="meta-dos-columnas meta-ritmo-datos">
+                        <div>
+                            <small>A estas alturas deberías llevar</small>
+                            <strong id="metaEsperado">0 h</strong>
+                        </div>
+                        <div class="meta-derecha">
+                            <small id="metaDiferenciaTitulo">Vas por delante</small>
+                            <strong id="metaDiferencia">0 h</strong>
+                        </div>
+                    </div>
+                    <p id="metaMensaje" class="meta-mensaje"></p>
+                </article>
+
+                <article class="tarjeta meta-restante">
+                    <h2>De aquí a agosto</h2>
+                    <div class="meta-dos-columnas">
+                        <div class="meta-cajita">
+                            <small>Tiempo restante</small>
+                            <strong id="metaTiempoRestante">—</strong>
+                        </div>
+                        <div class="meta-cajita">
+                            <small>Ritmo necesario</small>
+                            <strong id="metaRitmoNecesario">—</strong>
+                        </div>
+                    </div>
+                </article>
+
+                <article id="metaSinObjetivo" class="tarjeta meta-sin-objetivo oculto">
+                    <span>◎</span>
+                    <h2>No hay una meta anual activa</h2>
+                    <p>La meta anual se muestra para precursores regulares.</p>
+                </article>
+            </section>
+        </section>
+        <!-- =================================================
              AJUSTES
         ================================================== -->
         <section
@@ -1012,6 +1090,18 @@
         </button>
         <button
             class="nav-item"
+            data-vista="meta"
+            type="button"
+        >
+            <span class="nav-icono">
+                ◎
+            </span>
+            <span>
+                Meta
+            </span>
+        </button>
+        <button
+            class="nav-item"
             data-vista="ajustes"
             type="button"
         >
@@ -1131,7 +1221,7 @@
     crossorigin="anonymous"
     defer
 ></script>
-<script src="./app-v27.js?v=3701" defer></script>
+<script src="./app-v27.js?v=3801" defer></script>
 
 <script>
 (function () {
