@@ -8956,6 +8956,7 @@ function formatearFechaHoraOneDrive(fechaISO) {
         const boton = document.getElementById("botonDesplegarMes");
         const detalle = document.getElementById("detalleMes");
         const tarjeta = document.getElementById("tarjetaMesDesplegable");
+        const grid = tarjeta?.closest(".inicio-resumen-grid");
         if (!boton || !detalle || !tarjeta || boton.dataset.configurado === "1") return;
 
         boton.dataset.configurado = "1";
@@ -8967,6 +8968,9 @@ function formatearFechaHoraOneDrive(fechaISO) {
             detalle.hidden = !abrir;
             boton.setAttribute("aria-expanded", String(abrir));
             tarjeta.classList.toggle("abierta", abrir);
+            if (grid) {
+                grid.classList.toggle("mes-abierto", abrir);
+            }
         });
     }
 

@@ -5541,3 +5541,51 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
         min-height: 100px !important;
     }
 }
+
+
+/* =========================================================
+   V41 · CORRECCIÓN ESTRUCTURAL "ESTE MES" DESPLEGADO
+   Al abrir la tarjeta, el grid superior deja de imponer una
+   fila fija de 92/96/100 px. Así el detalle permanece dentro
+   de la tarjeta y Calendario baja a la fila siguiente.
+   ========================================================= */
+#vista-inicio .inicio-resumen-grid.mes-abierto {
+    grid-auto-rows: auto !important;
+    align-items: start !important;
+}
+
+#vista-inicio .inicio-resumen-grid.mes-abierto .tarjeta-mes-desplegable.abierta {
+    grid-column: 1 / -1 !important;
+    grid-row: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: hidden !important;
+    padding-bottom: 12px !important;
+}
+
+#vista-inicio .inicio-resumen-grid.mes-abierto .tarjeta-mes-desplegable.abierta .detalle-mes-colapsable {
+    position: static !important;
+    display: block !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding-top: 4px !important;
+}
+
+#vista-inicio .inicio-resumen-grid.mes-abierto .inicio-calendario-card {
+    grid-column: 1 / 2 !important;
+    height: 100px !important;
+    min-height: 100px !important;
+    max-height: 100px !important;
+}
+
+/* En pantallas más anchas conservamos el mismo comportamiento,
+   solo cambia la altura cerrada del calendario. */
+@media (min-height: 901px) {
+    #vista-inicio .inicio-resumen-grid.mes-abierto .inicio-calendario-card {
+        height: 108px !important;
+        min-height: 108px !important;
+        max-height: 108px !important;
+    }
+}
