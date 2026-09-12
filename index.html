@@ -28,7 +28,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=4102"
+        href="./styles-v27.css?v=4201"
     >
 
 </head>
@@ -359,6 +359,12 @@
                             +
                         </button>
                     </div>
+                </div>
+                <!-- CON QUIÉN SALGO -->
+                <div id="grupoCompaneroMinisterio" class="grupo-formulario grupo-companero">
+                    <label class="titulo-campo" for="companeroRegistro">Con quién salgo</label>
+                    <input id="companeroRegistro" class="campo" type="text" maxlength="80"
+                           autocomplete="off" placeholder="Ej. Marta">
                 </div>
                 <!-- TIEMPO -->
                 <div class="grupo-formulario grupo-tiempo">
@@ -1092,6 +1098,11 @@
                 <button type="button" class="atajo-tiempo atajo-tiempo-edicion" data-minutos="300">5 h</button>
             </div>
 
+            <label class="campo-editar" id="grupoEditarCompanero">
+                <span>Con quién salgo</span>
+                <input id="editarCompanero" type="text" maxlength="80" autocomplete="off" placeholder="Ej. Marta">
+            </label>
+
             <label class="campo-editar">
                 <span>Notas</span>
                 <textarea id="editarNotas" maxlength="250" rows="3" placeholder="Opcional"></textarea>
@@ -1124,7 +1135,7 @@
     if (standalone) document.body.classList.add('modo-standalone');
 })();
 </script>
-<script src="./app-v27.js?v=4102" defer></script>
+<script src="./app-v27.js?v=4201" defer></script>
 
 </body>
 </html>

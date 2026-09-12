@@ -427,6 +427,12 @@ function normalizarRegistros() {
                             ""
                         );
 
+                    normalizado.companero =
+                        String(
+                            normalizado.companero ||
+                            ""
+                        ).trim();
+
 
                     // -----------------------------------------
                     // Fecha de creación
@@ -898,6 +904,15 @@ function seleccionarActividad(
         grupoCursos.classList.toggle("oculto", tipo !== "ministerio");
         if (tipo !== "ministerio") reiniciarCursosBiblicos();
     }
+
+    const grupoCompanero = document.getElementById("grupoCompaneroMinisterio");
+    const campoCompanero = document.getElementById("companeroRegistro");
+    if (grupoCompanero) {
+        grupoCompanero.classList.toggle("oculto", tipo !== "ministerio");
+    }
+    if (campoCompanero && tipo !== "ministerio") {
+        campoCompanero.value = "";
+    }
 }
 
 
@@ -1149,6 +1164,11 @@ function registrarActividad() {
             "minutosRegistro"
         );
 
+    const campoCompanero =
+        document.getElementById(
+            "companeroRegistro"
+        );
+
     const campoNotas =
         document.getElementById(
             "notasRegistro"
@@ -1207,6 +1227,11 @@ function registrarActividad() {
 
     const notas =
         campoNotas.value.trim();
+
+    const companero =
+        tipo === "ministerio" && campoCompanero
+            ? campoCompanero.value.trim()
+            : "";
 
     const cursosBiblicos =
         tipo === "ministerio" ? obtenerCursosBiblicosFormulario() : 0;
@@ -1343,6 +1368,8 @@ function registrarActividad() {
 
         notas,
 
+        companero,
+
         cursosBiblicos,
 
         creadoEn:
@@ -1403,6 +1430,10 @@ function registrarActividad() {
 
     campoNotas.value =
         "";
+
+    if (campoCompanero) {
+        campoCompanero.value = "";
+    }
 
     reiniciarCursosBiblicos();
 
@@ -2455,6 +2486,8 @@ function abrirModalEdicion(id) {
     const horas = document.getElementById("editarHoras");
     const minutos = document.getElementById("editarMinutos");
     const notas = document.getElementById("editarNotas");
+    const companero = document.getElementById("editarCompanero");
+    const grupoCompanero = document.getElementById("grupoEditarCompanero");
     const mensaje = document.getElementById("mensajeEditarRegistro");
 
     if (!modal || !fecha || !tipo || !horas || !minutos || !notas) {
@@ -2468,6 +2501,16 @@ function abrirModalEdicion(id) {
     horas.value = String(Math.floor(total / 60));
     minutos.value = String(total % 60);
     notas.value = registro.notas || "";
+    if (companero) companero.value = registro.companero || "";
+    if (grupoCompanero) {
+        grupoCompanero.classList.toggle("oculto", registro.tipo !== "ministerio");
+    }
+    tipo.onchange = () => {
+        if (grupoCompanero) {
+            grupoCompanero.classList.toggle("oculto", tipo.value !== "ministerio");
+        }
+        if (companero && tipo.value !== "ministerio") companero.value = "";
+    };
 
     document
         .querySelectorAll(".atajo-tiempo-edicion")
@@ -2529,6 +2572,7 @@ function guardarEdicionRegistro(evento) {
     const horas = document.getElementById("editarHoras");
     const minutos = document.getElementById("editarMinutos");
     const notas = document.getElementById("editarNotas");
+    const companero = document.getElementById("editarCompanero");
     const mensaje = document.getElementById("mensajeEditarRegistro");
 
     const valorFecha = fecha ? fecha.value : "";
@@ -2536,6 +2580,10 @@ function guardarEdicionRegistro(evento) {
     const valorHoras = Number(horas ? horas.value : 0);
     const valorMinutos = Number(minutos ? minutos.value : 0);
     const valorNotas = notas ? notas.value.trim() : "";
+    const valorCompanero =
+        valorTipo === "ministerio" && companero
+            ? companero.value.trim()
+            : "";
 
     const tiposValidos = [
         "ministerio",
@@ -2600,6 +2648,7 @@ function guardarEdicionRegistro(evento) {
         tipo: valorTipo,
         minutos: totalMinutos,
         notas: valorNotas,
+        companero: valorCompanero,
         modificadoEn: new Date().toISOString(),
         sincronizacion: {
             estado: "pendiente",
@@ -3360,6 +3409,21 @@ function actualizarCalendarioInicio() {
         botonDia.appendChild(numero);
         botonDia.appendChild(tiempo);
 
+        const companerosDia = Array.from(new Set(
+            (registrosPorDia.get(dia) || [])
+                .filter(registro => registro.tipo === "ministerio")
+                .map(registro => String(registro.companero || "").trim())
+                .filter(Boolean)
+        ));
+
+        if (companerosDia.length > 0) {
+            const companeroDia = document.createElement("span");
+            companeroDia.className = "calendario-dia-companero";
+            companeroDia.textContent = companerosDia.join(", ");
+            companeroDia.title = companerosDia.join(", ");
+            botonDia.appendChild(companeroDia);
+        }
+
         botonDia.setAttribute(
             "aria-label",
             minutos > 0
@@ -3533,6 +3597,13 @@ function mostrarDetalleDiaCalendario(
                     formatearTiempo(registro.minutos);
 
                 datos.append(etiqueta, valor);
+
+                if (registro.companero) {
+                    const companero = document.createElement("small");
+                    companero.className = "detalle-dia-companero";
+                    companero.textContent = `Con: ${registro.companero}`;
+                    datos.appendChild(companero);
+                }
 
                 if (registro.notas) {
                     const nota =
