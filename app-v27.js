@@ -3812,123 +3812,133 @@ function mostrarDetalleDiaCalendario(
 // AGENDA DE SALIDAS DEL MINISTERIO
 // =========================================================
 
-function agendarSalidaCalendario(
-    fechaISO
-) {
+function agendarSalidaCalendario(fechaISO) {
+    abrirModalAgendaSalida(fechaISO);
+}
 
-    const actual =
-        String(
-            estado.agendaSalidas?.[fechaISO] || ""
-        ).trim();
 
-    const fecha =
-        fechaDesdeISO(
-            fechaISO
-        );
+function asegurarModalAgendaSalida() {
+    const modal = document.getElementById("modalAgendaSalida");
+    if (!modal || modal.dataset.configurado === "1") return;
 
-    const fechaTexto =
-        fecha.toLocaleDateString(
-            "es-ES",
-            {
-                weekday: "long",
-                day: "numeric",
-                month: "long"
-            }
-        );
+    const cancelar = document.getElementById("cancelarAgendaSalida");
+    const guardar = document.getElementById("guardarAgendaSalida");
+    const fondo = document.getElementById("fondoModalAgendaSalida");
+    const input = document.getElementById("nombreAgendaSalida");
 
-    const respuesta =
-        window.prompt(
-            `¿Con quién tienes previsto salir el ${fechaTexto}?\n\n` +
-            `Puedes escribir uno o varios nombres.`,
-            actual
-        );
+    cancelar?.addEventListener("click", cerrarModalAgendaSalida);
+    fondo?.addEventListener("click", cerrarModalAgendaSalida);
+    guardar?.addEventListener("click", guardarSalidaDesdeModal);
 
-    // Cancelar = no cambiar nada.
-    if (respuesta === null) {
+    input?.addEventListener("keydown", evento => {
+        if (evento.key === "Enter") {
+            evento.preventDefault();
+            guardarSalidaDesdeModal();
+        }
+    });
+
+    document.addEventListener("keydown", evento => {
+        if (evento.key === "Escape" && !modal.classList.contains("oculto")) {
+            cerrarModalAgendaSalida();
+        }
+    });
+
+    modal.dataset.configurado = "1";
+}
+
+
+function abrirModalAgendaSalida(fechaISO) {
+    asegurarModalAgendaSalida();
+
+    const modal = document.getElementById("modalAgendaSalida");
+    const input = document.getElementById("nombreAgendaSalida");
+    const fechaTexto = document.getElementById("fechaModalAgendaSalida");
+    const titulo = document.getElementById("tituloModalAgendaSalida");
+    const mensaje = document.getElementById("mensajeAgendaSalida");
+    if (!modal || !input) return;
+
+    const actual = String(estado.agendaSalidas?.[fechaISO] || "").trim();
+    const fecha = fechaDesdeISO(fechaISO);
+    const legible = fecha.toLocaleDateString("es-ES", {
+        weekday: "long", day: "numeric", month: "long", year: "numeric"
+    });
+
+    modal.dataset.fecha = fechaISO;
+    input.value = actual;
+    if (fechaTexto) fechaTexto.textContent = legible.replace(/^./, l => l.toUpperCase());
+    if (titulo) titulo.textContent = actual ? "Editar salida planificada" : "Planificar ministerio";
+    if (mensaje) mensaje.textContent = "";
+
+    modal.classList.remove("oculto");
+    modal.setAttribute("aria-hidden", "false");
+    window.setTimeout(() => {
+        input.focus();
+        input.setSelectionRange(input.value.length, input.value.length);
+    }, 60);
+}
+
+
+function cerrarModalAgendaSalida() {
+    const modal = document.getElementById("modalAgendaSalida");
+    if (!modal) return;
+    modal.classList.add("oculto");
+    modal.setAttribute("aria-hidden", "true");
+    delete modal.dataset.fecha;
+}
+
+
+function guardarSalidaDesdeModal() {
+    const modal = document.getElementById("modalAgendaSalida");
+    const input = document.getElementById("nombreAgendaSalida");
+    const mensaje = document.getElementById("mensajeAgendaSalida");
+    if (!modal || !input) return;
+
+    const fechaISO = modal.dataset.fecha;
+    const nombre = input.value.trim();
+    if (!fechaISO) return;
+
+    if (!nombre) {
+        if (mensaje) mensaje.textContent = "Escribe el nombre o usa Quitar desde el calendario.";
+        input.focus();
         return;
     }
 
-    const nombre =
-        String(
-            respuesta
-        ).trim();
-
-    if (!estado.agendaSalidas ||
-        typeof estado.agendaSalidas !== "object") {
+    if (!estado.agendaSalidas || typeof estado.agendaSalidas !== "object") {
         estado.agendaSalidas = {};
     }
 
-    if (nombre) {
-        estado.agendaSalidas[fechaISO] =
-            nombre;
-    } else {
-        delete estado.agendaSalidas[fechaISO];
-    }
+    estado.agendaSalidas[fechaISO] = nombre;
 
     if (!guardarAgendaSalidas()) {
-        window.alert(
-            "No se pudo guardar la salida planificada."
-        );
+        if (mensaje) mensaje.textContent = "No se pudo guardar la salida.";
         return;
     }
 
+    cerrarModalAgendaSalida();
     actualizarCalendarioInicio();
 
-    const fechaActualizada =
-        fechaDesdeISO(
-            fechaISO
-        );
-
-    const registrosDia =
-        estado.registros.filter(
-            registro =>
-                registro.fecha === fechaISO
-        );
-
+    const fecha = fechaDesdeISO(fechaISO);
+    const registrosDia = estado.registros.filter(registro => registro.fecha === fechaISO);
     mostrarDetalleDiaCalendario(
-        fechaActualizada.getDate(),
-        fechaActualizada.getMonth(),
-        fechaActualizada.getFullYear(),
-        registrosDia
+        fecha.getDate(), fecha.getMonth(), fecha.getFullYear(), registrosDia
     );
 }
 
 
-function quitarSalidaAgendada(
-    fechaISO
-) {
-
-    if (!estado.agendaSalidas?.[fechaISO]) {
-        return;
-    }
-
+function quitarSalidaAgendada(fechaISO) {
+    if (!estado.agendaSalidas?.[fechaISO]) return;
     delete estado.agendaSalidas[fechaISO];
 
     if (!guardarAgendaSalidas()) {
-        window.alert(
-            "No se pudo actualizar la agenda."
-        );
+        window.alert("No se pudo actualizar la agenda.");
         return;
     }
 
     actualizarCalendarioInicio();
-
-    const fecha =
-        fechaDesdeISO(
-            fechaISO
-        );
-
-    const registrosDia =
-        estado.registros.filter(
-            registro =>
-                registro.fecha === fechaISO
-        );
-
+    const fecha = fechaDesdeISO(fechaISO);
+    const registrosDia = estado.registros.filter(registro => registro.fecha === fechaISO);
     mostrarDetalleDiaCalendario(
-        fecha.getDate(),
-        fecha.getMonth(),
-        fecha.getFullYear(),
-        registrosDia
+        fecha.getDate(), fecha.getMonth(), fecha.getFullYear(), registrosDia
     );
 }
 
@@ -9481,6 +9491,18 @@ function actualizarMeta() {
     const resumenComputo = calcularComputoAnualMeta(registrosAnio, rango.inicio);
     const totalActividad = resumenComputo.actividadTotal;
     const totalComputable = resumenComputo.computable;
+    const totalExcedente = Math.max(totalActividad - totalComputable, 0);
+
+    // Resumen específico del mes actual para que quede claro qué
+    // parte entra en la meta y qué parte queda como excedente.
+    const inicioMesActual = new Date(ahora.getFullYear(), ahora.getMonth(), 1, 0, 0, 0, 0);
+    const finMesActual = new Date(ahora.getFullYear(), ahora.getMonth() + 1, 0, 23, 59, 59, 999);
+    const registrosMesActual = obtenerRegistrosEntreFechas(inicioMesActual, finMesActual);
+    const computoMesActual = calcularComputoMesMeta(registrosMesActual);
+    const excedenteMesActual = Math.max(
+        computoMesActual.actividadTotal - computoMesActual.computable,
+        0
+    );
     const objetivo = 600 * 60;
     const pendiente = Math.max(objetivo - totalComputable, 0);
     const progreso = objetivo > 0 ? totalComputable / objetivo : 0;
@@ -9520,6 +9542,32 @@ function actualizarMeta() {
     ponerTexto("metaTotal", formatearTiempo(totalComputable));
     ponerTexto("metaObjetivoTexto", `de ${formatearTiempo(objetivo)}`);
     ponerTexto("metaActividadTotal", formatearTiempo(totalActividad));
+    ponerTexto("metaComputableClaro", formatearTiempo(totalComputable));
+    ponerTexto("metaExcedente", formatearTiempo(totalExcedente));
+
+    ponerTexto(
+        "metaMesActividad",
+        `${formatearTiempo(computoMesActual.actividadTotal)} de actividad`
+    );
+    ponerTexto("metaMesComputable", formatearTiempo(computoMesActual.computable));
+    ponerTexto("metaMesExcedente", formatearTiempo(excedenteMesActual));
+
+    const tieneAdicionalMes = computoMesActual.actividadAdicional > 0;
+    const metaMesEstado = document.getElementById("metaMesEstado");
+    if (metaMesEstado) {
+        metaMesEstado.textContent = tieneAdicionalMes ? "Límite 55 h" : "Computa todo";
+        metaMesEstado.classList.toggle("con-limite", tieneAdicionalMes);
+    }
+
+    ponerTexto(
+        "metaMesExplicacion",
+        tieneAdicionalMes
+            ? (excedenteMesActual > 0
+                ? `${formatearTiempo(computoMesActual.computable)} suman a las 600 h y ${formatearTiempo(excedenteMesActual)} quedan como actividad adicional sin computar.`
+                : `Este mes hay actividad adicional. Hasta 55 h del total pueden computar para la meta anual.`)
+            : `Este mes solo hay Ministerio: todas las horas registradas computan para las 600 h.`
+    );
+
     ponerTexto("metaLlevas", formatearTiempo(totalComputable));
     ponerTexto("metaQueda", formatearTiempo(pendiente));
     ponerTexto("metaEsperado", formatearTiempo(esperado));

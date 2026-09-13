@@ -28,7 +28,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=4301"
+        href="./styles-v27.css?v=4401"
     >
 
 </head>
@@ -712,8 +712,39 @@
                                 <span>Actividad total registrada</span>
                                 <strong id="metaActividadTotal">0 h</strong>
                             </div>
+                            <div class="meta-computo-resumen">
+                                <div class="meta-computo-fila meta-computable">
+                                    <span>✓ Computa para las 600 h</span>
+                                    <strong id="metaComputableClaro">0 h</strong>
+                                </div>
+                                <div class="meta-computo-fila meta-excedente">
+                                    <span>Excedente que no computa</span>
+                                    <strong id="metaExcedente">0 h</strong>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                </article>
+
+                <article class="tarjeta meta-mes-computo">
+                    <div class="meta-mes-computo-cabecera">
+                        <div>
+                            <small>Este mes</small>
+                            <strong id="metaMesActividad">0 h de actividad</strong>
+                        </div>
+                        <span id="metaMesEstado" class="meta-mes-badge">Computa todo</span>
+                    </div>
+                    <div class="meta-mes-computo-grid">
+                        <div>
+                            <small>Computa</small>
+                            <strong id="metaMesComputable">0 h</strong>
+                        </div>
+                        <div>
+                            <small>Excedente</small>
+                            <strong id="metaMesExcedente">0 h</strong>
+                        </div>
+                    </div>
+                    <p id="metaMesExplicacion" class="meta-mes-explicacion"></p>
                 </article>
 
                 <div class="meta-dos-columnas">
@@ -1018,6 +1049,24 @@
 <!-- =========================================================
      MODAL BORRAR
 ========================================================== -->
+
+    <!-- MODAL PLANIFICAR SALIDA -->
+    <div id="modalAgendaSalida" class="modal oculto" aria-hidden="true">
+        <div class="modal-fondo" id="fondoModalAgendaSalida"></div>
+        <div class="modal-contenido modal-agenda-contenido" role="dialog" aria-modal="true" aria-labelledby="tituloModalAgendaSalida">
+            <h2 id="tituloModalAgendaSalida">Planificar ministerio</h2>
+            <p id="fechaModalAgendaSalida" class="texto-secundario"></p>
+            <label class="campo-editar">
+                <span>Con quién saldré</span>
+                <input id="nombreAgendaSalida" type="text" maxlength="80" autocomplete="off" placeholder="Ej. Marta">
+            </label>
+            <p id="mensajeAgendaSalida" class="mensaje-formulario"></p>
+            <div class="modal-botones">
+                <button id="cancelarAgendaSalida" class="boton-modal cancelar" type="button">Cancelar</button>
+                <button id="guardarAgendaSalida" class="boton-modal boton-guardar-edicion" type="button">Guardar</button>
+            </div>
+        </div>
+    </div>
 <div
     id="modalBorrar"
     class="modal oculto"
@@ -1135,7 +1184,7 @@
     if (standalone) document.body.classList.add('modo-standalone');
 })();
 </script>
-<script src="./app-v27.js?v=4301" defer></script>
+<script src="./app-v27.js?v=4401" defer></script>
 
 </body>
 </html>

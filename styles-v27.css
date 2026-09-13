@@ -5719,3 +5719,84 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
         flex-direction: column;
     }
 }
+
+
+/* =========================================================
+   V44 · AGENDA CON GUARDAR + CÓMPUTO CLARO
+   ========================================================= */
+.modal-agenda-contenido {
+    width: min(92vw, 420px);
+}
+.modal-agenda-contenido .campo-editar {
+    margin-top: 14px;
+}
+#mensajeAgendaSalida {
+    min-height: 18px;
+    margin: 8px 0 0;
+    color: #ff3b30;
+    font-size: 12px;
+}
+
+.meta-computo-resumen {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--separator, rgba(60,60,67,.16));
+    display: grid;
+    gap: 7px;
+}
+.meta-computo-fila {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 12px;
+}
+.meta-computo-fila strong { white-space: nowrap; font-size: 14px; }
+.meta-computable span, .meta-computable strong { color: #34c759; }
+.meta-excedente span, .meta-excedente strong { color: #ff9500; }
+
+.meta-mes-computo { display: grid; gap: 12px; }
+.meta-mes-computo-cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+.meta-mes-computo-cabecera > div { display: grid; gap: 3px; }
+.meta-mes-computo-cabecera small { color: var(--text-secondary); }
+.meta-mes-computo-cabecera strong { font-size: 19px; }
+.meta-mes-badge {
+    padding: 5px 8px;
+    border-radius: 999px;
+    background: color-mix(in srgb, #34c759 12%, transparent);
+    color: #248a3d;
+    font-size: 11px;
+    font-weight: 750;
+    white-space: nowrap;
+}
+.meta-mes-badge.con-limite {
+    background: color-mix(in srgb, #ff9500 14%, transparent);
+    color: #c66a00;
+}
+.meta-mes-computo-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 10px;
+}
+.meta-mes-computo-grid > div {
+    padding: 11px 12px;
+    border-radius: 14px;
+    background: var(--background-secondary);
+    display: grid;
+    gap: 4px;
+}
+.meta-mes-computo-grid small { color: var(--text-secondary); }
+.meta-mes-computo-grid strong { font-size: 18px; }
+.meta-mes-computo-grid > div:first-child strong { color: #34c759; }
+.meta-mes-computo-grid > div:last-child strong { color: #ff9500; }
+.meta-mes-explicacion {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 12px;
+    line-height: 1.4;
+}
