@@ -114,6 +114,7 @@ const estado = {
 
     preferencias: {
         tipoPublicador: "publicador",
+        personajeProgreso: "hombre",
         objetivoMensualMinutos: 0,
         mostrarLDC: true,
         mostrarAsambleas: true,
@@ -227,6 +228,9 @@ function cargarDatos() {
                 tipoPublicador:
                     "publicador",
 
+                personajeProgreso:
+                    "hombre",
+
                 objetivoMensualMinutos:
                     0,
                 mostrarLDC: true,
@@ -265,6 +269,9 @@ function cargarDatos() {
             tipoPublicador:
                 "publicador",
 
+            personajeProgreso:
+                "hombre",
+
             objetivoMensualMinutos:
                 0,
             mostrarLDC: true,
@@ -286,6 +293,19 @@ function cargarDatos() {
         estado.preferencias
             .tipoPublicador =
                 "publicador";
+    }
+
+
+    if (
+        !["hombre", "mujer"].includes(
+            estado.preferencias
+                .personajeProgreso
+        )
+    ) {
+
+        estado.preferencias
+            .personajeProgreso =
+                "hombre";
     }
 
 
@@ -4343,17 +4363,17 @@ function actualizarPersonajeProgreso(porcentaje) {
             "progresoPersonaje"
         );
 
-    const animal =
+    const personaje =
         document.getElementById(
             "animalProgreso"
         );
 
-    const estadoAnimal =
+    const estadoPersonaje =
         document.getElementById(
             "estadoAnimal"
         );
 
-    if (!contenedor || !animal) {
+    if (!contenedor || !personaje) {
         return;
     }
 
@@ -4366,27 +4386,13 @@ function actualizarPersonajeProgreso(porcentaje) {
             100
         );
 
-    // Safari/iOS: no usamos multiplicaciones dentro de calc(), porque
-    // WebKit puede ignorarlas. Calculamos en JavaScript la corrección
-    // necesaria para que el personaje recorra toda la pista sin salirse.
-    const anchoPersonaje =
-        window.matchMedia("(max-width: 430px)").matches
-            ? 40
-            : 44;
+    const genero =
+        estado.preferencias
+            ?.personajeProgreso === "mujer"
+                ? "mujer"
+                : "hombre";
 
-    const correccionPx =
-        (progreso / 100) * anchoPersonaje;
-
-    animal.style.left =
-        `calc(${progreso}% - ${correccionPx}px)`;
-
-    animal.style.marginLeft = "0";
-    animal.style.transform = "";
-
-    // El personaje ya no depende de porcentajes fijos.
-    // Comparamos el progreso real con el ritmo que correspondería
-    // al día actual del mes. Así, por ejemplo, un 38 % el día 8
-    // se considera adelantado, pero ese mismo 38 % al final del mes no.
+    // El ritmo se compara con el día actual del mes.
     const hoy = new Date();
     const diasDelMes =
         new Date(
@@ -4401,47 +4407,84 @@ function actualizarPersonajeProgreso(porcentaje) {
     const diferenciaRitmo =
         progreso - ritmoEsperado;
 
-    // Margen de 5 puntos porcentuales para considerar que vamos
-    // aproximadamente al ritmo esperado y evitar cambios constantes
-    // de personaje por pequeñas diferencias.
     const margenRitmo = 5;
 
     let estadoRitmo = "en-ritmo";
+    let icono = genero === "mujer" ? "🚶‍♀️✨" : "🚶‍♂️✨";
+    let aria = "Vas al ritmo del mes";
 
     if (progreso >= 100) {
+
         estadoRitmo = "completado";
-        animal.textContent = "🏁";
-        animal.setAttribute(
-            "aria-label",
-            "Objetivo conseguido"
-        );
+        icono =
+            genero === "mujer"
+                ? "💃🎉"
+                : "🕺🎉";
+        aria = "Objetivo conseguido";
+
     } else if (diferenciaRitmo >= margenRitmo) {
+
         estadoRitmo = "adelantado";
-        animal.textContent = "🐇";
-        animal.setAttribute(
-            "aria-label",
-            "Vas por delante del ritmo del mes"
-        );
+        icono =
+            genero === "mujer"
+                ? "🏃‍♀️💨🐇"
+                : "🏃‍♂️💨🐇";
+        aria = "Vas por delante del ritmo del mes";
+
     } else if (diferenciaRitmo <= -margenRitmo) {
+
         estadoRitmo = "atrasado";
-        animal.textContent = "🐢";
-        animal.setAttribute(
-            "aria-label",
-            "Vas por detrás del ritmo del mes"
-        );
-    } else {
-        animal.textContent = "🚶";
-        animal.setAttribute(
-            "aria-label",
-            "Vas al ritmo del mes"
-        );
+        icono =
+            genero === "mujer"
+                ? "🚶‍♀️🐢"
+                : "🚶‍♂️🐢";
+        aria = "Vas por detrás del ritmo del mes";
     }
 
-    animal.classList.remove("moviendo");
-    // Reinicia la animación visual cuando cambia el progreso.
-    void animal.offsetWidth;
-    if (progreso > 0 && progreso < 100) {
-        animal.classList.add("moviendo");
+    personaje.textContent = icono;
+    personaje.setAttribute(
+        "aria-label",
+        aria
+    );
+
+    personaje.classList.remove(
+        "estado-atrasado",
+        "estado-en-ritmo",
+        "estado-adelantado",
+        "estado-completado",
+        "moviendo"
+    );
+
+    personaje.classList.add(
+        `estado-${estadoRitmo}`
+    );
+
+    // Medimos el personaje real después de cambiar los emojis.
+    // Así nunca se sale de la pista aunque tenga dos o tres símbolos.
+    const anchoPersonaje =
+        Math.max(
+            personaje.offsetWidth || 0,
+            window.matchMedia("(max-width: 430px)").matches
+                ? 54
+                : 62
+        );
+
+    const correccionPx =
+        (progreso / 100) * anchoPersonaje;
+
+    personaje.style.left =
+        `calc(${progreso}% - ${correccionPx}px)`;
+
+    personaje.style.marginLeft = "0";
+    personaje.style.transform = "";
+
+    // Reiniciar la animación cada vez que se actualiza el progreso.
+    void personaje.offsetWidth;
+
+    if (progreso > 0) {
+        personaje.classList.add(
+            "moviendo"
+        );
     }
 
     contenedor.classList.toggle(
@@ -4449,23 +4492,27 @@ function actualizarPersonajeProgreso(porcentaje) {
         progreso >= 100
     );
 
-    if (estadoAnimal) {
+    if (estadoPersonaje) {
 
         if (estadoRitmo === "completado") {
-            estadoAnimal.textContent =
-                "¡Objetivo conseguido!";
+
+            estadoPersonaje.textContent =
+                "¡Meta conseguida! 🎉";
 
         } else if (estadoRitmo === "adelantado") {
-            estadoAnimal.textContent =
-                "¡Vas por delante del ritmo del mes!";
+
+            estadoPersonaje.textContent =
+                "¡Vas lanzado! Vas por delante del ritmo del mes 😄";
 
         } else if (estadoRitmo === "atrasado") {
-            estadoAnimal.textContent =
-                "Poco a poco, podemos recuperar ritmo";
+
+            estadoPersonaje.textContent =
+                "Paso a paso 🐢. Aún puedes recuperar el ritmo.";
 
         } else {
-            estadoAnimal.textContent =
-                "Buen ritmo, vas al día";
+
+            estadoPersonaje.textContent =
+                "¡Buen ritmo! Sigue así ✨";
         }
     }
 }
@@ -6494,12 +6541,27 @@ function cargarFormularioAjustes() {
         );
 
 
+    const personaje =
+        document.getElementById(
+            "personajeProgreso"
+        );
+
+
     if (tipo) {
 
         tipo.value =
             estado.preferencias
                 .tipoPublicador ||
             "publicador";
+    }
+
+
+    if (personaje) {
+
+        personaje.value =
+            estado.preferencias
+                .personajeProgreso ||
+            "hombre";
     }
 
 
@@ -6550,7 +6612,8 @@ function aplicarObjetivoSugerido() {
 
     if (
         !tipo ||
-        !objetivo
+        !objetivo ||
+        !personaje
     ) {
         return;
     }
@@ -6616,6 +6679,12 @@ function guardarAjustesDesdeFormulario() {
         );
 
 
+    const personaje =
+        document.getElementById(
+            "personajeProgreso"
+        );
+
+
     const mensaje =
         document.getElementById(
             "mensajeAjustes"
@@ -6624,7 +6693,8 @@ function guardarAjustesDesdeFormulario() {
 
     if (
         !tipo ||
-        !objetivo
+        !objetivo ||
+        !personaje
     ) {
         return;
     }
@@ -6651,6 +6721,27 @@ function guardarAjustesDesdeFormulario() {
         mostrarMensajeFormulario(
             mensaje,
             "Selecciona un tipo válido.",
+            true
+        );
+
+        return;
+    }
+
+
+    const personajesValidos = [
+        "hombre",
+        "mujer"
+    ];
+
+    if (
+        !personajesValidos.includes(
+            personaje.value
+        )
+    ) {
+
+        mostrarMensajeFormulario(
+            mensaje,
+            "Selecciona un personaje válido.",
             true
         );
 
@@ -6697,6 +6788,9 @@ function guardarAjustesDesdeFormulario() {
 
         tipoPublicador:
             tipo.value,
+
+        personajeProgreso:
+            personaje.value,
 
         objetivoMensualMinutos:
             Math.round(
@@ -7626,6 +7720,11 @@ function normalizarPreferenciasImportadas(
 
         tipoPublicador:
             tipo,
+
+        personajeProgreso:
+            preferencias?.personajeProgreso === "mujer"
+                ? "mujer"
+                : "hombre",
 
         objetivoMensualMinutos:
             objetivo,
