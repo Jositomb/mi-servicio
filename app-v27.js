@@ -3839,31 +3839,31 @@ function agendarSalidaCalendario(fechaISO) {
 
 function asegurarModalAgendaSalida() {
     const modal = document.getElementById("modalAgendaSalida");
-    if (!modal || modal.dataset.configurado === "1") return;
+    if (!modal) return;
 
-    const cancelar = document.getElementById("cancelarAgendaSalida");
-    const guardar = document.getElementById("guardarAgendaSalida");
     const fondo = document.getElementById("fondoModalAgendaSalida");
-    const input = document.getElementById("nombreAgendaSalida");
+    const cancelar = document.getElementById("cancelarAgendaSalida");
 
-    cancelar?.addEventListener("click", cerrarModalAgendaSalida);
-    fondo?.addEventListener("click", cerrarModalAgendaSalida);
-    guardar?.addEventListener("click", guardarSalidaDesdeModal);
+    // Estos dos controles no dependen de una fecha concreta.
+    if (fondo) {
+        fondo.onclick = cerrarModalAgendaSalida;
+    }
 
-    input?.addEventListener("keydown", evento => {
-        if (evento.key === "Enter") {
-            evento.preventDefault();
-            guardarSalidaDesdeModal();
-        }
-    });
+    if (cancelar) {
+        cancelar.onclick = cerrarModalAgendaSalida;
+    }
 
-    document.addEventListener("keydown", evento => {
-        if (evento.key === "Escape" && !modal.classList.contains("oculto")) {
-            cerrarModalAgendaSalida();
-        }
-    });
-
-    modal.dataset.configurado = "1";
+    if (modal.dataset.escapeConfigurado !== "1") {
+        document.addEventListener("keydown", evento => {
+            if (
+                evento.key === "Escape" &&
+                !modal.classList.contains("oculto")
+            ) {
+                cerrarModalAgendaSalida();
+            }
+        });
+        modal.dataset.escapeConfigurado = "1";
+    }
 }
 
 
@@ -3875,25 +3875,74 @@ function abrirModalAgendaSalida(fechaISO) {
     const fechaTexto = document.getElementById("fechaModalAgendaSalida");
     const titulo = document.getElementById("tituloModalAgendaSalida");
     const mensaje = document.getElementById("mensajeAgendaSalida");
-    if (!modal || !input) return;
+    const guardar = document.getElementById("guardarAgendaSalida");
 
-    const actual = String(estado.agendaSalidas?.[fechaISO] || "").trim();
+    if (!modal || !input || !guardar) return;
+
+    const actual =
+        String(
+            estado.agendaSalidas?.[fechaISO] || ""
+        ).trim();
+
     const fecha = fechaDesdeISO(fechaISO);
-    const legible = fecha.toLocaleDateString("es-ES", {
-        weekday: "long", day: "numeric", month: "long", year: "numeric"
-    });
+
+    const legible =
+        fecha.toLocaleDateString(
+            "es-ES",
+            {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+            }
+        );
 
     modal.dataset.fecha = fechaISO;
     input.value = actual;
-    if (fechaTexto) fechaTexto.textContent = legible.replace(/^./, l => l.toUpperCase());
-    if (titulo) titulo.textContent = actual ? "Editar salida planificada" : "Planificar ministerio";
-    if (mensaje) mensaje.textContent = "";
+
+    if (fechaTexto) {
+        fechaTexto.textContent =
+            legible.replace(/^./, letra => letra.toUpperCase());
+    }
+
+    if (titulo) {
+        titulo.textContent =
+            actual
+                ? "Editar salida planificada"
+                : "Planificar ministerio";
+    }
+
+    if (mensaje) {
+        mensaje.textContent = "";
+        mensaje.classList.remove("exito");
+    }
+
+    // IMPORTANTE:
+    // Se asigna de nuevo al abrir. Así Guardar siempre trabaja
+    // con la fecha que se está editando en ese momento.
+    guardar.disabled = false;
+    guardar.textContent = actual ? "Guardar cambios" : "Guardar";
+
+    guardar.onclick = () => {
+        guardarSalidaDesdeModal(fechaISO);
+    };
+
+    input.onkeydown = evento => {
+        if (evento.key === "Enter") {
+            evento.preventDefault();
+            guardarSalidaDesdeModal(fechaISO);
+        }
+    };
 
     modal.classList.remove("oculto");
     modal.setAttribute("aria-hidden", "false");
+
     window.setTimeout(() => {
         input.focus();
-        input.setSelectionRange(input.value.length, input.value.length);
+        input.setSelectionRange(
+            input.value.length,
+            input.value.length
+        );
     }, 60);
 }
 
@@ -3901,64 +3950,147 @@ function abrirModalAgendaSalida(fechaISO) {
 function cerrarModalAgendaSalida() {
     const modal = document.getElementById("modalAgendaSalida");
     if (!modal) return;
+
     modal.classList.add("oculto");
     modal.setAttribute("aria-hidden", "true");
     delete modal.dataset.fecha;
 }
 
 
-function guardarSalidaDesdeModal() {
+function guardarSalidaDesdeModal(fechaForzada = "") {
     const modal = document.getElementById("modalAgendaSalida");
     const input = document.getElementById("nombreAgendaSalida");
     const mensaje = document.getElementById("mensajeAgendaSalida");
-    if (!modal || !input) return;
+    const guardar = document.getElementById("guardarAgendaSalida");
 
-    const fechaISO = modal.dataset.fecha;
-    const nombre = input.value.trim();
-    if (!fechaISO) return;
+    if (!modal || !input || !guardar) return;
+
+    const fechaISO =
+        fechaForzada ||
+        modal.dataset.fecha ||
+        "";
+
+    const nombre =
+        input.value.trim();
+
+    if (!fechaISO) {
+        if (mensaje) {
+            mensaje.textContent =
+                "No se pudo identificar el día. Cierra y vuelve a abrirlo.";
+        }
+        return;
+    }
 
     if (!nombre) {
-        if (mensaje) mensaje.textContent = "Escribe el nombre o usa Quitar desde el calendario.";
+        if (mensaje) {
+            mensaje.textContent =
+                "Escribe con quién saldrás.";
+        }
         input.focus();
         return;
     }
 
-    if (!estado.agendaSalidas || typeof estado.agendaSalidas !== "object") {
+    if (
+        !estado.agendaSalidas ||
+        typeof estado.agendaSalidas !== "object"
+    ) {
         estado.agendaSalidas = {};
     }
 
-    estado.agendaSalidas[fechaISO] = nombre;
+    // Guardado optimista: el botón responde inmediatamente.
+    guardar.disabled = true;
+    guardar.textContent = "Guardando…";
+
+    const anterior =
+        estado.agendaSalidas[fechaISO];
+
+    estado.agendaSalidas[fechaISO] =
+        nombre;
 
     if (!guardarAgendaSalidas()) {
-        if (mensaje) mensaje.textContent = "No se pudo guardar la salida.";
+        if (anterior) {
+            estado.agendaSalidas[fechaISO] =
+                anterior;
+        } else {
+            delete estado.agendaSalidas[fechaISO];
+        }
+
+        guardar.disabled = false;
+        guardar.textContent = "Guardar";
+
+        if (mensaje) {
+            mensaje.textContent =
+                "No se pudo guardar la salida.";
+        }
         return;
     }
 
+    if (mensaje) {
+        mensaje.textContent = "Guardado ✓";
+        mensaje.classList.add("exito");
+    }
+
+    // Primero cerramos el modal para que la respuesta visual sea inmediata.
     cerrarModalAgendaSalida();
+
     actualizarCalendarioInicio();
 
-    const fecha = fechaDesdeISO(fechaISO);
-    const registrosDia = estado.registros.filter(registro => registro.fecha === fechaISO);
+    const fecha =
+        fechaDesdeISO(fechaISO);
+
+    const registrosDia =
+        estado.registros.filter(
+            registro =>
+                registro.fecha === fechaISO
+        );
+
     mostrarDetalleDiaCalendario(
-        fecha.getDate(), fecha.getMonth(), fecha.getFullYear(), registrosDia
+        fecha.getDate(),
+        fecha.getMonth(),
+        fecha.getFullYear(),
+        registrosDia
     );
 }
 
 
 function quitarSalidaAgendada(fechaISO) {
-    if (!estado.agendaSalidas?.[fechaISO]) return;
+    const actual =
+        estado.agendaSalidas?.[fechaISO];
+
+    if (!actual) return;
+
+    // Quitamos primero de la interfaz/estado para que el toque
+    // tenga respuesta instantánea.
     delete estado.agendaSalidas[fechaISO];
 
     if (!guardarAgendaSalidas()) {
-        window.alert("No se pudo actualizar la agenda.");
+        estado.agendaSalidas[fechaISO] =
+            actual;
+
+        window.alert(
+            "No se pudo quitar la salida planificada."
+        );
+
+        actualizarCalendarioInicio();
         return;
     }
 
     actualizarCalendarioInicio();
-    const fecha = fechaDesdeISO(fechaISO);
-    const registrosDia = estado.registros.filter(registro => registro.fecha === fechaISO);
+
+    const fecha =
+        fechaDesdeISO(fechaISO);
+
+    const registrosDia =
+        estado.registros.filter(
+            registro =>
+                registro.fecha === fechaISO
+        );
+
     mostrarDetalleDiaCalendario(
-        fecha.getDate(), fecha.getMonth(), fecha.getFullYear(), registrosDia
+        fecha.getDate(),
+        fecha.getMonth(),
+        fecha.getFullYear(),
+        registrosDia
     );
 }
 

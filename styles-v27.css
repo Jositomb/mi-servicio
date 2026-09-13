@@ -6169,3 +6169,30 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
         animation: none !important;
     }
 }
+
+
+/* =========================================================
+   V48 · RESPUESTA INMEDIATA AL GUARDAR / QUITAR AGENDA
+   ========================================================= */
+#mensajeAgendaSalida.exito {
+    color: #34c759 !important;
+    font-weight: 700;
+}
+
+#guardarAgendaSalida:disabled {
+    opacity: .62;
+    pointer-events: none;
+}
+
+.boton-agendar-calendario,
+.boton-quitar-agenda {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.boton-agendar-calendario:active,
+.boton-quitar-agenda:active,
+#guardarAgendaSalida:active {
+    transform: scale(.96);
+    opacity: .72;
+}
