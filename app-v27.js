@@ -4410,7 +4410,7 @@ function actualizarPersonajeProgreso(porcentaje) {
     const margenRitmo = 5;
 
     let estadoRitmo = "en-ritmo";
-    let icono = genero === "mujer" ? "🚶‍♀️✨" : "🚶‍♂️✨";
+    let icono = genero === "mujer" ? "🚶‍♀️" : "🚶‍♂️";
     let aria = "Vas al ritmo del mes";
 
     if (progreso >= 100) {
@@ -4418,8 +4418,8 @@ function actualizarPersonajeProgreso(porcentaje) {
         estadoRitmo = "completado";
         icono =
             genero === "mujer"
-                ? "💃🎉"
-                : "🕺🎉";
+                ? "💃"
+                : "🕺";
         aria = "Objetivo conseguido";
 
     } else if (diferenciaRitmo >= margenRitmo) {
@@ -4427,8 +4427,8 @@ function actualizarPersonajeProgreso(porcentaje) {
         estadoRitmo = "adelantado";
         icono =
             genero === "mujer"
-                ? "🏃‍♀️💨🐇"
-                : "🏃‍♂️💨🐇";
+                ? "🏃‍♀️"
+                : "🏃‍♂️";
         aria = "Vas por delante del ritmo del mes";
 
     } else if (diferenciaRitmo <= -margenRitmo) {
@@ -4436,8 +4436,8 @@ function actualizarPersonajeProgreso(porcentaje) {
         estadoRitmo = "atrasado";
         icono =
             genero === "mujer"
-                ? "🚶‍♀️🐢"
-                : "🚶‍♂️🐢";
+                ? "🚶‍♀️"
+                : "🚶‍♂️";
         aria = "Vas por detrás del ritmo del mes";
     }
 
@@ -4502,7 +4502,7 @@ function actualizarPersonajeProgreso(porcentaje) {
         } else if (estadoRitmo === "adelantado") {
 
             estadoPersonaje.textContent =
-                "¡Vas lanzado! Vas por delante del ritmo del mes 😄";
+                "¡Vas lanzado! 🐇💨 Vas por delante del ritmo 😄";
 
         } else if (estadoRitmo === "atrasado") {
 
