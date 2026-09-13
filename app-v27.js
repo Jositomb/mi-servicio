@@ -4647,6 +4647,49 @@ function actualizarPersonajeProgreso(porcentaje) {
                 "¡Buen ritmo! Sigue así ✨";
         }
     }
+
+    actualizarHitosProgreso(progreso);
+
+}
+
+
+function actualizarHitosProgreso(progreso) {
+    const contenedor = document.getElementById("hitosProgresoMes");
+    const celebracion = document.getElementById("celebracionProgreso");
+    if (!contenedor) return;
+
+    const valor = Math.max(0, Math.min(100, Number(progreso) || 0));
+    const hitos = Array.from(contenedor.querySelectorAll(".hito-mes"));
+
+    hitos.forEach(hito => {
+        const limite = Number(hito.dataset.hito) || 0;
+        hito.classList.toggle("alcanzado", valor >= limite);
+        const pendientes = hitos
+            .map(x => Number(x.dataset.hito) || 0)
+            .filter(x => x > valor);
+        const siguiente = pendientes.length ? Math.min(...pendientes) : -1;
+        hito.classList.toggle("siguiente", limite === siguiente);
+    });
+
+    if (!celebracion) return;
+
+    let nivel = 0;
+    if (valor >= 100) nivel = 100;
+    else if (valor >= 75) nivel = 75;
+    else if (valor >= 50) nivel = 50;
+    else if (valor >= 25) nivel = 25;
+
+    if (nivel > 0 && celebracion.dataset.ultimoNivel !== String(nivel)) {
+        celebracion.dataset.ultimoNivel = String(nivel);
+        celebracion.innerHTML =
+            nivel >= 100
+                ? "<span>🎉</span><span>🏆</span><span>✨</span><span>🎊</span><span>⭐</span>"
+                : "<span>✨</span><span>⭐</span><span>✨</span>";
+        celebracion.classList.remove("activo");
+        void celebracion.offsetWidth;
+        celebracion.classList.add("activo");
+        setTimeout(() => celebracion.classList.remove("activo"), nivel >= 100 ? 2200 : 1200);
+    }
 }
 
 
