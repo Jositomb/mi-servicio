@@ -945,12 +945,8 @@ function seleccionarActividad(
     }
 
     const grupoCompanero = document.getElementById("grupoCompaneroMinisterio");
-    const campoCompanero = document.getElementById("companeroRegistro");
     if (grupoCompanero) {
-        grupoCompanero.classList.toggle("oculto", tipo !== "ministerio");
-    }
-    if (campoCompanero && tipo !== "ministerio") {
-        campoCompanero.value = "";
+        grupoCompanero.classList.remove("oculto");
     }
 }
 
@@ -1268,7 +1264,7 @@ function registrarActividad() {
         campoNotas.value.trim();
 
     const companero =
-        tipo === "ministerio" && campoCompanero
+        campoCompanero
             ? campoCompanero.value.trim()
             : "";
 
@@ -2542,13 +2538,10 @@ function abrirModalEdicion(id) {
     notas.value = registro.notas || "";
     if (companero) companero.value = registro.companero || "";
     if (grupoCompanero) {
-        grupoCompanero.classList.toggle("oculto", registro.tipo !== "ministerio");
+        grupoCompanero.classList.remove("oculto");
     }
     tipo.onchange = () => {
-        if (grupoCompanero) {
-            grupoCompanero.classList.toggle("oculto", tipo.value !== "ministerio");
-        }
-        if (companero && tipo.value !== "ministerio") companero.value = "";
+        if (grupoCompanero) grupoCompanero.classList.remove("oculto");
     };
 
     document
@@ -2620,7 +2613,7 @@ function guardarEdicionRegistro(evento) {
     const valorMinutos = Number(minutos ? minutos.value : 0);
     const valorNotas = notas ? notas.value.trim() : "";
     const valorCompanero =
-        valorTipo === "ministerio" && companero
+        companero
             ? companero.value.trim()
             : "";
 
@@ -3450,7 +3443,6 @@ function actualizarCalendarioInicio() {
 
         const companerosDia = Array.from(new Set(
             (registrosPorDia.get(dia) || [])
-                .filter(registro => registro.tipo === "ministerio")
                 .map(registro => String(registro.companero || "").trim())
                 .filter(Boolean)
         ));
@@ -4591,6 +4583,14 @@ function actualizarPersonajeProgreso(porcentaje) {
         `estado-${estadoRitmo}`
     );
 
+    contenedor.classList.remove(
+        "ritmo-atrasado",
+        "ritmo-en-ritmo",
+        "ritmo-adelantado",
+        "ritmo-completado"
+    );
+    contenedor.classList.add(`ritmo-${estadoRitmo}`);
+
     // Medimos el personaje real después de cambiar los emojis.
     // Así nunca se sale de la pista aunque tenga dos o tres símbolos.
     const anchoPersonaje =
@@ -4606,6 +4606,18 @@ function actualizarPersonajeProgreso(porcentaje) {
 
     personaje.style.left =
         `calc(${progreso}% - ${correccionPx}px)`;
+
+    const desplazamientoVertical =
+        estadoRitmo === "adelantado"
+            ? (progreso / 100) * 22
+            : estadoRitmo === "atrasado"
+                ? -(progreso / 100) * 22
+                : 0;
+
+    personaje.style.setProperty(
+        "--desplazamiento-ritmo",
+        `${desplazamientoVertical}px`
+    );
 
     personaje.style.marginLeft = "0";
     personaje.style.transform = "";

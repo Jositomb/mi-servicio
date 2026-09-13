@@ -6221,3 +6221,26 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 @keyframes chispa4{25%{opacity:1}100%{opacity:0;transform:translate(105px,-145px) scale(1.35) rotate(40deg)}}
 @keyframes chispa5{25%{opacity:1}100%{opacity:0;transform:translate(150px,-90px) scale(1.2) rotate(55deg)}}
 @media(prefers-reduced-motion:reduce){#vista-inicio .tarjeta-grafico,#vista-inicio .hito-mes,#vista-inicio .celebracion-progreso span{animation:none!important}}
+
+/* V50 · Acompañante en todas las actividades + ruta dinámica */
+#vista-inicio .progreso-pista{
+ left:5px!important;right:5px!important;bottom:9px!important;height:7px!important;
+ transform-origin:center!important;
+ transition:transform .55s cubic-bezier(.2,.8,.25,1),box-shadow .35s ease!important
+}
+#vista-inicio .progreso-personaje.ritmo-en-ritmo .progreso-pista{transform:rotate(0deg)!important}
+#vista-inicio .progreso-personaje.ritmo-adelantado .progreso-pista{transform:rotate(-3.8deg)!important;box-shadow:0 3px 10px rgba(52,199,89,.18)}
+#vista-inicio .progreso-personaje.ritmo-atrasado .progreso-pista{transform:rotate(3.8deg)!important;box-shadow:0 3px 10px rgba(255,159,10,.16)}
+#vista-inicio .progreso-personaje.ritmo-completado .progreso-pista{transform:rotate(-2deg)!important}
+#vista-inicio .progreso-animal{
+ bottom:calc(15px + var(--desplazamiento-ritmo,0px))!important;
+ transition:left .75s cubic-bezier(.22,.75,.22,1),bottom .55s ease!important
+}
+#vista-inicio .progreso-personaje::before{
+ position:absolute;left:5px;top:0;z-index:12;font-size:12px;font-weight:800;opacity:.72
+}
+#vista-inicio .progreso-personaje.ritmo-adelantado::before{content:"↗ subiendo"}
+#vista-inicio .progreso-personaje.ritmo-atrasado::before{content:"↘ recuperando"}
+#vista-inicio .progreso-personaje.ritmo-en-ritmo::before{content:"→ en ritmo"}
+#vista-inicio .progreso-personaje.ritmo-completado::before{content:"↗ meta"}
+#vista-registrar #grupoCompaneroMinisterio{display:block!important}
