@@ -5993,3 +5993,179 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
     font-size: 19px;
     letter-spacing: 0;
 }
+
+
+/* =========================================================
+   V47 · CORRECCIÓN REAL DE LA ANIMACIÓN DEL OBJETIVO
+   Estructura real:
+   .progreso-personaje / .progreso-pista / .progreso-meta
+   ========================================================= */
+
+#vista-inicio .progreso-personaje {
+    position: relative !important;
+    height: 64px !important;
+    min-height: 64px !important;
+    margin-top: 7px !important;
+    overflow: visible !important;
+}
+
+#vista-inicio .progreso-pista {
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 7px !important;
+    top: auto !important;
+    height: 6px !important;
+    border-radius: 999px !important;
+}
+
+#vista-inicio .progreso-animal {
+    position: absolute !important;
+    top: auto !important;
+    bottom: 15px !important;
+
+    width: 48px !important;
+    min-width: 48px !important;
+    height: 44px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    overflow: visible !important;
+    z-index: 10 !important;
+
+    font-size: 37px !important;
+    line-height: 1 !important;
+    letter-spacing: 0 !important;
+
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,.15));
+    transform-origin: center bottom;
+}
+
+#vista-inicio .progreso-meta {
+    position: absolute !important;
+    right: 0 !important;
+    top: auto !important;
+    bottom: 15px !important;
+    z-index: 8 !important;
+    font-size: 27px !important;
+}
+
+/* Movimiento continuo y suave: así realmente se aprecia la animación. */
+#vista-inicio .progreso-animal.estado-atrasado {
+    animation: personajePasoLento 1.55s ease-in-out infinite !important;
+}
+
+#vista-inicio .progreso-animal.estado-en-ritmo {
+    animation: personajeCaminando .82s ease-in-out infinite !important;
+}
+
+#vista-inicio .progreso-animal.estado-adelantado {
+    animation: personajeCorriendo .56s ease-in-out infinite !important;
+}
+
+#vista-inicio .progreso-animal.estado-completado {
+    animation: personajeCelebrando .72s ease-in-out infinite !important;
+}
+
+@keyframes personajePasoLento {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    35% {
+        transform: translateY(-2px) rotate(-2deg);
+    }
+    70% {
+        transform: translateY(0) rotate(2deg);
+    }
+}
+
+@keyframes personajeCaminando {
+    0%, 100% {
+        transform: translateY(0) rotate(-2deg);
+    }
+    50% {
+        transform: translateY(-5px) rotate(3deg);
+    }
+}
+
+@keyframes personajeCorriendo {
+    0%, 100% {
+        transform: translateY(0) rotate(-4deg) scale(1);
+    }
+    50% {
+        transform: translateY(-7px) rotate(5deg) scale(1.06);
+    }
+}
+
+@keyframes personajeCelebrando {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg) scale(1);
+    }
+    30% {
+        transform: translateY(-7px) rotate(-8deg) scale(1.08);
+    }
+    65% {
+        transform: translateY(-2px) rotate(8deg) scale(1.08);
+    }
+}
+
+/* Detalles visuales según el estado */
+#vista-inicio .progreso-animal.estado-atrasado::after {
+    content: "🐢";
+    position: absolute;
+    left: 34px;
+    bottom: 0;
+    font-size: 18px;
+}
+
+#vista-inicio .progreso-animal.estado-en-ritmo::after {
+    content: "✨";
+    position: absolute;
+    left: 35px;
+    top: -3px;
+    font-size: 16px;
+}
+
+#vista-inicio .progreso-animal.estado-adelantado::after {
+    content: "💨";
+    position: absolute;
+    left: 35px;
+    bottom: 2px;
+    font-size: 17px;
+}
+
+#vista-inicio .progreso-animal.estado-completado::after {
+    content: "🎉";
+    position: absolute;
+    left: 35px;
+    top: -4px;
+    font-size: 18px;
+}
+
+@media (max-width: 430px) {
+    #vista-inicio .progreso-personaje {
+        height: 60px !important;
+        min-height: 60px !important;
+    }
+
+    #vista-inicio .progreso-animal {
+        width: 46px !important;
+        min-width: 46px !important;
+        height: 42px !important;
+        bottom: 14px !important;
+        font-size: 35px !important;
+    }
+
+    #vista-inicio .progreso-meta {
+        bottom: 14px !important;
+        font-size: 25px !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #vista-inicio .progreso-animal {
+        animation: none !important;
+    }
+}
