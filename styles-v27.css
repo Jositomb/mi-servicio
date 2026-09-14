@@ -6436,3 +6436,13 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
  #vista-inicio #graficoInicio,
  #vista-inicio #graficoInicio svg circle{animation:none!important}
 }
+
+/* V55 · Aros 3D vivos */
+#vista-inicio #graficoInicio svg circle{transition:stroke-dashoffset 1.15s cubic-bezier(.18,.8,.2,1),opacity .28s ease,filter .28s ease,transform .28s ease!important}
+#vista-inicio #graficoInicio.anillo-enfocado svg circle{opacity:.22!important}
+#vista-inicio #graficoInicio.anillo-enfocado svg circle.anillo-activo{opacity:1!important;transform:scale(1.035);filter:drop-shadow(0 0 5px currentColor) drop-shadow(0 0 10px currentColor) drop-shadow(0 5px 3px rgba(0,0,0,.22))!important}
+#vista-inicio #graficoInicio svg circle.anillo-con-progreso{animation:aroRespira 3.4s ease-in-out infinite}
+@keyframes aroRespira{0%,100%{opacity:.94}50%{opacity:1}}
+#vista-inicio .info-anillo-activo{min-height:30px;display:flex;align-items:center;justify-content:center;margin:-1px 0 5px;font-size:12px;font-weight:800;color:var(--text-primary);opacity:0;transform:translateY(-3px);transition:.22s;pointer-events:none}
+#vista-inicio .info-anillo-activo.visible{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){#vista-inicio #graficoInicio svg circle.anillo-con-progreso{animation:none!important}}

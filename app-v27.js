@@ -10091,3 +10091,35 @@ function textoTiempoRestanteMeta(desde, hasta) {
     if (meses > 0) return meses === 1 ? "1 mes" : `${meses} meses`;
     return dias === 1 ? "1 día" : `${dias} días`;
 }
+
+function configurarInteraccionAnillosProgreso() {
+    const grafico=document.getElementById("graficoInicio");
+    const info=document.getElementById("infoAnilloActivo");
+    if(!grafico||!info)return;
+    const circulos=Array.from(grafico.querySelectorAll("svg circle"));
+    circulos.forEach(circulo=>{
+        const dash=circulo.getAttribute("stroke-dasharray")||circulo.style.strokeDasharray||"";
+        if(dash&&dash!=="none")circulo.classList.add("anillo-con-progreso");
+        circulo.onclick=event=>{
+            event.stopPropagation();
+            circulos.forEach(c=>c.classList.remove("anillo-activo"));
+            circulo.classList.add("anillo-activo");
+            grafico.classList.add("anillo-enfocado");
+            const titulo=circulo.querySelector("title")?.textContent||circulo.getAttribute("aria-label")||"Progreso de actividad";
+            info.textContent=titulo;
+            info.classList.add("visible");
+            clearTimeout(grafico._temporizadorAnillo);
+            grafico._temporizadorAnillo=setTimeout(()=>{
+                grafico.classList.remove("anillo-enfocado");
+                circulos.forEach(c=>c.classList.remove("anillo-activo"));
+                info.classList.remove("visible");
+            },2600);
+        };
+    });
+}
+document.addEventListener("DOMContentLoaded",()=>{
+    const grafico=document.getElementById("graficoInicio");
+    if(!grafico)return;
+    configurarInteraccionAnillosProgreso();
+    new MutationObserver(()=>configurarInteraccionAnillosProgreso()).observe(grafico,{childList:true,subtree:true});
+});
