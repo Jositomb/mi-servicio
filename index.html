@@ -28,7 +28,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=5001"
+        href="./styles-v27.css?v=5101"
     >
 
 </head>
@@ -144,6 +144,11 @@
                 <article
                     class="tarjeta tarjeta-grafico-inicio"
                 >
+                    <div
+                        id="fechaProgresoMes"
+                        class="fecha-progreso-mes"
+                        aria-label="Fecha de hoy"
+                    ></div>
                     <div
                         id="graficoInicio"
                         class="grafico-inicio"
@@ -1078,8 +1083,19 @@
         <div class="modal-contenido modal-agenda-contenido" role="dialog" aria-modal="true" aria-labelledby="tituloModalAgendaSalida">
             <h2 id="tituloModalAgendaSalida">Planificar ministerio</h2>
             <p id="fechaModalAgendaSalida" class="texto-secundario"></p>
+
             <label class="campo-editar">
-                <span>Con quién saldré</span>
+                <span>Actividad</span>
+                <select id="tipoAgendaSalida">
+                    <option value="ministerio">Ministerio</option>
+                    <option value="ldc">LDC</option>
+                    <option value="asambleas">Asambleas</option>
+                    <option value="otras">Otras</option>
+                </select>
+            </label>
+
+            <label class="campo-editar">
+                <span>Con quién iré</span>
                 <input id="nombreAgendaSalida" type="text" maxlength="80" autocomplete="off" placeholder="Ej. Marta">
             </label>
             <p id="mensajeAgendaSalida" class="mensaje-formulario"></p>
@@ -1206,7 +1222,7 @@
     if (standalone) document.body.classList.add('modo-standalone');
 })();
 </script>
-<script src="./app-v27.js?v=5001" defer></script>
+<script src="./app-v27.js?v=5101" defer></script>
 
 </body>
 </html>

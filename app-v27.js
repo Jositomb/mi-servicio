@@ -221,6 +221,16 @@ function cargarDatos() {
         estado.agendaSalidas = {};
     }
 
+    estado.agendaSalidas =
+        Object.fromEntries(
+            Object.entries(estado.agendaSalidas)
+                .map(([fecha, valor]) => [
+                    fecha,
+                    normalizarAgendaDia(valor)
+                ])
+                .filter(([, valor]) => Boolean(valor.companero))
+        );
+
     estado.preferencias =
         leerJSON(
             STORAGE_KEYS.preferencias,
@@ -3425,21 +3435,74 @@ function actualizarCalendarioInicio() {
 
         numero.textContent = dia;
 
-        const tiempo =
+        const tiempos =
             document.createElement("span");
 
-        tiempo.className =
-            "calendario-dia-tiempo";
+        tiempos.className =
+            "calendario-dia-tiempos";
 
-        tiempo.textContent =
-            minutos > 0
-                ? formatearTiempoCortoCalendario(
-                    minutos
+        const registrosDia =
+            registrosPorDia.get(dia) || [];
+
+        const minutosPorActividad = {
+            ministerio: 0,
+            ldc: 0,
+            asambleas: 0,
+            otras: 0
+        };
+
+        registrosDia.forEach(registro => {
+            if (
+                Object.prototype.hasOwnProperty.call(
+                    minutosPorActividad,
+                    registro.tipo
                 )
-                : "";
+            ) {
+                minutosPorActividad[registro.tipo] +=
+                    Math.max(
+                        Number(registro.minutos) || 0,
+                        0
+                    );
+            }
+        });
+
+        [
+            "ministerio",
+            "ldc",
+            "asambleas",
+            "otras"
+        ].forEach(tipo => {
+            const minutosActividad =
+                minutosPorActividad[tipo];
+
+            if (
+                minutosActividad <= 0 ||
+                !actividadVisible(tipo)
+            ) {
+                return;
+            }
+
+            const tiempoActividad =
+                document.createElement("span");
+
+            tiempoActividad.className =
+                `calendario-dia-tiempo ${claseActividadCalendario(tipo)}`;
+
+            tiempoActividad.textContent =
+                formatearTiempoCortoCalendario(
+                    minutosActividad
+                );
+
+            tiempoActividad.title =
+                `${nombreActividad(tipo)}: ${formatearTiempo(minutosActividad)}`;
+
+            tiempos.appendChild(
+                tiempoActividad
+            );
+        });
 
         botonDia.appendChild(numero);
-        botonDia.appendChild(tiempo);
+        botonDia.appendChild(tiempos);
 
         const companerosDia = Array.from(new Set(
             (registrosPorDia.get(dia) || [])
@@ -3452,10 +3515,16 @@ function actualizarCalendarioInicio() {
                 new Date(anio, mes, dia)
             );
 
+        const agendaDiaDatos =
+            normalizarAgendaDia(
+                estado.agendaSalidas?.[fechaDiaISO]
+            );
+
         const companeroAgendado =
-            String(
-                estado.agendaSalidas?.[fechaDiaISO] || ""
-            ).trim();
+            agendaDiaDatos.companero;
+
+        const tipoAgendado =
+            agendaDiaDatos.tipo;
 
         // Si hay una salida planificada, la mostramos incluso aunque
         // todavía no haya horas registradas.
@@ -3466,13 +3535,13 @@ function actualizarCalendarioInicio() {
                 document.createElement("span");
 
             agendaDia.className =
-                "calendario-dia-agenda";
+                `calendario-dia-agenda ${claseActividadCalendario(tipoAgendado)}`;
 
             agendaDia.textContent =
-                `📌 ${companeroAgendado}`;
+                `📌 ${nombreActividad(tipoAgendado)} · ${companeroAgendado}`;
 
             agendaDia.title =
-                `Agendado con ${companeroAgendado}`;
+                `${nombreActividad(tipoAgendado)} planificado con ${companeroAgendado}`;
 
             botonDia.appendChild(agendaDia);
 
@@ -3625,10 +3694,16 @@ function mostrarDetalleDiaCalendario(
             fecha
         );
 
+    const agendaDiaDatos =
+        normalizarAgendaDia(
+            estado.agendaSalidas?.[fechaISO]
+        );
+
     const companeroAgendado =
-        String(
-            estado.agendaSalidas?.[fechaISO] || ""
-        ).trim();
+        agendaDiaDatos.companero;
+
+    const tipoAgendado =
+        agendaDiaDatos.tipo;
 
     const bloqueAgenda =
         document.createElement("div");
@@ -3647,15 +3722,15 @@ function mostrarDetalleDiaCalendario(
 
     etiquetaAgenda.textContent =
         companeroAgendado
-            ? "Salida prevista"
-            : "Planificar ministerio";
+            ? `${nombreActividad(tipoAgendado)} previsto`
+            : "Planificar actividad";
 
     const valorAgenda =
         document.createElement("strong");
 
     valorAgenda.textContent =
         companeroAgendado
-            ? companeroAgendado
+            ? `Con: ${companeroAgendado}`
             : "Sin planificar";
 
     textoAgenda.append(
@@ -3820,6 +3895,56 @@ function mostrarDetalleDiaCalendario(
 
 
 
+
+function normalizarAgendaDia(valor) {
+    if (!valor) {
+        return {
+            tipo: "ministerio",
+            companero: ""
+        };
+    }
+
+    if (typeof valor === "string") {
+        return {
+            tipo: "ministerio",
+            companero: valor.trim()
+        };
+    }
+
+    const tiposValidos = [
+        "ministerio",
+        "ldc",
+        "asambleas",
+        "otras"
+    ];
+
+    return {
+        tipo: tiposValidos.includes(valor.tipo)
+            ? valor.tipo
+            : "ministerio",
+        companero: String(
+            valor.companero ||
+            valor.nombre ||
+            ""
+        ).trim()
+    };
+}
+
+function claseActividadCalendario(tipo) {
+    switch (tipo) {
+        case "ldc":
+            return "actividad-ldc";
+        case "asambleas":
+            return "actividad-asambleas";
+        case "otras":
+            return "actividad-otras";
+        case "ministerio":
+        default:
+            return "actividad-ministerio";
+    }
+}
+
+
 // =========================================================
 // AGENDA DE SALIDAS DEL MINISTERIO
 // =========================================================
@@ -3864,17 +3989,21 @@ function abrirModalAgendaSalida(fechaISO) {
 
     const modal = document.getElementById("modalAgendaSalida");
     const input = document.getElementById("nombreAgendaSalida");
+    const tipo = document.getElementById("tipoAgendaSalida");
     const fechaTexto = document.getElementById("fechaModalAgendaSalida");
     const titulo = document.getElementById("tituloModalAgendaSalida");
     const mensaje = document.getElementById("mensajeAgendaSalida");
     const guardar = document.getElementById("guardarAgendaSalida");
 
-    if (!modal || !input || !guardar) return;
+    if (!modal || !input || !tipo || !guardar) return;
 
     const actual =
-        String(
-            estado.agendaSalidas?.[fechaISO] || ""
-        ).trim();
+        normalizarAgendaDia(
+            estado.agendaSalidas?.[fechaISO]
+        );
+
+    const nombreActual =
+        actual.companero;
 
     const fecha = fechaDesdeISO(fechaISO);
 
@@ -3890,7 +4019,8 @@ function abrirModalAgendaSalida(fechaISO) {
         );
 
     modal.dataset.fecha = fechaISO;
-    input.value = actual;
+    input.value = nombreActual;
+    tipo.value = actual.tipo;
 
     if (fechaTexto) {
         fechaTexto.textContent =
@@ -3899,9 +4029,9 @@ function abrirModalAgendaSalida(fechaISO) {
 
     if (titulo) {
         titulo.textContent =
-            actual
-                ? "Editar salida planificada"
-                : "Planificar ministerio";
+            nombreActual
+                ? "Editar actividad planificada"
+                : "Planificar actividad";
     }
 
     if (mensaje) {
@@ -3913,7 +4043,7 @@ function abrirModalAgendaSalida(fechaISO) {
     // Se asigna de nuevo al abrir. Así Guardar siempre trabaja
     // con la fecha que se está editando en ese momento.
     guardar.disabled = false;
-    guardar.textContent = actual ? "Guardar cambios" : "Guardar";
+    guardar.textContent = nombreActual ? "Guardar cambios" : "Guardar";
 
     guardar.onclick = () => {
         guardarSalidaDesdeModal(fechaISO);
@@ -3952,10 +4082,11 @@ function cerrarModalAgendaSalida() {
 function guardarSalidaDesdeModal(fechaForzada = "") {
     const modal = document.getElementById("modalAgendaSalida");
     const input = document.getElementById("nombreAgendaSalida");
+    const tipo = document.getElementById("tipoAgendaSalida");
     const mensaje = document.getElementById("mensajeAgendaSalida");
     const guardar = document.getElementById("guardarAgendaSalida");
 
-    if (!modal || !input || !guardar) return;
+    if (!modal || !input || !tipo || !guardar) return;
 
     const fechaISO =
         fechaForzada ||
@@ -3964,6 +4095,16 @@ function guardarSalidaDesdeModal(fechaForzada = "") {
 
     const nombre =
         input.value.trim();
+
+    const tipoActividad =
+        [
+            "ministerio",
+            "ldc",
+            "asambleas",
+            "otras"
+        ].includes(tipo.value)
+            ? tipo.value
+            : "ministerio";
 
     if (!fechaISO) {
         if (mensaje) {
@@ -3996,8 +4137,10 @@ function guardarSalidaDesdeModal(fechaForzada = "") {
     const anterior =
         estado.agendaSalidas[fechaISO];
 
-    estado.agendaSalidas[fechaISO] =
-        nombre;
+    estado.agendaSalidas[fechaISO] = {
+        tipo: tipoActividad,
+        companero: nombre
+    };
 
     if (!guardarAgendaSalidas()) {
         if (anterior) {
@@ -4108,6 +4251,21 @@ function actualizarGraficoInicio({
         document.getElementById(
             "leyendaGraficoInicio"
         );
+
+
+    const fechaProgreso =
+        document.getElementById(
+            "fechaProgresoMes"
+        );
+
+    if (fechaProgreso) {
+        const hoy = new Date();
+
+        fechaProgreso.textContent =
+            `${String(hoy.getDate()).padStart(2, "0")}/` +
+            `${String(hoy.getMonth() + 1).padStart(2, "0")}/` +
+            `${hoy.getFullYear()}`;
+    }
 
 
     if (!grafico || !leyenda) {
@@ -7503,11 +7661,11 @@ async function importarCopiaSeguridad(
             )
                 ? Object.fromEntries(
                     Object.entries(datos.agendaSalidas)
-                        .map(([fecha, nombre]) => [
+                        .map(([fecha, valor]) => [
                             String(fecha),
-                            String(nombre || "").trim()
+                            normalizarAgendaDia(valor)
                         ])
-                        .filter(([, nombre]) => Boolean(nombre))
+                        .filter(([, valor]) => Boolean(valor.companero))
                 )
                 : {};
 
