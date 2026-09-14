@@ -6361,3 +6361,78 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
  box-shadow:0 12px 28px rgba(0,0,0,.11),inset 0 2px 5px rgba(255,255,255,.65);
  transform:translateZ(-8px);pointer-events:none
 }
+
+/* =========================================================
+   V54 · AROS 3D INDEPENDIENTES + ENTRADA ESCALONADA
+   ========================================================= */
+#vista-inicio .tarjeta-grafico-inicio{
+ perspective:1000px!important;
+ overflow:visible!important;
+}
+#vista-inicio #graficoInicio{
+ transform:rotateX(9deg) rotateY(-3deg)!important;
+ transform-style:preserve-3d!important;
+ filter:drop-shadow(0 15px 15px rgba(0,0,0,.12))!important;
+ animation:aros3dEntrada .75s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes aros3dEntrada{
+ 0%{opacity:.15;transform:rotateX(18deg) rotateY(-8deg) scale(.82)!important}
+ 70%{opacity:1;transform:rotateX(7deg) rotateY(-2deg) scale(1.025)!important}
+ 100%{opacity:1;transform:rotateX(9deg) rotateY(-3deg) scale(1)!important}
+}
+#vista-inicio #graficoInicio svg{
+ overflow:visible!important;
+ transform-style:preserve-3d!important;
+ filter:none!important;
+}
+/* Cada aro recibe una profundidad distinta. */
+#vista-inicio #graficoInicio svg circle{
+ stroke-linecap:round!important;
+ transform-box:fill-box;
+ transform-origin:center;
+ transition:stroke-dashoffset 1.15s cubic-bezier(.18,.8,.2,1),filter .35s ease!important;
+}
+#vista-inicio #graficoInicio svg circle:nth-of-type(1){
+ filter:drop-shadow(0 7px 3px rgba(0,0,0,.22)) drop-shadow(0 -2px 1px rgba(255,255,255,.65))!important;
+ animation:aroRelieve1 1s .05s ease-out both;
+}
+#vista-inicio #graficoInicio svg circle:nth-of-type(2){
+ filter:drop-shadow(0 6px 2.7px rgba(0,0,0,.20)) drop-shadow(0 -2px 1px rgba(255,255,255,.60))!important;
+ animation:aroRelieve2 1s .13s ease-out both;
+}
+#vista-inicio #graficoInicio svg circle:nth-of-type(3){
+ filter:drop-shadow(0 5px 2.4px rgba(0,0,0,.18)) drop-shadow(0 -1.5px 1px rgba(255,255,255,.56))!important;
+ animation:aroRelieve3 1s .21s ease-out both;
+}
+#vista-inicio #graficoInicio svg circle:nth-of-type(4){
+ filter:drop-shadow(0 4px 2px rgba(0,0,0,.17)) drop-shadow(0 -1.5px 1px rgba(255,255,255,.52))!important;
+ animation:aroRelieve4 1s .29s ease-out both;
+}
+@keyframes aroRelieve1{0%{opacity:.15;transform:scale(.84)}100%{opacity:1;transform:scale(1)}}
+@keyframes aroRelieve2{0%{opacity:.12;transform:scale(.82)}100%{opacity:1;transform:scale(1)}}
+@keyframes aroRelieve3{0%{opacity:.10;transform:scale(.80)}100%{opacity:1;transform:scale(1)}}
+@keyframes aroRelieve4{0%{opacity:.08;transform:scale(.78)}100%{opacity:1;transform:scale(1)}}
+/* Luz especular: hace que parezcan tubos/aros pulidos. */
+#vista-inicio #graficoInicio::after{
+ left:16%!important;right:16%!important;top:7%!important;height:38%!important;
+ background:linear-gradient(180deg,rgba(255,255,255,.48),rgba(255,255,255,.12) 45%,transparent 82%)!important;
+ filter:blur(.2px);
+ opacity:.82!important;
+ transform:translateZ(34px)!important;
+}
+/* Sombra central bajo el conjunto. */
+#vista-inicio #graficoInicio::before{
+ inset:20% 24%!important;
+ background:rgba(80,80,90,.055)!important;
+ box-shadow:0 18px 32px rgba(0,0,0,.15),inset 0 3px 7px rgba(255,255,255,.75)!important;
+ transform:translateZ(-18px)!important;
+}
+/* Pequeño movimiento al tocar, como una pieza física. */
+#vista-inicio #graficoInicio:active{
+ transform:rotateX(4deg) rotateY(2deg) scale(1.025)!important;
+ filter:drop-shadow(0 19px 18px rgba(0,0,0,.15))!important;
+}
+@media(prefers-reduced-motion:reduce){
+ #vista-inicio #graficoInicio,
+ #vista-inicio #graficoInicio svg circle{animation:none!important}
+}
