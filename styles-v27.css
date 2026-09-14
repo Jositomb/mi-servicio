@@ -6320,3 +6320,11 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
         font-size: 11.5px;
     }
 }
+
+/* V52 · Personaje siempre mirando hacia la meta */
+#vista-inicio .progreso-animal {
+    scale: -1 1 !important;
+}
+#vista-inicio .progreso-animal.estado-completado {
+    scale: 1 1 !important;
+}
