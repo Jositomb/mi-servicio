@@ -6449,3 +6449,24 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 
 /* V56 tiempo */
 #vista-inicio .tarjeta-tiempo-inicio{position:relative;overflow:hidden;min-height:170px;padding:14px!important;background:linear-gradient(145deg,rgba(100,180,255,.13),rgba(255,255,255,.03))}.tiempo-cabecera{display:flex;justify-content:space-between}.tiempo-etiqueta{font-size:9px;font-weight:900;opacity:.55}.tiempo-lugar{font-size:13px;font-weight:800}.tiempo-icono{font-size:34px;animation:flotarTiempo 3.4s ease-in-out infinite}@keyframes flotarTiempo{50%{transform:translateY(-3px)}}.tiempo-principal{display:flex;align-items:baseline;gap:7px;margin-top:9px}.tiempo-principal strong{font-size:29px}.tiempo-principal span,.tiempo-datos{font-size:10.5px;font-weight:700;opacity:.72}.tiempo-datos{display:flex;gap:10px;margin-top:8px}.tiempo-consejo{margin-top:10px;padding:7px;border-radius:10px;background:rgba(127,127,127,.08);font-size:10.5px;font-weight:750}.tiempo-actualizar{border:0;background:transparent;color:var(--primary);font-size:9.5px;font-weight:800;padding-top:7px}
+
+/* V57 · Tiempo integrado en las cuatro esquinas del cuadro de anillos */
+#vista-inicio .tarjeta-grafico-inicio{position:relative!important}
+#vista-inicio .tiempo-esquinas{position:absolute;inset:42px 10px 10px;z-index:20;pointer-events:none}
+#vista-inicio .tiempo-esquina{position:absolute;display:flex;flex-direction:column;max-width:29%;font-size:10px;font-weight:800;line-height:1.1;text-shadow:0 1px 8px var(--background)}
+#vista-inicio .tiempo-esquina small{font-size:8px;font-weight:700;opacity:.58;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#vista-inicio .tiempo-esquina-tl{left:0;top:0;align-items:flex-start}
+#vista-inicio .tiempo-esquina-tl>span{font-size:27px;filter:drop-shadow(0 4px 4px rgba(0,0,0,.12));animation:flotarTiempo 3.4s ease-in-out infinite}
+#vista-inicio .tiempo-esquina-tr{right:0;top:0;align-items:flex-end;text-align:right}
+#vista-inicio .tiempo-esquina-tr strong{font-size:23px;line-height:1}
+#vista-inicio .tiempo-esquina-bl{left:0;bottom:0;align-items:flex-start}
+#vista-inicio .tiempo-esquina-br{right:0;bottom:0;align-items:flex-end;text-align:right;max-width:36%}
+#vista-inicio .tiempo-esquina-br small{white-space:normal;line-height:1.15}
+#vista-inicio .tiempo-recargar{position:absolute;right:0;top:35px;pointer-events:auto;width:22px;height:22px;border:0;border-radius:50%;background:rgba(127,127,127,.09);color:var(--text-secondary);font-size:13px;font-weight:800;padding:0}
+@media(max-width:390px){
+ #vista-inicio .tiempo-esquinas{inset:40px 7px 8px}
+ #vista-inicio .tiempo-esquina{font-size:9px}
+ #vista-inicio .tiempo-esquina small{font-size:7.5px}
+ #vista-inicio .tiempo-esquina-tl>span{font-size:24px}
+ #vista-inicio .tiempo-esquina-tr strong{font-size:21px}
+}
