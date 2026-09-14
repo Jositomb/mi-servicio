@@ -6470,3 +6470,12 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
  #vista-inicio .tiempo-esquina-tl>span{font-size:24px}
  #vista-inicio .tiempo-esquina-tr strong{font-size:21px}
 }
+
+/* V58 · Distribución definitiva del tiempo */
+#vista-inicio .tiempo-esquina-tr{right:0!important;top:0!important;align-items:flex-end!important;text-align:right!important;max-width:34%!important}
+#vista-inicio .tiempo-esquina-tr .tiempo-ropa-icono{font-size:20px;line-height:1;margin-bottom:2px}
+#vista-inicio .tiempo-esquina-tr small{white-space:normal!important;line-height:1.15!important}
+#vista-inicio .tiempo-esquina-bl{left:0!important;bottom:0!important;align-items:flex-start!important}
+#vista-inicio .tiempo-esquina-bl strong{font-size:23px!important;line-height:1!important}
+#vista-inicio .tiempo-esquina-br{right:0!important;bottom:0!important;align-items:flex-end!important;text-align:right!important;max-width:29%!important}
+#vista-inicio .tiempo-esquina-br small{white-space:nowrap!important}
