@@ -28,7 +28,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=6201"
+        href="./styles-v27.css?v=6301"
     >
 
 </head>
@@ -1111,6 +1111,12 @@
                 <span>Con quién iré</span>
                 <input id="nombreAgendaSalida" type="text" maxlength="80" autocomplete="off" placeholder="Ej. Marta">
             </label>
+            <label class="campo-editar campo-agenda-duracion">
+                <span>Tiempo previsto</span>
+                <select id="duracionAgendaSalida">
+                    <option value="0">Sin indicar</option><option value="30">30 min</option><option value="60">1 h</option><option value="90">1 h 30 min</option><option value="120">2 h</option><option value="180">3 h</option><option value="240">4 h</option><option value="300">5 h</option>
+                </select>
+            </label>
             <p id="mensajeAgendaSalida" class="mensaje-formulario"></p>
             <div class="modal-botones">
                 <button id="cancelarAgendaSalida" class="boton-modal cancelar" type="button">Cancelar</button>
@@ -1235,7 +1241,7 @@
     if (standalone) document.body.classList.add('modo-standalone');
 })();
 </script>
-<script src="./app-v27.js?v=6201" defer></script>
+<script src="./app-v27.js?v=6301" defer></script>
 
 </body>
 </html>

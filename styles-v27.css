@@ -6489,3 +6489,7 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 #vista-meta.activa #planInteligenteMes{display:block!important}
 #vista-meta[hidden] #planInteligenteMes{display:none!important}
 #vista-meta .plan-inteligente-mes{margin-top:14px!important}
+
+/* V63 · tiempo previsto en planificación */
+.campo-agenda-duracion select{width:100%}
+#vista-inicio .calendario-dia-agenda{font-weight:800}

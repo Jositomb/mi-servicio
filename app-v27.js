@@ -3538,7 +3538,7 @@ function actualizarCalendarioInicio() {
                 `calendario-dia-agenda ${claseActividadCalendario(tipoAgendado)}`;
 
             agendaDia.textContent =
-                `📌 ${nombreActividad(tipoAgendado)} · ${companeroAgendado}`;
+                `📌 ${nombreActividad(tipoAgendado)} · ${companeroAgendado}${agendaDiaDatos.minutosPrevistos ? " · "+formatoMinutosPlan(agendaDiaDatos.minutosPrevistos) : ""}`;
 
             agendaDia.title =
                 `${nombreActividad(tipoAgendado)} planificado con ${companeroAgendado}`;
@@ -3900,14 +3900,16 @@ function normalizarAgendaDia(valor) {
     if (!valor) {
         return {
             tipo: "ministerio",
-            companero: ""
+            companero: "",
+            minutosPrevistos: 0
         };
     }
 
     if (typeof valor === "string") {
         return {
             tipo: "ministerio",
-            companero: valor.trim()
+            companero: valor.trim(),
+            minutosPrevistos: 0
         };
     }
 
@@ -3926,10 +3928,23 @@ function normalizarAgendaDia(valor) {
             valor.companero ||
             valor.nombre ||
             ""
-        ).trim()
+        ).trim(),
+        minutosPrevistos: Math.max(0, Number(valor.minutosPrevistos || 0) || 0)
     };
 }
 
+
+function formatoMinutosPlan(minutos) {
+    const n=Math.max(0,Number(minutos)||0), h=Math.floor(n/60), m=n%60;
+    return m ? `${h ? h+" h " : ""}${m} min` : (h ? `${h} h` : "");
+}
+function minutosPlanificadosMesActual() {
+    const hoy=new Date();
+    return Object.entries(estado.agendaSalidas||{}).reduce((s,[fecha,v])=>{
+        const d=new Date(fecha+"T12:00:00"), a=normalizarAgendaDia(v);
+        return d.getFullYear()===hoy.getFullYear() && d.getMonth()===hoy.getMonth() ? s+(a.minutosPrevistos||0) : s;
+    },0);
+}
 function claseActividadCalendario(tipo) {
     switch (tipo) {
         case "ldc":
@@ -3994,6 +4009,7 @@ function abrirModalAgendaSalida(fechaISO) {
     const titulo = document.getElementById("tituloModalAgendaSalida");
     const mensaje = document.getElementById("mensajeAgendaSalida");
     const guardar = document.getElementById("guardarAgendaSalida");
+    const duracion = document.getElementById("duracionAgendaSalida");
 
     if (!modal || !input || !tipo || !guardar) return;
 
@@ -4021,6 +4037,7 @@ function abrirModalAgendaSalida(fechaISO) {
     modal.dataset.fecha = fechaISO;
     input.value = nombreActual;
     tipo.value = actual.tipo;
+    if (duracion) duracion.value = String(actual.minutosPrevistos || 0);
 
     if (fechaTexto) {
         fechaTexto.textContent =
@@ -4139,7 +4156,8 @@ function guardarSalidaDesdeModal(fechaForzada = "") {
 
     estado.agendaSalidas[fechaISO] = {
         tipo: tipoActividad,
-        companero: nombre
+        companero: nombre,
+        minutosPrevistos: Number(document.getElementById("duracionAgendaSalida")?.value || 0)
     };
 
     if (!guardarAgendaSalidas()) {
@@ -10144,11 +10162,12 @@ function actualizarPlanInteligenteMes(){
  const regs=(estado.registros||[]).filter(r=>{const d=new Date(r.fecha+"T12:00:00");return d.getFullYear()===hoy.getFullYear()&&d.getMonth()===hoy.getMonth()});
  const hecho=sumarMinutos(regs),resta=Math.max(objetivo-hecho,0),dias=Math.max(fin.getDate()-hoy.getDate()+1,1);
  let salidas=0;Object.keys(estado.agendaSalidas||{}).forEach(f=>{const d=new Date(f+"T12:00:00");if(d>=new Date(hoy.getFullYear(),hoy.getMonth(),hoy.getDate())&&d<=fin)salidas++});
- const base=Math.max(salidas,Math.ceil(dias/3),1),ritmo=Math.ceil(resta/base/15)*15;
+ const planMin=minutosPlanificadosMesActual();
+ const base=Math.max(salidas,Math.ceil(dias/3),1),ritmo=Math.ceil(Math.max(resta-planMin,0)/base/15)*15;
  const fmt=n=>{const a=Math.floor(n/60),b=n%60;return b?`${a} h ${b} min`:`${a} h`};
  const a=document.getElementById("planHorasRestantes"),b=document.getElementById("planRitmoSugerido"),m=document.getElementById("planMensajeMes");
  if(a)a.textContent=fmt(resta);if(b)b.textContent=resta?`${fmt(ritmo)} / salida`:"Meta conseguida";
- if(m)m.textContent=resta===0?"🎉 Has alcanzado tu objetivo mensual.":salidas?`Tienes ${salidas} salida${salidas===1?"":"s"} planificada${salidas===1?"":"s"}. Con unas ${fmt(ritmo)} por salida mantendrías un buen ritmo.`:`Te quedan ${dias} días. Si planificas unas ${base} salidas, con aproximadamente ${fmt(ritmo)} cada una mantendrías un ritmo cómodo.`;
+ if(m)m.textContent=resta===0?"🎉 Has alcanzado tu objetivo mensual.":planMin>0?`Tienes ${fmt(planMin)} previstas este mes. Si las completas, quedarían ${fmt(Math.max(resta-planMin,0))} para alcanzar la meta.`:salidas?`Tienes ${salidas} salida${salidas===1?"":"s"} planificada${salidas===1?"":"s"}. Añade el tiempo previsto para calcular mejor tu avance.`:`Te quedan ${dias} días. Si planificas unas ${base} salidas, con aproximadamente ${fmt(ritmo)} cada una mantendrías un ritmo cómodo.`;
 }
 document.addEventListener("DOMContentLoaded",()=>setTimeout(actualizarPlanInteligenteMes,120));
 document.addEventListener("click",()=>setTimeout(actualizarPlanInteligenteMes,120));
