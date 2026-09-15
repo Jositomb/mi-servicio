@@ -7267,3 +7267,20 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
   0%,100%{transform:translateY(2px);opacity:.55}
   50%{transform:translateY(-4px);opacity:1}
 }
+
+/* V81 · Pajarito y Gatito */
+#vista-ajustes #galeriaPersonajes [data-personaje="pajarito"] img,
+#vista-ajustes #galeriaPersonajes [data-personaje="gatito"] img,
+#vista-inicio #animalProgreso[data-personaje="pajarito"] .personaje-cuerpo-img,
+#vista-inicio #animalProgreso[data-personaje="gatito"] .personaje-cuerpo-img{
+  background:transparent!important;
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  filter:none!important;
+  object-fit:contain!important;
+}
+#vista-inicio #animalProgreso[data-personaje="pajarito"],
+#vista-inicio #animalProgreso[data-personaje="gatito"]{
+  overflow:visible!important;
+}
