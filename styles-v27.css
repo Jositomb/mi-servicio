@@ -6323,7 +6323,7 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 
 /* V52 · Personaje siempre mirando hacia la meta */
 #vista-inicio .progreso-animal {
-    scale: -1 1 !important;
+    scale:1 1!important;
 }
 #vista-inicio .progreso-animal.estado-completado {
     scale: 1 1 !important;
@@ -7171,6 +7171,54 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 /* Sin emoji de viento pegado al personaje: deja la ilustración limpia. */
 #vista-inicio .progreso-animal::before,
 #vista-inicio .progreso-animal::after{
+  box-shadow:none!important;
+  filter:none!important;
+}
+
+/* =========================================================
+   V77 · PERSONAJES HACIA LA META + REBUFO DETRÁS
+   ========================================================= */
+#vista-inicio #animalProgreso[data-personaje]{
+  position:relative!important;
+  transform:none!important;
+  scale:1 1!important;
+  z-index:3!important;
+}
+#vista-inicio #animalProgreso[data-personaje] .personaje-cuerpo-img{
+  position:relative!important;
+  z-index:3!important;
+  transform:none!important;
+  scale:1 1!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  filter:none!important;
+  object-fit:contain!important;
+}
+
+/* El rebúfo va detrás (izquierda) del personaje, nunca delante. */
+#vista-inicio #animalProgreso::before,
+#vista-inicio #animalProgreso::after{
+  z-index:1!important;
+}
+#vista-inicio #animalProgreso.estado-adelantado::before,
+#vista-inicio #animalProgreso.estado-adelantado::after,
+#vista-inicio .progreso-animal.estado-adelantado::before,
+#vista-inicio .progreso-animal.estado-adelantado::after{
+  left:-25px!important;
+  right:auto!important;
+  transform:none!important;
+}
+
+/* Pantera: ninguna caja, borde, sombra o fondo. */
+#vista-inicio #animalProgreso[data-personaje="pantera"],
+#vista-inicio #animalProgreso[data-personaje="pantera"] .personaje-cuerpo-img,
+#vista-ajustes [data-personaje="pantera"],
+#vista-ajustes [data-personaje="pantera"] .personaje-preview-img,
+#vista-ajustes [data-personaje="pantera"] img{
+  background:transparent!important;
+  background-color:transparent!important;
+  border:0!important;
+  outline:0!important;
   box-shadow:none!important;
   filter:none!important;
 }
