@@ -6818,3 +6818,128 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
   box-shadow:none!important;
   transform:scaleX(-1)!important;
 }
+
+/* =========================================================
+   V73 · CONTENCIÓN DEFINITIVA DE IMÁGENES EN AJUSTES
+   ========================================================= */
+
+/* Cualquier imagen que aparezca dentro de Ajustes queda limitada.
+   Esto evita que restos visuales de versiones anteriores puedan crecer. */
+#vista-ajustes img{
+  width:auto!important;
+  height:auto!important;
+  max-width:40px!important;
+  max-height:54px!important;
+  object-fit:contain!important;
+}
+
+/* Galería limpia */
+#vista-ajustes #selectorPersonajeDesplegable{
+  contain:layout paint!important;
+  overflow:hidden!important;
+}
+#vista-ajustes #galeriaPersonajes{
+  display:grid!important;
+  grid-template-columns:repeat(4,1fr)!important;
+  gap:10px 4px!important;
+  overflow:hidden!important;
+}
+#vista-ajustes #galeriaPersonajes button{
+  position:relative!important;
+  width:100%!important;
+  min-width:0!important;
+  height:72px!important;
+  padding:2px!important;
+  margin:0!important;
+  border:0!important;
+  outline:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  overflow:hidden!important;
+}
+#vista-ajustes #galeriaPersonajes button.seleccionado{
+  border:0!important;
+  outline:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+#vista-ajustes #galeriaPersonajes button.seleccionado::after{
+  content:"✓";
+  position:absolute;
+  top:0;right:8px;
+  width:15px;height:15px;
+  border-radius:50%;
+  display:grid;place-items:center;
+  background:#0a84ff;
+  color:white;
+  font-size:9px;
+  font-weight:900;
+}
+#vista-ajustes #galeriaPersonajes .personaje-preview-img{
+  width:34px!important;
+  height:47px!important;
+  max-width:34px!important;
+  max-height:47px!important;
+  margin:0 auto!important;
+  display:block!important;
+  overflow:hidden!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+#vista-ajustes #galeriaPersonajes .personaje-preview-img img{
+  width:34px!important;
+  height:47px!important;
+  min-width:0!important;
+  min-height:0!important;
+  max-width:34px!important;
+  max-height:47px!important;
+  display:block!important;
+  margin:0!important;
+  object-fit:cover!important;
+  object-position:center!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+#vista-ajustes #galeriaPersonajes button small{
+  display:block!important;
+  margin-top:2px!important;
+  font-size:9px!important;
+  line-height:1!important;
+  white-space:nowrap!important;
+}
+
+/* El resumen superior también pequeño */
+#vista-ajustes #personajeSeleccionadoIcono,
+#vista-ajustes #personajeSeleccionadoIcono img{
+  width:27px!important;
+  height:36px!important;
+  max-width:27px!important;
+  max-height:36px!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  background:transparent!important;
+  object-fit:cover!important;
+}
+
+/* Si por cualquier motivo apareciese una imagen de progreso dentro de Ajustes,
+   nunca se muestra allí. Solo pertenece a Inicio. */
+#vista-ajustes .personaje-cuerpo-img,
+#vista-ajustes #animalProgreso{
+  display:none!important;
+}
+
+#vista-inicio #animalProgreso[data-personaje]{
+  width:34px!important;height:46px!important;
+  border:0!important;background:transparent!important;box-shadow:none!important;
+}
+#vista-inicio #animalProgreso[data-personaje] .personaje-cuerpo-img{
+  width:34px!important;height:46px!important;
+  max-width:34px!important;max-height:46px!important;
+  object-fit:cover!important;border:0!important;border-radius:0!important;
+  box-shadow:none!important;transform:scaleX(-1)!important;
+}
