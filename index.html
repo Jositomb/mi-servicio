@@ -28,7 +28,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=6701"
+        href="./styles-v27.css?v=6801"
     >
 
 </head>
@@ -871,8 +871,18 @@
                             <option value="tortuga">Tortuga</option>
                             <option value="liebre">Liebre</option>
                         </select>
-                        <div id="galeriaPersonajes" class="galeria-personajes" aria-label="Vista previa de personajes">
-                            <button type="button" data-personaje="hombre"><span>🚶‍♂️</span><small>Hombre</small></button>
+                        <button id="abrirSelectorPersonaje" class="selector-personaje-resumen" type="button" aria-expanded="false">
+    <span class="selector-personaje-resumen-texto">
+        <small>Personaje de progreso</small>
+        <strong id="personajeSeleccionadoResumen">Hombre</strong>
+    </span>
+    <span id="personajeSeleccionadoIcono" class="selector-personaje-resumen-icono">🚶‍♂️</span>
+    <span class="selector-personaje-chevron">›</span>
+</button>
+<div id="selectorPersonajeDesplegable" class="selector-personaje-desplegable" hidden>
+<div id="galeriaPersonajes" class="galeria-personajes" aria-label="Vista previa de personajes">
+                            <button type="button" data-personaje="hombre"><span>🚶‍♂️</span><small>Hombre</small>
+</div></button>
                             <button type="button" data-personaje="mujer"><span>🚶‍♀️</span><small>Mujer</small></button>
                             <button type="button" data-personaje="koala"><span>🐨</span><small>Koala</small></button>
                             <button type="button" data-personaje="mariposa"><span>🦋</span><small>Mariposa</small></button>
@@ -1253,7 +1263,7 @@
     if (standalone) document.body.classList.add('modo-standalone');
 })();
 </script>
-<script src="./app-v27.js?v=6701" defer></script>
+<script src="./app-v27.js?v=6801" defer></script>
 
 </body>
 </html>

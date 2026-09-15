@@ -10202,3 +10202,54 @@ function configurarGaleriaPersonajes(){
     pintar();
 }
 document.addEventListener("DOMContentLoaded",()=>setTimeout(configurarGaleriaPersonajes,100));
+
+
+const PERSONAJES_UI={
+  hombre:{nombre:"Hombre",icono:"🚶‍♂️"},
+  mujer:{nombre:"Mujer",icono:"🚶‍♀️"},
+  koala:{nombre:"Koala",icono:"🐨"},
+  mariposa:{nombre:"Mariposa",icono:"🦋"},
+  pantera:{nombre:"Pantera rosa",icono:"🐈"},
+  tortuga:{nombre:"Tortuga",icono:"🐢"},
+  liebre:{nombre:"Liebre",icono:"🐇"}
+};
+function actualizarResumenPersonaje(){
+  const select=document.getElementById("personajeProgreso");
+  const nombre=document.getElementById("personajeSeleccionadoResumen");
+  const icono=document.getElementById("personajeSeleccionadoIcono");
+  if(!select||!nombre||!icono)return;
+  const p=PERSONAJES_UI[select.value]||PERSONAJES_UI.hombre;
+  nombre.textContent=p.nombre;
+  if(select.value==="pantera"){
+    const img=document.querySelector('#galeriaPersonajes [data-personaje="pantera"] img');
+    icono.innerHTML=img?`<img src="${img.src}" alt="">`:"🐈";
+    icono.classList.add("es-pantera");
+  }else{
+    icono.textContent=p.icono;
+    icono.classList.remove("es-pantera");
+  }
+}
+function configurarDesplegablePersonaje(){
+  const boton=document.getElementById("abrirSelectorPersonaje");
+  const panel=document.getElementById("selectorPersonajeDesplegable");
+  const select=document.getElementById("personajeProgreso");
+  const galeria=document.getElementById("galeriaPersonajes");
+  if(!boton||!panel||!select||!galeria)return;
+  boton.onclick=()=>{
+    const abrir=panel.hidden;
+    panel.hidden=!abrir;
+    boton.setAttribute("aria-expanded",String(abrir));
+  };
+  galeria.addEventListener("click",e=>{
+    const item=e.target.closest("[data-personaje]");
+    if(!item)return;
+    setTimeout(()=>{
+      actualizarResumenPersonaje();
+      panel.hidden=true;
+      boton.setAttribute("aria-expanded","false");
+    },40);
+  });
+  select.addEventListener("change",actualizarResumenPersonaje);
+  actualizarResumenPersonaje();
+}
+document.addEventListener("DOMContentLoaded",()=>setTimeout(configurarDesplegablePersonaje,130));
