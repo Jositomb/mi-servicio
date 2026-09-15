@@ -7222,3 +7222,18 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
   box-shadow:none!important;
   filter:none!important;
 }
+
+/* V78 · acabado final del personaje */
+#vista-inicio #animalProgreso[data-personaje]{
+  bottom:15px!important;
+  background:transparent!important;border:0!important;outline:0!important;
+  box-shadow:none!important;filter:none!important;
+}
+#vista-inicio #animalProgreso[data-personaje] .personaje-cuerpo-img{
+  background:transparent!important;border:0!important;outline:0!important;
+  box-shadow:none!important;filter:none!important;object-fit:contain!important;
+}
+#vista-inicio #animalProgreso.estado-adelantado::after,
+#vista-inicio .progreso-animal.estado-adelantado::after{
+  left:-25px!important;right:auto!important;bottom:2px!important;
+}
