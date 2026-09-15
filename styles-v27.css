@@ -6695,7 +6695,7 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 
 /* La meta está a la derecha: todos miran/caminan hacia ella */
 #animalProgreso[data-personaje] .personaje-cuerpo-img{
-  transform:scaleX(-1)!important;
+  transform:none!important;
 }
 #animalProgreso[data-personaje="pantera"] .personaje-cuerpo-img,
 #animalProgreso[data-personaje="koala"] .personaje-cuerpo-img,
@@ -6704,7 +6704,7 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 #animalProgreso[data-personaje="liebre"] .personaje-cuerpo-img,
 #animalProgreso[data-personaje="hombre"] .personaje-cuerpo-img,
 #animalProgreso[data-personaje="mujer"] .personaje-cuerpo-img{
-  transform:scaleX(-1)!important;
+  transform:none!important;
 }
 
 /* Resumen del desplegable también limpio */
@@ -6816,7 +6816,7 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
   border-radius:0!important;
   background:transparent!important;
   box-shadow:none!important;
-  transform:scaleX(-1)!important;
+  transform:none!important;
 }
 
 /* =========================================================
@@ -6941,7 +6941,7 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
   width:34px!important;height:46px!important;
   max-width:34px!important;max-height:46px!important;
   object-fit:cover!important;border:0!important;border-radius:0!important;
-  box-shadow:none!important;transform:scaleX(-1)!important;
+  box-shadow:none!important;transform:none!important;
 }
 
 /* =========================================================
@@ -7139,6 +7139,38 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 /* El elegido se indica solo con el pequeño check, nunca con una mancha o tarjeta */
 #vista-ajustes #galeriaPersonajes button.seleccionado{
   background:transparent!important;
+  box-shadow:none!important;
+  filter:none!important;
+}
+
+/* =========================================================
+   V76 · DIRECCIÓN ÚNICA HACIA LA META + PANTERA LIMPIA
+   ========================================================= */
+
+/* Ningún personaje se voltea por CSS: las ilustraciones originales ya miran a la derecha. */
+#vista-inicio #animalProgreso[data-personaje],
+#vista-inicio #animalProgreso[data-personaje] .personaje-cuerpo-img,
+#vista-ajustes #galeriaPersonajes [data-personaje] img,
+#vista-ajustes #personajeSeleccionadoIcono img{
+  transform:none!important;
+  scale:1 1!important;
+}
+
+/* Elimina cualquier efecto heredado alrededor de las imágenes. */
+#vista-inicio #animalProgreso[data-personaje] .personaje-cuerpo-img,
+#vista-ajustes #galeriaPersonajes [data-personaje] img,
+#vista-ajustes #personajeSeleccionadoIcono img{
+  background:transparent!important;
+  box-shadow:none!important;
+  filter:none!important;
+  border:0!important;
+  outline:0!important;
+  object-fit:contain!important;
+}
+
+/* Sin emoji de viento pegado al personaje: deja la ilustración limpia. */
+#vista-inicio .progreso-animal::before,
+#vista-inicio .progreso-animal::after{
   box-shadow:none!important;
   filter:none!important;
 }
