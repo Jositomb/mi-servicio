@@ -10137,3 +10137,18 @@ async function actualizarTiempoInicio(){
  }catch(e){desc.textContent="No disponible";con.textContent="Comprueba la conexión."}
 }
 document.addEventListener("DOMContentLoaded",()=>{document.getElementById("actualizarTiempoInicio")?.addEventListener("click",actualizarTiempoInicio);actualizarTiempoInicio()});
+
+function actualizarPlanInteligenteMes(){
+ const hoy=new Date(),fin=new Date(hoy.getFullYear(),hoy.getMonth()+1,0);
+ const objetivo=Number(estado.preferencias?.objetivoMensualMinutos)||3300;
+ const regs=(estado.registros||[]).filter(r=>{const d=new Date(r.fecha+"T12:00:00");return d.getFullYear()===hoy.getFullYear()&&d.getMonth()===hoy.getMonth()});
+ const hecho=sumarMinutos(regs),resta=Math.max(objetivo-hecho,0),dias=Math.max(fin.getDate()-hoy.getDate()+1,1);
+ let salidas=0;Object.keys(estado.agendaSalidas||{}).forEach(f=>{const d=new Date(f+"T12:00:00");if(d>=new Date(hoy.getFullYear(),hoy.getMonth(),hoy.getDate())&&d<=fin)salidas++});
+ const base=Math.max(salidas,Math.ceil(dias/3),1),ritmo=Math.ceil(resta/base/15)*15;
+ const fmt=n=>{const a=Math.floor(n/60),b=n%60;return b?`${a} h ${b} min`:`${a} h`};
+ const a=document.getElementById("planHorasRestantes"),b=document.getElementById("planRitmoSugerido"),m=document.getElementById("planMensajeMes");
+ if(a)a.textContent=fmt(resta);if(b)b.textContent=resta?`${fmt(ritmo)} / salida`:"Meta conseguida";
+ if(m)m.textContent=resta===0?"🎉 Has alcanzado tu objetivo mensual.":salidas?`Tienes ${salidas} salida${salidas===1?"":"s"} planificada${salidas===1?"":"s"}. Con unas ${fmt(ritmo)} por salida mantendrías un buen ritmo.`:`Te quedan ${dias} días. Si planificas unas ${base} salidas, con aproximadamente ${fmt(ritmo)} cada una mantendrías un ritmo cómodo.`;
+}
+document.addEventListener("DOMContentLoaded",()=>setTimeout(actualizarPlanInteligenteMes,120));
+document.addEventListener("click",()=>setTimeout(actualizarPlanInteligenteMes,120));
