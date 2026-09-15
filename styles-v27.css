@@ -6726,3 +6726,95 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
   width:42px!important;height:58px!important;border-radius:0!important;
   background:transparent!important;box-shadow:none!important;
 }
+
+/* V72 · Corrección estructural definitiva del selector de personajes */
+#selectorPersonajeDesplegable{
+  width:100%!important;
+  max-width:100%!important;
+  overflow:hidden!important;
+}
+#selectorPersonajeDesplegable[hidden]{display:none!important}
+#selectorPersonajeDesplegable:not([hidden]){display:block!important}
+
+#selectorPersonajeDesplegable .galeria-personajes{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:8px 5px!important;
+  width:100%!important;
+  max-width:100%!important;
+  margin:10px 0 4px!important;
+}
+#selectorPersonajeDesplegable .galeria-personajes button{
+  min-width:0!important;
+  width:100%!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  padding:4px 1px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:3px!important;
+}
+#selectorPersonajeDesplegable .galeria-personajes button.seleccionado{
+  background:rgba(0,122,255,.07)!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+#selectorPersonajeDesplegable .personaje-preview-img{
+  display:block!important;
+  width:36px!important;
+  height:50px!important;
+  max-width:36px!important;
+  max-height:50px!important;
+  overflow:hidden!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+#selectorPersonajeDesplegable .personaje-preview-img img{
+  display:block!important;
+  width:36px!important;
+  height:50px!important;
+  max-width:36px!important;
+  max-height:50px!important;
+  object-fit:cover!important;
+  object-position:center!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+#selectorPersonajeDesplegable .galeria-personajes small{
+  font-size:9px!important;
+  line-height:1.05!important;
+  font-weight:750!important;
+}
+#selectorPersonajeDesplegable>.ayuda-campo{
+  display:block!important;
+  margin-top:5px!important;
+}
+
+/* Personaje sobre la ruta: pequeño y sin ningún marco */
+#animalProgreso[data-personaje]{
+  width:36px!important;
+  height:48px!important;
+  overflow:visible!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+#animalProgreso[data-personaje] .personaje-cuerpo-img{
+  display:block!important;
+  width:36px!important;
+  height:48px!important;
+  object-fit:cover!important;
+  object-position:center!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  transform:scaleX(-1)!important;
+}
