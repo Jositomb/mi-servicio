@@ -6612,3 +6612,28 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 }
 
 #animalProgreso[data-personaje="pantera"] .pantera-personaje-img{display:none!important}
+
+/* V70 · Todos los personajes con el mismo estilo visual */
+.galeria-personajes{
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+}
+.galeria-personajes .personaje-preview-img{
+  width:52px!important;height:72px!important;border-radius:12px!important;
+  overflow:hidden!important;display:block!important;background:#fff!important;
+}
+.galeria-personajes .personaje-preview-img img{
+  width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;display:block!important;
+}
+#animalProgreso[data-personaje]{
+  width:48px!important;height:62px!important;border-radius:11px!important;
+  overflow:hidden!important;background:transparent!important;box-shadow:none!important;
+}
+#animalProgreso[data-personaje] .personaje-cuerpo-img{
+  width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;display:block!important;border-radius:11px!important;
+}
+.selector-personaje-resumen-icono.es-personaje-imagen{
+  width:34px!important;height:42px!important;border-radius:9px!important;overflow:hidden!important;display:block!important;
+}
+.selector-personaje-resumen-icono.es-personaje-imagen img{
+  width:100%!important;height:100%!important;object-fit:cover!important;display:block!important;
+}
