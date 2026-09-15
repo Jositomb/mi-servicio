@@ -4694,7 +4694,7 @@ function actualizarPersonajeProgreso(porcentaje) {
         mujer: { normal: "🚶‍♀️", rapido: "🏃‍♀️", meta: "💃" },
         koala: { normal: "🐨", rapido: "🐨", meta: "🐨✨" },
         mariposa: { normal: "🦋", rapido: "🦋", meta: "🦋✨" },
-        pantera: { normal: "🐆", rapido: "🐆", meta: "🐆✨" },
+        pantera: { normal: "🐈", rapido: "🐈", meta: "🐈✨" },
         tortuga: { normal: "🐢", rapido: "🐢", meta: "🐢✨" },
         liebre: { normal: "🐇", rapido: "🐇", meta: "🐇✨" }
     };
@@ -7095,11 +7095,7 @@ function guardarAjustesDesdeFormulario() {
         "mujer"
     ];
 
-    if (
-        !personajesValidos.includes(
-            personaje.value
-        )
-    ) {
+    if (!["hombre","mujer","koala","mariposa","pantera","tortuga","liebre"].includes(personajeProgreso)) {
 
         mostrarMensajeFormulario(
             mensaje,

@@ -6514,8 +6514,9 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 }
 .galeria-personajes button span{font-size:27px;line-height:1.15}
 .galeria-personajes button small{font-size:9px;font-weight:800;opacity:.68}
-.pantera-preview,#animalProgreso[data-personaje="pantera"]{
-  filter:hue-rotate(285deg) saturate(1.7) brightness(1.12)
+ .pantera-preview,#animalProgreso[data-personaje="pantera"]{
+  filter:hue-rotate(285deg) saturate(3.4) brightness(1.18)
+         drop-shadow(0 2px 2px rgba(236,70,160,.22));
 }
 #animalProgreso[data-personaje="mariposa"].moviendo{animation:personajeMariposa 1.25s ease-in-out infinite!important}
 #animalProgreso[data-personaje="koala"].moviendo{animation:personajeKoala 1.8s ease-in-out infinite!important}
@@ -6528,3 +6529,14 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 @keyframes personajeTortuga{50%{translate:2px 0;rotate:1deg}}
 @keyframes personajeLiebre{50%{translate:0 -8px;rotate:-4deg}}
 @media(max-width:370px){.galeria-personajes{grid-template-columns:repeat(3,1fr)}}
+
+/* V66 · Pantera rosa original, estilo dibujo animado */
+.galeria-personajes [data-personaje="pantera"] .pantera-preview{
+  display:grid;place-items:center;width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(145deg,rgba(255,183,218,.55),rgba(255,112,185,.16));
+  font-size:28px;
+}
+#animalProgreso[data-personaje="pantera"]{
+  font-size:1.08em;
+  transform-origin:50% 80%;
+}
