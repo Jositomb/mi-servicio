@@ -6583,3 +6583,32 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 .selector-personaje-resumen-icono.es-pantera img{
   width:100%;height:100%;object-fit:cover;object-position:50% 35%;display:block
 }
+
+/* V69 · Koala y Pantera con cuerpo completo */
+.galeria-personajes .personaje-preview-img{
+  width:46px!important;height:58px!important;border-radius:12px!important;
+  overflow:hidden!important;display:block!important;background:#fff!important;
+  box-shadow:0 2px 7px rgba(0,0,0,.10)!important;
+}
+.galeria-personajes .personaje-preview-img img{
+  width:100%!important;height:100%!important;object-fit:cover!important;
+  object-position:center!important;display:block!important;
+}
+#animalProgreso[data-personaje="koala"],
+#animalProgreso[data-personaje="pantera"]{
+  width:48px!important;height:58px!important;border-radius:12px!important;
+  overflow:hidden!important;background:transparent!important;box-shadow:none!important;
+}
+#animalProgreso .personaje-cuerpo-img{
+  width:100%!important;height:100%!important;object-fit:cover!important;
+  object-position:center!important;display:block!important;border-radius:12px!important;
+}
+.selector-personaje-resumen-icono.es-personaje-imagen{
+  width:34px!important;height:40px!important;border-radius:9px!important;
+  overflow:hidden!important;display:block!important;
+}
+.selector-personaje-resumen-icono.es-personaje-imagen img{
+  width:100%!important;height:100%!important;object-fit:cover!important;display:block!important;
+}
+
+#animalProgreso[data-personaje="pantera"] .pantera-personaje-img{display:none!important}
