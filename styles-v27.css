@@ -6514,10 +6514,6 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 }
 .galeria-personajes button span{font-size:27px;line-height:1.15}
 .galeria-personajes button small{font-size:9px;font-weight:800;opacity:.68}
- .pantera-preview,#animalProgreso[data-personaje="pantera"]{
-  filter:hue-rotate(285deg) saturate(3.4) brightness(1.18)
-         drop-shadow(0 2px 2px rgba(236,70,160,.22));
-}
 #animalProgreso[data-personaje="mariposa"].moviendo{animation:personajeMariposa 1.25s ease-in-out infinite!important}
 #animalProgreso[data-personaje="koala"].moviendo{animation:personajeKoala 1.8s ease-in-out infinite!important}
 #animalProgreso[data-personaje="pantera"].moviendo{animation:personajePantera .72s ease-in-out infinite!important}
@@ -6539,4 +6535,22 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 #animalProgreso[data-personaje="pantera"]{
   font-size:1.08em;
   transform-origin:50% 80%;
+}
+
+/* V67 · Pantera elegida por el usuario */
+.galeria-personajes [data-personaje="pantera"] .pantera-preview{
+  display:block;width:38px;height:38px;border-radius:50%;overflow:hidden;
+  background:none;
+  box-shadow:0 2px 7px rgba(0,0,0,.14);
+}
+.galeria-personajes [data-personaje="pantera"] .pantera-preview img{
+  width:100%;height:100%;object-fit:cover;object-position:50% 35%;display:block;
+}
+#animalProgreso[data-personaje="pantera"]{
+  width:46px;height:46px;border-radius:50%;overflow:hidden;
+  box-shadow:0 4px 12px rgba(0,0,0,.16);
+  background:#fff;
+}
+#animalProgreso[data-personaje="pantera"] .pantera-personaje-img{
+  width:100%;height:100%;object-fit:cover;object-position:50% 35%;display:block;
 }
