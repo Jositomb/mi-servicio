@@ -6943,3 +6943,202 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
   object-fit:cover!important;border:0!important;border-radius:0!important;
   box-shadow:none!important;transform:scaleX(-1)!important;
 }
+
+/* =========================================================
+   V74 · PERSONAJES TOTALMENTE LIMPIOS COMO LA REFERENCIA
+   ========================================================= */
+#vista-ajustes #selectorPersonajeDesplegable{
+  overflow:visible!important;
+  contain:none!important;
+  padding:8px 0 2px!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+#vista-ajustes #galeriaPersonajes{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:14px 4px!important;
+  overflow:visible!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+#vista-ajustes #galeriaPersonajes button,
+#vista-ajustes #galeriaPersonajes button:hover,
+#vista-ajustes #galeriaPersonajes button:focus,
+#vista-ajustes #galeriaPersonajes button:active,
+#vista-ajustes #galeriaPersonajes button.seleccionado{
+  position:relative!important;
+  appearance:none!important;
+  -webkit-appearance:none!important;
+  width:100%!important;
+  height:74px!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  outline:0!important;
+  border-radius:0!important;
+  background:none!important;
+  background-color:transparent!important;
+  box-shadow:none!important;
+  filter:none!important;
+  transform:none!important;
+  overflow:visible!important;
+}
+#vista-ajustes #galeriaPersonajes button::before{
+  display:none!important;
+  content:none!important;
+}
+#vista-ajustes #galeriaPersonajes button.seleccionado::after{
+  content:"✓"!important;
+  position:absolute!important;
+  top:-2px!important;
+  right:8px!important;
+  width:17px!important;
+  height:17px!important;
+  border-radius:50%!important;
+  display:grid!important;
+  place-items:center!important;
+  background:#0a84ff!important;
+  color:#fff!important;
+  font-size:10px!important;
+  font-weight:900!important;
+  line-height:1!important;
+  box-shadow:none!important;
+}
+#vista-ajustes #galeriaPersonajes .personaje-preview-img{
+  display:block!important;
+  width:37px!important;
+  height:51px!important;
+  max-width:37px!important;
+  max-height:51px!important;
+  margin:0 auto 3px!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  outline:0!important;
+  overflow:hidden!important;
+  background:none!important;
+  box-shadow:none!important;
+  filter:none!important;
+}
+#vista-ajustes #galeriaPersonajes .personaje-preview-img img{
+  display:block!important;
+  width:37px!important;
+  height:51px!important;
+  min-width:0!important;
+  min-height:0!important;
+  max-width:37px!important;
+  max-height:51px!important;
+  margin:0!important;
+  padding:0!important;
+  object-fit:cover!important;
+  object-position:center!important;
+  border:0!important;
+  border-radius:0!important;
+  outline:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  filter:none!important;
+}
+#vista-ajustes #galeriaPersonajes small{
+  display:block!important;
+  margin:0!important;
+  padding:0!important;
+  font-size:9px!important;
+  font-weight:700!important;
+  line-height:1.05!important;
+  color:var(--text-secondary)!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+#vista-ajustes #selectorPersonajeDesplegable>.ayuda-campo{
+  display:block!important;
+  margin:12px 4px 2px!important;
+  padding:10px 12px!important;
+  border:0!important;
+  border-radius:13px!important;
+  background:rgba(0,122,255,.055)!important;
+  box-shadow:none!important;
+  font-size:11px!important;
+  text-align:center!important;
+}
+#vista-ajustes #selectorPersonajeDesplegable>.ayuda-campo::before{
+  content:"ⓘ  "!important;
+}
+
+/* Resumen superior: personaje flotante, sin marco ni sombra */
+#vista-ajustes #personajeSeleccionadoIcono,
+#vista-ajustes #personajeSeleccionadoIcono.es-personaje-imagen{
+  width:28px!important;
+  height:38px!important;
+  max-width:28px!important;
+  max-height:38px!important;
+  overflow:hidden!important;
+  border:0!important;
+  border-radius:0!important;
+  outline:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  filter:none!important;
+}
+#vista-ajustes #personajeSeleccionadoIcono img{
+  display:block!important;
+  width:28px!important;
+  height:38px!important;
+  max-width:28px!important;
+  max-height:38px!important;
+  object-fit:cover!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  filter:none!important;
+}
+
+/* Inicio: personaje limpio, sin caja ni sombra */
+#vista-inicio #animalProgreso[data-personaje],
+#vista-inicio #animalProgreso[data-personaje] .personaje-cuerpo-img{
+  border:0!important;
+  border-radius:0!important;
+  outline:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  filter:none!important;
+}
+
+/* =========================================================
+   V75 · PERSONAJES RECORTADOS DE VERDAD, SIN FONDO/SOMBRA
+   ========================================================= */
+#vista-ajustes #galeriaPersonajes .personaje-preview-img,
+#vista-ajustes #galeriaPersonajes .personaje-preview-img img,
+#vista-ajustes #personajeSeleccionadoIcono,
+#vista-ajustes #personajeSeleccionadoIcono img,
+#vista-inicio #animalProgreso,
+#vista-inicio #animalProgreso .personaje-cuerpo-img{
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  filter:none!important;
+}
+#vista-ajustes #galeriaPersonajes .personaje-preview-img img{
+  object-fit:contain!important;
+}
+#vista-ajustes #personajeSeleccionadoIcono img{
+  object-fit:contain!important;
+}
+#vista-inicio #animalProgreso[data-personaje] .personaje-cuerpo-img{
+  object-fit:contain!important;
+  transform:none!important;
+}
+/* El elegido se indica solo con el pequeño check, nunca con una mancha o tarjeta */
+#vista-ajustes #galeriaPersonajes button.seleccionado{
+  background:transparent!important;
+  box-shadow:none!important;
+  filter:none!important;
+}
