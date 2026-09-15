@@ -28,7 +28,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=6401"
+        href="./styles-v27.css?v=6501"
     >
 
 </head>
@@ -864,12 +864,24 @@
                             <option value="hombre">
                                 Hombre
                             </option>
-                            <option value="mujer">
-                                Mujer
-                            </option>
+                            <option value="mujer">Mujer</option>
+                            <option value="koala">Koala</option>
+                            <option value="mariposa">Mariposa</option>
+                            <option value="pantera">Pantera rosa</option>
+                            <option value="tortuga">Tortuga</option>
+                            <option value="liebre">Liebre</option>
                         </select>
+                        <div id="galeriaPersonajes" class="galeria-personajes" aria-label="Vista previa de personajes">
+                            <button type="button" data-personaje="hombre"><span>🚶‍♂️</span><small>Hombre</small></button>
+                            <button type="button" data-personaje="mujer"><span>🚶‍♀️</span><small>Mujer</small></button>
+                            <button type="button" data-personaje="koala"><span>🐨</span><small>Koala</small></button>
+                            <button type="button" data-personaje="mariposa"><span>🦋</span><small>Mariposa</small></button>
+                            <button type="button" data-personaje="pantera"><span class="pantera-preview">🐆</span><small>Pantera</small></button>
+                            <button type="button" data-personaje="tortuga"><span>🐢</span><small>Tortuga</small></button>
+                            <button type="button" data-personaje="liebre"><span>🐇</span><small>Liebre</small></button>
+                        </div>
                         <small class="ayuda-campo">
-                            Cambia las animaciones de Inicio según el personaje.
+                            Toca un personaje para previsualizarlo. Se guardará al pulsar “Guardar ajustes”.
                         </small>
                     </div>
                     <!-- ACTIVIDADES DISPONIBLES -->
@@ -1241,7 +1253,7 @@
     if (standalone) document.body.classList.add('modo-standalone');
 })();
 </script>
-<script src="./app-v27.js?v=6401" defer></script>
+<script src="./app-v27.js?v=6501" defer></script>
 
 </body>
 </html>

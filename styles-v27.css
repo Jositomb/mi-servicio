@@ -6496,3 +6496,35 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 
 /* V64 acabado premium */
 .tarjeta{border:1px solid rgba(127,127,127,.10)!important;box-shadow:0 1px 1px rgba(0,0,0,.03),0 8px 24px rgba(0,0,0,.055)!important;backdrop-filter:saturate(1.12) blur(10px);-webkit-backdrop-filter:saturate(1.12) blur(10px)}#vista-inicio.activa .tarjeta{animation:premiumEntrada .34s cubic-bezier(.2,.75,.25,1) both}@keyframes premiumEntrada{from{opacity:.72;transform:translateY(5px) scale(.994)}to{opacity:1;transform:none}}#vista-inicio .calendario-dia{position:relative;transition:transform .18s ease,box-shadow .18s ease!important}#vista-inicio .calendario-dia:active{transform:scale(.965)}#vista-inicio .calendario-dia.hoy{box-shadow:0 0 0 2px rgba(0,122,255,.18),0 5px 14px rgba(0,122,255,.08)!important}#vista-inicio .calendario-dia-agenda{border:1px dashed currentColor!important;border-radius:7px!important;padding:2px 4px!important;background:transparent!important;opacity:.82}#vista-inicio .calendario-dia-tiempo{font-weight:900!important}#vista-inicio .calendario-dia-tiempo::before{content:"";display:inline-block;width:4px;height:4px;border-radius:50%;background:currentColor;margin-right:3px;vertical-align:middle;box-shadow:0 0 5px currentColor}#vista-inicio .tarjeta-grafico-inicio{transition:background .55s ease!important}#vista-inicio .tarjeta-grafico-inicio.clima-sol{background:radial-gradient(circle at 12% 10%,rgba(255,190,70,.11),transparent 34%),var(--card-background)!important}#vista-inicio .tarjeta-grafico-inicio.clima-nubes{background:radial-gradient(circle at 12% 10%,rgba(150,170,190,.10),transparent 35%),var(--card-background)!important}#vista-inicio .tarjeta-grafico-inicio.clima-lluvia{background:radial-gradient(circle at 12% 10%,rgba(70,145,220,.12),transparent 36%),var(--card-background)!important}@media(prefers-reduced-motion:reduce){#vista-inicio.activa .tarjeta{animation:none!important}}
+
+/* V65 · Selector visual de personaje */
+.galeria-personajes{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px
+}
+.galeria-personajes button{
+  appearance:none;border:1px solid rgba(127,127,127,.13);border-radius:14px;
+  background:rgba(127,127,127,.055);padding:8px 3px 6px;color:inherit;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease
+}
+.galeria-personajes button:active{transform:scale(.94)}
+.galeria-personajes button.seleccionado{
+  border-color:rgba(0,122,255,.55);
+  box-shadow:0 0 0 3px rgba(0,122,255,.10),0 6px 14px rgba(0,0,0,.06)
+}
+.galeria-personajes button span{font-size:27px;line-height:1.15}
+.galeria-personajes button small{font-size:9px;font-weight:800;opacity:.68}
+.pantera-preview,#animalProgreso[data-personaje="pantera"]{
+  filter:hue-rotate(285deg) saturate(1.7) brightness(1.12)
+}
+#animalProgreso[data-personaje="mariposa"].moviendo{animation:personajeMariposa 1.25s ease-in-out infinite!important}
+#animalProgreso[data-personaje="koala"].moviendo{animation:personajeKoala 1.8s ease-in-out infinite!important}
+#animalProgreso[data-personaje="pantera"].moviendo{animation:personajePantera .72s ease-in-out infinite!important}
+#animalProgreso[data-personaje="tortuga"].moviendo{animation:personajeTortuga 2.2s ease-in-out infinite!important}
+#animalProgreso[data-personaje="liebre"].moviendo{animation:personajeLiebre .65s ease-in-out infinite!important}
+@keyframes personajeMariposa{50%{translate:0 -7px;rotate:5deg}}
+@keyframes personajeKoala{50%{translate:0 -2px;rotate:-3deg}}
+@keyframes personajePantera{50%{translate:0 -3px;scale:1.06}}
+@keyframes personajeTortuga{50%{translate:2px 0;rotate:1deg}}
+@keyframes personajeLiebre{50%{translate:0 -8px;rotate:-4deg}}
+@media(max-width:370px){.galeria-personajes{grid-template-columns:repeat(3,1fr)}}

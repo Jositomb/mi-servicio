@@ -307,7 +307,7 @@ function cargarDatos() {
 
 
     if (
-        !["hombre", "mujer"].includes(
+        !["hombre","mujer","koala","mariposa","pantera","tortuga","liebre"].includes(
             estado.preferencias
                 .personajeProgreso
         )
@@ -4686,12 +4686,19 @@ function actualizarPersonajeProgreso(porcentaje) {
             100
         );
 
-    const genero =
-        estado.preferencias
-            ?.personajeProgreso === "mujer"
-                ? "mujer"
-                : "hombre";
+    const personajeElegido =
+        estado.preferencias?.personajeProgreso || "hombre";
 
+    const iconosPersonaje = {
+        hombre: { normal: "🚶‍♂️", rapido: "🏃‍♂️", meta: "🕺" },
+        mujer: { normal: "🚶‍♀️", rapido: "🏃‍♀️", meta: "💃" },
+        koala: { normal: "🐨", rapido: "🐨", meta: "🐨✨" },
+        mariposa: { normal: "🦋", rapido: "🦋", meta: "🦋✨" },
+        pantera: { normal: "🐆", rapido: "🐆", meta: "🐆✨" },
+        tortuga: { normal: "🐢", rapido: "🐢", meta: "🐢✨" },
+        liebre: { normal: "🐇", rapido: "🐇", meta: "🐇✨" }
+    };
+    const setIconos = iconosPersonaje[personajeElegido] || iconosPersonaje.hombre;
     // El ritmo se compara con el día actual del mes.
     const hoy = new Date();
     const diasDelMes =
@@ -4710,38 +4717,30 @@ function actualizarPersonajeProgreso(porcentaje) {
     const margenRitmo = 5;
 
     let estadoRitmo = "en-ritmo";
-    let icono = genero === "mujer" ? "🚶‍♀️" : "🚶‍♂️";
+    let icono = setIconos.normal;
     let aria = "Vas al ritmo del mes";
 
     if (progreso >= 100) {
 
         estadoRitmo = "completado";
-        icono =
-            genero === "mujer"
-                ? "💃"
-                : "🕺";
+        icono = setIconos.meta;
         aria = "Objetivo conseguido";
 
     } else if (diferenciaRitmo >= margenRitmo) {
 
         estadoRitmo = "adelantado";
-        icono =
-            genero === "mujer"
-                ? "🏃‍♀️"
-                : "🏃‍♂️";
+        icono = setIconos.rapido;
         aria = "Vas por delante del ritmo del mes";
 
     } else if (diferenciaRitmo <= -margenRitmo) {
 
         estadoRitmo = "atrasado";
-        icono =
-            genero === "mujer"
-                ? "🚶‍♀️"
-                : "🚶‍♂️";
+        icono = setIconos.normal;
         aria = "Vas por detrás del ritmo del mes";
     }
 
     personaje.textContent = icono;
+    personaje.dataset.personaje = personajeElegido;
     personaje.setAttribute(
         "aria-label",
         aria
@@ -8085,8 +8084,8 @@ function normalizarPreferenciasImportadas(
             tipo,
 
         personajeProgreso:
-            preferencias?.personajeProgreso === "mujer"
-                ? "mujer"
+            ["hombre","mujer","koala","mariposa","pantera","tortuga","liebre"].includes(preferencias?.personajeProgreso)
+                ? preferencias.personajeProgreso
                 : "hombre",
 
         objetivoMensualMinutos:
@@ -10173,3 +10172,34 @@ document.addEventListener("DOMContentLoaded",()=>setTimeout(actualizarPlanInteli
 document.addEventListener("click",()=>setTimeout(actualizarPlanInteligenteMes,120));
 
 function aplicarAmbienteClima(codigo){const t=document.querySelector("#vista-inicio .tarjeta-grafico-inicio");if(!t)return;t.classList.remove("clima-sol","clima-nubes","clima-lluvia");if(codigo===0||codigo===1)t.classList.add("clima-sol");else if([51,53,55,56,57,61,63,65,66,67,80,81,82,95,96,99].includes(Number(codigo)))t.classList.add("clima-lluvia");else t.classList.add("clima-nubes")}
+
+
+function configurarGaleriaPersonajes(){
+    const galeria=document.getElementById("galeriaPersonajes");
+    const select=document.getElementById("personajeProgreso");
+    if(!galeria||!select)return;
+    const pintar=()=>{
+        galeria.querySelectorAll("[data-personaje]").forEach(b=>{
+            b.classList.toggle("seleccionado",b.dataset.personaje===select.value);
+        });
+    };
+    galeria.querySelectorAll("[data-personaje]").forEach(b=>{
+        b.onclick=()=>{
+            select.value=b.dataset.personaje;
+            pintar();
+            const anterior=estado.preferencias.personajeProgreso;
+            estado.preferencias.personajeProgreso=select.value;
+            const objetivo=Number(estado.preferencias.objetivoMensualMinutos)||1;
+            const hoy=new Date();
+            const regs=(estado.registros||[]).filter(r=>{
+                const d=new Date(r.fecha+"T12:00:00");
+                return d.getFullYear()===hoy.getFullYear()&&d.getMonth()===hoy.getMonth();
+            });
+            actualizarPersonajeProgreso(Math.min(100,(sumarMinutos(regs)/objetivo)*100));
+            estado.preferencias.personajeProgreso=anterior;
+        };
+    });
+    select.addEventListener("change",pintar);
+    pintar();
+}
+document.addEventListener("DOMContentLoaded",()=>setTimeout(configurarGaleriaPersonajes,100));
