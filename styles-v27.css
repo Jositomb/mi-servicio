@@ -7237,3 +7237,33 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 #vista-inicio .progreso-animal.estado-adelantado::after{
   left:-25px!important;right:auto!important;bottom:2px!important;
 }
+
+/* V80 · Personaje Corazón */
+#vista-ajustes #galeriaPersonajes [data-personaje="corazon"] img,
+#vista-ajustes #personajeSeleccionadoIcono img[src^="data:image/svg+xml"],
+#vista-inicio #animalProgreso[data-personaje="corazon"] .personaje-cuerpo-img{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  filter:none!important;
+  object-fit:contain!important;
+}
+#vista-inicio #animalProgreso[data-personaje="corazon"]{
+  overflow:visible!important;
+}
+#vista-inicio #animalProgreso[data-personaje="corazon"].estado-completado::before{
+  content:"♡  ♥  ♡"!important;
+  position:absolute!important;
+  left:-8px!important;
+  top:-20px!important;
+  width:70px!important;
+  color:#ff4f7d!important;
+  font-size:13px!important;
+  letter-spacing:3px!important;
+  background:transparent!important;
+  animation:corazonesMeta 1.4s ease-in-out infinite!important;
+}
+@keyframes corazonesMeta{
+  0%,100%{transform:translateY(2px);opacity:.55}
+  50%{transform:translateY(-4px);opacity:1}
+}
