@@ -6637,3 +6637,92 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 .selector-personaje-resumen-icono.es-personaje-imagen img{
   width:100%!important;height:100%!important;object-fit:cover!important;display:block!important;
 }
+
+/* =========================================================
+   V71 · PERSONAJES LIMPIOS: SIN CUADRADOS + MÁS PEQUEÑOS
+   ========================================================= */
+
+/* Selector: sin tarjetas alrededor de cada personaje */
+.galeria-personajes{
+  gap:7px!important;
+}
+.galeria-personajes button{
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  border-radius:12px!important;
+  padding:5px 2px!important;
+}
+.galeria-personajes button.seleccionado{
+  border:0!important;
+  background:rgba(0,122,255,.075)!important;
+  box-shadow:none!important;
+}
+.galeria-personajes .personaje-preview-img{
+  width:42px!important;
+  height:58px!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  overflow:hidden!important;
+}
+.galeria-personajes .personaje-preview-img img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  object-position:center!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+
+/* En la pista: algo más pequeños y sin marco */
+#animalProgreso[data-personaje]{
+  width:39px!important;
+  height:51px!important;
+  border-radius:0!important;
+  overflow:visible!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+#animalProgreso[data-personaje] .personaje-cuerpo-img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  object-position:center!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+
+/* La meta está a la derecha: todos miran/caminan hacia ella */
+#animalProgreso[data-personaje] .personaje-cuerpo-img{
+  transform:scaleX(-1)!important;
+}
+#animalProgreso[data-personaje="pantera"] .personaje-cuerpo-img,
+#animalProgreso[data-personaje="koala"] .personaje-cuerpo-img,
+#animalProgreso[data-personaje="mariposa"] .personaje-cuerpo-img,
+#animalProgreso[data-personaje="tortuga"] .personaje-cuerpo-img,
+#animalProgreso[data-personaje="liebre"] .personaje-cuerpo-img,
+#animalProgreso[data-personaje="hombre"] .personaje-cuerpo-img,
+#animalProgreso[data-personaje="mujer"] .personaje-cuerpo-img{
+  transform:scaleX(-1)!important;
+}
+
+/* Resumen del desplegable también limpio */
+.selector-personaje-resumen-icono.es-personaje-imagen{
+  width:29px!important;
+  height:36px!important;
+  border-radius:0!important;
+  overflow:hidden!important;
+  box-shadow:none!important;
+  background:transparent!important;
+}
+.selector-personaje-resumen-icono.es-personaje-imagen img{
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+
+.galeria-personajes [data-personaje="pantera"] .personaje-preview-img,
+.galeria-personajes [data-personaje="koala"] .personaje-preview-img{
+  width:42px!important;height:58px!important;border-radius:0!important;
+  background:transparent!important;box-shadow:none!important;
+}
