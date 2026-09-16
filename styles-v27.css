@@ -7284,3 +7284,31 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 #vista-inicio #animalProgreso[data-personaje="gatito"]{
   overflow:visible!important;
 }
+
+/* V82 · Registrar · "Con quién voy" alargado y compacto */
+#vista-registrar .tarjeta:has(#companeroRegistro) {
+  grid-column:1 / -1!important;
+  width:100%!important;
+  min-height:0!important;
+  padding:12px 20px!important;
+  display:grid!important;
+  grid-template-columns:max-content minmax(0,1fr)!important;
+  align-items:center!important;
+  column-gap:18px!important;
+}
+#vista-registrar .tarjeta:has(#companeroRegistro) :is(h2,h3,label):first-child {
+  margin:0!important;
+  white-space:nowrap!important;
+}
+#vista-registrar .tarjeta:has(#companeroRegistro) input {
+  width:100%!important;
+  height:48px!important;
+  min-height:48px!important;
+  margin:0!important;
+}
+@media (max-width:430px) {
+  #vista-registrar .tarjeta:has(#companeroRegistro) {
+    padding:11px 16px!important;
+    column-gap:12px!important;
+  }
+}
