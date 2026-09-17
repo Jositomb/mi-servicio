@@ -7317,3 +7317,188 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
     padding:9px 12px!important;
   }
 }
+
+/* =========================================================
+   V83 · RUEDA DE ACTIVIDAD · sustituye los anillos
+   ========================================================= */
+#vista-inicio #graficoInicio{
+  width:270px!important;
+  height:270px!important;
+  margin:-12px auto -18px!important;
+  padding:0!important;
+  transform:none!important;
+  filter:none!important;
+  perspective:none!important;
+  overflow:visible!important;
+}
+#vista-inicio #graficoInicio::before,
+#vista-inicio #graficoInicio::after{display:none!important}
+#vista-inicio #graficoInicio:active{transform:none!important;filter:none!important}
+#vista-inicio #leyendaGraficoInicio{display:none!important}
+#vista-inicio #infoAnilloActivo{display:none!important}
+
+#vista-inicio .rueda-actividad{
+  position:absolute;
+  inset:0;
+  margin:auto;
+  width:250px;
+  height:250px;
+  filter:drop-shadow(0 12px 16px rgba(30,35,50,.12));
+}
+#vista-inicio .rueda-sector{
+  position:absolute;
+  width:116px;
+  height:116px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  color:#fff;
+  border:3px solid var(--card);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.30);
+}
+#vista-inicio .rueda-ministerio{
+  left:7px; top:7px;
+  border-radius:72% 12% 18% 12%;
+  background:linear-gradient(145deg,#4f98f7,#2776e8);
+}
+#vista-inicio .rueda-ldc{
+  right:7px; top:7px;
+  border-radius:12% 72% 12% 18%;
+  background:linear-gradient(145deg,#f7afd0,#ee78ae);
+}
+#vista-inicio .rueda-asambleas{
+  right:7px; bottom:7px;
+  border-radius:18% 12% 72% 12%;
+  background:linear-gradient(145deg,#ffb65f,#f28c35);
+}
+#vista-inicio .rueda-otras{
+  left:7px; bottom:7px;
+  border-radius:12% 18% 12% 72%;
+  background:linear-gradient(145deg,#9d86e8,#7156c8);
+}
+#vista-inicio .rueda-sector-contenido{
+  width:92px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:1px;
+  text-align:center;
+  line-height:1.05;
+  text-shadow:0 1px 2px rgba(0,0,0,.16);
+}
+#vista-inicio .rueda-sector-contenido strong{
+  font-size:11px;
+  font-weight:900;
+}
+#vista-inicio .rueda-sector-contenido span:not(.sector-icono){
+  font-size:10px;
+  font-weight:750;
+}
+#vista-inicio .rueda-sector-contenido b{
+  margin-top:2px;
+  font-size:14px;
+  font-weight:950;
+}
+#vista-inicio .sector-icono{
+  height:35px;
+  margin-bottom:2px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+#vista-inicio .sector-emoji{font-size:29px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.14))}
+
+/* Miniatura tipo folleto, inspirada en la publicación Disfrute, sin depender de Internet. */
+#vista-inicio .sector-libro{
+  position:relative;
+  width:27px;
+  height:34px;
+  flex-direction:column;
+  border-radius:2px 5px 5px 2px;
+  background:linear-gradient(155deg,#fff7cf,#f5df75);
+  border-left:3px solid rgba(70,120,170,.7);
+  box-shadow:0 3px 5px rgba(0,0,0,.18);
+  color:#4776a6;
+  text-shadow:none;
+}
+#vista-inicio .sector-libro .libro-sol{
+  height:auto;
+  font-size:14px;
+  line-height:1;
+  color:#f2a735;
+}
+#vista-inicio .sector-libro small{
+  margin-top:1px;
+  font-size:4.7px;
+  font-weight:950;
+  letter-spacing:.15px;
+}
+
+/* Auditorio con seis butacas. */
+#vista-inicio .sector-auditorio{
+  width:42px;
+  height:31px;
+  display:grid;
+  grid-template-columns:repeat(3,10px);
+  grid-template-rows:repeat(2,11px);
+  gap:3px 4px;
+  align-content:center;
+}
+#vista-inicio .sector-auditorio i{
+  position:relative;
+  display:block;
+  width:10px;
+  height:8px;
+  border-radius:4px 4px 2px 2px;
+  background:#fff4df;
+  box-shadow:0 2px 0 rgba(116,65,28,.34);
+}
+#vista-inicio .sector-auditorio i::after{
+  content:"";
+  position:absolute;
+  left:1px;right:1px;bottom:-3px;height:3px;
+  border-radius:0 0 3px 3px;
+  background:#fff4df;
+}
+
+#vista-inicio .rueda-centro{
+  position:absolute;
+  left:50%;top:50%;
+  width:92px;height:92px;
+  transform:translate(-50%,-50%);
+  z-index:4;
+  border-radius:50%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  background:linear-gradient(145deg,#fff,#f2f3f7);
+  border:4px solid var(--card);
+  box-shadow:0 7px 18px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.9);
+  color:var(--text-primary);
+}
+#vista-inicio .rueda-centro strong{
+  max-width:78px;
+  font-size:18px;
+  line-height:1.05;
+  font-weight:950;
+  letter-spacing:-.5px;
+}
+#vista-inicio .rueda-centro span{
+  margin-top:3px;
+  font-size:9px;
+  font-weight:800;
+  color:var(--text-secondary);
+}
+
+/* Mantiene el tiempo en las cuatro esquinas sin tapar la rueda. */
+#vista-inicio .tarjeta-grafico-inicio{padding:5px 10px 8px!important}
+#vista-inicio .tiempo-esquinas{inset:42px 7px 9px!important;z-index:20!important}
+@media(max-width:390px){
+  #vista-inicio #graficoInicio{width:252px!important;height:252px!important}
+  #vista-inicio .rueda-actividad{transform:scale(.92);transform-origin:center}
+  #vista-inicio .tiempo-esquina{max-width:25%!important}
+}

@@ -4260,161 +4260,93 @@ function actualizarGraficoInicio({
     otras
 }) {
 
-    const grafico =
-        document.getElementById(
-            "graficoInicio"
-        );
-
-    const leyenda =
-        document.getElementById(
-            "leyendaGraficoInicio"
-        );
-
-
-    const fechaProgreso =
-        document.getElementById(
-            "fechaProgresoMes"
-        );
+    const grafico = document.getElementById("graficoInicio");
+    const leyenda = document.getElementById("leyendaGraficoInicio");
+    const fechaProgreso = document.getElementById("fechaProgresoMes");
 
     if (fechaProgreso) {
         const hoy = new Date();
-
         fechaProgreso.textContent =
             `${String(hoy.getDate()).padStart(2, "0")}/` +
             `${String(hoy.getMonth() + 1).padStart(2, "0")}/` +
             `${hoy.getFullYear()}`;
     }
 
-
-    if (!grafico || !leyenda) {
-        return;
-    }
-
+    if (!grafico || !leyenda) return;
 
     const actividades = [
         {
             tipo: "ministerio",
             nombre: "Ministerio",
             minutos: ministerio,
-            color: "var(--primary)",
-            clase: "grafico-color-ministerio"
+            icono: `
+                <span class="sector-icono sector-libro" aria-hidden="true">
+                    <span class="libro-sol">☀</span>
+                    <small>DISFRUTE</small>
+                </span>
+            `
         },
         {
             tipo: "ldc",
             nombre: "LDC",
             minutos: ldc,
-            color: "var(--ldc)",
-            clase: "grafico-color-ldc"
+            icono: `<span class="sector-icono sector-emoji" aria-hidden="true">🛠️</span>`
         },
         {
             tipo: "asambleas",
             nombre: "Asambleas",
             minutos: asambleas,
-            color: "var(--assembly)",
-            clase: "grafico-color-asambleas"
+            icono: `
+                <span class="sector-icono sector-auditorio" aria-hidden="true">
+                    <i></i><i></i><i></i><i></i><i></i><i></i>
+                </span>
+            `
         },
         {
             tipo: "otras",
             nombre: "Otras",
             minutos: otras,
-            color: "var(--other)",
-            clase: "grafico-color-otras"
+            icono: `<span class="sector-icono sector-emoji" aria-hidden="true">✨</span>`
         }
-    ].filter(actividad => actividadVisible(actividad.tipo));
-
+    ];
 
     const totalVisible = actividades.reduce(
-        (suma, actividad) => suma + actividad.minutos,
-        0
+        (suma, actividad) => suma + actividad.minutos, 0
     );
 
-    // Anillos concéntricos al estilo de Actividad de Apple.
-    // Cada anillo representa qué parte del tiempo visible del mes
-    // corresponde a esa actividad. Así no inventamos objetivos
-    // individuales que el usuario no haya configurado.
-    const radios = [82, 65, 48, 31];
-    const centro = 100;
+    const sectores = actividades.map(actividad => {
+        const porcentaje = totalVisible > 0
+            ? Math.round((actividad.minutos / totalVisible) * 100)
+            : 0;
 
-    const anillos = actividades
-        .map((actividad, indice) => {
-            const radio = radios[indice] || 31;
-            const circunferencia = 2 * Math.PI * radio;
-            const proporcion = totalVisible > 0
-                ? actividad.minutos / totalVisible
-                : 0;
-            const longitud = Math.max(0, Math.min(proporcion, 1)) * circunferencia;
-            const resto = Math.max(circunferencia - longitud, 0);
-
-            return `
-                <circle
-                    class="anillo-pista"
-                    cx="${centro}"
-                    cy="${centro}"
-                    r="${radio}"
-                ></circle>
-                <circle
-                    class="anillo-actividad"
-                    cx="${centro}"
-                    cy="${centro}"
-                    r="${radio}"
-                    style="stroke: ${actividad.color}; stroke-dasharray: ${longitud.toFixed(2)} ${resto.toFixed(2)};"
-                ></circle>
-            `;
-        })
-        .join("");
-
+        return `
+            <div class="rueda-sector rueda-${actividad.tipo}"
+                 data-tipo="${actividad.tipo}"
+                 aria-label="${actividad.nombre}: ${formatearTiempo(actividad.minutos)}, ${porcentaje}%">
+                <div class="rueda-sector-contenido">
+                    ${actividad.icono}
+                    <strong>${actividad.nombre}</strong>
+                    <span>${formatearTiempo(actividad.minutos)}</span>
+                    <b>${porcentaje}%</b>
+                </div>
+            </div>
+        `;
+    }).join("");
 
     grafico.innerHTML = `
-        <svg
-            class="grafico-anillos-svg"
-            viewBox="0 0 200 200"
-            role="img"
-            aria-label="Distribución del tiempo por actividad"
-        >
-            ${anillos}
-        </svg>
-        <div class="grafico-inicio-centro">
-            <p class="grafico-inicio-total">
-                ${formatearTiempo(totalVisible)}
-            </p>
-            <span class="grafico-inicio-texto">
-                este mes
-            </span>
+        <div class="rueda-actividad" role="img" aria-label="Distribución del tiempo por actividad">
+            ${sectores}
+            <div class="rueda-centro">
+                <strong>${formatearTiempo(totalVisible)}</strong>
+                <span>este mes</span>
+            </div>
         </div>
     `;
 
-
-    leyenda.innerHTML =
-        actividades
-            .map(
-                actividad => {
-                    const porcentaje = totalVisible > 0
-                        ? Math.round((actividad.minutos / totalVisible) * 100)
-                        : 0;
-
-                    return `
-                        <div class="leyenda-grafico-fila">
-                            <span class="leyenda-grafico-nombre">
-                                <span
-                                    class="leyenda-grafico-punto ${actividad.clase}"
-                                ></span>
-                                ${actividad.nombre}
-                            </span>
-                            <span class="leyenda-grafico-datos">
-                                <strong class="leyenda-grafico-tiempo">
-                                    ${formatearTiempo(actividad.minutos)}
-                                </strong>
-                                <small class="leyenda-grafico-porcentaje">
-                                    ${porcentaje}%
-                                </small>
-                            </span>
-                        </div>
-                    `;
-                }
-            )
-            .join("");
+    // La información ya está dentro de cada sector; evitamos repetir una leyenda debajo.
+    leyenda.innerHTML = "";
+    leyenda.hidden = true;
 }
-
 
 // =========================================================
 // NOMBRE DEL MES ACTUAL
