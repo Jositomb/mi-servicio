@@ -8142,3 +8142,198 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
   #vista-inicio #graficoInicio{width:286px!important;height:286px!important}
   #vista-inicio .orbita-lineas{inset:17px 12px 15px}
 }
+
+/* =========================================================
+   V90 · COMPOSICIÓN EXACTA DE LA REFERENCIA APROBADA
+   Corrige V89: círculos separados + órbita detrás + clima integrado
+   ========================================================= */
+
+#vista-inicio .tarjeta-grafico-inicio{
+  position:relative!important;
+  overflow:hidden!important;
+  padding:8px 10px 10px!important;
+}
+
+#vista-inicio #graficoInicio{
+  width:304px!important;
+  height:304px!important;
+  margin:-2px auto -2px!important;
+  overflow:visible!important;
+}
+
+/* Órbita detrás de las burbujas, fina y sin dominar el gráfico. */
+#vista-inicio .orbita-lineas{
+  inset:31px 25px 23px!important;
+  z-index:1!important;
+  opacity:.82!important;
+}
+#vista-inicio .orbita-trazo{
+  inset:12px 7px 14px!important;
+  border-width:1.5px!important;
+}
+#vista-inicio .orbita-punto{
+  width:9px!important;
+  height:9px!important;
+  box-shadow:0 0 7px currentColor!important;
+}
+
+/* IMPORTANTE: usar clases, no nth-of-type; así las líneas no descolocan los círculos. */
+#vista-inicio .orbita-cantidad-2 .orbita-ministerio{
+  left:31%!important;
+  top:39%!important;
+}
+#vista-inicio .orbita-cantidad-2 .orbita-ldc{
+  left:76%!important;
+  top:55%!important;
+}
+#vista-inicio .orbita-cantidad-2 .orbita-centro{
+  left:51%!important;
+  top:75%!important;
+}
+
+/* Centro abajo, como en la referencia, sin tapar los datos. */
+#vista-inicio .orbita-cantidad-2 .orbita-centro{
+  width:98px!important;
+  height:98px!important;
+  z-index:6!important;
+}
+
+/* Tres actividades: posiciones por clase, sin depender de nodos decorativos. */
+#vista-inicio .orbita-cantidad-3 .orbita-ministerio{left:29%!important;top:31%!important}
+#vista-inicio .orbita-cantidad-3 .orbita-ldc{left:76%!important;top:35%!important}
+#vista-inicio .orbita-cantidad-3 .orbita-asambleas{left:73%!important;top:76%!important}
+#vista-inicio .orbita-cantidad-3 .orbita-otras{left:73%!important;top:76%!important}
+#vista-inicio .orbita-cantidad-3 .orbita-centro{left:40%!important;top:71%!important}
+
+/* Cuatro actividades. */
+#vista-inicio .orbita-cantidad-4 .orbita-ministerio{left:28%!important;top:29%!important}
+#vista-inicio .orbita-cantidad-4 .orbita-ldc{left:74%!important;top:31%!important}
+#vista-inicio .orbita-cantidad-4 .orbita-asambleas{left:74%!important;top:75%!important}
+#vista-inicio .orbita-cantidad-4 .orbita-otras{left:27%!important;top:76%!important}
+#vista-inicio .orbita-cantidad-4 .orbita-centro{left:50%!important;top:53%!important}
+
+/* Tiempo totalmente integrado: nada de caja, marco, fondo o pastilla. */
+#vista-inicio .tiempo-esquinas{
+  position:absolute!important;
+  inset:18px 5px 7px!important;
+  z-index:25!important;
+  pointer-events:none!important;
+  background:transparent!important;
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+}
+#vista-inicio .tiempo-esquina,
+#vista-inicio .tiempo-esquina-tl,
+#vista-inicio .tiempo-esquina-tr,
+#vista-inicio .tiempo-esquina-bl,
+#vista-inicio .tiempo-esquina-br{
+  background:transparent!important;
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  filter:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  padding:0!important;
+  margin:0!important;
+}
+#vista-inicio .tiempo-esquina-tl,
+#vista-inicio .tiempo-esquina-tr{
+  transform:none!important;
+  top:0!important;
+}
+#vista-inicio .tiempo-esquina-bl,
+#vista-inicio .tiempo-esquina-br{
+  bottom:0!important;
+}
+
+/* Condición arriba izquierda */
+#vista-inicio .tiempo-esquina-tl{
+  left:0!important;
+  right:auto!important;
+  align-items:flex-start!important;
+  text-align:left!important;
+  max-width:92px!important;
+}
+/* Ropa arriba derecha */
+#vista-inicio .tiempo-esquina-tr{
+  right:0!important;
+  left:auto!important;
+  align-items:flex-end!important;
+  text-align:right!important;
+  max-width:126px!important;
+}
+/* Temperatura abajo izquierda */
+#vista-inicio .tiempo-esquina-bl{
+  left:0!important;
+  right:auto!important;
+  align-items:flex-start!important;
+  text-align:left!important;
+}
+/* Lluvia abajo derecha */
+#vista-inicio .tiempo-esquina-br{
+  right:0!important;
+  left:auto!important;
+  align-items:flex-end!important;
+  text-align:right!important;
+}
+
+#vista-inicio #tiempoIcono,
+#vista-inicio .tiempo-ropa-icono{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+#vista-inicio #tiempoIcono{font-size:29px!important}
+#vista-inicio .tiempo-ropa-icono{font-size:28px!important}
+#vista-inicio .tiempo-esquina small{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  font-size:9px!important;
+  line-height:1.12!important;
+  opacity:.74!important;
+}
+#vista-inicio #tiempoTemperatura{
+  font-size:26px!important;
+  line-height:1!important;
+}
+#vista-inicio #tiempoLluvia{
+  font-size:16px!important;
+  line-height:1!important;
+}
+
+/* ↻ conserva el clic aunque el contenedor meteorológico no intercepte toques. */
+#vista-inicio .tiempo-recargar{
+  pointer-events:auto!important;
+  top:47px!important;
+  right:1px!important;
+  width:34px!important;
+  height:34px!important;
+  background:transparent!important;
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  font-size:19px!important;
+  opacity:.62!important;
+  z-index:50!important;
+}
+
+/* Fecha centrada y libre de los datos del tiempo. */
+#vista-inicio .fecha-progreso-mes{
+  position:relative!important;
+  z-index:35!important;
+}
+
+/* En pantallas algo más estrechas mantenemos exactamente la misma relación. */
+@media(max-width:390px){
+  #vista-inicio #graficoInicio{
+    width:286px!important;
+    height:286px!important;
+  }
+  #vista-inicio .orbita-grafico{
+    transform:scale(.95)!important;
+    transform-origin:center!important;
+  }
+}
