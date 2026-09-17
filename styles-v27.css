@@ -7900,3 +7900,94 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
   padding-top:8px!important;
   padding-bottom:12px!important;
 }
+
+/* =========================================================
+   V88 · COMPOSICIÓN COMO EL BOCETO APROBADO
+   Ministerio arriba-izq · LDC derecha · total abajo-centro
+   ========================================================= */
+#vista-inicio #graficoInicio{
+  width:300px!important;
+  height:300px!important;
+  margin:-10px auto -8px!important;
+}
+
+/* Para el caso actual de dos actividades: composición del boceto. */
+#vista-inicio .orbita-cantidad-2 .orbita-actividad:first-child{
+  left:30%!important;
+  top:38%!important;
+}
+#vista-inicio .orbita-cantidad-2 .orbita-actividad:nth-child(2){
+  left:76%!important;
+  top:56%!important;
+}
+#vista-inicio .orbita-cantidad-2 .orbita-centro{
+  left:52%!important;
+  top:70%!important;
+}
+
+/* Separación suficiente para que el centro no tape horas ni nombres. */
+#vista-inicio .orbita-cantidad-2 .orbita-centro{
+  width:100px!important;
+  height:100px!important;
+  z-index:6!important;
+}
+#vista-inicio .orbita-cantidad-2 .orbita-actividad{
+  z-index:3!important;
+}
+
+/* Acabado de las burbujas más parecido al boceto: profundidad sin contorno duro. */
+#vista-inicio .orbita-actividad{
+  border:1px solid rgba(255,255,255,.22)!important;
+  box-shadow:
+    0 14px 28px rgba(0,0,0,.25),
+    inset 0 2px 1px rgba(255,255,255,.32),
+    inset 0 -14px 22px rgba(0,0,0,.11)!important;
+}
+#vista-inicio .orbita-centro{
+  border:1px solid rgba(20,22,26,.25)!important;
+  box-shadow:0 14px 28px rgba(0,0,0,.25),inset 0 1px 1px #fff!important;
+}
+
+/* Horas protagonistas; porcentaje pequeño como en el boceto. */
+#vista-inicio .orbita-actividad span:not(.sector-icono){
+  font-size:clamp(22px,6.3vw,31px)!important;
+  font-weight:950!important;
+  line-height:.92!important;
+}
+#vista-inicio .orbita-actividad b{
+  font-size:10px!important;
+  font-weight:750!important;
+  opacity:.64!important;
+  margin-top:6px!important;
+}
+
+/* Un poco más de aire en la parte superior para el clima. */
+#vista-inicio .tiempo-esquina-tl,
+#vista-inicio .tiempo-esquina-tr{
+  transform:translateY(-31px)!important;
+}
+
+/* Si aparecen 3 actividades: triángulo alrededor del total, sin taparse. */
+#vista-inicio .orbita-cantidad-3 .orbita-actividad:first-child{
+  left:29%!important;top:30%!important;
+}
+#vista-inicio .orbita-cantidad-3 .orbita-actividad:nth-child(2){
+  left:75%!important;top:35%!important;
+}
+#vista-inicio .orbita-cantidad-3 .orbita-actividad:nth-child(3){
+  left:72%!important;top:76%!important;
+}
+#vista-inicio .orbita-cantidad-3 .orbita-centro{
+  left:40%!important;top:69%!important;
+}
+
+/* Cuatro actividades: reparto limpio en las cuatro esquinas del centro. */
+#vista-inicio .orbita-cantidad-4 .orbita-actividad:nth-child(1){left:28%!important;top:28%!important}
+#vista-inicio .orbita-cantidad-4 .orbita-actividad:nth-child(2){left:74%!important;top:30%!important}
+#vista-inicio .orbita-cantidad-4 .orbita-actividad:nth-child(3){left:74%!important;top:75%!important}
+#vista-inicio .orbita-cantidad-4 .orbita-actividad:nth-child(4){left:27%!important;top:76%!important}
+#vista-inicio .orbita-cantidad-4 .orbita-centro{left:50%!important;top:52%!important}
+
+@media(max-width:390px){
+  #vista-inicio #graficoInicio{width:282px!important;height:282px!important}
+}
