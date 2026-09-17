@@ -7640,3 +7640,126 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 #vista-inicio .tiempo-esquina-tr{
   transform:translateY(-15px)!important;
 }
+
+/* =========================================================
+   V86 · CÍRCULOS DE ACTIVIDAD ALREDEDOR DEL TOTAL
+   ========================================================= */
+#vista-inicio #graficoInicio{
+  width:286px!important;
+  height:286px!important;
+  margin:-16px auto -16px!important;
+  overflow:visible!important;
+}
+#vista-inicio .rueda-proporcional,
+#vista-inicio .rueda-vacia{display:none!important}
+
+#vista-inicio .orbita-grafico{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  overflow:visible;
+}
+#vista-inicio .orbita-actividad{
+  position:absolute;
+  left:var(--orb-x);
+  top:var(--orb-y);
+  width:var(--orb-size);
+  height:var(--orb-size);
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  z-index:2;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  color:#fff;
+  line-height:1.02;
+  border:3px solid var(--card);
+  box-shadow:
+    0 9px 18px rgba(0,0,0,.16),
+    inset 0 2px 0 rgba(255,255,255,.30),
+    inset 0 -8px 16px rgba(0,0,0,.08);
+  text-shadow:0 1px 3px rgba(0,0,0,.24);
+}
+#vista-inicio .orbita-ministerio{background:linear-gradient(145deg,#55a1ff,#2678e8)}
+#vista-inicio .orbita-ldc{background:linear-gradient(145deg,#f8acd0,#ed78ae)}
+#vista-inicio .orbita-asambleas{background:linear-gradient(145deg,#ffbc69,#f18c36)}
+#vista-inicio .orbita-otras{background:linear-gradient(145deg,#a28bed,#7258ca)}
+
+#vista-inicio .orbita-actividad strong{
+  max-width:90%;
+  font-size:11px;
+  font-weight:950;
+}
+#vista-inicio .orbita-actividad span:not(.sector-icono){
+  margin-top:2px;
+  font-size:10px;
+  font-weight:850;
+}
+#vista-inicio .orbita-actividad b{
+  margin-top:2px;
+  font-size:16px;
+  font-weight:950;
+}
+#vista-inicio .orbita-actividad .sector-icono{
+  height:31px;
+  margin:0 0 2px;
+  transform:scale(.80);
+  transform-origin:center bottom;
+}
+#vista-inicio .orbita-actividad[style*="132px"] strong,
+#vista-inicio .orbita-actividad[style*="12"] strong{font-size:12px}
+#vista-inicio .orbita-actividad[style*="132px"] b{font-size:19px}
+
+#vista-inicio .orbita-centro{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:104px;
+  height:104px;
+  transform:translate(-50%,-50%);
+  z-index:5;
+  border-radius:50%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  background:linear-gradient(145deg,#fff,#eceef3);
+  border:4px solid var(--card);
+  box-shadow:0 9px 20px rgba(0,0,0,.18),inset 0 1px 0 #fff;
+  text-shadow:none;
+}
+#vista-inicio .orbita-centro strong{
+  color:#111318!important;
+  font-size:22px!important;
+  line-height:1!important;
+  font-weight:950!important;
+  opacity:1!important;
+}
+#vista-inicio .orbita-centro span{
+  color:#737780!important;
+  margin-top:5px;
+  font-size:10px!important;
+  font-weight:850!important;
+  opacity:1!important;
+}
+#vista-inicio .orbita-centro-solo{left:50%;top:50%}
+
+/* Con 2 actividades las acercamos un poco al centro, como la referencia. */
+#vista-inicio .orbita-cantidad-2 .orbita-actividad:first-child{left:25%!important}
+#vista-inicio .orbita-cantidad-2 .orbita-actividad:nth-child(2){left:75%!important}
+
+/* El clima superior queda por encima de los círculos. */
+#vista-inicio .tiempo-esquina-tl,
+#vista-inicio .tiempo-esquina-tr{
+  transform:translateY(-21px)!important;
+  z-index:30!important;
+}
+
+@media(max-width:390px){
+  #vista-inicio #graficoInicio{width:270px!important;height:270px!important}
+  #vista-inicio .orbita-grafico{transform:scale(.94);transform-origin:center}
+}
