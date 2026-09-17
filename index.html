@@ -13,7 +13,7 @@
     <meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
     <title>Mi Servicio</title>
-    <link rel="manifest" href="./manifest.webmanifest?v=9001">
+    <link rel="manifest" href="./manifest.webmanifest?v=9101">
     <link rel="apple-touch-icon" href="./icon-apple.png?v=7901">
     <meta
         name="apple-mobile-web-app-capable"
@@ -29,8 +29,95 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=9001"
+        href="./styles-v27.css?v=9101"
     >
+
+
+<style id="v91-layout-final">
+/* V91: composición final, aplicada desde index para evitar caché CSS antigua */
+#vista-inicio .tarjeta-grafico-inicio{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  outline:0!important;
+  overflow:visible!important;
+  padding-left:10px!important;
+  padding-right:10px!important;
+}
+#vista-inicio #graficoInicio{
+  width:304px!important;
+  height:304px!important;
+  margin:-2px auto -2px!important;
+  overflow:visible!important;
+}
+#vista-inicio .orbita-lineas{
+  inset:31px 25px 23px!important;
+  z-index:1!important;
+}
+#vista-inicio .orbita-trazo{
+  inset:12px 7px 14px!important;
+  border-width:1.5px!important;
+  opacity:.58!important;
+}
+#vista-inicio .orbita-punto{
+  width:9px!important;height:9px!important;
+}
+
+/* Dos actividades: posiciones fijas por CLASE, nunca por orden de nodos */
+#vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-ministerio{
+  left:29%!important; top:39%!important;
+}
+#vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-ldc{
+  left:77%!important; top:55%!important;
+}
+#vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-centro{
+  left:51%!important; top:76%!important;
+  width:96px!important; height:96px!important;
+}
+#vista-inicio .orbita-actividad{z-index:3!important}
+#vista-inicio .orbita-centro{z-index:6!important}
+
+/* Tiempo suelto en las cuatro esquinas: sin ningún marco */
+#vista-inicio .tiempo-esquinas{
+  position:absolute!important;
+  inset:18px 5px 7px!important;
+  z-index:25!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  outline:0!important;
+  pointer-events:none!important;
+}
+#vista-inicio .tiempo-esquina,
+#vista-inicio .tiempo-esquina-tl,
+#vista-inicio .tiempo-esquina-tr,
+#vista-inicio .tiempo-esquina-bl,
+#vista-inicio .tiempo-esquina-br{
+  background:transparent!important;
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  padding:0!important;
+  transform:none!important;
+}
+#vista-inicio .tiempo-esquina-tl{left:0!important;top:0!important;right:auto!important;text-align:left!important;align-items:flex-start!important}
+#vista-inicio .tiempo-esquina-tr{right:0!important;top:0!important;left:auto!important;text-align:right!important;align-items:flex-end!important;max-width:126px!important}
+#vista-inicio .tiempo-esquina-bl{left:0!important;bottom:0!important;right:auto!important;text-align:left!important;align-items:flex-start!important}
+#vista-inicio .tiempo-esquina-br{right:0!important;bottom:0!important;left:auto!important;text-align:right!important;align-items:flex-end!important}
+#vista-inicio .tiempo-recargar{
+  pointer-events:auto!important;
+  position:absolute!important;
+  right:1px!important; top:48px!important;
+  width:34px!important;height:34px!important;
+  background:transparent!important;border:0!important;box-shadow:none!important;
+  z-index:50!important;
+}
+@media(max-width:390px){
+  #vista-inicio #graficoInicio{width:286px!important;height:286px!important}
+}
+</style>
 
 </head>
 <body data-mi-servicio-version="40.0">
@@ -1297,12 +1384,12 @@
     if (standalone) document.body.classList.add('modo-standalone');
 })();
 </script>
-<script src="./app-v27.js?v=9001" defer></script>
+<script src="./app-v27.js?v=9101" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js?v=7901", { scope: "./" })
+    navigator.serviceWorker.register("./sw.js?v=9101", { scope: "./" })
       .catch(error => console.warn("Modo sin conexión no disponible:", error));
   });
 }

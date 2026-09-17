@@ -8337,3 +8337,5 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
     transform-origin:center!important;
   }
 }
+
+/* V91 consolidado: ver también CSS crítico inline en index.html */
