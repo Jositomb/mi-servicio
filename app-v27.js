@@ -4259,7 +4259,6 @@ function actualizarGraficoInicio({
     asambleas,
     otras
 }) {
-
     const grafico = document.getElementById("graficoInicio");
     const leyenda = document.getElementById("leyendaGraficoInicio");
     const fechaProgreso = document.getElementById("fechaProgresoMes");
@@ -4279,12 +4278,7 @@ function actualizarGraficoInicio({
             tipo: "ministerio",
             nombre: "Ministerio",
             minutos: ministerio,
-            icono: `
-                <span class="sector-icono sector-libro" aria-hidden="true">
-                    <span class="libro-sol">☀</span>
-                    <small>DISFRUTE</small>
-                </span>
-            `
+            icono: `<span class="sector-icono sector-libro" aria-hidden="true"><span class="libro-sol">☀</span><small>DISFRUTE</small></span>`
         },
         {
             tipo: "ldc",
@@ -4296,11 +4290,7 @@ function actualizarGraficoInicio({
             tipo: "asambleas",
             nombre: "Asambleas",
             minutos: asambleas,
-            icono: `
-                <span class="sector-icono sector-auditorio" aria-hidden="true">
-                    <i></i><i></i><i></i><i></i><i></i><i></i>
-                </span>
-            `
+            icono: `<span class="sector-icono sector-auditorio" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>`
         },
         {
             tipo: "otras",
@@ -4310,40 +4300,83 @@ function actualizarGraficoInicio({
         }
     ];
 
-    const totalVisible = actividades.reduce(
-        (suma, actividad) => suma + actividad.minutos, 0
-    );
+    // V84: solo aparecen las actividades que realmente tienen tiempo registrado.
+    const activas = actividades.filter(actividad => actividad.minutos > 0);
+    const totalVisible = activas.reduce((suma, actividad) => suma + actividad.minutos, 0);
 
-    const sectores = actividades.map(actividad => {
-        const porcentaje = totalVisible > 0
-            ? Math.round((actividad.minutos / totalVisible) * 100)
-            : 0;
+    if (!activas.length || totalVisible <= 0) {
+        grafico.innerHTML = `
+            <div class="rueda-vacia">
+                <strong>0 min</strong>
+                <span>este mes</span>
+            </div>`;
+        leyenda.innerHTML = "";
+        leyenda.hidden = true;
+        return;
+    }
+
+    let acumulado = 0;
+    const colores = {
+        ministerio: "#2f80ed",
+        ldc: "#f18bbb",
+        asambleas: "#f6a046",
+        otras: "#8269d5"
+    };
+
+    const sectores = activas.map((actividad, indice) => {
+        const porcentajeExacto = actividad.minutos / totalVisible * 100;
+        const porcentaje = Math.round(porcentajeExacto);
+        const inicio = acumulado;
+        acumulado += porcentajeExacto;
+        const fin = indice === activas.length - 1 ? 100 : acumulado;
+
+        return {
+            ...actividad,
+            porcentaje,
+            inicio,
+            fin,
+            color: colores[actividad.tipo]
+        };
+    });
+
+    const gradiente = sectores.map(sector =>
+        `${sector.color} ${sector.inicio.toFixed(3)}% ${sector.fin.toFixed(3)}%`
+    ).join(",");
+
+    const etiquetas = sectores.map(sector => {
+        const anguloMedio = ((sector.inicio + sector.fin) / 2) * 3.6 - 90;
+        const rad = anguloMedio * Math.PI / 180;
+
+        // Los sectores pequeños acercan la etiqueta al centro para que no se corte.
+        const radio = sector.porcentaje < 18 ? 72 : sector.porcentaje < 30 ? 78 : 84;
+        const x = 50 + Math.cos(rad) * (radio / 2.5);
+        const y = 50 + Math.sin(rad) * (radio / 2.5);
 
         return `
-            <div class="rueda-sector rueda-${actividad.tipo}"
-                 data-tipo="${actividad.tipo}"
-                 aria-label="${actividad.nombre}: ${formatearTiempo(actividad.minutos)}, ${porcentaje}%">
-                <div class="rueda-sector-contenido">
-                    ${actividad.icono}
-                    <strong>${actividad.nombre}</strong>
-                    <span>${formatearTiempo(actividad.minutos)}</span>
-                    <b>${porcentaje}%</b>
-                </div>
-            </div>
-        `;
+            <div class="rueda-etiqueta rueda-etiqueta-${sector.tipo}"
+                 style="left:${x.toFixed(2)}%;top:${y.toFixed(2)}%;"
+                 aria-label="${sector.nombre}: ${formatearTiempo(sector.minutos)}, ${sector.porcentaje}%">
+                ${sector.icono}
+                <strong>${sector.nombre}</strong>
+                <span>${formatearTiempo(sector.minutos)}</span>
+                <b>${sector.porcentaje}%</b>
+            </div>`;
     }).join("");
 
     grafico.innerHTML = `
-        <div class="rueda-actividad" role="img" aria-label="Distribución del tiempo por actividad">
-            ${sectores}
-            <div class="rueda-centro">
+        <div class="rueda-proporcional"
+             style="--rueda-gradiente:conic-gradient(${gradiente});"
+             role="img"
+             aria-label="Distribución proporcional del tiempo por actividad">
+            <div class="rueda-proporcional-color"></div>
+            ${etiquetas}
+            <div class="rueda-centro rueda-centro-proporcional">
                 <strong>${formatearTiempo(totalVisible)}</strong>
                 <span>este mes</span>
             </div>
         </div>
     `;
 
-    // La información ya está dentro de cada sector; evitamos repetir una leyenda debajo.
     leyenda.innerHTML = "";
     leyenda.hidden = true;
 }
