@@ -7608,3 +7608,35 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 @media(max-width:390px){
   #vista-inicio .rueda-proporcional{transform:scale(.92);transform-origin:center}
 }
+
+/* V85 · retoques rueda: total central + clima superior */
+#vista-inicio .rueda-centro-proporcional strong{
+  color:#111318!important;
+  opacity:1!important;
+  font-size:21px!important;
+  font-weight:950!important;
+  text-shadow:none!important;
+}
+#vista-inicio .rueda-centro-proporcional span{
+  color:#747780!important;
+  opacity:1!important;
+  font-weight:800!important;
+  text-shadow:none!important;
+}
+@media (prefers-color-scheme:dark){
+  #vista-inicio .rueda-centro-proporcional{
+    background:linear-gradient(145deg,#f8f8fa,#e9e9ed)!important;
+  }
+  #vista-inicio .rueda-centro-proporcional strong{
+    color:#111318!important;
+  }
+  #vista-inicio .rueda-centro-proporcional span{
+    color:#747780!important;
+  }
+}
+
+/* Solo suben condición y ropa; temperatura y lluvia permanecen en su sitio. */
+#vista-inicio .tiempo-esquina-tl,
+#vista-inicio .tiempo-esquina-tr{
+  transform:translateY(-15px)!important;
+}

@@ -1,11 +1,11 @@
-const CACHE = 'mi-servicio-v8401';
+const CACHE = 'mi-servicio-v8501';
 const APP_SHELL = [
   './',
   './index.html',
-  './styles-v27.css?v=8401',
-  './app-v27.js?v=8401',
-  './icon-apple.png?v=8401',
-  './manifest.webmanifest?v=8401'
+  './styles-v27.css?v=8501',
+  './app-v27.js?v=8501',
+  './icon-apple.png?v=8501',
+  './manifest.webmanifest?v=8501'
 ];
 
 self.addEventListener('install', event => {
