@@ -7763,3 +7763,140 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
   #vista-inicio #graficoInicio{width:270px!important;height:270px!important}
   #vista-inicio .orbita-grafico{transform:scale(.94);transform-origin:center}
 }
+
+/* =========================================================
+   V87 · ACABADO VISUAL APROBADO
+   Horas protagonistas + porcentaje secundario + clima limpio
+   ========================================================= */
+
+/* Círculos: más profundidad y aspecto suave, sin bordes duros. */
+#vista-inicio .orbita-actividad{
+  border:1px solid rgba(255,255,255,.28)!important;
+  box-shadow:
+    0 12px 24px rgba(0,0,0,.22),
+    inset 0 2px 1px rgba(255,255,255,.30),
+    inset 0 -12px 22px rgba(0,0,0,.10)!important;
+}
+#vista-inicio .orbita-ministerio{
+  background:radial-gradient(circle at 34% 25%,#65afff 0,#3388ef 46%,#236fd3 100%)!important;
+}
+#vista-inicio .orbita-ldc{
+  background:radial-gradient(circle at 34% 25%,#ffb5d5 0,#ef87b8 48%,#d8659b 100%)!important;
+}
+#vista-inicio .orbita-asambleas{
+  background:radial-gradient(circle at 34% 25%,#ffc777 0,#f3a04b 48%,#db7c2d 100%)!important;
+}
+#vista-inicio .orbita-otras{
+  background:radial-gradient(circle at 34% 25%,#b19cf4 0,#846bd8 48%,#6750b8 100%)!important;
+}
+
+/* Nombre discreto; HORAS grandes; porcentaje claramente secundario. */
+#vista-inicio .orbita-actividad strong{
+  font-size:11px!important;
+  font-weight:850!important;
+  margin-top:1px!important;
+}
+#vista-inicio .orbita-actividad span:not(.sector-icono){
+  order:3!important;
+  margin-top:3px!important;
+  font-size:clamp(19px,5.5vw,27px)!important;
+  line-height:.95!important;
+  font-weight:950!important;
+  letter-spacing:-.7px!important;
+  color:#fff!important;
+}
+#vista-inicio .orbita-actividad b{
+  order:4!important;
+  margin-top:5px!important;
+  font-size:11px!important;
+  line-height:1!important;
+  font-weight:750!important;
+  opacity:.68!important;
+}
+#vista-inicio .orbita-actividad .sector-icono{
+  order:1!important;
+  height:32px!important;
+  margin-bottom:3px!important;
+  transform:scale(.86)!important;
+}
+#vista-inicio .orbita-actividad strong{order:2!important}
+
+/* Centro más parecido al concepto aprobado. */
+#vista-inicio .orbita-centro{
+  width:108px!important;
+  height:108px!important;
+  border:1px solid rgba(255,255,255,.42)!important;
+  background:radial-gradient(circle at 34% 25%,#fff,#e9ebef 88%)!important;
+  box-shadow:0 12px 25px rgba(0,0,0,.24),inset 0 1px 1px #fff!important;
+}
+#vista-inicio .orbita-centro strong{
+  font-size:26px!important;
+  letter-spacing:-1px!important;
+}
+#vista-inicio .orbita-centro span{
+  font-size:11px!important;
+  margin-top:6px!important;
+}
+
+/* Clima: completamente limpio, sin cajas, fondos, bordes ni sombras. */
+#vista-inicio .tiempo-esquina,
+#vista-inicio .tiempo-esquina-tl,
+#vista-inicio .tiempo-esquina-tr,
+#vista-inicio .tiempo-esquina-bl,
+#vista-inicio .tiempo-esquina-br{
+  background:transparent!important;
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+#vista-inicio .tiempo-esquina::before,
+#vista-inicio .tiempo-esquina::after{
+  display:none!important;
+}
+
+/* Arriba con más aire respecto a los círculos. */
+#vista-inicio .tiempo-esquina-tl,
+#vista-inicio .tiempo-esquina-tr{
+  transform:translateY(-27px)!important;
+}
+
+/* Iconos meteorológicos más naturales y visibles. */
+#vista-inicio #tiempoIcono{
+  font-size:31px!important;
+  line-height:1!important;
+  filter:drop-shadow(0 3px 5px rgba(0,0,0,.18))!important;
+}
+#vista-inicio .tiempo-ropa-icono{
+  font-size:29px!important;
+  line-height:1!important;
+  filter:drop-shadow(0 3px 5px rgba(0,0,0,.16))!important;
+}
+#vista-inicio #tiempoTemperatura{
+  font-size:25px!important;
+  font-weight:950!important;
+}
+#vista-inicio #tiempoLluvia{
+  font-size:15px!important;
+  font-weight:900!important;
+}
+#vista-inicio .tiempo-esquina small{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+
+/* El botón de recarga queda discreto, sin pastilla marcada. */
+#vista-inicio .tiempo-recargar{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  opacity:.58!important;
+}
+
+/* Algo más de espacio para que la composición respire como el concepto. */
+#vista-inicio .tarjeta-grafico-inicio{
+  padding-top:8px!important;
+  padding-bottom:12px!important;
+}
