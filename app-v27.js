@@ -4333,6 +4333,12 @@ function actualizarGraficoInicio({
 
     grafico.innerHTML=`
       <div class="orbita-grafico orbita-cantidad-${activas.length}">
+        <div class="orbita-lineas" aria-hidden="true">
+          <span class="orbita-trazo orbita-trazo-a"></span>
+          <span class="orbita-trazo orbita-trazo-b"></span>
+          <i class="orbita-punto orbita-punto-a"></i>
+          <i class="orbita-punto orbita-punto-b"></i>
+        </div>
         ${circulos}
         <div class="orbita-centro">
           <strong>${formatearTiempo(totalVisible)}</strong>

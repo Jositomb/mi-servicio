@@ -7991,3 +7991,154 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 @media(max-width:390px){
   #vista-inicio #graficoInicio{width:282px!important;height:282px!important}
 }
+
+/* =========================================================
+   V89 · ÓRBITAS SUTILES + TIEMPO INTEGRADO
+   ========================================================= */
+
+/* Un poco más de lienzo vertical para que el tiempo y los círculos respiren. */
+#vista-inicio #graficoInicio{
+  width:304px!important;
+  height:304px!important;
+  margin:-6px auto -4px!important;
+}
+
+/* Líneas orbitales muy sutiles, detrás de los círculos. */
+#vista-inicio .orbita-lineas{
+  position:absolute;
+  inset:19px 14px 17px;
+  z-index:1;
+  pointer-events:none;
+}
+#vista-inicio .orbita-trazo{
+  position:absolute;
+  inset:17px 12px 20px;
+  border-radius:50%;
+  border:2px solid transparent;
+  opacity:.62;
+}
+#vista-inicio .orbita-trazo-a{
+  border-top-color:rgba(70,148,255,.72);
+  border-left-color:rgba(70,148,255,.48);
+  border-bottom-color:rgba(70,148,255,.25);
+  transform:rotate(-13deg);
+}
+#vista-inicio .orbita-trazo-b{
+  border-right-color:rgba(245,111,177,.70);
+  border-bottom-color:rgba(245,111,177,.50);
+  transform:rotate(18deg);
+}
+#vista-inicio .orbita-punto{
+  position:absolute;
+  width:10px;height:10px;
+  border-radius:50%;
+  box-shadow:0 0 9px currentColor;
+}
+#vista-inicio .orbita-punto-a{
+  left:16%;top:56%;
+  color:#4595ff;background:#4595ff;
+}
+#vista-inicio .orbita-punto-b{
+  right:13%;bottom:25%;
+  color:#f278b6;background:#f278b6;
+}
+
+/* Mantener los círculos por encima de las órbitas. */
+#vista-inicio .orbita-actividad{z-index:3!important}
+#vista-inicio .orbita-centro{z-index:5!important}
+
+/* Composición de dos actividades basada en el diseño aprobado. */
+#vista-inicio .orbita-cantidad-2 .orbita-actividad:first-of-type{
+  left:29%!important;
+  top:38%!important;
+}
+#vista-inicio .orbita-cantidad-2 .orbita-actividad:nth-of-type(2){
+  left:76%!important;
+  top:55%!important;
+}
+#vista-inicio .orbita-cantidad-2 .orbita-centro{
+  left:52%!important;
+  top:72%!important;
+}
+
+/* Tiempo integrado: sin recuadros ni remarques. */
+#vista-inicio .tiempo-esquinas{
+  inset:35px 6px 5px!important;
+  z-index:20!important;
+  pointer-events:none;
+}
+#vista-inicio .tiempo-esquina{
+  background:none!important;
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  padding:0!important;
+}
+#vista-inicio .tiempo-esquina-tl,
+#vista-inicio .tiempo-esquina-tr{
+  transform:translateY(-30px)!important;
+}
+#vista-inicio .tiempo-esquina-tl{
+  align-items:flex-start!important;
+  text-align:left!important;
+}
+#vista-inicio .tiempo-esquina-tr{
+  align-items:flex-end!important;
+  text-align:right!important;
+}
+#vista-inicio .tiempo-esquina-bl{
+  align-items:flex-start!important;
+  text-align:left!important;
+}
+#vista-inicio .tiempo-esquina-br{
+  align-items:flex-end!important;
+  text-align:right!important;
+}
+#vista-inicio #tiempoIcono{
+  font-size:30px!important;
+  filter:drop-shadow(0 2px 5px rgba(0,0,0,.20))!important;
+}
+#vista-inicio .tiempo-ropa-icono{
+  font-size:28px!important;
+  filter:drop-shadow(0 2px 5px rgba(0,0,0,.18))!important;
+}
+#vista-inicio .tiempo-esquina small{
+  font-size:9px!important;
+  line-height:1.15!important;
+  opacity:.72!important;
+  background:none!important;
+}
+#vista-inicio #tiempoTemperatura{
+  font-size:25px!important;
+}
+#vista-inicio #tiempoLluvia{
+  font-size:15px!important;
+}
+
+/* El botón ↻ sigue operativo: visualmente discreto pero tocable. */
+#vista-inicio .tiempo-recargar{
+  pointer-events:auto!important;
+  position:absolute!important;
+  top:50px!important;
+  right:4px!important;
+  width:34px!important;
+  height:34px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  font-size:19px!important;
+  opacity:.62!important;
+  z-index:40!important;
+}
+#vista-inicio .tiempo-recargar:active{
+  transform:rotate(35deg) scale(.94)!important;
+  opacity:1!important;
+}
+
+@media(max-width:390px){
+  #vista-inicio #graficoInicio{width:286px!important;height:286px!important}
+  #vista-inicio .orbita-lineas{inset:17px 12px 15px}
+}
