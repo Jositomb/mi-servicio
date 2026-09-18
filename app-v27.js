@@ -23,6 +23,9 @@
    V93 NO cambia lógica, datos ni nombres públicos.
    Es una primera fase de organización segura antes de modularizar.
    ========================================================= */
+/* V102 · Historial: utilidades puras disponibles en window.MiServicioHistorial.
+   Las implementaciones heredadas permanecen como fallback durante la validación. */
+
 /* V96 · Integración progresiva de storage
    Estos adaptadores usan el módulo core/storage.js cuando está disponible.
    Mantienen exactamente el mismo formato JSON y las mismas claves.

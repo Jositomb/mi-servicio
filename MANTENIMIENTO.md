@@ -110,3 +110,9 @@ Solo añade mapa e índices de mantenimiento. No altera la lógica ni el aspecto
 - No modifica registros, filtros, búsqueda, edición ni borrado existentes.
 - Incluido en el shell offline y en `legacy-bridge.js`.
 - Próxima fase: extraer funciones completas de renderizado/filtros tras validar V101.
+
+## V102 — Historial, fase 2
+- Extraídas a `historial.js` utilidades puras de comparación, agrupación y cantidad.
+- No modifican datos, almacenamiento ni DOM.
+- Se mantiene fallback heredado durante la validación.
+- `app-v27.js` partía de 10249 líneas en esta fase.

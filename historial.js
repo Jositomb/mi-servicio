@@ -2,6 +2,26 @@
    Primer módulo funcional de Historial.
    Coordina accesibilidad y ciclo de vida sin modificar los datos existentes.
 */
+
+/* V102 · Utilidades puras de Historial */
+function compararPorFecha(a,b){
+  const fa=new Date(a?.fecha ?? 0).getTime();
+  const fb=new Date(b?.fecha ?? 0).getTime();
+  return fb-fa;
+}
+function agruparPorFecha(registros=[]){
+  return registros.reduce((grupos,registro)=>{
+    const clave=String(registro?.fecha ?? "").slice(0,10);
+    if(!grupos[clave]) grupos[clave]=[];
+    grupos[clave].push(registro);
+    return grupos;
+  },{});
+}
+function cantidadTexto(cantidad){
+  const n=Number(cantidad)||0;
+  return `${n} ${n===1 ? "registro" : "registros"}`;
+}
+
 const Historial = {
   iniciar() {
     const vista =
@@ -27,7 +47,11 @@ const Historial = {
 
   refrescar() {
     this.iniciar();
-  }
+  },
+
+  compararPorFecha,
+  agruparPorFecha,
+  cantidadTexto
 };
 
 function arrancarHistorial(){
@@ -40,4 +64,4 @@ if(document.readyState==="loading"){
 }else arrancarHistorial();
 
 window.MiServicioHistorial=Historial;
-export {Historial};
+export {Historial, compararPorFecha, agruparPorFecha, cantidadTexto};
