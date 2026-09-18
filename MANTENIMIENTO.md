@@ -167,3 +167,9 @@ Solo añade mapa e índices de mantenimiento. No altera la lógica ni el aspecto
 - Se conservan literalmente sus cuerpos y se carga antes de `app-v27.js`.
 - Incluido en el shell offline.
 - `app-v27.js`: 8767 → 7935 líneas (832 líneas menos).
+
+## V110 — Planificación y calendario
+- Extraídas físicamente a `planificacion.js`: configurarCalendarioInicio, actualizarCalendarioInicio, formatearTiempoCortoCalendario, mostrarDetalleDiaCalendario, normalizarAgendaDia, minutosPlanificadosMesActual, claseActividadCalendario, agendarSalidaCalendario, asegurarModalAgendaSalida, abrirModalAgendaSalida, cerrarModalAgendaSalida, quitarSalidaAgendada, sumarUnMesCalendario.
+- Se conservan los cuerpos existentes para mantener comportamiento y formato de datos.
+- Se carga antes de `app-v27.js` y forma parte del shell offline.
+- `app-v27.js`: 7935 → 7028 líneas (907 líneas menos).

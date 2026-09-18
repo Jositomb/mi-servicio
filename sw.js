@@ -15,7 +15,8 @@ const APP_SHELL = [
   "./historial-edicion.js",
   "./estadisticas.js",
   "./estadisticas-render.js",
-  "./registrar.js"
+  "./registrar.js",
+  "./planificacion.js"
 ];
 
 self.addEventListener("install", event => {
