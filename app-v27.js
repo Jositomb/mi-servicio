@@ -23,6 +23,9 @@
    V93 NO cambia lógica, datos ni nombres públicos.
    Es una primera fase de organización segura antes de modularizar.
    ========================================================= */
+/* V98 · Tiempo fase 2: utilidades meteorológicas reutilizables viven en tiempo.js.
+   La consulta estable de red permanece temporalmente aquí para evitar regresiones. */
+
 
 /* V97 · Módulo Tiempo
    tiempo.js ya coordina la interfaz meteorológica y el botón de actualización.

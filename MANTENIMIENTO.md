@@ -79,3 +79,9 @@ Solo añade mapa e índices de mantenimiento. No altera la lógica ni el aspecto
   para evitar una extracción brusca.
 - Añadido al shell offline.
 - Próxima fase: trasladar al módulo las funciones meteorológicas completas.
+
+## V98 — Tiempo, fase 2
+- `tiempo.js` centraliza interpretación de códigos meteorológicos.
+- Centraliza consejos de ropa según temperatura y lluvia.
+- Mantiene el botón ↻ y la detección de re-render de Inicio.
+- La consulta de red permanece temporalmente en `app-v27.js` para conservar el comportamiento validado.

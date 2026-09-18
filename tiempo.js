@@ -1,39 +1,49 @@
-/* Mi Servicio · tiempo.js · V97
-   Módulo funcional de Tiempo.
-   Encapsula el enlace del refresco manual y deja preparada la migración
-   de la consulta meteorológica sin alterar la implementación estable.
+/* Mi Servicio · tiempo.js · V98
+   Tiempo desacoplado · fase 2
 */
+const WMO = Object.freeze({
+  0:["☀️","Despejado"],1:["🌤️","Mayormente despejado"],2:["⛅","Parcialmente nublado"],
+  3:["☁️","Nublado"],45:["🌫️","Niebla"],48:["🌫️","Niebla"],
+  51:["🌦️","Llovizna"],53:["🌦️","Llovizna"],55:["🌧️","Llovizna"],
+  61:["🌧️","Lluvia"],63:["🌧️","Lluvia"],65:["🌧️","Lluvia intensa"],
+  71:["🌨️","Nieve"],73:["🌨️","Nieve"],75:["❄️","Nieve intensa"],
+  80:["🌦️","Chubascos"],81:["🌧️","Chubascos"],82:["⛈️","Chubascos fuertes"],
+  95:["⛈️","Tormenta"],96:["⛈️","Tormenta"],99:["⛈️","Tormenta fuerte"]
+});
 
-const Tiempo = {
-  iniciar() {
-    const boton = document.getElementById("actualizarTiempoInicio");
-    if (!boton || boton.dataset.moduloTiempo === "1") return;
+function describirCodigoTiempo(codigo){
+  return WMO[Number(codigo)] || ["🌤️","Tiempo variable"];
+}
 
-    boton.dataset.moduloTiempo = "1";
+function consejoRopa(temperatura,lluvia=0){
+  const t=Number(temperatura), p=Number(lluvia)||0;
+  if(p>=45) return ["☂️","Lleva paraguas"];
+  if(t<=8) return ["🧥","Abrígate bien"];
+  if(t<=16) return ["🧥","Chaqueta ligera"];
+  if(t<=23) return ["👕","Ropa cómoda"];
+  return ["👕","Ropa fresca"];
+}
 
-    // La implementación meteorológica estable sigue en app-v27.js durante
-    // esta primera extracción. El módulo coordina el refresco sin duplicarlo.
-    boton.setAttribute("aria-label", "Actualizar el tiempo");
+const Tiempo={
+  iniciar(){
+    const boton=document.getElementById("actualizarTiempoInicio");
+    if(!boton || boton.dataset.moduloTiempo==="1") return;
+    boton.dataset.moduloTiempo="1";
+    boton.setAttribute("aria-label","Actualizar el tiempo");
   },
-
-  disponible() {
-    return Boolean(document.getElementById("tiempoEsquinas"));
-  }
+  disponible(){ return Boolean(document.getElementById("tiempoEsquinas")); },
+  describirCodigo:describirCodigoTiempo,
+  consejoRopa
 };
 
-function iniciarTiempoCuandoProceda() {
+function iniciarTiempoCuandoProceda(){
   Tiempo.iniciar();
-
-  // Inicio puede renderizarse de nuevo al navegar entre pestañas.
-  const observer = new MutationObserver(() => Tiempo.iniciar());
-  observer.observe(document.body, { childList: true, subtree: true });
+  const observer=new MutationObserver(()=>Tiempo.iniciar());
+  observer.observe(document.body,{childList:true,subtree:true});
 }
+if(document.readyState==="loading"){
+  document.addEventListener("DOMContentLoaded",iniciarTiempoCuandoProceda,{once:true});
+}else iniciarTiempoCuandoProceda();
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", iniciarTiempoCuandoProceda, { once: true });
-} else {
-  iniciarTiempoCuandoProceda();
-}
-
-window.MiServicioTiempo = Tiempo;
-export { Tiempo };
+window.MiServicioTiempo=Tiempo;
+export {Tiempo,describirCodigoTiempo,consejoRopa};
