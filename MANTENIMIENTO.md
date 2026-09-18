@@ -63,3 +63,10 @@ Solo añade mapa e índices de mantenimiento. No altera la lógica ni el aspecto
 - Se incluye en el shell offline.
 - Las llamadas antiguas siguen activas temporalmente para comprobar primero
   que la aplicación continúa funcionando sin cambios.
+
+## V96 — integración progresiva de storage
+- Añadidos adaptadores `msStorageLeer` y `msStorageGuardar`.
+- Migradas automáticamente 0 lecturas JSON simples y 4 escrituras JSON simples.
+- Solo se sustituyeron patrones inequívocos; los accesos especiales permanecen intactos.
+- No se modifican claves, estructura de registros ni contenido almacenado.
+- La migración continúa siendo compatible si el módulo no cargase: existe fallback a localStorage.

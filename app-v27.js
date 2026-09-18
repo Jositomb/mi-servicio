@@ -24,6 +24,37 @@
    Es una primera fase de organización segura antes de modularizar.
    ========================================================= */
 
+/* V96 · Integración progresiva de storage
+   Estos adaptadores usan el módulo core/storage.js cuando está disponible.
+   Mantienen exactamente el mismo formato JSON y las mismas claves.
+*/
+function msStorageLeer(clave, valorPorDefecto = null) {
+    if (window.MiServicioStorage) {
+        return window.MiServicioStorage.leer(clave, valorPorDefecto);
+    }
+    try {
+        const contenido = localStorage.getItem(clave);
+        return contenido === null ? valorPorDefecto : JSON.parse(contenido);
+    } catch (error) {
+        console.error(`[Mi Servicio] No se pudo leer "${clave}"`, error);
+        return valorPorDefecto;
+    }
+}
+
+function msStorageGuardar(clave, valor) {
+    if (window.MiServicioStorage) {
+        return window.MiServicioStorage.guardar(clave, valor);
+    }
+    try {
+        msStorageGuardar(clave, valor);
+        return true;
+    } catch (error) {
+        console.error(`[Mi Servicio] No se pudo guardar "${clave}"`, error);
+        return false;
+    }
+}
+
+
 /* V94 · Primer módulo real
    core/config.js se carga como ES6 antes de este archivo.
    Durante esta fase app-v27.js conserva sus constantes originales para garantizar
@@ -97,10 +128,7 @@ const almacenamiento = {
 
         try {
 
-            localStorage.setItem(
-                clave,
-                JSON.stringify(valor)
-            );
+            msStorageGuardar(clave, valor);
 
             return true;
 
@@ -8895,15 +8923,9 @@ function importarTransferenciaDesdeURL() {
                 datos.preferencias
             );
 
-        localStorage.setItem(
-            STORAGE_KEYS.registros,
-            JSON.stringify(registros)
-        );
+        msStorageGuardar(STORAGE_KEYS.registros, registros);
 
-        localStorage.setItem(
-            STORAGE_KEYS.preferencias,
-            JSON.stringify(preferencias)
-        );
+        msStorageGuardar(STORAGE_KEYS.preferencias, preferencias);
 
         // Una vez importados, retiramos los datos de la URL.
         history.replaceState(
