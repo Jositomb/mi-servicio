@@ -6,5 +6,6 @@ window.MiServicio = window.MiServicio || {};
 Object.defineProperties(window.MiServicio, {
   config: { get: () => window.MiServicioConfig, configurable: true },
   storage: { get: () => window.MiServicioStorage, configurable: true },
-  tiempo: { get: () => window.MiServicioTiempo, configurable: true }
+  tiempo: { get: () => window.MiServicioTiempo, configurable: true },
+  historial: { get: () => window.MiServicioHistorial, configurable: true }
 });

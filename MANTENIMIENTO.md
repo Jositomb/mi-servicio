@@ -102,3 +102,11 @@ Solo añade mapa e índices de mantenimiento. No altera la lógica ni el aspecto
 - No se ha borrado automáticamente ningún bloque heredado cuyo límite no pudiera
   verificarse con total seguridad; prima conservar el comportamiento validado.
 - Próximo bloque recomendado: Historial o Estadísticas, extrayéndolo por funciones completas.
+
+## V101 — Historial, fase 1
+- Añadido `historial.js` como módulo ES6.
+- Coordina el ciclo de vida de la vista Historial.
+- Empieza además la mejora de accesibilidad en modales y botones de icono.
+- No modifica registros, filtros, búsqueda, edición ni borrado existentes.
+- Incluido en el shell offline y en `legacy-bridge.js`.
+- Próxima fase: extraer funciones completas de renderizado/filtros tras validar V101.
