@@ -1,3 +1,29 @@
+/* =========================================================
+   MI SERVICIO · ÍNDICE DE MANTENIMIENTO · V93
+   =========================================================
+   Este archivo sigue siendo único para no arriesgar datos ni comportamiento.
+   A partir de aquí las mejoras se localizarán por bloques funcionales:
+
+   01 · Configuración, constantes y almacenamiento
+   02 · Navegación y vistas
+   03 · Inicio y progreso mensual
+   04 · Registro de actividad
+   05 · Calendario y planificación
+   06 · Historial
+   07 · Estadísticas
+   08 · Meta / año de servicio
+   09 · Ajustes y preferencias
+   10 · Copias de seguridad / importación / exportación
+   11 · OneDrive
+   12 · Tiempo
+   13 · Personajes y animaciones
+   14 · Inicialización y eventos
+
+   IMPORTANTE:
+   V93 NO cambia lógica, datos ni nombres públicos.
+   Es una primera fase de organización segura antes de modularizar.
+   ========================================================= */
+
 // =========================================================
 // MI SERVICIO WEB
 // app.js
