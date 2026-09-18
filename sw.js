@@ -11,7 +11,8 @@ const APP_SHELL = [
   "./tiempo.js",
   "./core/legacy-bridge.js",
   "./historial.js",
-  "./historial-render.js"
+  "./historial-render.js",
+  "./historial-edicion.js"
 ];
 
 self.addEventListener("install", event => {

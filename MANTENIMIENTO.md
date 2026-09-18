@@ -142,3 +142,11 @@ Solo añade mapa e índices de mantenimiento. No altera la lógica ni el aspecto
 - Se carga antes de `app-v27.js` con `defer` y está incluido en el shell offline.
 - `app-v27.js`: 10274 → 9639 líneas (635 líneas menos).
 - Edición y borrado permanecen todavía en el archivo principal.
+
+## V106 — Historial, edición y borrado extraídos
+- Trasladadas físicamente a `historial-edicion.js`:
+  `configurarEdicionRegistros`, `guardarEdicionRegistro` y `confirmarEliminarRegistro`.
+- Los cuerpos de las funciones se conservan para no alterar su comportamiento.
+- Se carga antes de `app-v27.js` y forma parte del shell offline.
+- `app-v27.js`: 9639 → 9420 líneas (219 líneas menos en esta fase).
+- Historial queda ahora dividido en coordinación, renderizado y edición/borrado.
