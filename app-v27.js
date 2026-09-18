@@ -23,6 +23,12 @@
    V93 NO cambia lógica, datos ni nombres públicos.
    Es una primera fase de organización segura antes de modularizar.
    ========================================================= */
+
+/* V103 · Historial fase 3
+   historial.js ya ofrece filtrado por actividad y búsqueda como funciones puras.
+   El renderizado, edición y borrado permanecen en este archivo hasta validar filtros.
+*/
+
 /* V102 · Historial: utilidades puras disponibles en window.MiServicioHistorial.
    Las implementaciones heredadas permanecen como fallback durante la validación. */
 

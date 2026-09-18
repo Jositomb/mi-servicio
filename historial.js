@@ -22,6 +22,52 @@ function cantidadTexto(cantidad){
   return `${n} ${n===1 ? "registro" : "registros"}`;
 }
 
+
+/* V103 · Filtros de Historial */
+function normalizarTexto(valor=""){
+  return String(valor)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .toLowerCase()
+    .trim();
+}
+
+function coincideBusqueda(registro,busqueda=""){
+  const q=normalizarTexto(busqueda);
+  if(!q) return true;
+  const texto=normalizarTexto([
+    registro?.tipo,
+    registro?.actividad,
+    registro?.notas,
+    registro?.nota,
+    registro?.acompanante,
+    registro?.compañero,
+    registro?.fecha
+  ].filter(Boolean).join(" "));
+  return texto.includes(q);
+}
+
+function coincideActividad(registro,filtro="todos"){
+  const f=normalizarTexto(filtro);
+  if(!f || f==="todos") return true;
+  const tipo=normalizarTexto(registro?.tipo ?? registro?.actividad ?? "");
+  const equivalencias={
+    ministerio:["ministerio"],
+    ldc:["ldc"],
+    asambleas:["asambleas","asamblea"],
+    otras:["otras","otra"]
+  };
+  return (equivalencias[f]||[f]).includes(tipo);
+}
+
+function filtrar(registros=[],opciones={}){
+  const filtro=opciones.filtro ?? opciones.actividad ?? "todos";
+  const busqueda=opciones.busqueda ?? "";
+  return registros.filter(r =>
+    coincideActividad(r,filtro) && coincideBusqueda(r,busqueda)
+  );
+}
+
 const Historial = {
   iniciar() {
     const vista =
@@ -51,7 +97,10 @@ const Historial = {
 
   compararPorFecha,
   agruparPorFecha,
-  cantidadTexto
+  cantidadTexto,
+  filtrar,
+  coincideBusqueda,
+  coincideActividad
 };
 
 function arrancarHistorial(){
@@ -64,4 +113,7 @@ if(document.readyState==="loading"){
 }else arrancarHistorial();
 
 window.MiServicioHistorial=Historial;
-export {Historial, compararPorFecha, agruparPorFecha, cantidadTexto};
+export {
+  Historial, compararPorFecha, agruparPorFecha, cantidadTexto,
+  filtrar, coincideBusqueda, coincideActividad
+};

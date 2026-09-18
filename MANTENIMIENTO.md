@@ -116,3 +116,11 @@ Solo añade mapa e índices de mantenimiento. No altera la lógica ni el aspecto
 - No modifican datos, almacenamiento ni DOM.
 - Se mantiene fallback heredado durante la validación.
 - `app-v27.js` partía de 10249 líneas en esta fase.
+
+## V103 — Historial, fase 3
+- Añadidos filtros puros a `historial.js`.
+- Búsqueda tolerante a mayúsculas/minúsculas y acentos.
+- Filtro por Ministerio, LDC, Asambleas y Otras.
+- No modifica registros ni almacenamiento.
+- Renderizado, edición y borrado siguen intactos en `app-v27.js`.
+- Próxima fase: migrar el renderizado una vez validados los filtros.
