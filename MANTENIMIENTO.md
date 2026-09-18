@@ -161,3 +161,9 @@ Solo añade mapa e índices de mantenimiento. No altera la lógica ni el aspecto
 ## V108 — Estadísticas fase 2
 - Extraídas: configurarEstadisticas, seleccionarPeriodoEstadisticas, moverPeriodoEstadisticas, actualizarEstadisticas, actualizarBarrasActividadEstadisticas, obtenerRangoEstadisticas, actualizarTextoPeriodoEstadisticas, actualizarGraficoEstadisticas, actualizarEstadoOneDrive.
 - app-v27.js: 9420 → 8767 líneas (653 menos).
+
+## V109 — Registrar, extracción inicial
+- Extraídas físicamente a `registrar.js`: normalizarRegistros, guardarRegistros, configurarCursosBiblicos, obtenerCursosBiblicosFormulario, reiniciarCursosBiblicos, prepararPantallaRegistrar, registrarActividad, obtenerRegistrosFiltrados, compararRegistrosPorFecha, obtenerRegistrosMesActual, obtenerRegistrosEntreFechas, normalizarRegistrosImportados, filtrarRegistrosVisibles, textoCantidadRegistros, registrarSincronizacionOneDrive.
+- Se conservan literalmente sus cuerpos y se carga antes de `app-v27.js`.
+- Incluido en el shell offline.
+- `app-v27.js`: 8767 → 7935 líneas (832 líneas menos).
