@@ -24,6 +24,14 @@
    Es una primera fase de organización segura antes de modularizar.
    ========================================================= */
 
+/* V97 · Módulo Tiempo
+   tiempo.js ya coordina la interfaz meteorológica y el botón de actualización.
+   La consulta Open-Meteo permanece temporalmente aquí para conservar exactamente
+   el comportamiento validado. En la siguiente fase podrá trasladarse completa
+   una vez comprobado este primer desacoplamiento.
+*/
+
+
 /* V96 · Integración progresiva de storage
    Estos adaptadores usan el módulo core/storage.js cuando está disponible.
    Mantienen exactamente el mismo formato JSON y las mismas claves.

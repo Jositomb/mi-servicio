@@ -70,3 +70,12 @@ Solo añade mapa e índices de mantenimiento. No altera la lógica ni el aspecto
 - Solo se sustituyeron patrones inequívocos; los accesos especiales permanecen intactos.
 - No se modifican claves, estructura de registros ni contenido almacenado.
 - La migración continúa siendo compatible si el módulo no cargase: existe fallback a localStorage.
+
+## V97 — primer módulo funcional: Tiempo
+- Añadido `tiempo.js` como módulo ES6 independiente.
+- Coordina la interfaz meteorológica y el botón manual de actualización.
+- Tolera que Inicio se vuelva a renderizar al cambiar de pestaña.
+- Se mantiene temporalmente la consulta Open-Meteo estable en `app-v27.js`
+  para evitar una extracción brusca.
+- Añadido al shell offline.
+- Próxima fase: trasladar al módulo las funciones meteorológicas completas.
