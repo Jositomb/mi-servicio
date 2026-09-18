@@ -23,6 +23,10 @@
    V93 NO cambia lógica, datos ni nombres públicos.
    Es una primera fase de organización segura antes de modularizar.
    ========================================================= */
+/* V99 · Tiempo autónomo: tiempo.js ya contiene consulta, geocodificación,
+   interpretación y refresco manual. La carga inicial heredada se conserva
+   temporalmente para compatibilidad mientras validamos esta versión. */
+
 /* V98 · Tiempo fase 2: utilidades meteorológicas reutilizables viven en tiempo.js.
    La consulta estable de red permanece temporalmente aquí para evitar regresiones. */
 

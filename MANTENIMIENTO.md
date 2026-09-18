@@ -85,3 +85,11 @@ Solo añade mapa e índices de mantenimiento. No altera la lógica ni el aspecto
 - Centraliza consejos de ropa según temperatura y lluvia.
 - Mantiene el botón ↻ y la detección de re-render de Inicio.
 - La consulta de red permanece temporalmente en `app-v27.js` para conservar el comportamiento validado.
+
+## V99 — Tiempo autónomo
+- `tiempo.js` ya contiene geocodificación, consulta Open-Meteo, interpretación WMO,
+  probabilidad de lluvia, consejo de ropa y refresco manual.
+- Mantiene la clave `miServicio.localidadTiempo`.
+- Mantiene los IDs visuales existentes.
+- La carga inicial heredada permanece temporalmente como compatibilidad; tras validar
+  V99 podrá eliminarse del archivo principal para reducir líneas físicamente.
