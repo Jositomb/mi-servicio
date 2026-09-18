@@ -10256,3 +10256,19 @@ function configurarDesplegablePersonaje(){
   actualizarResumenPersonaje();
 }
 document.addEventListener("DOMContentLoaded",()=>setTimeout(configurarDesplegablePersonaje,130));
+
+
+/* V104 · Registro del renderizador estable en el módulo Historial.
+   No modifica el renderizado actual; únicamente crea el punto de desacoplamiento. */
+function conectarRenderizadorHistorialModular(){
+    if (window.MiServicioHistorial &&
+        typeof window.MiServicioHistorial.registrarRenderizador === "function" &&
+        typeof renderizarHistorial === "function") {
+        window.MiServicioHistorial.registrarRenderizador(renderizarHistorial);
+    }
+}
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", conectarRenderizadorHistorialModular, { once:true });
+} else {
+    conectarRenderizadorHistorialModular();
+}

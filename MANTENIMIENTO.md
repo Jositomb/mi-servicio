@@ -124,3 +124,11 @@ Solo añade mapa e índices de mantenimiento. No altera la lógica ni el aspecto
 - No modifica registros ni almacenamiento.
 - Renderizado, edición y borrado siguen intactos en `app-v27.js`.
 - Próxima fase: migrar el renderizado una vez validados los filtros.
+
+## V104 — Historial, fase 4
+- Creado un puente de renderizado en `historial.js`.
+- El renderizador estable `renderizarHistorial` se registra ahora en el módulo.
+- El cuerpo del renderizador, edición y borrado no se modifica todavía.
+- Esto crea el punto de desacoplamiento necesario para mover el bloque completo
+  en la siguiente fase sin duplicar eventos ni DOM.
+- `app-v27.js` tenía 10258 líneas al comenzar esta fase.

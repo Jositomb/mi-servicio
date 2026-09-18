@@ -68,6 +68,19 @@ function filtrar(registros=[],opciones={}){
   );
 }
 
+
+/* V104 · Puente de renderizado de Historial */
+let renderizadorHistorial=null;
+
+function registrarRenderizador(fn){
+  renderizadorHistorial=typeof fn==="function" ? fn : null;
+}
+
+function renderizar(contexto){
+  if(renderizadorHistorial) return renderizadorHistorial(contexto);
+  return null;
+}
+
 const Historial = {
   iniciar() {
     const vista =
@@ -100,7 +113,9 @@ const Historial = {
   cantidadTexto,
   filtrar,
   coincideBusqueda,
-  coincideActividad
+  coincideActividad,
+  registrarRenderizador,
+  renderizar
 };
 
 function arrancarHistorial(){
@@ -115,5 +130,6 @@ if(document.readyState==="loading"){
 window.MiServicioHistorial=Historial;
 export {
   Historial, compararPorFecha, agruparPorFecha, cantidadTexto,
-  filtrar, coincideBusqueda, coincideActividad
+  filtrar, coincideBusqueda, coincideActividad,
+  registrarRenderizador, renderizar
 };
