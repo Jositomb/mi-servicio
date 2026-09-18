@@ -46,3 +46,12 @@ se extraen bloques uno por uno, comprobando la aplicación tras cada extracción
 
 ## V93
 Solo añade mapa e índices de mantenimiento. No altera la lógica ni el aspecto.
+
+## V94 — primer módulo real
+- Añadido `core/config.js` como módulo ES6.
+- Se carga antes de `app-v27.js`.
+- Está incluido en el shell offline.
+- Centraliza la configuración estable: inicio del año de servicio, meta anual,
+  límite mensual mixto y nombres de actividades.
+- Por seguridad, `app-v27.js` conserva temporalmente sus constantes originales.
+  La migración se hará una a una para poder comprobar equivalencia.

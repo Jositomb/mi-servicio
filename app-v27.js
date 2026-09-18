@@ -24,6 +24,13 @@
    Es una primera fase de organización segura antes de modularizar.
    ========================================================= */
 
+/* V94 · Primer módulo real
+   core/config.js se carga como ES6 antes de este archivo.
+   Durante esta fase app-v27.js conserva sus constantes originales para garantizar
+   compatibilidad exacta; las iremos sustituyendo por MiServicioConfig una a una.
+*/
+
+
 // =========================================================
 // MI SERVICIO WEB
 // app.js
