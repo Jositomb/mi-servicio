@@ -12,7 +12,9 @@ const APP_SHELL = [
   "./core/legacy-bridge.js",
   "./historial.js",
   "./historial-render.js",
-  "./historial-edicion.js"
+  "./historial-edicion.js",
+  "./estadisticas.js",
+  "./estadisticas-render.js"
 ];
 
 self.addEventListener("install", event => {

@@ -150,3 +150,14 @@ Solo añade mapa e índices de mantenimiento. No altera la lógica ni el aspecto
 - Se carga antes de `app-v27.js` y forma parte del shell offline.
 - `app-v27.js`: 9639 → 9420 líneas (219 líneas menos en esta fase).
 - Historial queda ahora dividido en coordinación, renderizado y edición/borrado.
+
+## V107 — Estadísticas, fase 1
+- Añadido `estadisticas.js` como módulo ES6.
+- Centraliza minutos por registro, sumas, porcentajes y resumen por actividad.
+- No cambia todavía el renderizado ni la navegación de Estadísticas.
+- Incluido en offline y `legacy-bridge.js`.
+- `app-v27.js` permanece en 9420 líneas hasta validar este módulo.
+
+## V108 — Estadísticas fase 2
+- Extraídas: configurarEstadisticas, seleccionarPeriodoEstadisticas, moverPeriodoEstadisticas, actualizarEstadisticas, actualizarBarrasActividadEstadisticas, obtenerRangoEstadisticas, actualizarTextoPeriodoEstadisticas, actualizarGraficoEstadisticas, actualizarEstadoOneDrive.
+- app-v27.js: 9420 → 8767 líneas (653 menos).
