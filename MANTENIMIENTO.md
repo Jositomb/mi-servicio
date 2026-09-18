@@ -132,3 +132,13 @@ Solo añade mapa e índices de mantenimiento. No altera la lógica ni el aspecto
 - Esto crea el punto de desacoplamiento necesario para mover el bloque completo
   en la siguiente fase sin duplicar eventos ni DOM.
 - `app-v27.js` tenía 10258 líneas al comenzar esta fase.
+
+## V105 — Historial, renderizado extraído
+- Trasladadas físicamente desde `app-v27.js` a `historial-render.js`:
+  `renderizarHistorial`, `agruparRegistrosPorFecha`, `tituloFechaHistorial`,
+  `actualizarEstadoVacioHistorial` y `crearTarjetaHistorial`.
+- Se mantiene como script clásico temporalmente para conservar acceso al estado y
+  utilidades globales sin cambiar su comportamiento.
+- Se carga antes de `app-v27.js` con `defer` y está incluido en el shell offline.
+- `app-v27.js`: 10274 → 9639 líneas (635 líneas menos).
+- Edición y borrado permanecen todavía en el archivo principal.

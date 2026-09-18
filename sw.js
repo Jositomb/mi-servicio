@@ -10,7 +10,8 @@ const APP_SHELL = [
   "./core/storage.js",
   "./tiempo.js",
   "./core/legacy-bridge.js",
-  "./historial.js"
+  "./historial.js",
+  "./historial-render.js"
 ];
 
 self.addEventListener("install", event => {
