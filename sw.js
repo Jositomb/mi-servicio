@@ -8,7 +8,8 @@ const APP_SHELL = [
   "./manifest.webmanifest",
   "./core/config.js",
   "./core/storage.js",
-  "./tiempo.js"
+  "./tiempo.js",
+  "./core/legacy-bridge.js"
 ];
 
 self.addEventListener("install", event => {

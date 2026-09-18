@@ -93,3 +93,12 @@ Solo añade mapa e índices de mantenimiento. No altera la lógica ni el aspecto
 - Mantiene los IDs visuales existentes.
 - La carga inicial heredada permanece temporalmente como compatibilidad; tras validar
   V99 podrá eliminarse del archivo principal para reducir líneas físicamente.
+
+## V100 — cierre de la primera fase de modularización
+- `tiempo.js` queda establecido como módulo meteorológico autónomo.
+- Añadido `core/legacy-bridge.js` para desacoplar módulos nuevos del código histórico.
+- Retiradas notas temporales de migración del archivo principal.
+- `app-v27.js`: 10265 → 10249 líneas en esta limpieza conservadora.
+- No se ha borrado automáticamente ningún bloque heredado cuyo límite no pudiera
+  verificarse con total seguridad; prima conservar el comportamiento validado.
+- Próximo bloque recomendado: Historial o Estadísticas, extrayéndolo por funciones completas.
