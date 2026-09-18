@@ -6,7 +6,8 @@ const APP_SHELL = [
   "./app-v27.js",
   "./icon-apple.png",
   "./manifest.webmanifest",
-  "./core/config.js"
+  "./core/config.js",
+  "./core/storage.js"
 ];
 
 self.addEventListener("install", event => {

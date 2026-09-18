@@ -30,6 +30,14 @@
    compatibilidad exacta; las iremos sustituyendo por MiServicioConfig una a una.
 */
 
+/* V95 · Capa de almacenamiento modular
+   core/storage.js expone window.MiServicioStorage.
+   En esta fase no se cambian todavía las llamadas antiguas a localStorage:
+   primero validamos que el módulo carga correctamente y después migraremos
+   cada bloque funcional sin modificar las claves ni el formato de los datos.
+*/
+
+
 
 // =========================================================
 // MI SERVICIO WEB

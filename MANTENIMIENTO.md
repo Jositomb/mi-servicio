@@ -55,3 +55,11 @@ Solo añade mapa e índices de mantenimiento. No altera la lógica ni el aspecto
   límite mensual mixto y nombres de actividades.
 - Por seguridad, `app-v27.js` conserva temporalmente sus constantes originales.
   La migración se hará una a una para poder comprobar equivalencia.
+
+## V95 — capa de almacenamiento
+- Añadido `core/storage.js`.
+- Expone `MiServicioStorage.leer`, `guardar`, `eliminar` y `existe`.
+- No cambia ninguna clave de `localStorage` ni el formato de los registros.
+- Se incluye en el shell offline.
+- Las llamadas antiguas siguen activas temporalmente para comprobar primero
+  que la aplicación continúa funcionando sin cambios.
