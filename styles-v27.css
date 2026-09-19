@@ -8364,3 +8364,34 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
   width: 90px !important;
   height: 90px !important;
 }
+
+
+/* =========================================================
+   FIX 4 ACTIVIDADES · 2026-09-19
+   Corrige el desplazamiento causado por .orbita-lineas.
+   Se usan las clases reales de cada actividad, no nth-child.
+   ========================================================= */
+#vista-inicio .orbita-cantidad-4 .orbita-actividad.orbita-ministerio {
+  left: 25% !important;
+  top: 25% !important;
+}
+
+#vista-inicio .orbita-cantidad-4 .orbita-actividad.orbita-ldc {
+  left: 78% !important;
+  top: 27% !important;
+}
+
+#vista-inicio .orbita-cantidad-4 .orbita-actividad.orbita-asambleas {
+  left: 78% !important;
+  top: 77% !important;
+}
+
+#vista-inicio .orbita-cantidad-4 .orbita-actividad.orbita-otras {
+  left: 22% !important;
+  top: 77% !important;
+}
+
+#vista-inicio .orbita-cantidad-4 .orbita-centro {
+  left: 50% !important;
+  top: 52% !important;
+}
