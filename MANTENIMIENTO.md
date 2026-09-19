@@ -178,3 +178,8 @@ Solo añade mapa e índices de mantenimiento. No altera la lógica ni el aspecto
 - Extraídas: actualizarInicio, actualizarFraseAnimoInicio, refrescarFraseAlVolverAInicio, actualizarPersonajeProgreso, actualizarHitosProgreso, calcularComputoMesMeta, calcularComputoAnualMeta, actualizarMeta, textoTiempoRestanteMeta, configurarInteraccionAnillosProgreso.
 - Clima queda intacto.
 - app-v27.js: 7028 → 6304 (724 menos).
+
+## V112 — Ajustes
+- Extraídas: guardarPreferencias, configurarAjustes, cargarFormularioAjustes, guardarAjustesDesdeFormulario, normalizarPreferenciasImportadas.
+- OneDrive/backup intactos.
+- app-v27.js: 6304 → 5923 (381 líneas menos).
