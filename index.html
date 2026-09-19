@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=12191"
+        href="./styles-v27.css?v=13001"
     >
 
 
@@ -119,6 +119,7 @@
 }
 </style>
 
+  <meta name="mi-servicio-version" content="V130-PUSH-SEGURO">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -1391,12 +1392,12 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=12191" defer></script>
+<script src="./app-v27.js?v=13001" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js?v=12191", { scope: "./" })
+    navigator.serviceWorker.register("./sw.js?v=13001", { scope: "./" })
       .catch(error => console.warn("Modo sin conexión no disponible:", error));
   });
 }

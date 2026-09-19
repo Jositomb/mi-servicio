@@ -6392,9 +6392,8 @@ async function iniciarOneDrive() {
         const conectado = almacenamiento.leer(STORAGE_KEYS.onedriveConectado, false) && !!cuenta;
         actualizarInterfazOneDrive(conectado, cuenta);
 
-        if (conectado) {
-            setTimeout(() => sincronizarConOneDrive(false), 650);
-        }
+        // V130: no hacemos una descarga automática al arrancar.
+        // Así una copia remota antigua nunca pisa los datos de este dispositivo.
     } catch (error) {
         console.error("Error iniciando OneDrive:", error);
         actualizarEstadoOneDrive("No se pudo iniciar OneDrive", false);
@@ -6463,19 +6462,6 @@ function mostrarMensajeOneDrive(texto, error = false) {
     mensaje.classList.add("visible");
 }
 
-function diagnosticoOneDriveProd(texto, error = false) {
-    const hora = new Date().toLocaleTimeString("es-ES", {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit"
-    });
-    const salida = `[${hora}] ${texto}`;
-    console.log("OneDrive diagnóstico:", salida);
-    almacenamiento.guardar("miServicio.onedriveDiagnostico", salida);
-    mostrarMensajeOneDrive(salida, error);
-}
-
-
 function marcarModificacionLocalOneDrive() {
     almacenamiento.guardar(STORAGE_KEYS.ultimaModificacionLocal, new Date().toISOString());
 }
@@ -6485,7 +6471,7 @@ function programarSincronizacionOneDrive() {
     if (!almacenamiento.leer(STORAGE_KEYS.onedriveConectado, false)) return;
 
     clearTimeout(temporizadorSyncOneDrive);
-    temporizadorSyncOneDrive = setTimeout(() => sincronizarConOneDrive(false), 1200);
+    temporizadorSyncOneDrive = setTimeout(() => sincronizarConOneDrive(false), 350);
 }
 
 async function obtenerTokenOneDrive() {
@@ -6522,54 +6508,29 @@ async function sincronizarConOneDrive(mostrarResultado = false) {
     if (indicador) indicador.classList.add("sincronizando");
 
     try {
-        diagnosticoOneDriveProd("Inicio de sincronización. Solicitando acceso a Microsoft…");
         const token = await obtenerTokenOneDrive();
-        if (!token) {
-            diagnosticoOneDriveProd("SIN TOKEN: Microsoft no devolvió acceso; la sincronización se detuvo.", true);
-            return;
-        }
+        if (!token) return;
 
-        diagnosticoOneDriveProd("TOKEN OK. Leyendo mi-servicio.json de OneDrive…");
-        const remoto = await descargarDatosOneDrive(token);
-        const localMs = obtenerFechaModificacionLocalOneDrive();
-        const remotoMs = remoto?.updatedAt ? Date.parse(remoto.updatedAt) || 0 : 0;
+        // V130: una sincronización iniciada desde un dispositivo que ya usa la app
+        // SIEMPRE publica el estado local. Nunca descarga encima de cambios locales.
+        await subirDatosOneDrive(token);
 
-        let accion = "";
-
-        if (!remoto) {
-            diagnosticoOneDriveProd("No existe copia remota. Intentando SUBIR copia local…");
-            await subirDatosOneDrive(token);
-            accion = "subidos";
-        } else if (remotoMs > localMs) {
-            diagnosticoOneDriveProd(`DECISIÓN: DESCARGAR. remoto=${remoto.updatedAt || "sin fecha"} · local=${new Date(localMs || 0).toISOString()}`);
-            aplicarDatosDesdeOneDrive(remoto);
-            accion = "descargados";
-        } else if (localMs > remotoMs) {
-            diagnosticoOneDriveProd(`DECISIÓN: SUBIR. local=${new Date(localMs || 0).toISOString()} · remoto=${remoto.updatedAt || "sin fecha"}`);
-            await subirDatosOneDrive(token);
-            accion = "subidos";
-        } else {
-            diagnosticoOneDriveProd(`DECISIÓN: AL DÍA. local=${localMs} · remoto=${remotoMs}`);
-            registrarSincronizacionOneDrive(remoto.updatedAt || new Date().toISOString());
-            accion = "al día";
-        }
-
-        const cuenta = clienteMSALOneDrive.getActiveAccount() || clienteMSALOneDrive.getAllAccounts()[0] || null;
+        const cuenta =
+            clienteMSALOneDrive.getActiveAccount() ||
+            clienteMSALOneDrive.getAllAccounts()[0] ||
+            null;
         actualizarInterfazOneDrive(true, cuenta);
 
         if (mostrarResultado) {
-            mostrarMensajeOneDrive(
-                accion === "al día"
-                    ? "✓ OneDrive ya estaba al día."
-                    : `✓ Datos ${accion} correctamente con OneDrive.`,
-                false
-            );
+            mostrarMensajeOneDrive("✓ Datos guardados en OneDrive.", false);
         }
     } catch (error) {
         console.error("Error sincronizando OneDrive:", error);
-        diagnosticoOneDriveProd(`ERROR DE SINCRONIZACIÓN: ${error?.message || error}`, true);
         if (mostrarResultado) {
-            mostrarMensajeOneDrive(`ERROR: ${error?.message || error}`, true);
+            mostrarMensajeOneDrive(
+                `No se pudo guardar en OneDrive${error?.message ? ": " + error.message : "."}`,
+                true
+            );
         }
     } finally {
         sincronizandoOneDrive = false;
@@ -6617,7 +6578,6 @@ async function subirDatosOneDrive(token) {
     };
 
     const url = `https://graph.microsoft.com/v1.0/me/drive/special/approot:/${encodeURIComponent(ONEDRIVE_CONFIG.archivo)}:/content`;
-    diagnosticoOneDriveProd("Enviando PUT a Microsoft Graph…");
     const respuesta = await fetch(url, {
         method: "PUT",
         headers: {
@@ -6641,15 +6601,26 @@ function aplicarDatosDesdeOneDrive(remoto) {
 
     const registros = normalizarRegistrosImportados(copia.registros);
     const preferencias = normalizarPreferenciasImportadas(copia.preferencias);
+    const agendaSalidas =
+        copia.agendaSalidas &&
+        typeof copia.agendaSalidas === "object" &&
+        !Array.isArray(copia.agendaSalidas)
+            ? copia.agendaSalidas
+            : {};
 
     aplicandoDatosOneDrive = true;
     try {
         estado.registros = registros;
         estado.preferencias = preferencias;
+        estado.agendaSalidas = agendaSalidas;
         guardarJSON(STORAGE_KEYS.registros, estado.registros);
         guardarJSON(STORAGE_KEYS.preferencias, estado.preferencias);
-        almacenamiento.guardar(STORAGE_KEYS.ultimaModificacionLocal, remoto.updatedAt);
-        registrarSincronizacionOneDrive(remoto.updatedAt);
+        guardarJSON(STORAGE_KEYS.agendaSalidas, estado.agendaSalidas);
+        almacenamiento.guardar(
+            STORAGE_KEYS.ultimaModificacionLocal,
+            remoto.updatedAt || new Date().toISOString()
+        );
+        registrarSincronizacionOneDrive(remoto.updatedAt || new Date().toISOString());
     } finally {
         aplicandoDatosOneDrive = false;
     }
