@@ -8363,23 +8363,27 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 
 
 /* =========================================================
-   V113 · CORRECCIÓN IPHONE — 2 ACTIVIDADES SIN SUPERPOSICIÓN
+   V114 · DISTRIBUCIÓN ESTABLE PARA 2 ACTIVIDADES EN IPHONE
+   Ministerio arriba-izquierda · segunda actividad derecha
+   Total abajo-centro. Evita cruces entre las tres burbujas.
    ========================================================= */
 @media (max-width: 430px) {
   #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-ministerio {
-    left: 27% !important;
-    top: 38% !important;
+    left: 30% !important;
+    top: 40% !important;
   }
 
   #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-ldc,
   #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-asambleas,
   #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-otras {
-    left: 78% !important;
-    top: 66% !important;
+    left: 79% !important;
+    top: 58% !important;
   }
 
   #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-centro {
-    left: 42% !important;
-    top: 72% !important;
+    left: 48% !important;
+    top: 82% !important;
+    width: 88px !important;
+    height: 88px !important;
   }
 }

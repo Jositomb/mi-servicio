@@ -174,15 +174,12 @@ Solo añade mapa e índices de mantenimiento. No altera la lógica ni el aspecto
 - Se carga antes de `app-v27.js` y forma parte del shell offline.
 - `app-v27.js`: 7935 → 7028 líneas (907 líneas menos).
 
-## V111 — Inicio
-- Extraídas: actualizarInicio, actualizarFraseAnimoInicio, refrescarFraseAlVolverAInicio, actualizarPersonajeProgreso, actualizarHitosProgreso, calcularComputoMesMeta, calcularComputoAnualMeta, actualizarMeta, textoTiempoRestanteMeta, configurarInteraccionAnillosProgreso.
-- Clima queda intacto.
-- app-v27.js: 7028 → 6304 (724 menos).
-
-## V113 — Corrección tras V112
-- Se revierte únicamente la extracción de Ajustes de V112: las funciones de preferencias
-  vuelven a permanecer juntas en `app-v27.js`, como en la V111 validada.
-- Esto evita separar las funciones de su estado interno y recupera la persistencia al salir/entrar.
-- Añadido ajuste responsive para dos actividades en Inicio, separando la segunda burbuja
-  y el total central en iPhone para evitar superposición.
-- No se modifican registros, claves de localStorage, reglas de meta ni datos existentes.
+## V114 — Recuperación de base estable + círculos
+- Base restaurada a V110, última versión confirmada por el usuario antes de aparecer
+  los problemas de carga inicial y de visualización/persistencia de Ajustes.
+- Por tanto, `actualizarInicio` y las funciones de Ajustes vuelven a su ubicación
+  y orden de ejecución previamente validados.
+- No se modifican datos, localStorage, registros, planificación ni reglas de meta.
+- Se corrige únicamente la disposición móvil con 2 actividades:
+  Ministerio arriba-izquierda, segunda actividad a la derecha y total abajo-centro.
+- La regla cubre LDC, Asambleas y Otras.
