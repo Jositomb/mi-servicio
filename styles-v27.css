@@ -8388,3 +8388,29 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
     height: 82px !important;
   }
 }
+
+
+/* =========================================================
+   V117 · HOTFIX CÍRCULOS — SELECTORES REALES DEL GRÁFICO
+   No toca JavaScript ni datos.
+   ========================================================= */
+@media (max-width: 430px) {
+  #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-actividad.actividad-ministerio {
+    left: 25% !important;
+    top: 40% !important;
+  }
+
+  #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-actividad.actividad-ldc,
+  #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-actividad.actividad-asambleas,
+  #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-actividad.actividad-otras {
+    left: 82% !important;
+    top: 57% !important;
+  }
+
+  #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-centro {
+    left: 46% !important;
+    top: 84% !important;
+    width: 82px !important;
+    height: 82px !important;
+  }
+}

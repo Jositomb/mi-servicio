@@ -181,3 +181,11 @@ Solo añade mapa e índices de mantenimiento. No altera la lógica ni el aspecto
 - No se toca localStorage, claves, registros, preferencias, OneDrive ni reglas de cómputo.
 - Único cambio respecto a V110: hotfix CSS para separar el gráfico con 2 actividades.
 - Objetivo de esta versión: recuperar estabilidad antes de continuar cualquier refactor.
+
+## V117 — Hotfix círculos
+- Base lógica idéntica a V116, donde Ajustes ya vuelve a guardar correctamente.
+- No se modifica ningún JavaScript.
+- Corregidos los selectores CSS para apuntar a las clases reales de las burbujas:
+  `.orbita-actividad.actividad-ministerio`, `.actividad-ldc`,
+  `.actividad-asambleas` y `.actividad-otras`.
+- Sólo cambia la colocación cuando hay exactamente 2 actividades en iPhone.
