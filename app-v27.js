@@ -6353,20 +6353,13 @@ let sincronizandoOneDrive = false;
 // V122 · PROTECCIÓN DE DATOS ONEDRIVE
 // =========================================================
 function dispositivoLocalVacioOneDrive() {
-    const registros = Array.isArray(estado?.registros) ? estado.registros : [];
-    const agenda = estado?.agendaSalidas;
-    const tieneAgenda =
-        !!agenda &&
-        typeof agenda === "object" &&
-        !Array.isArray(agenda) &&
-        Object.keys(agenda).length > 0;
+    const yaSincronizado =
+        Boolean(almacenamiento.leer(STORAGE_KEYS.ultimaSyncOneDrive, null));
 
     const cambioLocalPendiente =
         almacenamiento.leer("miServicio.onedriveCambioLocalPendiente", false) === true;
 
-    // V125: si el usuario acaba de guardar cualquier cambio (incluidas
-    // preferencias como mostrarAsambleas=false), el dispositivo NO es vacío.
-    return registros.length === 0 && !tieneAgenda && !cambioLocalPendiente;
+    return !yaSincronizado && !cambioLocalPendiente;
 }
 
 async function escribirArchivoOneDrive(token, nombre, datos) {
@@ -6574,35 +6567,41 @@ async function sincronizarConOneDrive(mostrarResultado = false) {
         if (!token) return;
 
         const remoto = await descargarDatosOneDrive(token);
-        const localVacio = dispositivoLocalVacioOneDrive();
         const pendiente = almacenamiento.leer("miServicio.onedriveCambioLocalPendiente", false) === true;
+        const primeraSync = dispositivoLocalVacioOneDrive();
         const revLocal = obtenerRevisionLocalOneDrive();
         const revRemota = obtenerRevisionRemotaOneDrive(remoto);
-        const localMs = obtenerFechaModificacionLocalOneDrive();
-        const remotoMs = remoto?.updatedAt ? Date.parse(remoto.updatedAt) || 0 : 0;
         let accion = "";
 
         if (pendiente) {
             await subirDatosOneDrive(token, remoto);
             accion = "subidos";
-        } else if (remoto && localVacio && validarCopiaSeguridad(remoto.copia)) {
+        } else if (remoto && primeraSync && validarCopiaSeguridad(remoto.copia)) {
             aplicarDatosDesdeOneDrive(remoto);
             accion = "recuperados";
         } else if (!remoto) {
             await subirDatosOneDrive(token, null);
             accion = "subidos";
-        } else if (revLocal > revRemota) {
-            await subirDatosOneDrive(token, remoto);
-            accion = "subidos";
         } else if (revRemota > revLocal) {
             aplicarDatosDesdeOneDrive(remoto);
             accion = "descargados";
-        } else if (remotoMs > localMs) {
-            aplicarDatosDesdeOneDrive(remoto);
-            accion = "descargados";
-        } else if (localMs > remotoMs) {
+        } else if (revLocal > revRemota) {
             await subirDatosOneDrive(token, remoto);
             accion = "subidos";
+        } else if (revLocal === 0 && revRemota === 0) {
+            // Compatibilidad con la copia antigua de V121/V122:
+            const localMs = obtenerFechaModificacionLocalOneDrive();
+            const remotoMs = remoto?.updatedAt ? Date.parse(remoto.updatedAt) || 0 : 0;
+            if (remotoMs > localMs) {
+                aplicarDatosDesdeOneDrive(remoto);
+                accion = "descargados";
+            } else if (localMs > remotoMs) {
+                await subirDatosOneDrive(token, remoto);
+                accion = "subidos";
+            } else {
+                registrarSincronizacionOneDrive(remoto.updatedAt || new Date().toISOString());
+                accion = "al día";
+            }
         } else {
             registrarSincronizacionOneDrive(remoto.updatedAt || new Date().toISOString());
             accion = "al día";
