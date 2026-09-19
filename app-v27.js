@@ -1,83 +1,3 @@
-/* =========================================================
-   MI SERVICIO · ÍNDICE DE MANTENIMIENTO · V93
-   =========================================================
-   Este archivo sigue siendo único para no arriesgar datos ni comportamiento.
-   A partir de aquí las mejoras se localizarán por bloques funcionales:
-
-   01 · Configuración, constantes y almacenamiento
-   02 · Navegación y vistas
-   03 · Inicio y progreso mensual
-   04 · Registro de actividad
-   05 · Calendario y planificación
-   06 · Historial
-   07 · Estadísticas
-   08 · Meta / año de servicio
-   09 · Ajustes y preferencias
-   10 · Copias de seguridad / importación / exportación
-   11 · OneDrive
-   12 · Tiempo
-   13 · Personajes y animaciones
-   14 · Inicialización y eventos
-
-   IMPORTANTE:
-   V93 NO cambia lógica, datos ni nombres públicos.
-   Es una primera fase de organización segura antes de modularizar.
-   ========================================================= */
-
-/* V103 · Historial fase 3
-   historial.js ya ofrece filtrado por actividad y búsqueda como funciones puras.
-   El renderizado, edición y borrado permanecen en este archivo hasta validar filtros.
-*/
-
-/* V102 · Historial: utilidades puras disponibles en window.MiServicioHistorial.
-   Las implementaciones heredadas permanecen como fallback durante la validación. */
-
-/* V96 · Integración progresiva de storage
-   Estos adaptadores usan el módulo core/storage.js cuando está disponible.
-   Mantienen exactamente el mismo formato JSON y las mismas claves.
-*/
-function msStorageLeer(clave, valorPorDefecto = null) {
-    if (window.MiServicioStorage) {
-        return window.MiServicioStorage.leer(clave, valorPorDefecto);
-    }
-    try {
-        const contenido = localStorage.getItem(clave);
-        return contenido === null ? valorPorDefecto : JSON.parse(contenido);
-    } catch (error) {
-        console.error(`[Mi Servicio] No se pudo leer "${clave}"`, error);
-        return valorPorDefecto;
-    }
-}
-
-function msStorageGuardar(clave, valor) {
-    if (window.MiServicioStorage) {
-        return window.MiServicioStorage.guardar(clave, valor);
-    }
-    try {
-        msStorageGuardar(clave, valor);
-        return true;
-    } catch (error) {
-        console.error(`[Mi Servicio] No se pudo guardar "${clave}"`, error);
-        return false;
-    }
-}
-
-
-/* V94 · Primer módulo real
-   core/config.js se carga como ES6 antes de este archivo.
-   Durante esta fase app-v27.js conserva sus constantes originales para garantizar
-   compatibilidad exacta; las iremos sustituyendo por MiServicioConfig una a una.
-*/
-
-/* V95 · Capa de almacenamiento modular
-   core/storage.js expone window.MiServicioStorage.
-   En esta fase no se cambian todavía las llamadas antiguas a localStorage:
-   primero validamos que el módulo carga correctamente y después migraremos
-   cada bloque funcional sin modificar las claves ni el formato de los datos.
-*/
-
-
-
 // =========================================================
 // MI SERVICIO WEB
 // app.js
@@ -136,7 +56,10 @@ const almacenamiento = {
 
         try {
 
-            msStorageGuardar(clave, valor);
+            localStorage.setItem(
+                clave,
+                JSON.stringify(valor)
+            );
 
             return true;
 
@@ -429,8 +352,207 @@ function cargarDatos() {
 // NORMALIZAR REGISTROS
 // =========================================================
 
-/* V109: normalizarRegistros → registrar.js */
+function normalizarRegistros() {
 
+    let huboCambios = false;
+
+
+    estado.registros =
+        estado.registros
+            .filter(
+                registro => {
+
+                    return (
+                        registro &&
+                        typeof registro ===
+                            "object"
+                    );
+                }
+            )
+            .map(
+                registro => {
+
+                    const normalizado = {
+                        ...registro
+                    };
+
+
+                    // -----------------------------------------
+                    // ID
+                    // -----------------------------------------
+
+                    if (
+                        !normalizado.id
+                    ) {
+
+                        normalizado.id =
+                            crearID();
+
+                        huboCambios =
+                            true;
+                    }
+
+
+                    // -----------------------------------------
+                    // Fecha
+                    // -----------------------------------------
+
+                    if (
+                        !normalizado.fecha
+                    ) {
+
+                        normalizado.fecha =
+                            fechaLocalISO(
+                                new Date()
+                            );
+
+                        huboCambios =
+                            true;
+                    }
+
+
+                    // -----------------------------------------
+                    // Tipo
+                    // -----------------------------------------
+
+                    const tiposValidos = [
+                        "ministerio",
+                        "ldc",
+                        "asambleas",
+                        "otras"
+                    ];
+
+
+                    if (
+                        !tiposValidos.includes(
+                            normalizado.tipo
+                        )
+                    ) {
+
+                        normalizado.tipo =
+                            "ministerio";
+
+                        huboCambios =
+                            true;
+                    }
+
+
+                    // -----------------------------------------
+                    // Minutos
+                    // -----------------------------------------
+
+                    const minutos =
+                        Math.max(
+                            Math.round(
+                                Number(
+                                    normalizado.minutos
+                                ) || 0
+                            ),
+                            0
+                        );
+
+
+                    if (
+                        minutos !==
+                        normalizado.minutos
+                    ) {
+
+                        huboCambios =
+                            true;
+                    }
+
+
+                    normalizado.minutos =
+                        minutos;
+
+
+                    // -----------------------------------------
+                    // Notas
+                    // -----------------------------------------
+
+                    normalizado.notas =
+                        String(
+                            normalizado.notas ||
+                            ""
+                        );
+
+                    normalizado.companero =
+                        String(
+                            normalizado.companero ||
+                            ""
+                        ).trim();
+
+
+                    // -----------------------------------------
+                    // Fecha de creación
+                    // -----------------------------------------
+
+                    if (
+                        !normalizado.creadoEn
+                    ) {
+
+                        normalizado.creadoEn =
+                            new Date()
+                                .toISOString();
+
+                        huboCambios =
+                            true;
+                    }
+
+
+                    // -----------------------------------------
+                    // Última modificación
+                    // -----------------------------------------
+
+                    if (
+                        !normalizado.modificadoEn
+                    ) {
+
+                        normalizado.modificadoEn =
+                            normalizado.creadoEn;
+
+                        huboCambios =
+                            true;
+                    }
+
+
+                    // -----------------------------------------
+                    // Información de sincronización
+                    // -----------------------------------------
+
+                    if (
+                        !normalizado
+                            .sincronizacion ||
+                        typeof normalizado
+                            .sincronizacion !==
+                            "object"
+                    ) {
+
+                        normalizado
+                            .sincronizacion = {
+
+                                estado:
+                                    "pendiente",
+
+                                ultimaSincronizacion:
+                                    null
+                            };
+
+                        huboCambios =
+                            true;
+                    }
+
+
+                    return normalizado;
+                }
+            );
+
+
+    if (huboCambios) {
+
+        guardarRegistros();
+    }
+}
 
 
 // =========================================================
@@ -469,8 +591,20 @@ function guardarJSON(
 // GUARDAR REGISTROS
 // =========================================================
 
-/* V109: guardarRegistros → registrar.js */
+function guardarRegistros() {
 
+    const guardado = guardarJSON(
+        STORAGE_KEYS.registros,
+        estado.registros
+    );
+
+    if (guardado && !aplicandoDatosOneDrive) {
+        marcarModificacionLocalOneDrive();
+        programarSincronizacionOneDrive();
+    }
+
+    return guardado;
+}
 
 
 // =========================================================
@@ -880,14 +1014,49 @@ function configurarFormulario() {
 // =========================================================
 // CURSOS BÍBLICOS
 // =========================================================
-/* V109: configurarCursosBiblicos → registrar.js */
+function configurarCursosBiblicos() {
+    const restar = document.getElementById("restarCurso");
+    const sumar = document.getElementById("sumarCurso");
+    const numero = document.getElementById("cantidadCursosBiblicos");
 
+    if (!numero) return;
 
-/* V109: obtenerCursosBiblicosFormulario → registrar.js */
+    const actualizar = valor => {
+        const siguiente = Math.max(0, Math.min(99, Number(valor) || 0));
+        numero.textContent = String(siguiente);
+        numero.dataset.valor = String(siguiente);
+    };
 
+    actualizar(numero.textContent);
 
-/* V109: reiniciarCursosBiblicos → registrar.js */
+    if (restar && restar.dataset.configuradoCurso !== "1") {
+        restar.dataset.configuradoCurso = "1";
+        restar.addEventListener("click", () => {
+            actualizar((Number(numero.dataset.valor) || 0) - 1);
+            if (typeof vibrar === "function") vibrar(8);
+        });
+    }
 
+    if (sumar && sumar.dataset.configuradoCurso !== "1") {
+        sumar.dataset.configuradoCurso = "1";
+        sumar.addEventListener("click", () => {
+            actualizar((Number(numero.dataset.valor) || 0) + 1);
+            if (typeof vibrar === "function") vibrar(8);
+        });
+    }
+}
+
+function obtenerCursosBiblicosFormulario() {
+    const numero = document.getElementById("cantidadCursosBiblicos");
+    return Math.max(0, Number(numero?.dataset.valor ?? numero?.textContent ?? 0) || 0);
+}
+
+function reiniciarCursosBiblicos() {
+    const numero = document.getElementById("cantidadCursosBiblicos");
+    if (!numero) return;
+    numero.textContent = "0";
+    numero.dataset.valor = "0";
+}
 
 // =========================================================
 // CAMPOS Y ATAJOS DE TIEMPO
@@ -975,8 +1144,21 @@ function configurarAtajosTiempo(selector, idHoras, idMinutos) {
 // PREPARAR PANTALLA REGISTRAR
 // =========================================================
 
-/* V109: prepararPantallaRegistrar → registrar.js */
+function prepararPantallaRegistrar() {
 
+    const fecha =
+        document.getElementById(
+            "fechaRegistro"
+        );
+
+    if (
+        fecha &&
+        !fecha.value
+    ) {
+
+        establecerFechaActual();
+    }
+}
 
 
 // =========================================================
@@ -1005,8 +1187,341 @@ function establecerFechaActual() {
 // REGISTRAR ACTIVIDAD
 // =========================================================
 
-/* V109: registrarActividad → registrar.js */
+function registrarActividad() {
 
+    const campoFecha =
+        document.getElementById(
+            "fechaRegistro"
+        );
+
+    const campoTipo =
+        document.getElementById(
+            "tipoRegistro"
+        );
+
+    const campoHoras =
+        document.getElementById(
+            "horasRegistro"
+        );
+
+    const campoMinutos =
+        document.getElementById(
+            "minutosRegistro"
+        );
+
+    const campoCompanero =
+        document.getElementById(
+            "companeroRegistro"
+        );
+
+    const campoNotas =
+        document.getElementById(
+            "notasRegistro"
+        );
+
+    const mensaje =
+        document.getElementById(
+            "mensajeFormulario"
+        );
+
+
+    // -----------------------------------------
+    // Comprobar formulario
+    // -----------------------------------------
+
+    if (
+        !campoFecha ||
+        !campoTipo ||
+        !campoHoras ||
+        !campoMinutos ||
+        !campoNotas
+    ) {
+
+        console.error(
+            "Faltan campos del formulario."
+        );
+
+        return;
+    }
+
+
+    limpiarMensajeFormulario(
+        mensaje
+    );
+
+
+    // -----------------------------------------
+    // Obtener valores
+    // -----------------------------------------
+
+    const fecha =
+        campoFecha.value;
+
+    const tipo =
+        campoTipo.value;
+
+    const horas =
+        Number(
+            campoHoras.value
+        );
+
+    const minutos =
+        Number(
+            campoMinutos.value
+        );
+
+    const notas =
+        campoNotas.value.trim();
+
+    const companero =
+        campoCompanero
+            ? campoCompanero.value.trim()
+            : "";
+
+    const cursosBiblicos =
+        tipo === "ministerio" ? obtenerCursosBiblicosFormulario() : 0;
+
+
+    // -----------------------------------------
+    // Validar fecha
+    // -----------------------------------------
+
+    if (!fecha) {
+
+        mostrarMensajeFormulario(
+            mensaje,
+            "Selecciona una fecha.",
+            true
+        );
+
+        return;
+    }
+
+
+    // -----------------------------------------
+    // Validar tipo
+    // -----------------------------------------
+
+    const tiposValidos = [
+        "ministerio",
+        "ldc",
+        "asambleas",
+        "otras"
+    ];
+
+    if (
+        !tiposValidos.includes(
+            tipo
+        )
+    ) {
+
+        mostrarMensajeFormulario(
+            mensaje,
+            "Selecciona una actividad.",
+            true
+        );
+
+        return;
+    }
+
+
+    // -----------------------------------------
+    // Validar horas
+    // -----------------------------------------
+
+    if (
+        !Number.isFinite(horas) ||
+        horas < 0 ||
+        horas > 24 ||
+        !Number.isInteger(horas)
+    ) {
+
+        mostrarMensajeFormulario(
+            mensaje,
+            "Revisa las horas.",
+            true
+        );
+
+        return;
+    }
+
+
+    // -----------------------------------------
+    // Validar minutos
+    // -----------------------------------------
+
+    if (
+        !Number.isFinite(minutos) ||
+        minutos < 0 ||
+        minutos > 59 ||
+        !Number.isInteger(minutos)
+    ) {
+
+        mostrarMensajeFormulario(
+            mensaje,
+            "Los minutos deben estar entre 0 y 59.",
+            true
+        );
+
+        return;
+    }
+
+
+    // -----------------------------------------
+    // Calcular total
+    // -----------------------------------------
+
+    const totalMinutos =
+        minutosTotales(
+            horas,
+            minutos
+        );
+
+
+    if (totalMinutos <= 0) {
+
+        mostrarMensajeFormulario(
+            mensaje,
+            "Introduce un tiempo mayor que cero.",
+            true
+        );
+
+        return;
+    }
+
+
+    // -----------------------------------------
+    // Crear registro
+    // -----------------------------------------
+
+    const ahora =
+        new Date()
+            .toISOString();
+
+
+    const registro = {
+
+        id:
+            crearID(),
+
+        fecha,
+
+        tipo,
+
+        minutos:
+            totalMinutos,
+
+        notas,
+
+        companero,
+
+        cursosBiblicos,
+
+        creadoEn:
+            ahora,
+
+        modificadoEn:
+            ahora,
+
+        sincronizacion: {
+
+            estado:
+                "pendiente",
+
+            ultimaSincronizacion:
+                null
+        }
+    };
+
+
+    // -----------------------------------------
+    // Guardar
+    // -----------------------------------------
+
+    estado.registros.push(
+        registro
+    );
+
+
+    if (
+        !guardarRegistros()
+    ) {
+
+        estado.registros.pop();
+
+        mostrarMensajeFormulario(
+            mensaje,
+            "No se pudo guardar el registro.",
+            true
+        );
+
+        return;
+    }
+
+
+    // -----------------------------------------
+    // Limpiar formulario
+    // -----------------------------------------
+
+    campoHoras.value =
+        "0";
+
+    campoMinutos.value =
+        "0";
+
+    document
+        .querySelectorAll(".atajo-tiempo:not(.atajo-tiempo-edicion)")
+        .forEach(boton => boton.classList.remove("seleccionado"));
+
+    campoNotas.value =
+        "";
+
+    if (campoCompanero) {
+        campoCompanero.value = "";
+    }
+
+    reiniciarCursosBiblicos();
+
+    establecerFechaActual();
+
+    seleccionarActividad(
+        "ministerio"
+    );
+
+
+    // -----------------------------------------
+    // Confirmación
+    // -----------------------------------------
+
+    mostrarMensajeFormulario(
+        mensaje,
+        "Actividad guardada ✓",
+        false
+    );
+
+
+    // -----------------------------------------
+    // Actualizar aplicación
+    // -----------------------------------------
+
+    actualizarTodaLaInterfaz();
+
+
+    // -----------------------------------------
+    // Vibración suave si está disponible
+    // -----------------------------------------
+
+    if (
+        navigator.vibrate &&
+        typeof navigator.vibrate ===
+            "function"
+    ) {
+
+        navigator.vibrate(
+            30
+        );
+    }
+}
 
 
 // =========================================================
@@ -1238,56 +1753,763 @@ function seleccionarFiltroHistorial(
 // OBTENER REGISTROS FILTRADOS
 // =========================================================
 
-/* V109: obtenerRegistrosFiltrados → registrar.js */
+function obtenerRegistrosFiltrados() {
 
+    if (
+        estado.filtroHistorial ===
+        "todos"
+    ) {
+
+        return estado.registros.filter(
+            registro => actividadVisible(registro.tipo)
+        );
+    }
+
+
+    return estado.registros.filter(
+        registro => {
+
+            return (
+                actividadVisible(registro.tipo) &&
+                registro.tipo ===
+                estado.filtroHistorial
+            );
+        }
+    );
+}
 
 
 // =========================================================
 // RENDERIZAR HISTORIAL
 // =========================================================
 
-/* V105: renderizarHistorial trasladada a historial-render.js */
+function renderizarHistorial() {
 
+    const lista =
+        document.getElementById(
+            "listaHistorial"
+        );
+
+    const vacio =
+        document.getElementById(
+            "historialVacio"
+        );
+
+    const contador =
+        document.getElementById(
+            "contadorHistorial"
+        );
+
+    const tituloVacio =
+        document.getElementById(
+            "tituloHistorialVacio"
+        );
+
+    const textoVacio =
+        document.getElementById(
+            "textoHistorialVacio"
+        );
+
+
+    if (
+        !lista ||
+        !vacio ||
+        !contador
+    ) {
+
+        return;
+    }
+
+
+    // -----------------------------------------
+    // Filtrar y ordenar
+    // -----------------------------------------
+
+    const registros =
+        obtenerRegistrosFiltrados()
+            .sort(
+                compararRegistrosPorFecha
+            );
+
+
+    contador.textContent =
+        textoCantidadRegistros(
+            registros.length
+        );
+
+
+    // -----------------------------------------
+    // Estado vacío
+    // -----------------------------------------
+
+    if (
+        registros.length === 0
+    ) {
+
+        lista.innerHTML =
+            "";
+
+        vacio.classList.remove(
+            "oculto"
+        );
+
+        actualizarEstadoVacioHistorial(
+            tituloVacio,
+            textoVacio
+        );
+
+        return;
+    }
+
+
+    vacio.classList.add(
+        "oculto"
+    );
+
+
+    lista.innerHTML =
+        "";
+
+
+    // -----------------------------------------
+    // Agrupar por fecha
+    // -----------------------------------------
+
+    const grupos =
+        agruparRegistrosPorFecha(
+            registros
+        );
+
+
+    grupos.forEach(
+        grupo => {
+
+            const seccion =
+                document.createElement(
+                    "section"
+                );
+
+            seccion.className =
+                "grupo-historial";
+
+
+            // ---------------------------------
+            // Cabecera del día
+            // ---------------------------------
+
+            const encabezado =
+                document.createElement(
+                    "div"
+                );
+
+            encabezado.className =
+                "grupo-historial-cabecera";
+
+
+            const titulo =
+                document.createElement(
+                    "h3"
+                );
+
+            titulo.className =
+                "grupo-historial-titulo";
+
+            titulo.textContent =
+                tituloFechaHistorial(
+                    grupo.fecha
+                );
+
+
+            const total =
+                document.createElement(
+                    "span"
+                );
+
+            total.className =
+                "grupo-historial-total";
+
+            total.textContent =
+                formatearTiempo(
+                    sumarMinutos(
+                        grupo.registros
+                    )
+                );
+
+
+            encabezado.append(
+                titulo,
+                total
+            );
+
+
+            // ---------------------------------
+            // Registros del día
+            // ---------------------------------
+
+            const contenido =
+                document.createElement(
+                    "div"
+                );
+
+            contenido.className =
+                "grupo-historial-registros";
+
+
+            grupo.registros.forEach(
+                registro => {
+
+                    contenido.appendChild(
+                        crearTarjetaHistorial(
+                            registro
+                        )
+                    );
+                }
+            );
+
+
+            seccion.append(
+                encabezado,
+                contenido
+            );
+
+
+            lista.appendChild(
+                seccion
+            );
+        }
+    );
+}
 
 
 // =========================================================
 // AGRUPAR REGISTROS POR FECHA
 // =========================================================
 
-/* V105: agruparRegistrosPorFecha trasladada a historial-render.js */
+function agruparRegistrosPorFecha(
+    registros
+) {
 
+    const mapa =
+        new Map();
+
+
+    registros.forEach(
+        registro => {
+
+            if (
+                !mapa.has(
+                    registro.fecha
+                )
+            ) {
+
+                mapa.set(
+                    registro.fecha,
+                    []
+                );
+            }
+
+
+            mapa
+                .get(
+                    registro.fecha
+                )
+                .push(
+                    registro
+                );
+        }
+    );
+
+
+    return Array
+        .from(
+            mapa.entries()
+        )
+        .map(
+            (
+                [
+                    fecha,
+                    registrosGrupo
+                ]
+            ) => {
+
+                return {
+                    fecha,
+                    registros:
+                        registrosGrupo
+                };
+            }
+        );
+}
 
 
 // =========================================================
 // TÍTULO DE FECHA DEL HISTORIAL
 // =========================================================
 
-/* V105: tituloFechaHistorial trasladada a historial-render.js */
+function tituloFechaHistorial(
+    fechaISO
+) {
 
+    const fecha =
+        fechaDesdeISO(
+            fechaISO
+        );
+
+    const hoy =
+        new Date();
+
+    const ayer =
+        new Date();
+
+
+    ayer.setDate(
+        ayer.getDate() - 1
+    );
+
+
+    // -----------------------------------------
+    // Hoy
+    // -----------------------------------------
+
+    if (
+        fechaLocalISO(fecha) ===
+        fechaLocalISO(hoy)
+    ) {
+
+        return "Hoy";
+    }
+
+
+    // -----------------------------------------
+    // Ayer
+    // -----------------------------------------
+
+    if (
+        fechaLocalISO(fecha) ===
+        fechaLocalISO(ayer)
+    ) {
+
+        return "Ayer";
+    }
+
+
+    // -----------------------------------------
+    // Fecha normal
+    // -----------------------------------------
+
+    const mismoAnio =
+        fecha.getFullYear() ===
+        hoy.getFullYear();
+
+
+    const opciones =
+        mismoAnio
+            ? {
+                day: "numeric",
+                month: "long"
+            }
+            : {
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+            };
+
+
+    return capitalizar(
+        new Intl.DateTimeFormat(
+            "es-ES",
+            opciones
+        ).format(
+            fecha
+        )
+    );
+}
 
 
 // =========================================================
 // ESTADO VACÍO DEL HISTORIAL
 // =========================================================
 
-/* V105: actualizarEstadoVacioHistorial trasladada a historial-render.js */
+function actualizarEstadoVacioHistorial(
+    titulo,
+    texto
+) {
 
+    if (
+        estado.registros.length ===
+        0
+    ) {
+
+        if (titulo) {
+
+            titulo.textContent =
+                "Todavía no hay registros";
+        }
+
+
+        if (texto) {
+
+            texto.textContent =
+                "Cuando registres actividad, aparecerá aquí.";
+        }
+
+
+        return;
+    }
+
+
+    const nombre =
+        nombreActividad(
+            estado.filtroHistorial
+        );
+
+
+    if (titulo) {
+
+        titulo.textContent =
+            `No hay registros de ${nombre}`;
+    }
+
+
+    if (texto) {
+
+        texto.textContent =
+            "Prueba con otro filtro o registra una nueva actividad.";
+    }
+}
 
 
 // =========================================================
 // CREAR TARJETA DEL HISTORIAL
 // =========================================================
 
-/* V105: crearTarjetaHistorial trasladada a historial-render.js */
+function crearTarjetaHistorial(
+    registro
+) {
 
+    const tarjeta =
+        document.createElement(
+            "article"
+        );
+
+
+    tarjeta.className =
+        `registro-card registro-card-${registro.tipo}`;
+
+
+    // -----------------------------------------
+    // Icono
+    // -----------------------------------------
+
+    const icono =
+        document.createElement(
+            "div"
+        );
+
+
+    icono.className =
+        `registro-icono ${registro.tipo}`;
+
+
+    icono.textContent =
+        iconoActividad(
+            registro.tipo
+        );
+
+
+    // -----------------------------------------
+    // Contenido
+    // -----------------------------------------
+
+    const contenido =
+        document.createElement(
+            "div"
+        );
+
+
+    contenido.className =
+        "registro-contenido";
+
+
+    // -----------------------------------------
+    // Cabecera
+    // -----------------------------------------
+
+    const cabecera =
+        document.createElement(
+            "div"
+        );
+
+
+    cabecera.className =
+        "registro-cabecera";
+
+
+    const tipo =
+        document.createElement(
+            "p"
+        );
+
+
+    tipo.className =
+        "registro-tipo";
+
+
+    tipo.textContent =
+        nombreActividad(
+            registro.tipo
+        );
+
+
+    const tiempo =
+        document.createElement(
+            "span"
+        );
+
+
+    tiempo.className =
+        "registro-tiempo";
+
+
+    tiempo.textContent =
+        formatearTiempo(
+            registro.minutos
+        );
+
+
+    cabecera.append(
+        tipo,
+        tiempo
+    );
+
+
+    // -----------------------------------------
+    // Fecha
+    // -----------------------------------------
+
+    const fecha =
+        document.createElement(
+            "p"
+        );
+
+
+    fecha.className =
+        "registro-fecha";
+
+
+    fecha.textContent =
+        formatearFecha(
+            registro.fecha
+        );
+
+
+    contenido.append(
+        cabecera,
+        fecha
+    );
+
+
+    // -----------------------------------------
+    // Notas
+    // -----------------------------------------
+
+    if (
+        registro.notas
+    ) {
+
+        const notas =
+            document.createElement(
+                "p"
+            );
+
+
+        notas.className =
+            "registro-notas";
+
+
+        notas.textContent =
+            registro.notas;
+
+
+        contenido.appendChild(
+            notas
+        );
+    }
+
+
+    // -----------------------------------------
+    // Botón borrar
+    // -----------------------------------------
+
+    const botonBorrar =
+        document.createElement(
+            "button"
+        );
+
+
+    botonBorrar.type =
+        "button";
+
+
+    botonBorrar.className =
+        "boton-borrar";
+
+
+    botonBorrar.textContent =
+        "⌫";
+
+
+    botonBorrar.setAttribute(
+        "aria-label",
+        `Eliminar registro de ${nombreActividad(registro.tipo)}`
+    );
+
+
+    botonBorrar.addEventListener(
+        "click",
+        () => {
+
+            abrirModalBorrado(
+                registro.id
+            );
+        }
+    );
+
+
+    // -----------------------------------------
+    // Acciones: editar y borrar
+    // -----------------------------------------
+
+    const acciones =
+        document.createElement("div");
+
+    acciones.className =
+        "registro-acciones";
+
+    const botonEditar =
+        document.createElement("button");
+
+    botonEditar.type = "button";
+    botonEditar.className =
+        "boton-editar-registro";
+    botonEditar.textContent = "✎";
+    botonEditar.setAttribute(
+        "aria-label",
+        `Editar registro de ${nombreActividad(registro.tipo)}`
+    );
+
+    botonEditar.addEventListener(
+        "click",
+        evento => {
+            evento.stopPropagation();
+            abrirModalEdicion(registro.id);
+        }
+    );
+
+    botonBorrar.addEventListener(
+        "click",
+        evento => {
+            evento.stopPropagation();
+        },
+        { once: false }
+    );
+
+    acciones.append(
+        botonEditar,
+        botonBorrar
+    );
+
+    tarjeta.append(
+        icono,
+        contenido,
+        acciones
+    );
+
+    tarjeta.classList.add("registro-card-editable");
+    tarjeta.setAttribute("tabindex", "0");
+    tarjeta.setAttribute(
+        "aria-label",
+        `Editar ${nombreActividad(registro.tipo)}, ${formatearTiempo(registro.minutos)}`
+    );
+
+    tarjeta.addEventListener(
+        "click",
+        evento => {
+            if (evento.target.closest("button")) return;
+            abrirModalEdicion(registro.id);
+        }
+    );
+
+    tarjeta.addEventListener(
+        "keydown",
+        evento => {
+            if (evento.key === "Enter" || evento.key === " ") {
+                evento.preventDefault();
+                abrirModalEdicion(registro.id);
+            }
+        }
+    );
+
+    return tarjeta;
+}
 
 
 // =========================================================
 // EDICIÓN DE REGISTROS
 // =========================================================
 
-/* V106: configurarEdicionRegistros trasladada a historial-edicion.js */
+function configurarEdicionRegistros() {
 
+    configurarCamposTiempoFaciles(
+        "editarHoras",
+        "editarMinutos"
+    );
+
+    configurarAtajosTiempo(
+        ".atajo-tiempo-edicion",
+        "editarHoras",
+        "editarMinutos"
+    );
+
+    const formulario =
+        document.getElementById("formEditarRegistro");
+
+    const cancelar =
+        document.getElementById("cancelarEdicion");
+
+    const fondo =
+        document.querySelector("#modalEditar .modal-fondo");
+
+    if (formulario) {
+        formulario.addEventListener(
+            "submit",
+            guardarEdicionRegistro
+        );
+    }
+
+    if (cancelar) {
+        cancelar.addEventListener(
+            "click",
+            cerrarModalEdicion
+        );
+    }
+
+    if (fondo) {
+        fondo.addEventListener(
+            "click",
+            cerrarModalEdicion
+        );
+    }
+
+    document.addEventListener(
+        "keydown",
+        evento => {
+            if (evento.key === "Escape") {
+                cerrarModalEdicion();
+            }
+        }
+    );
+}
 
 
 function abrirModalEdicion(id) {
@@ -1373,8 +2595,119 @@ function cerrarModalEdicion() {
 }
 
 
-/* V106: guardarEdicionRegistro trasladada a historial-edicion.js */
+function guardarEdicionRegistro(evento) {
 
+    evento.preventDefault();
+
+    const id = estado.registroPendienteEditar;
+    const indice = estado.registros.findIndex(
+        registro => registro.id === id
+    );
+
+    if (indice < 0) {
+        cerrarModalEdicion();
+        return;
+    }
+
+    const fecha = document.getElementById("editarFecha");
+    const tipo = document.getElementById("editarTipo");
+    const horas = document.getElementById("editarHoras");
+    const minutos = document.getElementById("editarMinutos");
+    const notas = document.getElementById("editarNotas");
+    const companero = document.getElementById("editarCompanero");
+    const mensaje = document.getElementById("mensajeEditarRegistro");
+
+    const valorFecha = fecha ? fecha.value : "";
+    const valorTipo = tipo ? tipo.value : "ministerio";
+    const valorHoras = Number(horas ? horas.value : 0);
+    const valorMinutos = Number(minutos ? minutos.value : 0);
+    const valorNotas = notas ? notas.value.trim() : "";
+    const valorCompanero =
+        companero
+            ? companero.value.trim()
+            : "";
+
+    const tiposValidos = [
+        "ministerio",
+        "ldc",
+        "asambleas",
+        "otras"
+    ];
+
+    function error(texto) {
+        if (mensaje) {
+            mensaje.textContent = texto;
+            mensaje.classList.add("error");
+        }
+    }
+
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(valorFecha)) {
+        error("Selecciona una fecha válida.");
+        return;
+    }
+
+    if (!tiposValidos.includes(valorTipo)) {
+        error("Selecciona una actividad válida.");
+        return;
+    }
+
+    if (
+        !Number.isInteger(valorHoras)
+        || valorHoras < 0
+        || valorHoras > 24
+    ) {
+        error("Revisa las horas.");
+        return;
+    }
+
+    if (
+        !Number.isInteger(valorMinutos)
+        || valorMinutos < 0
+        || valorMinutos > 59
+    ) {
+        error("Los minutos deben estar entre 0 y 59.");
+        return;
+    }
+
+    const totalMinutos =
+        (valorHoras * 60) + valorMinutos;
+
+    if (totalMinutos <= 0) {
+        error("Introduce un tiempo mayor que cero.");
+        return;
+    }
+
+    const anterior = {
+        ...estado.registros[indice],
+        sincronizacion: {
+            ...(estado.registros[indice].sincronizacion || {})
+        }
+    };
+
+    estado.registros[indice] = {
+        ...estado.registros[indice],
+        fecha: valorFecha,
+        tipo: valorTipo,
+        minutos: totalMinutos,
+        notas: valorNotas,
+        companero: valorCompanero,
+        modificadoEn: new Date().toISOString(),
+        sincronizacion: {
+            estado: "pendiente",
+            ultimaSincronizacion:
+                estado.registros[indice].sincronizacion?.ultimaSincronizacion || null
+        }
+    };
+
+    if (!guardarRegistros()) {
+        estado.registros[indice] = anterior;
+        error("No se pudieron guardar los cambios.");
+        return;
+    }
+
+    cerrarModalEdicion();
+    actualizarTodaLaInterfaz();
+}
 
 
 // =========================================================
@@ -1449,16 +2782,114 @@ function cerrarModalBorrado() {
 // CONFIRMAR BORRADO
 // =========================================================
 
-/* V106: confirmarEliminarRegistro trasladada a historial-edicion.js */
+function confirmarEliminarRegistro() {
 
+    const id =
+        estado.registroPendienteBorrar;
+
+
+    if (!id) {
+
+        cerrarModalBorrado();
+
+        return;
+    }
+
+
+    // Guardamos una copia por seguridad.
+
+    const anteriores =
+        [
+            ...estado.registros
+        ];
+
+
+    estado.registros =
+        estado.registros.filter(
+            registro => {
+
+                return (
+                    registro.id !==
+                    id
+                );
+            }
+        );
+
+
+    // -----------------------------------------
+    // Guardar cambio
+    // -----------------------------------------
+
+    if (
+        !guardarRegistros()
+    ) {
+
+        estado.registros =
+            anteriores;
+
+        cerrarModalBorrado();
+
+        console.error(
+            "No se pudo eliminar el registro."
+        );
+
+        return;
+    }
+
+
+    cerrarModalBorrado();
+
+
+    actualizarTodaLaInterfaz();
+}
 
 
 // =========================================================
 // ORDENAR REGISTROS
 // =========================================================
 
-/* V109: compararRegistrosPorFecha → registrar.js */
+function compararRegistrosPorFecha(
+    a,
+    b
+) {
 
+    const fechaA =
+        fechaDesdeISO(
+            a.fecha
+        );
+
+    const fechaB =
+        fechaDesdeISO(
+            b.fecha
+        );
+
+
+    const diferencia =
+        fechaB.getTime() -
+        fechaA.getTime();
+
+
+    if (
+        diferencia !== 0
+    ) {
+
+        return diferencia;
+    }
+
+
+    // Si son del mismo día,
+    // el último creado aparece primero.
+
+    return (
+        new Date(
+            b.creadoEn || 0
+        ).getTime()
+        -
+        new Date(
+            a.creadoEn || 0
+        ).getTime()
+    );
+}
 
 
 // =========================================================
@@ -1768,56 +3199,901 @@ window.addEventListener("focus", () => {
 // CALENDARIO DEL MES EN INICIO
 // =========================================================
 
-/* V110: configurarCalendarioInicio → planificacion.js */
+function configurarCalendarioInicio() {
+
+    const boton =
+        document.getElementById(
+            "botonCalendarioInicio"
+        );
+
+    const panel =
+        document.getElementById(
+            "panelCalendarioInicio"
+        );
+
+    const icono =
+        document.getElementById(
+            "iconoCalendarioInicio"
+        );
+
+    if (!boton || !panel) {
+        return;
+    }
+
+    boton.addEventListener(
+        "click",
+        () => {
+
+            const abrir =
+                panel.classList.contains(
+                    "oculto"
+                );
+
+            panel.classList.toggle(
+                "oculto",
+                !abrir
+            );
+
+            boton.setAttribute(
+                "aria-expanded",
+                abrir ? "true" : "false"
+            );
+
+            if (icono) {
+                icono.textContent =
+                    abrir ? "⌃" : "⌄";
+            }
+
+            if (abrir) {
+                actualizarCalendarioInicio();
+            }
+        }
+    );
+}
+
+
+function actualizarCalendarioInicio() {
+
+    const calendario =
+        document.getElementById(
+            "calendarioInicio"
+        );
+
+    const titulo =
+        document.getElementById(
+            "tituloCalendarioInicio"
+        );
+
+    const resumen =
+        document.getElementById(
+            "resumenCalendarioInicio"
+        );
+
+    const detalle =
+        document.getElementById(
+            "detalleDiaCalendario"
+        );
+
+    if (!calendario) {
+        return;
+    }
+
+    const hoy = new Date();
+    const anio = hoy.getFullYear();
+    const mes = hoy.getMonth();
+
+    if (titulo) {
+        titulo.textContent =
+            hoy.toLocaleDateString(
+                "es-ES",
+                {
+                    month: "long",
+                    year: "numeric"
+                }
+            ).replace(
+                /^./,
+                letra => letra.toUpperCase()
+            );
+    }
+
+    const registrosMes =
+        estado.registros.filter(
+            registro => {
+                const fecha =
+                    fechaDesdeISO(
+                        registro.fecha
+                    );
+
+                return (
+                    fecha.getFullYear() === anio
+                    &&
+                    fecha.getMonth() === mes
+                );
+            }
+        );
+
+    const minutosPorDia = new Map();
+    const registrosPorDia = new Map();
+
+    registrosMes.forEach(
+        registro => {
+            const fecha =
+                fechaDesdeISO(
+                    registro.fecha
+                );
+
+            const dia = fecha.getDate();
+            const minutos =
+                Math.max(
+                    Number(registro.minutos) || 0,
+                    0
+                );
+
+            minutosPorDia.set(
+                dia,
+                (minutosPorDia.get(dia) || 0)
+                + minutos
+            );
+
+            if (!registrosPorDia.has(dia)) {
+                registrosPorDia.set(dia, []);
+            }
+
+            registrosPorDia.get(dia).push(registro);
+        }
+    );
+
+    const diasConActividad =
+        Array.from(
+            minutosPorDia.values()
+        ).filter(
+            minutos => minutos > 0
+        ).length;
+
+    if (resumen) {
+        resumen.textContent =
+            diasConActividad === 1
+                ? "1 día con actividad"
+                : `${diasConActividad} días con actividad`;
+    }
+
+    calendario.innerHTML = "";
+
+    if (detalle) {
+        detalle.classList.add("oculto");
+        detalle.innerHTML = "";
+    }
+
+    const primerDia =
+        new Date(anio, mes, 1).getDay();
+
+    const huecosIniciales =
+        (primerDia + 6) % 7;
+
+    const diasMes =
+        new Date(
+            anio,
+            mes + 1,
+            0
+        ).getDate();
+
+    for (
+        let indice = 0;
+        indice < huecosIniciales;
+        indice += 1
+    ) {
+        const hueco =
+            document.createElement("span");
+
+        hueco.className =
+            "calendario-dia calendario-dia-vacio";
+
+        hueco.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+        calendario.appendChild(hueco);
+    }
+
+    for (
+        let dia = 1;
+        dia <= diasMes;
+        dia += 1
+    ) {
+        const minutos =
+            minutosPorDia.get(dia) || 0;
+
+        const botonDia =
+            document.createElement("button");
+
+        botonDia.type = "button";
+        botonDia.className =
+            "calendario-dia";
+
+        if (minutos > 0) {
+            botonDia.classList.add(
+                "con-actividad"
+            );
+        }
+
+        if (
+            dia === hoy.getDate()
+            &&
+            mes === hoy.getMonth()
+            &&
+            anio === hoy.getFullYear()
+        ) {
+            botonDia.classList.add("hoy");
+        }
+
+        const numero =
+            document.createElement("span");
+
+        numero.className =
+            "calendario-dia-numero";
+
+        numero.textContent = dia;
+
+        const tiempos =
+            document.createElement("span");
+
+        tiempos.className =
+            "calendario-dia-tiempos";
+
+        const registrosDia =
+            registrosPorDia.get(dia) || [];
+
+        const minutosPorActividad = {
+            ministerio: 0,
+            ldc: 0,
+            asambleas: 0,
+            otras: 0
+        };
+
+        registrosDia.forEach(registro => {
+            if (
+                Object.prototype.hasOwnProperty.call(
+                    minutosPorActividad,
+                    registro.tipo
+                )
+            ) {
+                minutosPorActividad[registro.tipo] +=
+                    Math.max(
+                        Number(registro.minutos) || 0,
+                        0
+                    );
+            }
+        });
+
+        [
+            "ministerio",
+            "ldc",
+            "asambleas",
+            "otras"
+        ].forEach(tipo => {
+            const minutosActividad =
+                minutosPorActividad[tipo];
+
+            if (
+                minutosActividad <= 0 ||
+                !actividadVisible(tipo)
+            ) {
+                return;
+            }
+
+            const tiempoActividad =
+                document.createElement("span");
+
+            tiempoActividad.className =
+                `calendario-dia-tiempo ${claseActividadCalendario(tipo)}`;
+
+            tiempoActividad.textContent =
+                formatearTiempoCortoCalendario(
+                    minutosActividad
+                );
+
+            tiempoActividad.title =
+                `${nombreActividad(tipo)}: ${formatearTiempo(minutosActividad)}`;
+
+            tiempos.appendChild(
+                tiempoActividad
+            );
+        });
+
+        botonDia.appendChild(numero);
+        botonDia.appendChild(tiempos);
+
+        const companerosDia = Array.from(new Set(
+            (registrosPorDia.get(dia) || [])
+                .map(registro => String(registro.companero || "").trim())
+                .filter(Boolean)
+        ));
+
+        const fechaDiaISO =
+            fechaLocalISO(
+                new Date(anio, mes, dia)
+            );
+
+        const agendaDiaDatos =
+            normalizarAgendaDia(
+                estado.agendaSalidas?.[fechaDiaISO]
+            );
+
+        const companeroAgendado =
+            agendaDiaDatos.companero;
+
+        const tipoAgendado =
+            agendaDiaDatos.tipo;
+
+        // Si hay una salida planificada, la mostramos incluso aunque
+        // todavía no haya horas registradas.
+        if (companeroAgendado) {
+            botonDia.classList.add("con-agenda");
+
+            const agendaDia =
+                document.createElement("span");
+
+            agendaDia.className =
+                `calendario-dia-agenda ${claseActividadCalendario(tipoAgendado)}`;
+
+            agendaDia.textContent =
+                `📌 ${nombreActividad(tipoAgendado)} · ${companeroAgendado}${agendaDiaDatos.minutosPrevistos ? " · "+formatoMinutosPlan(agendaDiaDatos.minutosPrevistos) : ""}`;
+
+            agendaDia.title =
+                `${nombreActividad(tipoAgendado)} planificado con ${companeroAgendado}`;
+
+            botonDia.appendChild(agendaDia);
+
+        } else if (companerosDia.length > 0) {
+            const companeroDia =
+                document.createElement("span");
+
+            companeroDia.className =
+                "calendario-dia-companero";
+
+            companeroDia.textContent =
+                companerosDia.join(", ");
+
+            companeroDia.title =
+                companerosDia.join(", ");
+
+            botonDia.appendChild(companeroDia);
+        }
+
+        const ariaActividad =
+            minutos > 0
+                ? `${dia}: ${formatearTiempo(minutos)} de actividad`
+                : `${dia}: sin actividad`;
+
+        botonDia.setAttribute(
+            "aria-label",
+            companeroAgendado
+                ? `${ariaActividad}. Salida agendada con ${companeroAgendado}`
+                : ariaActividad
+        );
+
+        botonDia.addEventListener(
+            "click",
+            () => {
+                mostrarDetalleDiaCalendario(
+                    dia,
+                    mes,
+                    anio,
+                    registrosPorDia.get(dia) || []
+                );
+            }
+        );
+
+        calendario.appendChild(botonDia);
+    }
+}
+
+
+function formatearTiempoCortoCalendario(minutos) {
+
+    const total =
+        Math.max(
+            Math.round(
+                Number(minutos) || 0
+            ),
+            0
+        );
+
+    const horas =
+        Math.floor(total / 60);
+
+    const resto = total % 60;
+
+    if (horas > 0 && resto > 0) {
+        return `${horas}h ${resto}m`;
+    }
+
+    if (horas > 0) {
+        return `${horas}h`;
+    }
+
+    return resto > 0
+        ? `${resto}m`
+        : "";
+}
+
+
+function mostrarDetalleDiaCalendario(
+    dia,
+    mes,
+    anio,
+    registros
+) {
+
+    const detalle =
+        document.getElementById(
+            "detalleDiaCalendario"
+        );
+
+    if (!detalle) {
+        return;
+    }
+
+    const fecha =
+        new Date(anio, mes, dia);
+
+    const tituloFecha =
+        fecha.toLocaleDateString(
+            "es-ES",
+            {
+                weekday: "long",
+                day: "numeric",
+                month: "long"
+            }
+        );
+
+    const registrosVisibles =
+        registros.filter(
+            registro =>
+                actividadVisible(
+                    registro.tipo
+                )
+        );
+
+    const total =
+        sumarMinutos(
+            registrosVisibles
+        );
+
+    detalle.innerHTML = "";
+    detalle.classList.remove("oculto");
+
+    const cabecera =
+        document.createElement("div");
+
+    cabecera.className =
+        "detalle-dia-cabecera";
+
+    const nombre =
+        document.createElement("strong");
+
+    nombre.textContent =
+        tituloFecha.replace(
+            /^./,
+            letra => letra.toUpperCase()
+        );
+
+    const totalTexto =
+        document.createElement("span");
+
+    totalTexto.textContent =
+        formatearTiempo(total);
+
+    cabecera.appendChild(nombre);
+    cabecera.appendChild(totalTexto);
+    detalle.appendChild(cabecera);
+
+    const fechaISO =
+        fechaLocalISO(
+            fecha
+        );
+
+    const agendaDiaDatos =
+        normalizarAgendaDia(
+            estado.agendaSalidas?.[fechaISO]
+        );
+
+    const companeroAgendado =
+        agendaDiaDatos.companero;
+
+    const tipoAgendado =
+        agendaDiaDatos.tipo;
+
+    const bloqueAgenda =
+        document.createElement("div");
+
+    bloqueAgenda.className =
+        "detalle-dia-agenda";
+
+    const textoAgenda =
+        document.createElement("div");
+
+    textoAgenda.className =
+        "detalle-dia-agenda-texto";
+
+    const etiquetaAgenda =
+        document.createElement("span");
+
+    etiquetaAgenda.textContent =
+        companeroAgendado
+            ? `${nombreActividad(tipoAgendado)} previsto`
+            : "Planificar actividad";
+
+    const valorAgenda =
+        document.createElement("strong");
+
+    valorAgenda.textContent =
+        companeroAgendado
+            ? `Con: ${companeroAgendado}`
+            : "Sin planificar";
+
+    textoAgenda.append(
+        etiquetaAgenda,
+        valorAgenda
+    );
+
+    const accionesAgenda =
+        document.createElement("div");
+
+    accionesAgenda.className =
+        "detalle-dia-agenda-acciones";
+
+    const botonAgendar =
+        document.createElement("button");
+
+    botonAgendar.type = "button";
+    botonAgendar.className =
+        "boton-agendar-calendario";
+
+    botonAgendar.textContent =
+        companeroAgendado
+            ? "Cambiar"
+            : "Agendar";
+
+    botonAgendar.addEventListener(
+        "click",
+        () => {
+            agendarSalidaCalendario(
+                fechaISO
+            );
+        }
+    );
+
+    accionesAgenda.appendChild(
+        botonAgendar
+    );
+
+    if (companeroAgendado) {
+        const botonQuitar =
+            document.createElement("button");
+
+        botonQuitar.type = "button";
+        botonQuitar.className =
+            "boton-quitar-agenda";
+
+        botonQuitar.textContent =
+            "Quitar";
+
+        botonQuitar.addEventListener(
+            "click",
+            () => {
+                quitarSalidaAgendada(
+                    fechaISO
+                );
+            }
+        );
+
+        accionesAgenda.appendChild(
+            botonQuitar
+        );
+    }
+
+    bloqueAgenda.append(
+        textoAgenda,
+        accionesAgenda
+    );
+
+    detalle.appendChild(
+        bloqueAgenda
+    );
+
+    if (registrosVisibles.length === 0) {
+        const vacio =
+            document.createElement("p");
+
+        vacio.className =
+            "texto-secundario";
+
+        vacio.textContent =
+            "No hubo actividad registrada este día.";
+
+        detalle.appendChild(vacio);
+        return;
+    }
+
+    const lista =
+        document.createElement("div");
+
+    lista.className =
+        "detalle-dia-lista-registros";
+
+    registrosVisibles
+        .slice()
+        .sort(compararRegistrosPorFecha)
+        .forEach(
+            registro => {
+                const fila =
+                    document.createElement("div");
+
+                fila.className =
+                    "detalle-dia-registro";
+
+                const datos =
+                    document.createElement("div");
+
+                datos.className =
+                    "detalle-dia-registro-datos";
+
+                const etiqueta =
+                    document.createElement("span");
+
+                etiqueta.textContent =
+                    nombreActividad(registro.tipo);
+
+                const valor =
+                    document.createElement("strong");
+
+                valor.textContent =
+                    formatearTiempo(registro.minutos);
+
+                datos.append(etiqueta, valor);
+
+                if (registro.companero) {
+                    const companero = document.createElement("small");
+                    companero.className = "detalle-dia-companero";
+                    companero.textContent = `Con: ${registro.companero}`;
+                    datos.appendChild(companero);
+                }
+
+                if (registro.notas) {
+                    const nota =
+                        document.createElement("small");
+                    nota.textContent = registro.notas;
+                    datos.appendChild(nota);
+                }
+
+                const editar =
+                    document.createElement("button");
+
+                editar.type = "button";
+                editar.className =
+                    "boton-editar-calendario";
+                editar.textContent = "Editar";
+                editar.setAttribute(
+                    "aria-label",
+                    `Editar ${nombreActividad(registro.tipo)} de ${formatearTiempo(registro.minutos)}`
+                );
+
+                editar.addEventListener(
+                    "click",
+                    () => abrirModalEdicion(registro.id)
+                );
+
+                fila.append(datos, editar);
+                lista.appendChild(fila);
+            }
+        );
+
+    detalle.appendChild(lista);
+}
 
 
 
-/* V110: actualizarCalendarioInicio → planificacion.js */
 
+function normalizarAgendaDia(valor) {
+    if (!valor) {
+        return {
+            tipo: "ministerio",
+            companero: "",
+            minutosPrevistos: 0
+        };
+    }
 
+    if (typeof valor === "string") {
+        return {
+            tipo: "ministerio",
+            companero: valor.trim(),
+            minutosPrevistos: 0
+        };
+    }
 
-/* V110: formatearTiempoCortoCalendario → planificacion.js */
+    const tiposValidos = [
+        "ministerio",
+        "ldc",
+        "asambleas",
+        "otras"
+    ];
 
-
-
-/* V110: mostrarDetalleDiaCalendario → planificacion.js */
-
-
-
-
-
-/* V110: normalizarAgendaDia → planificacion.js */
-
+    return {
+        tipo: tiposValidos.includes(valor.tipo)
+            ? valor.tipo
+            : "ministerio",
+        companero: String(
+            valor.companero ||
+            valor.nombre ||
+            ""
+        ).trim(),
+        minutosPrevistos: Math.max(0, Number(valor.minutosPrevistos || 0) || 0)
+    };
+}
 
 
 function formatoMinutosPlan(minutos) {
     const n=Math.max(0,Number(minutos)||0), h=Math.floor(n/60), m=n%60;
     return m ? `${h ? h+" h " : ""}${m} min` : (h ? `${h} h` : "");
 }
-/* V110: minutosPlanificadosMesActual → planificacion.js */
-
-/* V110: claseActividadCalendario → planificacion.js */
-
+function minutosPlanificadosMesActual() {
+    const hoy=new Date();
+    return Object.entries(estado.agendaSalidas||{}).reduce((s,[fecha,v])=>{
+        const d=new Date(fecha+"T12:00:00"), a=normalizarAgendaDia(v);
+        return d.getFullYear()===hoy.getFullYear() && d.getMonth()===hoy.getMonth() ? s+(a.minutosPrevistos||0) : s;
+    },0);
+}
+function claseActividadCalendario(tipo) {
+    switch (tipo) {
+        case "ldc":
+            return "actividad-ldc";
+        case "asambleas":
+            return "actividad-asambleas";
+        case "otras":
+            return "actividad-otras";
+        case "ministerio":
+        default:
+            return "actividad-ministerio";
+    }
+}
 
 
 // =========================================================
 // AGENDA DE SALIDAS DEL MINISTERIO
 // =========================================================
 
-/* V110: agendarSalidaCalendario → planificacion.js */
+function agendarSalidaCalendario(fechaISO) {
+    abrirModalAgendaSalida(fechaISO);
+}
 
 
+function asegurarModalAgendaSalida() {
+    const modal = document.getElementById("modalAgendaSalida");
+    if (!modal) return;
 
-/* V110: asegurarModalAgendaSalida → planificacion.js */
+    const fondo = document.getElementById("fondoModalAgendaSalida");
+    const cancelar = document.getElementById("cancelarAgendaSalida");
+
+    // Estos dos controles no dependen de una fecha concreta.
+    if (fondo) {
+        fondo.onclick = cerrarModalAgendaSalida;
+    }
+
+    if (cancelar) {
+        cancelar.onclick = cerrarModalAgendaSalida;
+    }
+
+    if (modal.dataset.escapeConfigurado !== "1") {
+        document.addEventListener("keydown", evento => {
+            if (
+                evento.key === "Escape" &&
+                !modal.classList.contains("oculto")
+            ) {
+                cerrarModalAgendaSalida();
+            }
+        });
+        modal.dataset.escapeConfigurado = "1";
+    }
+}
 
 
+function abrirModalAgendaSalida(fechaISO) {
+    asegurarModalAgendaSalida();
 
-/* V110: abrirModalAgendaSalida → planificacion.js */
+    const modal = document.getElementById("modalAgendaSalida");
+    const input = document.getElementById("nombreAgendaSalida");
+    const tipo = document.getElementById("tipoAgendaSalida");
+    const fechaTexto = document.getElementById("fechaModalAgendaSalida");
+    const titulo = document.getElementById("tituloModalAgendaSalida");
+    const mensaje = document.getElementById("mensajeAgendaSalida");
+    const guardar = document.getElementById("guardarAgendaSalida");
+    const duracion = document.getElementById("duracionAgendaSalida");
+
+    if (!modal || !input || !tipo || !guardar) return;
+
+    const actual =
+        normalizarAgendaDia(
+            estado.agendaSalidas?.[fechaISO]
+        );
+
+    const nombreActual =
+        actual.companero;
+
+    const fecha = fechaDesdeISO(fechaISO);
+
+    const legible =
+        fecha.toLocaleDateString(
+            "es-ES",
+            {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+            }
+        );
+
+    modal.dataset.fecha = fechaISO;
+    input.value = nombreActual;
+    tipo.value = actual.tipo;
+    if (duracion) duracion.value = String(actual.minutosPrevistos || 0);
+
+    if (fechaTexto) {
+        fechaTexto.textContent =
+            legible.replace(/^./, letra => letra.toUpperCase());
+    }
+
+    if (titulo) {
+        titulo.textContent =
+            nombreActual
+                ? "Editar actividad planificada"
+                : "Planificar actividad";
+    }
+
+    if (mensaje) {
+        mensaje.textContent = "";
+        mensaje.classList.remove("exito");
+    }
+
+    // IMPORTANTE:
+    // Se asigna de nuevo al abrir. Así Guardar siempre trabaja
+    // con la fecha que se está editando en ese momento.
+    guardar.disabled = false;
+    guardar.textContent = nombreActual ? "Guardar cambios" : "Guardar";
+
+    guardar.onclick = () => {
+        guardarSalidaDesdeModal(fechaISO);
+    };
+
+    input.onkeydown = evento => {
+        if (evento.key === "Enter") {
+            evento.preventDefault();
+            guardarSalidaDesdeModal(fechaISO);
+        }
+    };
+
+    modal.classList.remove("oculto");
+    modal.setAttribute("aria-hidden", "false");
+
+    window.setTimeout(() => {
+        input.focus();
+        input.setSelectionRange(
+            input.value.length,
+            input.value.length
+        );
+    }, 60);
+}
 
 
+function cerrarModalAgendaSalida() {
+    const modal = document.getElementById("modalAgendaSalida");
+    if (!modal) return;
 
-/* V110: cerrarModalAgendaSalida → planificacion.js */
-
+    modal.classList.add("oculto");
+    modal.setAttribute("aria-hidden", "true");
+    delete modal.dataset.fecha;
+}
 
 
 function guardarSalidaDesdeModal(fechaForzada = "") {
@@ -1930,8 +4206,46 @@ function guardarSalidaDesdeModal(fechaForzada = "") {
 }
 
 
-/* V110: quitarSalidaAgendada → planificacion.js */
+function quitarSalidaAgendada(fechaISO) {
+    const actual =
+        estado.agendaSalidas?.[fechaISO];
 
+    if (!actual) return;
+
+    // Quitamos primero de la interfaz/estado para que el toque
+    // tenga respuesta instantánea.
+    delete estado.agendaSalidas[fechaISO];
+
+    if (!guardarAgendaSalidas()) {
+        estado.agendaSalidas[fechaISO] =
+            actual;
+
+        window.alert(
+            "No se pudo quitar la salida planificada."
+        );
+
+        actualizarCalendarioInicio();
+        return;
+    }
+
+    actualizarCalendarioInicio();
+
+    const fecha =
+        fechaDesdeISO(fechaISO);
+
+    const registrosDia =
+        estado.registros.filter(
+            registro =>
+                registro.fecha === fechaISO
+        );
+
+    mostrarDetalleDiaCalendario(
+        fecha.getDate(),
+        fecha.getMonth(),
+        fecha.getFullYear(),
+        registrosDia
+    );
+}
 
 
 // =========================================================
@@ -2071,8 +4385,31 @@ function actualizarNombreMes() {
 // OBTENER REGISTROS DEL MES ACTUAL
 // =========================================================
 
-/* V109: obtenerRegistrosMesActual → registrar.js */
+function obtenerRegistrosMesActual() {
 
+    const hoy =
+        new Date();
+
+
+    return estado.registros.filter(
+        registro => {
+
+            const fecha =
+                fechaDesdeISO(
+                    registro.fecha
+                );
+
+
+            return (
+                fecha.getFullYear() ===
+                    hoy.getFullYear()
+                &&
+                fecha.getMonth() ===
+                    hoy.getMonth()
+            );
+        }
+    );
+}
 
 
 // =========================================================
@@ -2490,48 +4827,468 @@ function actualizarHitosProgreso(progreso) {
 // CONFIGURAR ESTADÍSTICAS
 // =========================================================
 
-/* V108: configurarEstadisticas → estadisticas-render.js */
+function configurarEstadisticas() {
 
+    document
+        .querySelectorAll(".periodo-boton")
+        .forEach(boton => {
+
+            boton.addEventListener(
+                "click",
+                () => {
+
+                    const periodo =
+                        boton.dataset.periodo;
+
+                    seleccionarPeriodoEstadisticas(
+                        periodo
+                    );
+                }
+            );
+        });
+
+
+    const anterior =
+        document.getElementById(
+            "periodoAnterior"
+        );
+
+
+    const siguiente =
+        document.getElementById(
+            "periodoSiguiente"
+        );
+
+
+    if (anterior) {
+
+        anterior.addEventListener(
+            "click",
+            () => {
+
+                moverPeriodoEstadisticas(
+                    -1
+                );
+            }
+        );
+    }
+
+
+    if (siguiente) {
+
+        siguiente.addEventListener(
+            "click",
+            () => {
+
+                moverPeriodoEstadisticas(
+                    1
+                );
+            }
+        );
+    }
+}
 
 
 // =========================================================
 // SELECCIONAR SEMANA / MES / AÑO
 // =========================================================
 
-/* V108: seleccionarPeriodoEstadisticas → estadisticas-render.js */
+function seleccionarPeriodoEstadisticas(
+    periodo
+) {
 
+    const periodosValidos = [
+        "semana",
+        "mes",
+        "anio"
+    ];
+
+
+    if (
+        !periodosValidos.includes(
+            periodo
+        )
+    ) {
+        return;
+    }
+
+
+    estado.estadisticas.periodo =
+        periodo;
+
+
+    // Al cambiar de Semana/Mes/Año
+    // volvemos al periodo actual.
+
+    estado.estadisticas.fechaReferencia =
+        new Date();
+
+
+    document
+        .querySelectorAll(".periodo-boton")
+        .forEach(boton => {
+
+            boton.classList.toggle(
+                "activo",
+                boton.dataset.periodo ===
+                    periodo
+            );
+        });
+
+
+    actualizarEstadisticas();
+}
 
 
 // =========================================================
 // MOVER PERIODO
 // =========================================================
 
-/* V108: moverPeriodoEstadisticas → estadisticas-render.js */
+function moverPeriodoEstadisticas(
+    direccion
+) {
 
+    const fecha =
+        copiarFecha(
+            estado.estadisticas
+                .fechaReferencia
+        );
+
+
+    switch (
+        estado.estadisticas.periodo
+    ) {
+
+        case "semana":
+
+            fecha.setDate(
+                fecha.getDate() +
+                direccion * 7
+            );
+
+            break;
+
+
+        case "mes":
+
+            fecha.setDate(1);
+
+            fecha.setMonth(
+                fecha.getMonth() +
+                direccion
+            );
+
+            break;
+
+
+        case "anio": {
+
+            const rangoActual =
+                rangoAnio(
+                    fecha
+                );
+
+            fecha.setTime(
+                rangoActual.inicio.getTime()
+            );
+
+            fecha.setFullYear(
+                fecha.getFullYear() +
+                direccion
+            );
+
+            break;
+        }
+    }
+
+
+    estado.estadisticas.fechaReferencia =
+        fecha;
+
+
+    actualizarEstadisticas();
+}
 
 
 // =========================================================
 // ACTUALIZAR ESTADÍSTICAS
 // =========================================================
 
-/* V108: actualizarEstadisticas → estadisticas-render.js */
+function actualizarEstadisticas() {
 
+    const rango =
+        obtenerRangoEstadisticas();
+
+
+    const registros =
+        obtenerRegistrosEntreFechas(
+            rango.inicio,
+            rango.fin
+        ).filter(
+            registro => actividadVisible(registro.tipo)
+        );
+
+
+    const total =
+        sumarMinutos(
+            registros
+        );
+
+
+    const ministerio =
+        sumarMinutos(
+            registros.filter(
+                registro =>
+                    registro.tipo ===
+                    "ministerio"
+            )
+        );
+
+
+    const ldc =
+        sumarMinutos(
+            registros.filter(
+                registro =>
+                    registro.tipo ===
+                    "ldc"
+            )
+        );
+
+
+    const asambleas =
+        sumarMinutos(
+            registros.filter(
+                registro =>
+                    registro.tipo ===
+                    "asambleas"
+            )
+        );
+
+
+    const otras =
+        sumarMinutos(
+            registros.filter(
+                registro =>
+                    registro.tipo ===
+                    "otras"
+            )
+        );
+
+
+    // -----------------------------------------------------
+    // Totales
+    // -----------------------------------------------------
+
+    ponerTexto(
+        "estadisticasTotal",
+        formatearTiempo(
+            total
+        )
+    );
+
+
+    ponerTexto(
+        "estadisticasMinisterio",
+        formatearTiempo(
+            ministerio
+        )
+    );
+
+
+    ponerTexto(
+        "estadisticasLDC",
+        formatearTiempo(
+            ldc
+        )
+    );
+
+
+    ponerTexto(
+        "estadisticasAsambleas",
+        formatearTiempo(
+            asambleas
+        )
+    );
+
+
+    ponerTexto(
+        "estadisticasOtras",
+        formatearTiempo(
+            otras
+        )
+    );
+
+
+    // -----------------------------------------------------
+    // Barras de actividad · v13
+    // -----------------------------------------------------
+
+    actualizarBarrasActividadEstadisticas({
+        ministerio,
+        ldc,
+        asambleas,
+        otras
+    });
+
+
+    // -----------------------------------------------------
+    // Resumen
+    // -----------------------------------------------------
+
+    ponerTexto(
+        "estadisticasRegistros",
+        String(
+            registros.length
+        )
+    );
+
+
+    ponerTexto(
+        "estadisticasDiasActivos",
+        String(
+            contarDiasActivos(
+                registros
+            )
+        )
+    );
+
+
+    // -----------------------------------------------------
+    // Periodo
+    // -----------------------------------------------------
+
+    actualizarTextoPeriodoEstadisticas(
+        rango
+    );
+
+
+    // -----------------------------------------------------
+    // Gráfico
+    // -----------------------------------------------------
+
+    actualizarGraficoEstadisticas(
+        rango
+    );
+
+
+    // -----------------------------------------------------
+    // Trimestres
+    // Solo aparecen cuando estamos viendo AÑO
+    // -----------------------------------------------------
+
+    actualizarTrimestres(
+        rango
+    );
+
+
+    // -----------------------------------------------------
+    // Estado vacío
+    // -----------------------------------------------------
+
+    const vacio =
+        document.getElementById(
+            "estadisticasVacias"
+        );
+
+
+    if (vacio) {
+
+        vacio.classList.toggle(
+            "oculto",
+            registros.length !== 0
+        );
+    }
+}
 
 
 // =========================================================
 // BARRAS DE ACTIVIDAD DE ESTADÍSTICAS
 // =========================================================
 
-/* V108: actualizarBarrasActividadEstadisticas → estadisticas-render.js */
+function actualizarBarrasActividadEstadisticas(valores) {
 
+    const configuracion = [
+        ["ministerio", "Ministerio"],
+        ["ldc", "LDC"],
+        ["asambleas", "Asambleas"],
+        ["otras", "Otras"]
+    ];
+
+    const totalVisible = configuracion.reduce(
+        (suma, [tipo]) =>
+            suma + (actividadVisible(tipo) ? (valores[tipo] || 0) : 0),
+        0
+    );
+
+    configuracion.forEach(([tipo, sufijo]) => {
+        const item = document.querySelector(
+            `[data-estadistica-tipo="${tipo}"]`
+        );
+        if (item) {
+            item.classList.toggle("oculto", !actividadVisible(tipo));
+        }
+
+        const minutos = valores[tipo] || 0;
+        const porcentaje = totalVisible > 0
+            ? Math.round((minutos / totalVisible) * 100)
+            : 0;
+
+        ponerTexto(`porcentaje${sufijo}`, `${porcentaje} %`);
+
+        const barra = document.getElementById(`barra${sufijo}`);
+        if (barra) {
+            // Reinicio breve para que la animación se perciba al cambiar de periodo.
+            barra.style.width = "0%";
+            window.requestAnimationFrame(() => {
+                window.requestAnimationFrame(() => {
+                    barra.style.width = `${porcentaje}%`;
+                });
+            });
+        }
+    });
+}
 
 
 // =========================================================
 // OBTENER RANGO ACTUAL
 // =========================================================
 
-/* V108: obtenerRangoEstadisticas → estadisticas-render.js */
+function obtenerRangoEstadisticas() {
 
+    const referencia =
+        copiarFecha(
+            estado.estadisticas
+                .fechaReferencia
+        );
+
+
+    switch (
+        estado.estadisticas.periodo
+    ) {
+
+        case "mes":
+
+            return rangoMes(
+                referencia
+            );
+
+
+        case "anio":
+
+            return rangoAnio(
+                referencia
+            );
+
+
+        case "semana":
+
+        default:
+
+            return rangoSemana(
+                referencia
+            );
+    }
+}
 
 
 // =========================================================
@@ -2700,8 +5457,27 @@ function rangoAnio(
 // REGISTROS ENTRE DOS FECHAS
 // =========================================================
 
-/* V109: obtenerRegistrosEntreFechas → registrar.js */
+function obtenerRegistrosEntreFechas(
+    inicio,
+    fin
+) {
 
+    return estado.registros.filter(
+        registro => {
+
+            const fecha =
+                fechaDesdeISO(
+                    registro.fecha
+                );
+
+
+            return (
+                fecha >= inicio &&
+                fecha <= fin
+            );
+        }
+    );
+}
 
 
 // =========================================================
@@ -2725,8 +5501,126 @@ function contarDiasActivos(
 // TEXTO DEL PERIODO
 // =========================================================
 
-/* V108: actualizarTextoPeriodoEstadisticas → estadisticas-render.js */
+function actualizarTextoPeriodoEstadisticas(
+    rango
+) {
 
+    const periodo =
+        estado.estadisticas.periodo;
+
+
+    let titulo = "";
+    let textoRango = "";
+
+
+    // -----------------------------------------------------
+    // SEMANA
+    // -----------------------------------------------------
+
+    if (
+        periodo === "semana"
+    ) {
+
+        titulo =
+            esSemanaActual(
+                rango.inicio,
+                rango.fin
+            )
+                ? "Esta semana"
+                : "Semana";
+
+
+        textoRango =
+            formatearRangoSemana(
+                rango.inicio,
+                rango.fin
+            );
+    }
+
+
+    // -----------------------------------------------------
+    // MES
+    // -----------------------------------------------------
+
+    if (
+        periodo === "mes"
+    ) {
+
+        const nombreMes =
+            capitalizar(
+                new Intl.DateTimeFormat(
+                    "es-ES",
+                    {
+                        month: "long"
+                    }
+                ).format(
+                    rango.inicio
+                )
+            );
+
+
+        titulo =
+            esMesActual(
+                rango.inicio
+            )
+                ? "Este mes"
+                : nombreMes;
+
+
+        textoRango =
+            capitalizar(
+                new Intl.DateTimeFormat(
+                    "es-ES",
+                    {
+                        month: "long",
+                        year: "numeric"
+                    }
+                ).format(
+                    rango.inicio
+                )
+            );
+    }
+
+
+    // -----------------------------------------------------
+    // AÑO
+    // -----------------------------------------------------
+
+    if (
+        periodo === "anio"
+    ) {
+
+        const anioServicio =
+            rango.fin
+                .getFullYear();
+
+
+        titulo =
+            esAnioActual(
+                rango.inicio
+            )
+                ? "Este año de servicio"
+                : "Año de servicio";
+
+
+        textoRango =
+            `${anioServicio} · ` +
+            `sep ${rango.inicio.getFullYear()} – ` +
+            `ago ${anioServicio}`;
+    }
+
+
+    ponerTexto(
+        "tituloPeriodoEstadisticas",
+        titulo
+    );
+
+
+    ponerTexto(
+        "rangoPeriodoEstadisticas",
+        textoRango
+    );
+}
 
 
 // =========================================================
@@ -2848,8 +5742,119 @@ function esAnioActual(
 // ACTUALIZAR GRÁFICO
 // =========================================================
 
-/* V108: actualizarGraficoEstadisticas → estadisticas-render.js */
+function actualizarGraficoEstadisticas(
+    rango
+) {
 
+    const grafico =
+        document.getElementById(
+            "graficoActividad"
+        );
+
+
+    const vacio =
+        document.getElementById(
+            "graficoVacio"
+        );
+
+
+    if (!grafico) {
+        return;
+    }
+
+
+    let datos = [];
+
+
+    switch (
+        estado.estadisticas.periodo
+    ) {
+
+        case "semana":
+
+            datos =
+                obtenerDatosGraficoSemana(
+                    rango.inicio
+                );
+
+
+            ponerTexto(
+                "graficoPeriodoTexto",
+                "Semana"
+            );
+
+            break;
+
+
+        case "mes":
+
+            datos =
+                obtenerDatosGraficoMes(
+                    rango.inicio,
+                    rango.fin
+                );
+
+
+            ponerTexto(
+                "graficoPeriodoTexto",
+                "Mes"
+            );
+
+            break;
+
+
+        case "anio":
+
+            datos =
+                obtenerDatosGraficoAnio(
+                    rango.inicio
+                );
+
+
+            ponerTexto(
+                "graficoPeriodoTexto",
+                "Año"
+            );
+
+            break;
+    }
+
+
+    grafico.innerHTML = "";
+
+
+    const tieneActividad =
+        datos.some(
+            dato =>
+                dato.minutos > 0
+        );
+
+
+    if (vacio) {
+
+        vacio.classList.toggle(
+            "oculto",
+            tieneActividad
+        );
+    }
+
+
+    grafico.classList.toggle(
+        "oculto",
+        !tieneActividad
+    );
+
+
+    if (!tieneActividad) {
+        return;
+    }
+
+
+    renderizarColumnasGrafico(
+        grafico,
+        datos
+    );
+}
 
 
 // =========================================================
@@ -3603,8 +6608,32 @@ function guardarUltimaCopiaSeguridad(fecha = new Date()) {
 }
 
 
-/* V110: sumarUnMesCalendario → planificacion.js */
+function sumarUnMesCalendario(fecha) {
 
+    const resultado = new Date(fecha);
+    const diaOriginal = resultado.getDate();
+
+    resultado.setDate(1);
+    resultado.setMonth(
+        resultado.getMonth() + 1
+    );
+
+    const ultimoDiaDelMes =
+        new Date(
+            resultado.getFullYear(),
+            resultado.getMonth() + 1,
+            0
+        ).getDate();
+
+    resultado.setDate(
+        Math.min(
+            diaOriginal,
+            ultimoDiaDelMes
+        )
+    );
+
+    return resultado;
+}
 
 
 function formatearFechaCopia(fecha) {
@@ -4091,10 +7120,6 @@ function guardarAjustesDesdeFormulario() {
 
     aplicarVisibilidadActividades();
     actualizarTodaLaInterfaz();
-
-
-    // V118: aplicar inmediatamente las preferencias guardadas al resto de vistas.
-    if (typeof actualizarInicio === "function") actualizarInicio();
 }
 
 // =========================================================
@@ -4822,8 +7847,126 @@ function validarCopiaSeguridad(
 // NORMALIZAR REGISTROS IMPORTADOS
 // =========================================================
 
-/* V109: normalizarRegistrosImportados → registrar.js */
+function normalizarRegistrosImportados(
+    registros
+) {
 
+    const resultado = [];
+
+
+    registros.forEach(
+        registro => {
+
+            if (
+                !registro ||
+                typeof registro !==
+                    "object"
+            ) {
+
+                return;
+            }
+
+
+            const fecha =
+                String(
+                    registro.fecha || ""
+                );
+
+
+            if (
+                !fechaISOValida(
+                    fecha
+                )
+            ) {
+
+                return;
+            }
+
+
+            const tiposValidos = [
+                "ministerio",
+                "ldc",
+                "asambleas",
+                "otras"
+            ];
+
+
+            const tipo =
+                tiposValidos.includes(
+                    registro.tipo
+                )
+                    ? registro.tipo
+                    : "ministerio";
+
+
+            const minutos =
+                Math.max(
+                    Math.round(
+                        Number(
+                            registro.minutos
+                        ) || 0
+                    ),
+                    0
+                );
+
+
+            if (
+                minutos <= 0
+            ) {
+                return;
+            }
+
+
+            const ahora =
+                new Date()
+                    .toISOString();
+
+
+            resultado.push({
+
+                id:
+                    registro.id ||
+                    crearID(),
+
+                fecha,
+
+                tipo,
+
+                minutos,
+
+                notas:
+                    typeof registro.notas ===
+                        "string"
+                        ? registro.notas
+                        : "",
+
+                creadoEn:
+                    registro.creadoEn ||
+                    ahora,
+
+                modificadoEn:
+                    registro.modificadoEn ||
+                    registro.creadoEn ||
+                    ahora,
+
+                sincronizacion: {
+
+                    estado:
+                        "pendiente",
+
+                    ultimaSincronizacion:
+                        registro
+                            .sincronizacion
+                            ?.ultimaSincronizacion ||
+                        null
+                }
+            });
+        }
+    );
+
+
+    return resultado;
+}
 
 
 // =========================================================
@@ -4945,8 +8088,9 @@ function actividadVisible(tipo) {
     }
 }
 
-/* V109: filtrarRegistrosVisibles → registrar.js */
-
+function filtrarRegistrosVisibles(registros) {
+    return registros.filter(registro => actividadVisible(registro.tipo));
+}
 
 function aplicarVisibilidadActividades() {
     ["ldc", "asambleas", "otras"].forEach(tipo => {
@@ -5389,8 +8533,23 @@ function iconoActividad(
 // TEXTO NÚMERO DE REGISTROS
 // =========================================================
 
-/* V109: textoCantidadRegistros → registrar.js */
+function textoCantidadRegistros(
+    cantidad
+) {
 
+    const numero =
+        Math.max(
+            Number(
+                cantidad
+            ) || 0,
+            0
+        );
+
+
+    return numero === 1
+        ? "1 registro"
+        : `${numero} registros`;
+}
 
 
 // =========================================================
@@ -5695,9 +8854,15 @@ function importarTransferenciaDesdeURL() {
                 datos.preferencias
             );
 
-        msStorageGuardar(STORAGE_KEYS.registros, registros);
+        localStorage.setItem(
+            STORAGE_KEYS.registros,
+            JSON.stringify(registros)
+        );
 
-        msStorageGuardar(STORAGE_KEYS.preferencias, preferencias);
+        localStorage.setItem(
+            STORAGE_KEYS.preferencias,
+            JSON.stringify(preferencias)
+        );
 
         // Una vez importados, retiramos los datos de la URL.
         history.replaceState(
@@ -6376,8 +9541,12 @@ function actualizarInterfazOneDrive(conectado, cuenta) {
     }
 }
 
-/* V108: actualizarEstadoOneDrive → estadisticas-render.js */
-
+function actualizarEstadoOneDrive(texto, conectado) {
+    const estadoEl = document.getElementById("estadoOneDrive");
+    const indicador = document.getElementById("indicadorOneDrive");
+    if (estadoEl) estadoEl.textContent = texto;
+    if (indicador) indicador.classList.toggle("conectado", !!conectado);
+}
 
 function mostrarMensajeOneDrive(texto, error = false) {
     const mensaje = document.getElementById("mensajeDatos");
@@ -6560,8 +9729,10 @@ function aplicarDatosDesdeOneDrive(remoto) {
     actualizarRecordatorioCopiaSeguridad();
 }
 
-/* V109: registrarSincronizacionOneDrive → registrar.js */
-
+function registrarSincronizacionOneDrive(fecha) {
+    const iso = fecha || new Date().toISOString();
+    almacenamiento.guardar(STORAGE_KEYS.ultimaSyncOneDrive, iso);
+}
 
 function formatearFechaHoraOneDrive(fechaISO) {
     const fecha = new Date(fechaISO);
@@ -7014,19 +10185,3 @@ function configurarDesplegablePersonaje(){
   actualizarResumenPersonaje();
 }
 document.addEventListener("DOMContentLoaded",()=>setTimeout(configurarDesplegablePersonaje,130));
-
-
-/* V104 · Registro del renderizador estable en el módulo Historial.
-   No modifica el renderizado actual; únicamente crea el punto de desacoplamiento. */
-function conectarRenderizadorHistorialModular(){
-    if (window.MiServicioHistorial &&
-        typeof window.MiServicioHistorial.registrarRenderizador === "function" &&
-        typeof renderizarHistorial === "function") {
-        window.MiServicioHistorial.registrarRenderizador(renderizarHistorial);
-    }
-}
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", conectarRenderizadorHistorialModular, { once:true });
-} else {
-    conectarRenderizadorHistorialModular();
-}

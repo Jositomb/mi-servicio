@@ -13,8 +13,8 @@
     <meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
     <title>Mi Servicio</title>
-    <link rel="manifest" href="./manifest.webmanifest">
-    <link rel="apple-touch-icon" href="./icon-apple.png">
+    <link rel="manifest" href="./manifest.webmanifest?v=9101">
+    <link rel="apple-touch-icon" href="./icon-apple.png?v=7901">
     <meta
         name="apple-mobile-web-app-capable"
         content="yes"
@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css"
+        href="./styles-v27.css?v=9101"
     >
 
 
@@ -1384,28 +1384,16 @@
     if (standalone) document.body.classList.add('modo-standalone');
 })();
 </script>
-<script type="module" src="./core/config.js"></script>
-<script type="module" src="./core/storage.js"></script>
-<script src="./historial-render.js" defer></script>
-<script src="./historial-edicion.js" defer></script>
-<script src="./estadisticas-render.js" defer></script>
-<script src="./registrar.js" defer></script>
-<script src="./planificacion.js" defer></script>
-<script src="./app-v27.js" defer></script>
+<script src="./app-v27.js?v=9101" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js", { scope: "./" })
+    navigator.serviceWorker.register("./sw.js?v=9101", { scope: "./" })
       .catch(error => console.warn("Modo sin conexión no disponible:", error));
   });
 }
 </script>
 
-
-<script type="module" src="./tiempo.js"></script>
-<script type="module" src="./core/legacy-bridge.js"></script>
-<script type="module" src="./historial.js"></script>
-<script type="module" src="./estadisticas.js"></script>
 </body>
 </html>
