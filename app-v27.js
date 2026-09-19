@@ -6339,13 +6339,46 @@ const ONEDRIVE_CONFIG = {
     authority: "https://login.microsoftonline.com/common",
     redirectUri: "https://jositomb.github.io/mi-servicio/",
     scopes: ["User.Read", "Files.ReadWrite.AppFolder"],
-    archivo: "mi-servicio.json"
+    archivo: "mi-servicio.json",
+    archivoAnterior: "mi-servicio-anterior.json"
 };
 
 let clienteMSALOneDrive = null;
 let aplicandoDatosOneDrive = false;
 let temporizadorSyncOneDrive = null;
 let sincronizandoOneDrive = false;
+
+
+// =========================================================
+// V122 · PROTECCIÓN DE DATOS ONEDRIVE
+// =========================================================
+function dispositivoLocalVacioOneDrive() {
+    const registros = Array.isArray(estado?.registros) ? estado.registros : [];
+    const agenda = Array.isArray(estado?.agendaSalidas) ? estado.agendaSalidas : [];
+    return registros.length === 0 && agenda.length === 0;
+}
+
+async function escribirArchivoOneDrive(token, nombre, datos) {
+    const url = `https://graph.microsoft.com/v1.0/me/drive/special/approot:/${encodeURIComponent(nombre)}:/content`;
+    const respuesta = await fetch(url, {
+        method: "PUT",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json;charset=utf-8"
+        },
+        body: JSON.stringify(datos)
+    });
+    if (!respuesta.ok) throw new Error(`Graph upload ${nombre} ${respuesta.status}`);
+}
+
+async function guardarCopiaAnteriorOneDrive(token, remotoActual) {
+    if (!remotoActual || !remotoActual.copia || !validarCopiaSeguridad(remotoActual.copia)) return;
+    await escribirArchivoOneDrive(token, ONEDRIVE_CONFIG.archivoAnterior, {
+        ...remotoActual,
+        respaldoCreadoEn: new Date().toISOString(),
+        respaldoDe: ONEDRIVE_CONFIG.archivo
+    });
+}
 
 function configurarOneDrive() {
     const conectar = document.getElementById("conectarOneDrive");
@@ -6513,19 +6546,22 @@ async function sincronizarConOneDrive(mostrarResultado = false) {
         if (!token) return;
 
         const remoto = await descargarDatosOneDrive(token);
+        const localVacio = dispositivoLocalVacioOneDrive();
         const localMs = obtenerFechaModificacionLocalOneDrive();
         const remotoMs = remoto?.updatedAt ? Date.parse(remoto.updatedAt) || 0 : 0;
-
         let accion = "";
 
-        if (!remoto) {
-            await subirDatosOneDrive(token);
+        if (remoto && localVacio && validarCopiaSeguridad(remoto.copia)) {
+            aplicarDatosDesdeOneDrive(remoto);
+            accion = "recuperados";
+        } else if (!remoto) {
+            await subirDatosOneDrive(token, null);
             accion = "subidos";
         } else if (remotoMs > localMs) {
             aplicarDatosDesdeOneDrive(remoto);
             accion = "descargados";
         } else if (localMs > remotoMs) {
-            await subirDatosOneDrive(token);
+            await subirDatosOneDrive(token, remoto);
             accion = "subidos";
         } else {
             registrarSincronizacionOneDrive(remoto.updatedAt || new Date().toISOString());
@@ -6539,7 +6575,9 @@ async function sincronizarConOneDrive(mostrarResultado = false) {
             mostrarMensajeOneDrive(
                 accion === "al día"
                     ? "✓ OneDrive ya estaba al día."
-                    : `✓ Datos ${accion} correctamente con OneDrive.`,
+                    : accion === "recuperados"
+                        ? "✓ Datos recuperados de OneDrive en este dispositivo."
+                        : `✓ Datos ${accion} correctamente con OneDrive.`,
                 false
             );
         }
@@ -6584,27 +6622,32 @@ async function descargarDatosOneDrive(token) {
     return datos;
 }
 
-async function subirDatosOneDrive(token) {
+async function subirDatosOneDrive(token, remotoActual = undefined) {
+    if (remotoActual === undefined) {
+        remotoActual = await descargarDatosOneDrive(token);
+    }
+
+    if (dispositivoLocalVacioOneDrive() &&
+        remotoActual &&
+        remotoActual.copia &&
+        validarCopiaSeguridad(remotoActual.copia)) {
+        aplicarDatosDesdeOneDrive(remotoActual);
+        return;
+    }
+
+    if (remotoActual) {
+        await guardarCopiaAnteriorOneDrive(token, remotoActual);
+    }
+
     const ahora = new Date().toISOString();
     const paquete = {
         formato: "mi-servicio-onedrive",
-        version: 1,
+        version: 2,
         updatedAt: ahora,
         copia: crearDatosCopiaSeguridad()
     };
 
-    const url = `https://graph.microsoft.com/v1.0/me/drive/special/approot:/${encodeURIComponent(ONEDRIVE_CONFIG.archivo)}:/content`;
-    const respuesta = await fetch(url, {
-        method: "PUT",
-        headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json;charset=utf-8"
-        },
-        body: JSON.stringify(paquete)
-    });
-
-    if (!respuesta.ok) throw new Error(`Graph upload ${respuesta.status}`);
-
+    await escribirArchivoOneDrive(token, ONEDRIVE_CONFIG.archivo, paquete);
     almacenamiento.guardar(STORAGE_KEYS.ultimaModificacionLocal, ahora);
     registrarSincronizacionOneDrive(ahora);
 }
@@ -6617,13 +6660,16 @@ function aplicarDatosDesdeOneDrive(remoto) {
 
     const registros = normalizarRegistrosImportados(copia.registros);
     const preferencias = normalizarPreferenciasImportadas(copia.preferencias);
+    const agendaSalidas = Array.isArray(copia.agendaSalidas) ? copia.agendaSalidas : [];
 
     aplicandoDatosOneDrive = true;
     try {
         estado.registros = registros;
         estado.preferencias = preferencias;
+        estado.agendaSalidas = agendaSalidas;
         guardarJSON(STORAGE_KEYS.registros, estado.registros);
         guardarJSON(STORAGE_KEYS.preferencias, estado.preferencias);
+        guardarJSON(STORAGE_KEYS.agendaSalidas, estado.agendaSalidas);
         almacenamiento.guardar(STORAGE_KEYS.ultimaModificacionLocal, remoto.updatedAt);
         registrarSincronizacionOneDrive(remoto.updatedAt);
     } finally {
