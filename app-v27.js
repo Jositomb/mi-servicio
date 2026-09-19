@@ -4091,6 +4091,10 @@ function guardarAjustesDesdeFormulario() {
 
     aplicarVisibilidadActividades();
     actualizarTodaLaInterfaz();
+
+
+    // V118: aplicar inmediatamente las preferencias guardadas al resto de vistas.
+    if (typeof actualizarInicio === "function") actualizarInicio();
 }
 
 // =========================================================

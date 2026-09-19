@@ -189,3 +189,9 @@ Solo añade mapa e índices de mantenimiento. No altera la lógica ni el aspecto
   `.orbita-actividad.actividad-ministerio`, `.actividad-ldc`,
   `.actividad-asambleas` y `.actividad-otras`.
 - Sólo cambia la colocación cuando hay exactamente 2 actividades en iPhone.
+
+## V118 — Ajustes aplicados + geometría real
+- Tras guardar Ajustes se refrescan las vistas consumidoras disponibles.
+- Se modifica la geometría real usada por `actualizarGraficoInicio` para el caso de 2 actividades,
+  en vez de intentar mover burbujas mediante clases CSS inexistentes.
+- El círculo total se desplaza abajo y se reduce en móvil.
