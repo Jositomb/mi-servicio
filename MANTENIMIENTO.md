@@ -183,3 +183,12 @@ Solo añade mapa e índices de mantenimiento. No altera la lógica ni el aspecto
 - Se corrige únicamente la disposición móvil con 2 actividades:
   Ministerio arriba-izquierda, segunda actividad a la derecha y total abajo-centro.
 - La regla cubre LDC, Asambleas y Otras.
+
+## V115 — Ajustes persistentes + círculos separados
+- Corregido el fallback de `msStorageGuardar`: eliminada una recursión accidental y se usa
+  `localStorage.setItem` directamente si el módulo de almacenamiento aún no está disponible.
+- `almacenamiento.guardar` devuelve ahora el resultado real del guardado.
+- El resumen visual del personaje se sincroniza al entrar en Ajustes.
+- Los controles de Ajustes se guardan también al cambiar, además de conservar el botón Guardar.
+- Corregida una referencia inexistente a `personaje` en `aplicarObjetivoSugerido`.
+- Para 2 actividades en iPhone se separan más los tres círculos y el total central se reduce a 82px.
