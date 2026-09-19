@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=9202"
+        href="./styles-v27.css?v=9101"
     >
 
 
@@ -117,61 +117,6 @@
 @media(max-width:390px){
   #vista-inicio #graficoInicio{width:286px!important;height:286px!important}
 }
-
-/* =========================================================
-   FIX CÍRCULOS 9202 · REGLAS FINALES POR CLASE REAL
-   ========================================================= */
-
-/* 2 actividades */
-#vista-inicio .orbita-cantidad-2 .orbita-ministerio{
-  left:28%!important; top:34%!important;
-}
-#vista-inicio .orbita-cantidad-2 .orbita-ldc,
-#vista-inicio .orbita-cantidad-2 .orbita-asambleas,
-#vista-inicio .orbita-cantidad-2 .orbita-otras{
-  left:77%!important; top:48%!important;
-}
-#vista-inicio .orbita-cantidad-2 .orbita-centro{
-  left:43%!important; top:78%!important;
-  width:88px!important; height:88px!important;
-}
-
-/* 3 actividades */
-#vista-inicio .orbita-cantidad-3 .orbita-ministerio{
-  left:50%!important; top:24%!important;
-}
-#vista-inicio .orbita-cantidad-3 .orbita-ldc{
-  left:77%!important; top:72%!important;
-}
-#vista-inicio .orbita-cantidad-3 .orbita-asambleas{
-  left:77%!important; top:72%!important;
-}
-#vista-inicio .orbita-cantidad-3 .orbita-otras{
-  left:23%!important; top:72%!important;
-}
-#vista-inicio .orbita-cantidad-3 .orbita-centro{
-  left:50%!important; top:54%!important;
-  width:82px!important; height:82px!important;
-}
-
-/* 4 actividades: una en cada esquina del gráfico */
-#vista-inicio .orbita-cantidad-4 .orbita-ministerio{
-  left:25%!important; top:25%!important;
-}
-#vista-inicio .orbita-cantidad-4 .orbita-ldc{
-  left:77%!important; top:27%!important;
-}
-#vista-inicio .orbita-cantidad-4 .orbita-asambleas{
-  left:77%!important; top:77%!important;
-}
-#vista-inicio .orbita-cantidad-4 .orbita-otras{
-  left:23%!important; top:77%!important;
-}
-#vista-inicio .orbita-cantidad-4 .orbita-centro{
-  left:50%!important; top:52%!important;
-  width:82px!important; height:82px!important;
-}
-
 </style>
 
 </head>
@@ -1439,12 +1384,12 @@
     if (standalone) document.body.classList.add('modo-standalone');
 })();
 </script>
-<script src="./app-v27.js?v=9101" defer></script>
+<script src="./app-v27.js?v=9301" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js?v=9202", { scope: "./" })
+    navigator.serviceWorker.register("./sw.js?v=9301", { scope: "./" })
       .catch(error => console.warn("Modo sin conexión no disponible:", error));
   });
 }

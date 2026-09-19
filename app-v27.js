@@ -4303,10 +4303,10 @@ function actualizarGraficoInicio({
     }
 
     const posicionesPorCantidad={
-      1:[{x:50,y:23}],
-      2:[{x:27,y:50},{x:73,y:50}],
-      3:[{x:50,y:20},{x:24,y:66},{x:76,y:66}],
-      4:[{x:50,y:18},{x:82,y:50},{x:50,y:82},{x:18,y:50}]
+      1:[{x:50,y:28}],
+      2:[{x:28,y:38},{x:76,y:62}],
+      3:[{x:50,y:22},{x:76,y:70},{x:24,y:70}],
+      4:[{x:28,y:25},{x:76,y:28},{x:76,y:76},{x:24,y:76}]
     };
     const posiciones=posicionesPorCantidad[activas.length] || posicionesPorCantidad[4];
 
@@ -4322,7 +4322,7 @@ function actualizarGraficoInicio({
       const pos=posiciones[i];
       return `
         <div class="orbita-actividad orbita-${a.tipo}"
-             style="--orb-x:${pos.x}%;--orb-y:${pos.y}%;--orb-size:${tam}px"
+             style="--orb-x:${pos.x}%;--orb-y:${pos.y}%;--orb-size:${tam}px;left:${pos.x}% !important;top:${pos.y}% !important"
              aria-label="${a.nombre}: ${formatearTiempo(a.minutos)}, ${pct}%">
           ${a.icono}
           <strong>${a.nombre}</strong>
@@ -4340,7 +4340,8 @@ function actualizarGraficoInicio({
           <i class="orbita-punto orbita-punto-b"></i>
         </div>
         ${circulos}
-        <div class="orbita-centro">
+        <div class="orbita-centro"
+             style="${activas.length === 4 ? 'left:50% !important;top:52% !important;width:82px !important;height:82px !important;' : activas.length === 3 ? 'left:50% !important;top:52% !important;width:84px !important;height:84px !important;' : activas.length === 2 ? 'left:45% !important;top:82% !important;width:86px !important;height:86px !important;' : ''}">
           <strong>${formatearTiempo(totalVisible)}</strong>
           <span>este mes</span>
         </div>
