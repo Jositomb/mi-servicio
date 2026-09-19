@@ -8363,51 +8363,27 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 
 
 /* =========================================================
-   V114 · DISTRIBUCIÓN ESTABLE PARA 2 ACTIVIDADES EN IPHONE
-   Ministerio arriba-izquierda · segunda actividad derecha
-   Total abajo-centro. Evita cruces entre las tres burbujas.
+   V116 · HOTFIX VISUAL SEGURO — SOLO CSS
+   Dos actividades: separación amplia sin tocar datos ni JS.
    ========================================================= */
 @media (max-width: 430px) {
-  #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-ministerio {
-    left: 30% !important;
-    top: 40% !important;
+  #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-item:nth-of-type(1),
+  #vista-inicio .orbita-grafico.orbita-cantidad-2 [data-actividad="ministerio"] {
+    left: 25% !important;
+    top: 43% !important;
   }
 
-  #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-ldc,
-  #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-asambleas,
-  #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-otras {
-    left: 79% !important;
-    top: 58% !important;
+  #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-item:nth-of-type(2),
+  #vista-inicio .orbita-grafico.orbita-cantidad-2 [data-actividad="ldc"],
+  #vista-inicio .orbita-grafico.orbita-cantidad-2 [data-actividad="asambleas"],
+  #vista-inicio .orbita-grafico.orbita-cantidad-2 [data-actividad="otras"] {
+    left: 82% !important;
+    top: 55% !important;
   }
 
   #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-centro {
-    left: 48% !important;
-    top: 82% !important;
-    width: 88px !important;
-    height: 88px !important;
-  }
-}
-
-
-/* =========================================================
-   V115 · 2 ACTIVIDADES — SEPARACIÓN REAL EN IPHONE
-   ========================================================= */
-@media (max-width: 430px) {
-  #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-ministerio {
-    left: 30% !important;
-    top: 40% !important;
-  }
-
-  #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-ldc,
-  #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-asambleas,
-  #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-otras {
-    left: 80% !important;
-    top: 60% !important;
-  }
-
-  #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-centro {
-    left: 40% !important;
-    top: 86% !important;
+    left: 49% !important;
+    top: 84% !important;
     width: 82px !important;
     height: 82px !important;
   }

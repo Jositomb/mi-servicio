@@ -54,7 +54,7 @@ function msStorageGuardar(clave, valor) {
         return window.MiServicioStorage.guardar(clave, valor);
     }
     try {
-        localStorage.setItem(clave, JSON.stringify(valor));
+        msStorageGuardar(clave, valor);
         return true;
     } catch (error) {
         console.error(`[Mi Servicio] No se pudo guardar "${clave}"`, error);
@@ -136,7 +136,9 @@ const almacenamiento = {
 
         try {
 
-            return msStorageGuardar(clave, valor);
+            msStorageGuardar(clave, valor);
+
+            return true;
 
         } catch (error) {
 
@@ -3717,24 +3719,6 @@ function configurarAjustes() {
         );
     }
 
-    const controlesAjustes = [
-        "tipoPublicador",
-        "personajeProgreso",
-        "mostrarLDC",
-        "mostrarAsambleas",
-        "mostrarOtras",
-        "objetivoMensual"
-    ];
-
-    controlesAjustes.forEach(id => {
-        const control = document.getElementById(id);
-        if (!control) return;
-
-        control.addEventListener("change", () => {
-            guardarAjustesDesdeFormulario();
-        });
-    });
-
 
     // -----------------------------------------------------
     // COPIAS DE SEGURIDAD
@@ -3871,10 +3855,6 @@ function cargarFormularioAjustes() {
     if (mostrarLDC) mostrarLDC.checked = estado.preferencias.mostrarLDC !== false;
     if (mostrarAsambleas) mostrarAsambleas.checked = estado.preferencias.mostrarAsambleas !== false;
     if (mostrarOtras) mostrarOtras.checked = estado.preferencias.mostrarOtras !== false;
-
-    if (typeof actualizarResumenPersonaje === "function") {
-        actualizarResumenPersonaje();
-    }
 }
 
 
@@ -3898,7 +3878,8 @@ function aplicarObjetivoSugerido() {
 
     if (
         !tipo ||
-        !objetivo
+        !objetivo ||
+        !personaje
     ) {
         return;
     }

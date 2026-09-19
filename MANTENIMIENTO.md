@@ -174,21 +174,10 @@ Solo añade mapa e índices de mantenimiento. No altera la lógica ni el aspecto
 - Se carga antes de `app-v27.js` y forma parte del shell offline.
 - `app-v27.js`: 7935 → 7028 líneas (907 líneas menos).
 
-## V114 — Recuperación de base estable + círculos
-- Base restaurada a V110, última versión confirmada por el usuario antes de aparecer
-  los problemas de carga inicial y de visualización/persistencia de Ajustes.
-- Por tanto, `actualizarInicio` y las funciones de Ajustes vuelven a su ubicación
-  y orden de ejecución previamente validados.
-- No se modifican datos, localStorage, registros, planificación ni reglas de meta.
-- Se corrige únicamente la disposición móvil con 2 actividades:
-  Ministerio arriba-izquierda, segunda actividad a la derecha y total abajo-centro.
-- La regla cubre LDC, Asambleas y Otras.
-
-## V115 — Ajustes persistentes + círculos separados
-- Corregido el fallback de `msStorageGuardar`: eliminada una recursión accidental y se usa
-  `localStorage.setItem` directamente si el módulo de almacenamiento aún no está disponible.
-- `almacenamiento.guardar` devuelve ahora el resultado real del guardado.
-- El resumen visual del personaje se sincroniza al entrar en Ajustes.
-- Los controles de Ajustes se guardan también al cambiar, además de conservar el botón Guardar.
-- Corregida una referencia inexistente a `personaje` en `aplicarObjetivoSugerido`.
-- Para 2 actividades en iPhone se separan más los tres círculos y el total central se reduce a 82px.
+## V116 — Recuperación segura
+- Se vuelve exactamente a V110 para toda la lógica JavaScript: última versión confirmada
+  antes de modificar Inicio/Ajustes.
+- Se eliminan por tanto los cambios de V111–V115 en lógica/persistencia.
+- No se toca localStorage, claves, registros, preferencias, OneDrive ni reglas de cómputo.
+- Único cambio respecto a V110: hotfix CSS para separar el gráfico con 2 actividades.
+- Objetivo de esta versión: recuperar estabilidad antes de continuar cualquier refactor.
