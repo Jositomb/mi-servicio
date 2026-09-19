@@ -173,3 +173,8 @@ Solo añade mapa e índices de mantenimiento. No altera la lógica ni el aspecto
 - Se conservan los cuerpos existentes para mantener comportamiento y formato de datos.
 - Se carga antes de `app-v27.js` y forma parte del shell offline.
 - `app-v27.js`: 7935 → 7028 líneas (907 líneas menos).
+
+## V111 — Inicio
+- Extraídas: actualizarInicio, actualizarFraseAnimoInicio, refrescarFraseAlVolverAInicio, actualizarPersonajeProgreso, actualizarHitosProgreso, calcularComputoMesMeta, calcularComputoAnualMeta, actualizarMeta, textoTiempoRestanteMeta, configurarInteraccionAnillosProgreso.
+- Clima queda intacto.
+- app-v27.js: 7028 → 6304 (724 menos).
