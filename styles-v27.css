@@ -8342,24 +8342,25 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 
 
 /* =========================================================
-   FIX CÍRCULOS · 2 ACTIVIDADES · 2026-09-19
-   Único cambio: separación visual en Inicio.
+   FIX REAL · DOS ACTIVIDADES
+   El CSS antiguo sólo contemplaba Ministerio + LDC.
+   Añadimos Asambleas y Otras usando las clases reales del DOM.
    ========================================================= */
-@media (max-width: 430px) {
-  #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-actividad:nth-of-type(1) {
-    left: 25% !important;
-    top: 38% !important;
-  }
+#vista-inicio .orbita-cantidad-2 .orbita-ministerio {
+  left: 29% !important;
+  top: 36% !important;
+}
 
-  #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-actividad:nth-of-type(2) {
-    left: 80% !important;
-    top: 58% !important;
-  }
+#vista-inicio .orbita-cantidad-2 .orbita-ldc,
+#vista-inicio .orbita-cantidad-2 .orbita-asambleas,
+#vista-inicio .orbita-cantidad-2 .orbita-otras {
+  left: 78% !important;
+  top: 57% !important;
+}
 
-  #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-centro {
-    left: 45% !important;
-    top: 84% !important;
-    width: 82px !important;
-    height: 82px !important;
-  }
+#vista-inicio .orbita-cantidad-2 .orbita-centro {
+  left: 42% !important;
+  top: 79% !important;
+  width: 90px !important;
+  height: 90px !important;
 }
