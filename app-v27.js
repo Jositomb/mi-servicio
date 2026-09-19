@@ -6354,8 +6354,19 @@ let sincronizandoOneDrive = false;
 // =========================================================
 function dispositivoLocalVacioOneDrive() {
     const registros = Array.isArray(estado?.registros) ? estado.registros : [];
-    const agenda = Array.isArray(estado?.agendaSalidas) ? estado.agendaSalidas : [];
-    return registros.length === 0 && agenda.length === 0;
+    const agenda = estado?.agendaSalidas;
+    const tieneAgenda =
+        !!agenda &&
+        typeof agenda === "object" &&
+        !Array.isArray(agenda) &&
+        Object.keys(agenda).length > 0;
+
+    const cambioLocalPendiente =
+        almacenamiento.leer("miServicio.onedriveCambioLocalPendiente", false) === true;
+
+    // V125: si el usuario acaba de guardar cualquier cambio (incluidas
+    // preferencias como mostrarAsambleas=false), el dispositivo NO es vacío.
+    return registros.length === 0 && !tieneAgenda && !cambioLocalPendiente;
 }
 
 async function escribirArchivoOneDrive(token, nombre, datos) {
@@ -6571,13 +6582,16 @@ async function sincronizarConOneDrive(mostrarResultado = false) {
         const remotoMs = remoto?.updatedAt ? Date.parse(remoto.updatedAt) || 0 : 0;
         let accion = "";
 
-        if (remoto && localVacio && validarCopiaSeguridad(remoto.copia)) {
+        if (pendiente) {
+            await subirDatosOneDrive(token, remoto);
+            accion = "subidos";
+        } else if (remoto && localVacio && validarCopiaSeguridad(remoto.copia)) {
             aplicarDatosDesdeOneDrive(remoto);
             accion = "recuperados";
         } else if (!remoto) {
             await subirDatosOneDrive(token, null);
             accion = "subidos";
-        } else if (pendiente || revLocal > revRemota) {
+        } else if (revLocal > revRemota) {
             await subirDatosOneDrive(token, remoto);
             accion = "subidos";
         } else if (revRemota > revLocal) {
