@@ -8342,56 +8342,55 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 
 
 /* =========================================================
-   FIX REAL · DOS ACTIVIDADES
-   El CSS antiguo sólo contemplaba Ministerio + LDC.
-   Añadimos Asambleas y Otras usando las clases reales del DOM.
+   FIX CÍRCULOS 9202 · REGLAS FINALES POR CLASE REAL
    ========================================================= */
-#vista-inicio .orbita-cantidad-2 .orbita-ministerio {
-  left: 29% !important;
-  top: 36% !important;
-}
 
+/* 2 actividades */
+#vista-inicio .orbita-cantidad-2 .orbita-ministerio{
+  left:28%!important; top:34%!important;
+}
 #vista-inicio .orbita-cantidad-2 .orbita-ldc,
 #vista-inicio .orbita-cantidad-2 .orbita-asambleas,
-#vista-inicio .orbita-cantidad-2 .orbita-otras {
-  left: 78% !important;
-  top: 57% !important;
+#vista-inicio .orbita-cantidad-2 .orbita-otras{
+  left:77%!important; top:48%!important;
+}
+#vista-inicio .orbita-cantidad-2 .orbita-centro{
+  left:43%!important; top:78%!important;
+  width:88px!important; height:88px!important;
 }
 
-#vista-inicio .orbita-cantidad-2 .orbita-centro {
-  left: 42% !important;
-  top: 79% !important;
-  width: 90px !important;
-  height: 90px !important;
+/* 3 actividades */
+#vista-inicio .orbita-cantidad-3 .orbita-ministerio{
+  left:50%!important; top:24%!important;
+}
+#vista-inicio .orbita-cantidad-3 .orbita-ldc{
+  left:77%!important; top:72%!important;
+}
+#vista-inicio .orbita-cantidad-3 .orbita-asambleas{
+  left:77%!important; top:72%!important;
+}
+#vista-inicio .orbita-cantidad-3 .orbita-otras{
+  left:23%!important; top:72%!important;
+}
+#vista-inicio .orbita-cantidad-3 .orbita-centro{
+  left:50%!important; top:54%!important;
+  width:82px!important; height:82px!important;
 }
 
-
-/* =========================================================
-   FIX 4 ACTIVIDADES · 2026-09-19
-   Corrige el desplazamiento causado por .orbita-lineas.
-   Se usan las clases reales de cada actividad, no nth-child.
-   ========================================================= */
-#vista-inicio .orbita-cantidad-4 .orbita-actividad.orbita-ministerio {
-  left: 25% !important;
-  top: 25% !important;
+/* 4 actividades: una en cada esquina del gráfico */
+#vista-inicio .orbita-cantidad-4 .orbita-ministerio{
+  left:25%!important; top:25%!important;
 }
-
-#vista-inicio .orbita-cantidad-4 .orbita-actividad.orbita-ldc {
-  left: 78% !important;
-  top: 27% !important;
+#vista-inicio .orbita-cantidad-4 .orbita-ldc{
+  left:77%!important; top:27%!important;
 }
-
-#vista-inicio .orbita-cantidad-4 .orbita-actividad.orbita-asambleas {
-  left: 78% !important;
-  top: 77% !important;
+#vista-inicio .orbita-cantidad-4 .orbita-asambleas{
+  left:77%!important; top:77%!important;
 }
-
-#vista-inicio .orbita-cantidad-4 .orbita-actividad.orbita-otras {
-  left: 22% !important;
-  top: 77% !important;
+#vista-inicio .orbita-cantidad-4 .orbita-otras{
+  left:23%!important; top:77%!important;
 }
-
-#vista-inicio .orbita-cantidad-4 .orbita-centro {
-  left: 50% !important;
-  top: 52% !important;
+#vista-inicio .orbita-cantidad-4 .orbita-centro{
+  left:50%!important; top:52%!important;
+  width:82px!important; height:82px!important;
 }
