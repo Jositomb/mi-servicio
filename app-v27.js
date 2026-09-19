@@ -6380,6 +6380,21 @@ async function guardarCopiaAnteriorOneDrive(token, remotoActual) {
     });
 }
 
+
+function obtenerRevisionLocalOneDrive() {
+    return Math.max(0, Number(almacenamiento.leer("miServicio.onedriveRevision", 0)) || 0);
+}
+
+function obtenerRevisionRemotaOneDrive(remoto) {
+    return Math.max(0, Number(remoto?.revision) || 0);
+}
+
+function incrementarRevisionLocalOneDrive() {
+    const siguiente = obtenerRevisionLocalOneDrive() + 1;
+    almacenamiento.guardar("miServicio.onedriveRevision", siguiente);
+    return siguiente;
+}
+
 function configurarOneDrive() {
     const conectar = document.getElementById("conectarOneDrive");
     const sincronizar = document.getElementById("sincronizarOneDrive");
@@ -6499,6 +6514,7 @@ function mostrarMensajeOneDrive(texto, error = false) {
 function marcarModificacionLocalOneDrive() {
     almacenamiento.guardar(STORAGE_KEYS.ultimaModificacionLocal, new Date().toISOString());
     almacenamiento.guardar("miServicio.onedriveCambioLocalPendiente", true);
+    incrementarRevisionLocalOneDrive();
 }
 
 function programarSincronizacionOneDrive() {
@@ -6548,27 +6564,25 @@ async function sincronizarConOneDrive(mostrarResultado = false) {
 
         const remoto = await descargarDatosOneDrive(token);
         const localVacio = dispositivoLocalVacioOneDrive();
-        const cambioLocalPendiente =
-            almacenamiento.leer("miServicio.onedriveCambioLocalPendiente", false) === true;
+        const pendiente = almacenamiento.leer("miServicio.onedriveCambioLocalPendiente", false) === true;
+        const revLocal = obtenerRevisionLocalOneDrive();
+        const revRemota = obtenerRevisionRemotaOneDrive(remoto);
         const localMs = obtenerFechaModificacionLocalOneDrive();
         const remotoMs = remoto?.updatedAt ? Date.parse(remoto.updatedAt) || 0 : 0;
         let accion = "";
 
-        // Protección V122: dispositivo vacío recupera la nube.
         if (remoto && localVacio && validarCopiaSeguridad(remoto.copia)) {
             aplicarDatosDesdeOneDrive(remoto);
             accion = "recuperados";
-
-        // V123: si el usuario acaba de pulsar Guardar, ese cambio local tiene
-        // prioridad. Así una sincronización concurrente no puede reactivar
-        // Asambleas/LDC/Otras con el valor antiguo de OneDrive.
-        } else if (cambioLocalPendiente) {
-            await subirDatosOneDrive(token, remoto);
-            accion = "subidos";
-
         } else if (!remoto) {
             await subirDatosOneDrive(token, null);
             accion = "subidos";
+        } else if (pendiente || revLocal > revRemota) {
+            await subirDatosOneDrive(token, remoto);
+            accion = "subidos";
+        } else if (revRemota > revLocal) {
+            aplicarDatosDesdeOneDrive(remoto);
+            accion = "descargados";
         } else if (remotoMs > localMs) {
             aplicarDatosDesdeOneDrive(remoto);
             accion = "descargados";
@@ -6585,11 +6599,9 @@ async function sincronizarConOneDrive(mostrarResultado = false) {
 
         if (mostrarResultado) {
             mostrarMensajeOneDrive(
-                accion === "al día"
-                    ? "✓ OneDrive ya estaba al día."
-                    : accion === "recuperados"
-                        ? "✓ Datos recuperados de OneDrive en este dispositivo."
-                        : `✓ Datos ${accion} correctamente con OneDrive.`,
+                accion === "al día" ? "✓ OneDrive ya estaba al día."
+                : accion === "recuperados" ? "✓ Datos recuperados de OneDrive en este dispositivo."
+                : `✓ Datos ${accion} correctamente con OneDrive.`,
                 false
             );
         }
@@ -6601,9 +6613,6 @@ async function sincronizarConOneDrive(mostrarResultado = false) {
     } finally {
         sincronizandoOneDrive = false;
         if (indicador) indicador.classList.remove("sincronizando");
-
-        // Si se produjo otro Guardar mientras sincronizábamos, no lo perdemos:
-        // lanzamos una nueva pasada.
         if (almacenamiento.leer("miServicio.onedriveCambioLocalPendiente", false) === true) {
             clearTimeout(temporizadorSyncOneDrive);
             temporizadorSyncOneDrive = setTimeout(() => sincronizarConOneDrive(false), 350);
@@ -6642,45 +6651,51 @@ async function descargarDatosOneDrive(token) {
 }
 
 async function subirDatosOneDrive(token, remotoActual = undefined) {
-    if (remotoActual === undefined) {
-        remotoActual = await descargarDatosOneDrive(token);
-    }
+    if (remotoActual === undefined) remotoActual = await descargarDatosOneDrive(token);
 
     if (dispositivoLocalVacioOneDrive() &&
-        remotoActual &&
-        remotoActual.copia &&
+        remotoActual && remotoActual.copia &&
         validarCopiaSeguridad(remotoActual.copia)) {
         aplicarDatosDesdeOneDrive(remotoActual);
         return;
     }
 
-    if (remotoActual) {
-        await guardarCopiaAnteriorOneDrive(token, remotoActual);
-    }
+    if (remotoActual) await guardarCopiaAnteriorOneDrive(token, remotoActual);
 
     const ahora = new Date().toISOString();
+    const revision = Math.max(
+        obtenerRevisionLocalOneDrive(),
+        obtenerRevisionRemotaOneDrive(remotoActual) + 1
+    );
     const paquete = {
         formato: "mi-servicio-onedrive",
-        version: 2,
+        version: 3,
+        revision,
         updatedAt: ahora,
         copia: crearDatosCopiaSeguridad()
     };
 
     await escribirArchivoOneDrive(token, ONEDRIVE_CONFIG.archivo, paquete);
     almacenamiento.guardar(STORAGE_KEYS.ultimaModificacionLocal, ahora);
+    almacenamiento.guardar("miServicio.onedriveRevision", revision);
     almacenamiento.guardar("miServicio.onedriveCambioLocalPendiente", false);
     registrarSincronizacionOneDrive(ahora);
 }
 
 function aplicarDatosDesdeOneDrive(remoto) {
     const copia = remoto.copia;
-    if (!validarCopiaSeguridad(copia)) {
-        throw new Error("La copia de OneDrive no es válida");
-    }
+    if (!validarCopiaSeguridad(copia)) throw new Error("La copia de OneDrive no es válida");
 
     const registros = normalizarRegistrosImportados(copia.registros);
     const preferencias = normalizarPreferenciasImportadas(copia.preferencias);
-    const agendaSalidas = Array.isArray(copia.agendaSalidas) ? copia.agendaSalidas : [];
+    const agendaSalidas =
+        copia.agendaSalidas && typeof copia.agendaSalidas === "object" && !Array.isArray(copia.agendaSalidas)
+            ? Object.fromEntries(
+                Object.entries(copia.agendaSalidas)
+                    .map(([fecha, valor]) => [String(fecha), normalizarAgendaDia(valor)])
+                    .filter(([, valor]) => Boolean(valor.companero))
+              )
+            : {};
 
     aplicandoDatosOneDrive = true;
     try {
@@ -6691,6 +6706,7 @@ function aplicarDatosDesdeOneDrive(remoto) {
         guardarJSON(STORAGE_KEYS.preferencias, estado.preferencias);
         guardarJSON(STORAGE_KEYS.agendaSalidas, estado.agendaSalidas);
         almacenamiento.guardar(STORAGE_KEYS.ultimaModificacionLocal, remoto.updatedAt);
+        almacenamiento.guardar("miServicio.onedriveRevision", obtenerRevisionRemotaOneDrive(remoto));
         almacenamiento.guardar("miServicio.onedriveCambioLocalPendiente", false);
         registrarSincronizacionOneDrive(remoto.updatedAt);
     } finally {
