@@ -6445,7 +6445,9 @@ async function iniciarOneDrive() {
         actualizarInterfazOneDrive(conectado, cuenta);
 
         if (conectado) {
-            setTimeout(() => sincronizarConOneDrive(false), 650);
+            const reanudar = almacenamiento.leer("miServicio.onedriveReanudarSync", false) === true;
+            almacenamiento.guardar("miServicio.onedriveReanudarSync", false);
+            setTimeout(() => sincronizarConOneDrive(reanudar), reanudar ? 150 : 650);
         }
     } catch (error) {
         console.error("Error iniciando OneDrive:", error);
@@ -6538,16 +6540,21 @@ async function obtenerTokenOneDrive() {
     try {
         const respuesta = await clienteMSALOneDrive.acquireTokenSilent({
             scopes: ONEDRIVE_CONFIG.scopes,
-            account: cuenta
+            account: cuenta,
+            forceRefresh: false
         });
+        if (!respuesta?.accessToken) throw new Error("Microsoft no devolvió un token de acceso");
         return respuesta.accessToken;
     } catch (error) {
         if (error instanceof msal.InteractionRequiredAuthError) {
+            // Guardamos que hay una sincronización pendiente para retomarla
+            // al volver del inicio de sesión de Microsoft.
+            almacenamiento.guardar("miServicio.onedriveReanudarSync", true);
             await clienteMSALOneDrive.acquireTokenRedirect({
                 scopes: ONEDRIVE_CONFIG.scopes,
                 account: cuenta
             });
-            return null;
+            throw new Error("REAUTH_ONEDRIVE");
         }
         throw error;
     }
@@ -6564,7 +6571,6 @@ async function sincronizarConOneDrive(mostrarResultado = false) {
 
     try {
         const token = await obtenerTokenOneDrive();
-        if (!token) return;
 
         const remoto = await descargarDatosOneDrive(token);
         const pendiente = almacenamiento.leer("miServicio.onedriveCambioLocalPendiente", false) === true;
@@ -6619,10 +6625,14 @@ async function sincronizarConOneDrive(mostrarResultado = false) {
             );
         }
     } catch (error) {
-        console.error("Error sincronizando OneDrive:", error);
-        if (mostrarResultado) {
-            mostrarMensajeOneDrive("No se pudo sincronizar con OneDrive. Comprueba la conexión e inténtalo de nuevo.", true);
+        if (error?.message === "REAUTH_ONEDRIVE") {
+            return;
         }
+        console.error("Error sincronizando OneDrive:", error);
+        mostrarMensajeOneDrive(
+            "No se pudo completar la sincronización con OneDrive. Pulsa de nuevo «Sincronizar ahora».",
+            true
+        );
     } finally {
         sincronizandoOneDrive = false;
         if (indicador) indicador.classList.remove("sincronizando");
