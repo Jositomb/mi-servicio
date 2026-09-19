@@ -1384,12 +1384,12 @@
     if (standalone) document.body.classList.add('modo-standalone');
 })();
 </script>
-<script src="./app-v27.js?v=9301" defer></script>
+<script src="./app-v27.js?v=9402" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js?v=9301", { scope: "./" })
+    navigator.serviceWorker.register("./sw.js?v=9402", { scope: "./" })
       .catch(error => console.warn("Modo sin conexión no disponible:", error));
   });
 }

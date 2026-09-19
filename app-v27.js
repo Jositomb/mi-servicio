@@ -4252,6 +4252,89 @@ function quitarSalidaAgendada(fechaISO) {
 // GRÁFICO CIRCULAR DEL MES
 // =========================================================
 
+
+// =========================================================
+// ÓRBITAS DINÁMICAS · 9402
+// Conserva el diseño orbital y separa automáticamente
+// las burbujas según su tamaño real.
+// =========================================================
+function resolverColisionesOrbitas(grafico) {
+    const contenedor = grafico?.querySelector(".orbita-grafico");
+    if (!contenedor) return;
+
+    const nodos = [...contenedor.querySelectorAll(".orbita-actividad")];
+    const centroNodo = contenedor.querySelector(".orbita-centro");
+    if (nodos.length < 2 || !centroNodo) return;
+
+    const caja = contenedor.getBoundingClientRect();
+    if (!caja.width || !caja.height) return;
+
+    const leer = nodo => {
+        const r = nodo.getBoundingClientRect();
+        return {
+            nodo,
+            x: r.left - caja.left + r.width / 2,
+            y: r.top - caja.top + r.height / 2,
+            radio: Math.max(r.width, r.height) / 2
+        };
+    };
+
+    const items = nodos.map(leer);
+    const centro = leer(centroNodo);
+    const separacion = 10;
+    const borde = 5;
+
+    // El centro puede moverse un poco, pero tiene más "peso" para
+    // conservar la composición central.
+    for (let vuelta = 0; vuelta < 30; vuelta++) {
+        for (let i = 0; i < items.length; i++) {
+            for (let j = i + 1; j < items.length; j++) {
+                separar(items[i], items[j], 0.5, 0.5);
+            }
+            separar(items[i], centro, 0.78, 0.22);
+        }
+
+        // Mantener todas las burbujas dentro del área visible.
+        for (const a of items) {
+            a.x = Math.max(a.radio + borde, Math.min(caja.width - a.radio - borde, a.x));
+            a.y = Math.max(a.radio + borde, Math.min(caja.height - a.radio - borde, a.y));
+        }
+        centro.x = Math.max(centro.radio + borde, Math.min(caja.width - centro.radio - borde, centro.x));
+        centro.y = Math.max(centro.radio + borde, Math.min(caja.height - centro.radio - borde, centro.y));
+    }
+
+    function separar(a, b, pesoA, pesoB) {
+        let dx = b.x - a.x;
+        let dy = b.y - a.y;
+        let distancia = Math.hypot(dx, dy);
+
+        if (distancia < 0.1) {
+            dx = 1;
+            dy = 0.35;
+            distancia = Math.hypot(dx, dy);
+        }
+
+        const minima = a.radio + b.radio + separacion;
+        if (distancia >= minima) return;
+
+        const falta = minima - distancia;
+        const ux = dx / distancia;
+        const uy = dy / distancia;
+
+        a.x -= ux * falta * pesoA;
+        a.y -= uy * falta * pesoA;
+        b.x += ux * falta * pesoB;
+        b.y += uy * falta * pesoB;
+    }
+
+    for (const a of items) {
+        a.nodo.style.setProperty("left", `${(a.x / caja.width) * 100}%`, "important");
+        a.nodo.style.setProperty("top", `${(a.y / caja.height) * 100}%`, "important");
+    }
+    centroNodo.style.setProperty("left", `${(centro.x / caja.width) * 100}%`, "important");
+    centroNodo.style.setProperty("top", `${(centro.y / caja.height) * 100}%`, "important");
+}
+
 function actualizarGraficoInicio({
     total,
     ministerio,
@@ -4322,7 +4405,7 @@ function actualizarGraficoInicio({
       const pos=posiciones[i];
       return `
         <div class="orbita-actividad orbita-${a.tipo}"
-             style="--orb-x:${pos.x}%;--orb-y:${pos.y}%;--orb-size:${tam}px;left:${pos.x}% !important;top:${pos.y}% !important"
+             style="--orb-x:${pos.x}%;--orb-y:${pos.y}%;--orb-size:${tam}px"
              aria-label="${a.nombre}: ${formatearTiempo(a.minutos)}, ${pct}%">
           ${a.icono}
           <strong>${a.nombre}</strong>
@@ -4340,12 +4423,14 @@ function actualizarGraficoInicio({
           <i class="orbita-punto orbita-punto-b"></i>
         </div>
         ${circulos}
-        <div class="orbita-centro"
-             style="${activas.length === 4 ? 'left:50% !important;top:52% !important;width:82px !important;height:82px !important;' : activas.length === 3 ? 'left:50% !important;top:52% !important;width:84px !important;height:84px !important;' : activas.length === 2 ? 'left:45% !important;top:82% !important;width:86px !important;height:86px !important;' : ''}">
+        <div class="orbita-centro">
           <strong>${formatearTiempo(totalVisible)}</strong>
           <span>este mes</span>
         </div>
       </div>`;
+
+    // Ajusta las órbitas según el tamaño real de cada círculo.
+    requestAnimationFrame(() => resolverColisionesOrbitas(grafico));
 
     leyenda.innerHTML="";
     leyenda.hidden=true;
