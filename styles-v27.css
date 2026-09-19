@@ -8360,3 +8360,26 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 }
 
 /* V91 consolidado: ver también CSS crítico inline en index.html */
+
+
+/* =========================================================
+   V113 · CORRECCIÓN IPHONE — 2 ACTIVIDADES SIN SUPERPOSICIÓN
+   ========================================================= */
+@media (max-width: 430px) {
+  #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-ministerio {
+    left: 27% !important;
+    top: 38% !important;
+  }
+
+  #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-ldc,
+  #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-asambleas,
+  #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-otras {
+    left: 78% !important;
+    top: 66% !important;
+  }
+
+  #vista-inicio .orbita-grafico.orbita-cantidad-2 .orbita-centro {
+    left: 42% !important;
+    top: 72% !important;
+  }
+}

@@ -179,7 +179,10 @@ Solo añade mapa e índices de mantenimiento. No altera la lógica ni el aspecto
 - Clima queda intacto.
 - app-v27.js: 7028 → 6304 (724 menos).
 
-## V112 — Ajustes
-- Extraídas: guardarPreferencias, configurarAjustes, cargarFormularioAjustes, guardarAjustesDesdeFormulario, normalizarPreferenciasImportadas.
-- OneDrive/backup intactos.
-- app-v27.js: 6304 → 5923 (381 líneas menos).
+## V113 — Corrección tras V112
+- Se revierte únicamente la extracción de Ajustes de V112: las funciones de preferencias
+  vuelven a permanecer juntas en `app-v27.js`, como en la V111 validada.
+- Esto evita separar las funciones de su estado interno y recupera la persistencia al salir/entrar.
+- Añadido ajuste responsive para dos actividades en Inicio, separando la segunda burbuja
+  y el total central en iPhone para evitar superposición.
+- No se modifican registros, claves de localStorage, reglas de meta ni datos existentes.
