@@ -212,8 +212,7 @@ function guardarRegistros() {
     );
 
     if (guardado && !aplicandoDatosOneDrive) {
-        almacenamiento.guardar(STORAGE_KEYS.ultimaModificacionLocal, new Date().toISOString());
-        almacenamiento.guardar("miServicio.onedriveCambioLocalPendiente", true);
+        marcarModificacionLocalOneDrive();
         programarSincronizacionOneDrive();
     }
 

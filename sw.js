@@ -1,9 +1,9 @@
-const CACHE = "mi-servicio-v12801";
+const CACHE = "mi-servicio-v12191";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles-v27.css?v=12801",
-  "./app-v27.js?v=12801",
+  "./styles-v27.css?v=12191",
+  "./app-v27.js?v=12191",
   "./icon-apple.png",
   "./manifest.webmanifest",
   "./core/config.js",
