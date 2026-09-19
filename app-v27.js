@@ -54,7 +54,7 @@ function msStorageGuardar(clave, valor) {
         return window.MiServicioStorage.guardar(clave, valor);
     }
     try {
-        msStorageGuardar(clave, valor);
+        localStorage.setItem(clave, JSON.stringify(valor));
         return true;
     } catch (error) {
         console.error(`[Mi Servicio] No se pudo guardar "${clave}"`, error);
@@ -136,9 +136,7 @@ const almacenamiento = {
 
         try {
 
-            msStorageGuardar(clave, valor);
-
-            return true;
+            return msStorageGuardar(clave, valor);
 
         } catch (error) {
 
@@ -7164,23 +7162,23 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 
 
-function mostrarVersionPublicadaV131() {
+function mostrarVersionPublicadaV132() {
     const destino =
         document.getElementById("estadoOneDrive") ||
         document.getElementById("mensajeOneDrive") ||
         document.querySelector("[data-onedrive]");
 
-    if (!destino || document.getElementById("versionPublicadaV131")) return;
+    if (!destino || document.getElementById("versionPublicadaV132")) return;
 
     const etiqueta = document.createElement("div");
-    etiqueta.id = "versionPublicadaV131";
-    etiqueta.textContent = "Versión publicada: V131";
+    etiqueta.id = "versionPublicadaV132";
+    etiqueta.textContent = "Versión publicada: V132";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(mostrarVersionPublicadaV131, 500);
+    setTimeout(mostrarVersionPublicadaV132, 500);
 });
 
