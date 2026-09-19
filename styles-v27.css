@@ -1,4 +1,25 @@
 /* =========================================================
+   MI SERVICIO · ÍNDICE DE ESTILOS · V93
+   =========================================================
+   01 · Variables y base
+   02 · Estructura / navegación
+   03 · Inicio
+   04 · Registro
+   05 · Calendario
+   06 · Historial
+   07 · Estadísticas
+   08 · Meta
+   09 · Ajustes
+   10 · Modales
+   11 · Progreso / clima / personajes
+   12 · Responsive
+   13 · Modo oscuro / standalone
+   14 · Compatibilidad y correcciones acumuladas
+
+   V93 conserva el orden actual de las reglas para evitar regresiones.
+   ========================================================= */
+
+/* =========================================================
    MI SERVICIO WEB
    styles.css
    ========================================================= */
@@ -8339,3 +8360,65 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 }
 
 /* V91 consolidado: ver también CSS crítico inline en index.html */
+
+
+/* =========================================================
+   V121 · INICIO RESPONSIVE
+   Mantiene el diseño existente y evita recortes laterales.
+   ========================================================= */
+#vista-inicio,
+#vista-inicio .contenido,
+#vista-inicio .seccion,
+#vista-inicio .tarjeta {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+#vista-inicio .orbita-grafico {
+    width: min(100%, 430px);
+    max-width: 100%;
+    margin-inline: auto;
+    box-sizing: border-box;
+}
+
+#vista-inicio .orbita-actividad,
+#vista-inicio .orbita-centro {
+    box-sizing: border-box;
+}
+
+#vista-inicio .tiempo-esquinas {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+@media (max-width: 390px) {
+    #vista-inicio {
+        --inicio-gap-responsive: 10px;
+    }
+
+    #vista-inicio .orbita-grafico {
+        transform-origin: top center;
+    }
+
+    #vista-inicio .tiempo-esquina small {
+        font-size: clamp(9px, 2.7vw, 11px);
+    }
+
+    #vista-inicio .tiempo-esquina {
+        max-width: 42%;
+    }
+
+    #vista-inicio .frase-animo-card {
+        padding-inline: 12px;
+    }
+}
+
+@media (max-width: 360px) {
+    #vista-inicio .orbita-grafico {
+        width: 100%;
+    }
+
+    #vista-inicio .tiempo-esquina {
+        max-width: 40%;
+    }
+}
