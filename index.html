@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=14101"
+        href="./styles-v27.css?v=14201"
     >
 
 
@@ -119,7 +119,7 @@
 }
 </style>
 
-    <meta name="mi-servicio-version" content="V141-AGENDA-INTELIGENTE">
+    <meta name="mi-servicio-version" content="V142-AGENDA-MODO-OSCURO">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -1413,12 +1413,12 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=14101" defer></script>
+<script src="./app-v27.js?v=14201" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js?v=14101", { scope: "./" })
+    navigator.serviceWorker.register("./sw.js?v=14201", { scope: "./" })
       .catch(error => console.warn("Modo sin conexión no disponible:", error));
   });
 }

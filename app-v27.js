@@ -528,7 +528,7 @@ function renderHistorialCopiasV136(){
  }).join("");
 }
 function configurarEstadoSyncV134(){
-    const a=document.getElementById("versionPublicadaV141");
+    const a=document.getElementById("versionPublicadaV142");
     if(!a||document.getElementById("estadoSyncV134"))return;
     const el=document.createElement("div"); el.id="estadoSyncV134";
     el.style.cssText="font-size:12px;text-align:center;margin-top:6px;font-weight:600;";
@@ -7270,24 +7270,24 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 
 
-function mostrarVersionPublicadaV141() {
+function mostrarVersionPublicadaV142() {
     const destino =
         document.getElementById("estadoOneDrive") ||
         document.getElementById("mensajeOneDrive") ||
         document.querySelector("[data-onedrive]");
 
-    if (!destino || document.getElementById("versionPublicadaV141")) return;
+    if (!destino || document.getElementById("versionPublicadaV142")) return;
 
     const etiqueta = document.createElement("div");
-    etiqueta.id = "versionPublicadaV141";
-    etiqueta.textContent = "Versión publicada: V141";
+    etiqueta.id = "versionPublicadaV142";
+    etiqueta.textContent = "Versión publicada: V142";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(() => { mostrarVersionPublicadaV141(); configurarEstadoSyncV134(); }, 500);
+    setTimeout(() => { mostrarVersionPublicadaV142(); configurarEstadoSyncV134(); }, 500);
 });
 
 
