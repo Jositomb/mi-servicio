@@ -476,6 +476,32 @@ function guardarJSON(
 // =========================================================
 
 
+
+function estadoSyncV134(texto, tipo="ok") {
+    almacenamiento.guardar("miServicio.estadoSyncV134",{texto,tipo,fecha:new Date().toISOString()});
+    const el=document.getElementById("estadoSyncV134"); if(!el)return;
+    const icono=tipo==="subiendo"?"↑":tipo==="bajando"?"↓":tipo==="pendiente"?"⚠︎":"✓";
+    el.textContent=`${icono} ${texto}`;
+}
+function guardarSnapshotLocalV134(){
+    return almacenamiento.guardar("miServicio.snapshotAnteriorV134",{
+        formato:"mi-servicio-snapshot-local",version:1,guardadoEn:new Date().toISOString(),
+        registros:estado.registros,preferencias:estado.preferencias,agendaSalidas:estado.agendaSalidas
+    });
+}
+function configurarEstadoSyncV134(){
+    const a=document.getElementById("versionPublicadaV134");
+    if(!a||document.getElementById("estadoSyncV134"))return;
+    const el=document.createElement("div"); el.id="estadoSyncV134";
+    el.style.cssText="font-size:12px;text-align:center;margin-top:6px;font-weight:600;";
+    a.insertAdjacentElement("beforebegin",el);
+    const g=almacenamiento.leer("miServicio.estadoSyncV134",null);
+    if(!navigator.onLine) estadoSyncV134("Sin conexión · cambios pendientes","pendiente");
+    else if(g?.texto) estadoSyncV134(g.texto,g.tipo||"ok");
+    else estadoSyncV134("Preparado para sincronizar","ok");
+}
+window.addEventListener("offline",()=>estadoSyncV134("Sin conexión · cambios pendientes","pendiente"));
+window.addEventListener("online",()=>{estadoSyncV134("Conexión recuperada · sincronizando…","subiendo");setTimeout(()=>sincronizarConOneDrive(false),300);});
 function obtenerRevisionLocalV133() {
     const n = Number(almacenamiento.leer("miServicio.syncRevision", 0));
     return Number.isFinite(n) && n >= 0 ? Math.floor(n) : 0;
@@ -489,6 +515,7 @@ function marcarCambioLocalV133() {
     establecerRevisionLocalV133(obtenerRevisionLocalV133() + 1);
     almacenamiento.guardar("miServicio.onedriveCambioLocalPendiente", true);
     almacenamiento.guardar(STORAGE_KEYS.ultimaModificacionLocal, new Date().toISOString());
+    estadoSyncV134(navigator.onLine ? "Cambio pendiente de sincronizar" : "Sin conexión · cambio pendiente","pendiente");
 }
 function guardarPreferencias() {
     const guardado = guardarJSON(STORAGE_KEYS.preferencias, estado.preferencias);
@@ -6511,6 +6538,8 @@ async function sincronizarConOneDrive(mostrarResultado = false) {
     const indicador=document.getElementById("indicadorOneDrive");
     if(indicador) indicador.classList.add("sincronizando");
     try {
+        if(!navigator.onLine){estadoSyncV134("Sin conexión · cambios pendientes","pendiente");return;}
+        estadoSyncV134("Comprobando OneDrive…","subiendo");
         const token=await obtenerTokenOneDrive(); if(!token) return;
         const remoto=await descargarDatosOneDrive(token);
         let localRev=obtenerRevisionLocalV133();
@@ -6524,34 +6553,36 @@ async function sincronizarConOneDrive(mostrarResultado = false) {
 
         if(!remoto){
             if(localRev===0){ establecerRevisionLocalV133(1); localRev=1; }
-            await subirDatosOneDrive(token); accion="subidos";
+            estadoSyncV134("Guardando cambios en OneDrive…","subiendo"); await subirDatosOneDrive(token); accion="subidos";
         } else if(remotoRev>localRev){
             if(pendiente && remotoMs>ultimaSyncMs)
                 throw new Error("Hay cambios nuevos en este dispositivo y en OneDrive. No se ha sobrescrito nada.");
-            aplicarDatosDesdeOneDrive(remoto); accion="descargados";
+            estadoSyncV134("Recibiendo datos más recientes…","bajando"); aplicarDatosDesdeOneDrive(remoto); accion="descargados";
         } else if(localRev>remotoRev){
-            await subirDatosOneDrive(token); accion="subidos";
+            estadoSyncV134("Guardando cambios en OneDrive…","subiendo"); await subirDatosOneDrive(token); accion="subidos";
         } else if(localRev===0 && remotoRev===0){
             if(remotoMs>localMs){
                 if(pendiente && remotoMs>ultimaSyncMs)
                     throw new Error("Hay cambios nuevos en este dispositivo y en OneDrive. No se ha sobrescrito nada.");
-                aplicarDatosDesdeOneDrive(remoto); accion="descargados";
+                estadoSyncV134("Recibiendo datos más recientes…","bajando"); aplicarDatosDesdeOneDrive(remoto); accion="descargados";
             } else if(localMs>remotoMs){
                 establecerRevisionLocalV133(1);
-                await subirDatosOneDrive(token); accion="subidos";
+                estadoSyncV134("Guardando cambios en OneDrive…","subiendo"); await subirDatosOneDrive(token); accion="subidos";
             } else registrarSincronizacionOneDrive(remoto.updatedAt||new Date().toISOString());
         } else if(pendiente){
             establecerRevisionLocalV133(localRev+1);
-            await subirDatosOneDrive(token); accion="subidos";
+            estadoSyncV134("Guardando cambios en OneDrive…","subiendo"); await subirDatosOneDrive(token); accion="subidos";
         } else registrarSincronizacionOneDrive(remoto.updatedAt||new Date().toISOString());
 
         const cuenta=clienteMSALOneDrive.getActiveAccount()||clienteMSALOneDrive.getAllAccounts()[0]||null;
         actualizarInterfazOneDrive(true,cuenta);
+        estadoSyncV134(accion==="descargados"?"Sincronizado · datos recibidos":accion==="subidos"?"Sincronizado · cambios guardados":"Sincronizado · todo al día","ok");
         if(mostrarResultado) mostrarMensajeOneDrive(
             accion==="descargados"?"✓ Se han recibido los datos más recientes de OneDrive.":
             accion==="subidos"?"✓ Tus cambios se han guardado en OneDrive.":"✓ OneDrive está al día.",false);
     } catch(error){
         console.error("Error sincronizando OneDrive:",error);
+        estadoSyncV134(navigator.onLine?"No se pudo sincronizar · se conserva local":"Sin conexión · cambios pendientes","pendiente");
         if(mostrarResultado) mostrarMensajeOneDrive(error?.message||"No se pudo sincronizar con OneDrive.",true);
     } finally {
         sincronizandoOneDrive=false;
@@ -6617,6 +6648,7 @@ function aplicarDatosDesdeOneDrive(remoto) {
     const preferencias = normalizarPreferenciasImportadas(copia.preferencias);
     const agendaSalidas = copia.agendaSalidas && typeof copia.agendaSalidas === "object" &&
         !Array.isArray(copia.agendaSalidas) ? copia.agendaSalidas : {};
+    guardarSnapshotLocalV134();
     aplicandoDatosOneDrive = true;
     try {
         estado.registros=registros; estado.preferencias=preferencias; estado.agendaSalidas=agendaSalidas;
@@ -7165,23 +7197,23 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 
 
-function mostrarVersionPublicadaV133() {
+function mostrarVersionPublicadaV134() {
     const destino =
         document.getElementById("estadoOneDrive") ||
         document.getElementById("mensajeOneDrive") ||
         document.querySelector("[data-onedrive]");
 
-    if (!destino || document.getElementById("versionPublicadaV133")) return;
+    if (!destino || document.getElementById("versionPublicadaV134")) return;
 
     const etiqueta = document.createElement("div");
-    etiqueta.id = "versionPublicadaV133";
-    etiqueta.textContent = "Versión publicada: V133";
+    etiqueta.id = "versionPublicadaV134";
+    etiqueta.textContent = "Versión publicada: V134";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(mostrarVersionPublicadaV133, 500);
+    setTimeout(() => { mostrarVersionPublicadaV134(); configurarEstadoSyncV134(); }, 500);
 });
 
