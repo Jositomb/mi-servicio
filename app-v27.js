@@ -511,7 +511,7 @@ function renderHistorialCopiasV136(){
  return `<div class="v136-backup-row"><span>🕘 ${t}</span><button type="button" onclick="restaurarCopiaV136(${i})">Restaurar</button></div>`;}).join("");
 }
 function configurarEstadoSyncV134(){
-    const a=document.getElementById("versionPublicadaV137");
+    const a=document.getElementById("versionPublicadaV138");
     if(!a||document.getElementById("estadoSyncV134"))return;
     const el=document.createElement("div"); el.id="estadoSyncV134";
     el.style.cssText="font-size:12px;text-align:center;margin-top:6px;font-weight:600;";
@@ -7218,24 +7218,24 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 
 
-function mostrarVersionPublicadaV137() {
+function mostrarVersionPublicadaV138() {
     const destino =
         document.getElementById("estadoOneDrive") ||
         document.getElementById("mensajeOneDrive") ||
         document.querySelector("[data-onedrive]");
 
-    if (!destino || document.getElementById("versionPublicadaV137")) return;
+    if (!destino || document.getElementById("versionPublicadaV138")) return;
 
     const etiqueta = document.createElement("div");
-    etiqueta.id = "versionPublicadaV137";
-    etiqueta.textContent = "Versión publicada: V137";
+    etiqueta.id = "versionPublicadaV138";
+    etiqueta.textContent = "Versión publicada: V138";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(() => { mostrarVersionPublicadaV137(); configurarEstadoSyncV134(); }, 500);
+    setTimeout(() => { mostrarVersionPublicadaV138(); configurarEstadoSyncV134(); }, 500);
 });
 
 
@@ -7303,58 +7303,72 @@ function montarHistorialCopiasV136(){
  const b=document.createElement("div");b.className="v136-history";b.innerHTML='<div class="v135-section-label">Copias recuperables</div><div id="historialCopiasV136"></div>';card.appendChild(b);renderHistorialCopiasV136();
 }
 function montarComparacionSemanalV136(){
- const viejo=document.getElementById("comparacionSemanalV136");if(viejo)viejo.remove();
- const inicio=document.querySelector('[data-vista="inicio"],#vistaInicio,.vista-inicio');if(!inicio)return;
+    const viejo=document.getElementById("comparacionSemanalV136");
+    if(viejo) viejo.remove();
 
- const ahora=new Date(),ini=new Date(ahora);
- ini.setHours(0,0,0,0);
- ini.setDate(ini.getDate()-((ini.getDay()+6)%7));
- const ant=new Date(ini);ant.setDate(ant.getDate()-7);
- const antFin=new Date(ini);antFin.setMilliseconds(-1);
+    // IMPORTANTE V138: el elemento vive dentro de la vista Inicio real.
+    // Nunca se añade al body ni al contenedor general de vistas.
+    const inicio =
+        document.getElementById("vistaInicio") ||
+        document.querySelector('.vista[data-vista="inicio"]') ||
+        document.querySelector('[data-vista="inicio"]');
+    if(!inicio) return;
 
- const total=(a,b)=>{
-   const regs=Array.isArray(estado.registros)?estado.registros:[];
-   return regs.reduce((x,r)=>{
-     const f=new Date(r.fecha);
-     if(Number.isNaN(f.getTime())||f<a||f>b)return x;
-     return x + (Number(r.minutosTotales) || ((Number(r.horas)||0)*60 + (Number(r.minutos)||0)));
-   },0);
- };
- const ac=total(ini,ahora),pr=total(ant,antFin);
- const fmt=m=>`${Math.floor(m/60)} h${m%60?" "+m%60+" min":""}`;
- const dif=ac-pr;
+    const ahora=new Date();
+    const ini=new Date(ahora);
+    ini.setHours(0,0,0,0);
+    ini.setDate(ini.getDate()-((ini.getDay()+6)%7));
+    const ant=new Date(ini); ant.setDate(ant.getDate()-7);
+    const antFin=new Date(ini); antFin.setMilliseconds(-1);
 
- const el=document.createElement("div");
- el.id="comparacionSemanalV136";
- el.className="v137-week";
- el.innerHTML=`
-   <div class="v137-week-title">📊 <strong>Comparación semanal</strong></div>
-   <div class="v137-week-grid">
-     <div><small>Esta semana</small><b>${fmt(ac)}</b></div>
-     <div><small>Semana anterior</small><b>${fmt(pr)}</b></div>
-     <div class="v137-week-diff ${dif>=0?"positivo":"negativo"}">
-       <b>${dif>0?"↑ +":dif<0?"↓ −":""}${dif===0?"=":fmt(Math.abs(dif))}</b>
-       <small>${dif===0?"igual que la anterior":"respecto a la anterior"}</small>
-     </div>
-   </div>`;
+    const total=(a,b)=>{
+        const regs=Array.isArray(estado.registros)?estado.registros:[];
+        return regs.reduce((sum,r)=>{
+            const f=new Date(r.fecha);
+            if(Number.isNaN(f.getTime()) || f<a || f>b) return sum;
+            const mins=Number(r.minutosTotales) ||
+                ((Number(r.horas)||0)*60 + (Number(r.minutos)||0));
+            return sum+mins;
+        },0);
+    };
 
- // Colocarla justo DESPUÉS de la tarjeta Objetivo y antes de la navegación inferior.
- const candidatos=[...inicio.querySelectorAll("h1,h2,h3,h4,div,section")];
- const tituloObjetivo=candidatos.find(x=>(x.textContent||"").trim()==="Objetivo");
- let tarjeta=null;
- if(tituloObjetivo){
-   let n=tituloObjetivo.nextElementSibling;
-   while(n && !n.matches("nav,.bottom-nav,[class*='nav']")){
-     if(n.matches(".card,.tarjeta,section") || n.querySelector?.("progress,[class*='progreso'],[class*='objetivo']")){
-       tarjeta=n;break;
-     }
-     n=n.nextElementSibling;
-   }
- }
- if(tarjeta) tarjeta.insertAdjacentElement("afterend",el);
- else {
-   const nav=inicio.querySelector("nav,.bottom-nav,[class*='bottom'][class*='nav']");
-   if(nav) nav.insertAdjacentElement("beforebegin",el); else inicio.appendChild(el);
- }
+    const actual=total(ini,ahora);
+    const anterior=total(ant,antFin);
+    const dif=actual-anterior;
+    const fmt=m=>`${Math.floor(m/60)} h${m%60 ? " "+(m%60)+" min" : ""}`;
+
+    const el=document.createElement("section");
+    el.id="comparacionSemanalV136";
+    el.className="v138-week";
+    el.innerHTML=`
+      <div class="v138-week-title">📊 <strong>Comparación semanal</strong></div>
+      <div class="v138-week-grid">
+        <div class="v138-week-value">
+          <small>Esta semana</small><b>${fmt(actual)}</b>
+        </div>
+        <div class="v138-week-value">
+          <small>Semana anterior</small><b>${fmt(anterior)}</b>
+        </div>
+        <div class="v138-week-diff ${dif<0?"negativo":"positivo"}">
+          <b>${dif>0?"↑ +":dif<0?"↓ −":"="}${dif===0?"":fmt(Math.abs(dif))}</b>
+          <small>${dif===0?"igual que la anterior":"respecto a la anterior"}</small>
+        </div>
+      </div>`;
+
+    // Buscar el bloque Objetivo DENTRO de Inicio.
+    const titulo=[...inicio.querySelectorAll("h1,h2,h3,h4")]
+        .find(x=>(x.textContent||"").trim()==="Objetivo");
+
+    if(titulo){
+        // La tarjeta de objetivo es el siguiente bloque hermano.
+        let tarjeta=titulo.nextElementSibling;
+        if(tarjeta){
+            tarjeta.insertAdjacentElement("afterend",el);
+            return;
+        }
+    }
+
+    // Fallback seguro: sigue dentro de Inicio.
+    inicio.appendChild(el);
 }
 document.addEventListener("DOMContentLoaded",()=>setTimeout(()=>{montarHistorialCopiasV136();montarComparacionSemanalV136();},850));

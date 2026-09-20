@@ -8460,30 +8460,40 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 .v136-week{margin:8px 16px 12px;padding:10px 14px;border-radius:16px;background:rgba(22,119,255,.07);display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:13px}
 .v136-week span{opacity:.65;text-align:right;font-size:12px}@media(max-width:390px){.v136-week{align-items:flex-start;flex-direction:column}.v136-week span{text-align:left}}
 
-/* V137 · comparación semanal compacta */
-.v137-week{
+/* V138 · comparación semanal: SOLO Inicio, compacta y dentro del flujo */
+.v138-week{
+  position:relative !important;
+  inset:auto !important;
+  float:none !important;
   box-sizing:border-box;
   width:calc(100% - 32px);
-  margin:10px 16px 16px;
+  max-width:none;
+  margin:10px 16px 18px;
   padding:12px 14px;
   border-radius:18px;
-  background:rgba(255,255,255,.88);
+  background:rgba(255,255,255,.90);
   box-shadow:0 5px 18px rgba(30,55,90,.07);
+  z-index:auto !important;
 }
-.v137-week-title{font-size:14px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.v137-week-grid{display:grid;grid-template-columns:1fr 1fr 1.15fr;gap:10px;align-items:center}
-.v137-week-grid>div{min-width:0}
-.v137-week-grid>div+div:not(.v137-week-diff){border-left:1px solid rgba(120,120,128,.18);padding-left:10px}
-.v137-week small{display:block;font-size:10.5px;opacity:.62;line-height:1.15;margin-bottom:3px}
-.v137-week b{display:block;font-size:16px;line-height:1.1;white-space:nowrap}
-.v137-week-diff{padding:8px 9px;border-radius:13px;text-align:center;background:rgba(52,199,89,.09)}
-.v137-week-diff.positivo b{color:#19a45b}
-.v137-week-diff.negativo{background:rgba(255,159,10,.10)}
-.v137-week-diff.negativo b{color:#c77b00}
-.v137-week-diff small{margin:3px 0 0;font-size:9.5px}
+.v138-week-title{display:flex;align-items:center;gap:6px;font-size:14px;margin-bottom:10px}
+.v138-week-grid{display:grid;grid-template-columns:1fr 1fr 1.15fr;gap:10px;align-items:center}
+.v138-week-value{min-width:0}
+.v138-week-value+.v138-week-value{border-left:1px solid rgba(120,120,128,.18);padding-left:10px}
+.v138-week small{display:block;font-size:10px;opacity:.62;line-height:1.15;margin-bottom:3px}
+.v138-week b{display:block;font-size:15px;line-height:1.15;white-space:nowrap}
+.v138-week-diff{padding:8px;border-radius:12px;text-align:center;background:rgba(52,199,89,.09)}
+.v138-week-diff.positivo b{color:#19a45b}
+.v138-week-diff.negativo{background:rgba(255,159,10,.10)}
+.v138-week-diff.negativo b{color:#c77b00}
+.v138-week-diff small{font-size:9px;margin-top:3px}
+
+/* Defensa extra: nunca mostrar la tarjeta fuera de Inicio activo */
+.vista:not(.activa) > #comparacionSemanalV136,
+.vista:not(.active) > #comparacionSemanalV136,
+[hidden] #comparacionSemanalV136{display:none !important}
+
 @media(max-width:390px){
- .v137-week{width:calc(100% - 24px);margin-left:12px;margin-right:12px;padding:11px 12px}
- .v137-week-grid{gap:7px;grid-template-columns:.9fr 1.05fr 1.15fr}
- .v137-week b{font-size:14px}
- .v137-week small{font-size:9.5px}
+ .v138-week{width:calc(100% - 24px);margin:10px 12px 16px;padding:11px 12px}
+ .v138-week-grid{grid-template-columns:.9fr 1.05fr 1.15fr;gap:7px}
+ .v138-week b{font-size:14px}
 }
