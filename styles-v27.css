@@ -8762,3 +8762,31 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio{padding-top:2px!
   #vista-inicio .progreso-personaje{height:25px!important}
   #vista-inicio .progreso-animal{width:29px!important;height:29px!important;font-size:22px!important}
 }
+
+/* V148 · Pantera realmente apoyada sobre la pista inferior */
+#vista-inicio .progreso-personaje{
+  height:34px!important;
+  margin-top:0!important;
+  position:relative!important;
+}
+#vista-inicio .progreso-pista{
+  bottom:2px!important;
+}
+#vista-inicio .progreso-animal{
+  top:auto!important;
+  bottom:-1px!important;
+  margin:0!important;
+  width:32px!important;
+  height:32px!important;
+  font-size:24px!important;
+  transform:translateX(-50%)!important;
+  transform-origin:50% 100%!important;
+}
+#vista-inicio .progreso-meta{
+  top:auto!important;
+  bottom:1px!important;
+}
+@media(max-width:390px){
+ #vista-inicio .progreso-personaje{height:32px!important}
+ #vista-inicio .progreso-animal{bottom:-1px!important;width:30px!important;height:30px!important;font-size:23px!important}
+}
