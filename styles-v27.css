@@ -8563,3 +8563,127 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 .v145-hoy-estado{font-size:9px;font-weight:750;color:#1677ff;background:rgba(22,119,255,.09);padding:6px 7px;border-radius:10px;white-space:nowrap}
 @media(prefers-color-scheme:dark){#vista-inicio .v145-hoy{background:#1c1c1e;color:#f5f5f7;border:1px solid rgba(255,255,255,.06);box-shadow:0 4px 16px rgba(0,0,0,.28)}.v145-hoy-icono,.v145-hoy-estado{background:rgba(88,166,255,.12)}.v145-hoy-estado{color:#6aa8ff}}
 @media(max-width:390px){#vista-inicio .v145-hoy{width:calc(100% - 24px);margin-left:12px;margin-right:12px}}
+
+/* =========================================================
+   V146 · INICIO COMPACTO + COMPARACIÓN SEMANAL MODO OSCURO
+   Solo presentación. No altera cálculos, registros ni sync.
+   ========================================================= */
+
+/* Menos aire general solo en Inicio */
+#vista-inicio .seccion{margin-bottom:8px!important}
+#vista-inicio .titulo-seccion{margin:2px 0 5px!important}
+#vista-inicio .titulo-seccion h2{font-size:16px!important;line-height:1.1!important}
+
+/* Tarjetas superiores: conservan desplegables pero ocupan mucho menos */
+#vista-inicio .inicio-resumen-grid{gap:8px!important;margin-bottom:3px!important}
+#vista-inicio .inicio-mini-card{min-height:58px!important;height:58px!important;padding:8px 10px!important;border-radius:16px!important}
+#vista-inicio .inicio-mini-titulo{font-size:10px!important}
+#vista-inicio .inicio-mini-subtitulo{font-size:9px!important}
+#vista-inicio .inicio-mini-total{font-size:19px!important;margin-top:2px!important}
+#vista-inicio .inicio-calendario-icono{font-size:22px!important}
+
+/* Gráfico: mismo contenido y posiciones relativas, pero bastante más compacto */
+#vista-inicio #seccionGraficoInicio{padding-top:2px!important;margin-top:0!important}
+#vista-inicio #seccionGraficoInicio .titulo-seccion{display:none!important}
+#vista-inicio .tarjeta-grafico-inicio{
+  padding:5px 8px 4px!important;
+  min-height:0!important;
+  overflow:visible!important;
+}
+#vista-inicio #graficoInicio{
+  width:286px!important;
+  height:286px!important;
+  margin:0 auto!important;
+}
+#vista-inicio .orbita-grafico{
+  transform:scale(.88)!important;
+  transform-origin:center!important;
+}
+#vista-inicio .fecha-progreso-mes{font-size:11px!important;margin-bottom:-4px!important}
+#vista-inicio .tiempo-esquina small{font-size:9px!important}
+#vista-inicio #tiempoTemperatura{font-size:22px!important}
+#vista-inicio #tiempoLluvia{font-size:14px!important}
+#vista-inicio .tiempo-recargar{top:39px!important;width:28px!important;height:28px!important;font-size:17px!important}
+
+/* Objetivo: conservar personaje, meta, mensajes y barra, reduciendo alto */
+#vista-inicio .seccion:has(#porcentajeObjetivo) .titulo-seccion{margin-top:2px!important}
+#vista-inicio .seccion:has(#porcentajeObjetivo) .tarjeta{padding:10px 12px!important;border-radius:18px!important}
+#vista-inicio .objetivo-cabecera{margin-bottom:4px!important}
+#vista-inicio .objetivo-cabecera .etiqueta{font-size:10px!important}
+#vista-inicio #valorObjetivo{font-size:21px!important;line-height:1!important}
+#vista-inicio #porcentajeObjetivo{font-size:24px!important}
+#vista-inicio .barra{height:5px!important}
+#vista-inicio .progreso-personaje{height:36px!important;margin-top:2px!important}
+#vista-inicio .progreso-pista{bottom:5px!important;height:3px!important}
+#vista-inicio .progreso-animal{bottom:7px!important;width:27px!important;height:27px!important;font-size:21px!important}
+#vista-inicio .progreso-meta{bottom:7px!important;font-size:17px!important}
+#vista-inicio .progreso-estado{font-size:10px!important;margin-top:0!important}
+#vista-inicio #desgloseObjetivo,
+#vista-inicio #mensajeObjetivo{font-size:10px!important;line-height:1.2!important;margin-top:3px!important}
+
+/* Frase: una sola línea compacta */
+#vista-inicio .seccion-frase-animo{margin:5px 0!important}
+#vista-inicio .frase-animo-card{min-height:38px!important;padding:8px 11px!important;border-radius:15px!important}
+#vista-inicio .frase-animo-icono{font-size:16px!important}
+#vista-inicio #fraseAnimoInicio{font-size:11px!important;line-height:1.15!important}
+
+/* Resumen de hoy aún más compacto */
+#vista-inicio .v145-hoy{
+  width:calc(100% - 32px)!important;
+  margin:5px 16px!important;
+  padding:8px 10px!important;
+  min-height:46px!important;
+  grid-template-columns:28px 1fr auto!important;
+  gap:7px!important;
+  border-radius:15px!important;
+}
+#vista-inicio .v145-hoy-icono{width:28px!important;height:28px!important;border-radius:9px!important;font-size:15px!important}
+#vista-inicio .v145-hoy-texto small{font-size:7.5px!important}
+#vista-inicio .v145-hoy-texto strong{font-size:11px!important}
+#vista-inicio .v145-hoy-texto span{font-size:9px!important}
+#vista-inicio .v145-hoy-estado{font-size:8px!important;padding:5px 6px!important}
+
+/* Comparación semanal: más baja */
+#vista-inicio .v139-week{
+  width:calc(100% - 32px)!important;
+  margin:5px 16px 8px!important;
+  padding:8px 10px!important;
+  border-radius:15px!important;
+}
+.v139-week-title{font-size:11.5px!important;margin-bottom:6px!important}
+.v139-week-grid{gap:6px!important}
+.v139-week small{font-size:8px!important;margin-bottom:2px!important}
+.v139-week b{font-size:13px!important}
+.v139-week-diff{padding:6px!important;border-radius:10px!important}
+
+/* El fallo de la captura: comparación semanal adaptada al modo oscuro */
+@media (prefers-color-scheme:dark){
+  #vista-inicio .v139-week{
+    background:#1c1c1e!important;
+    color:#f5f5f7!important;
+    border:1px solid rgba(255,255,255,.06)!important;
+    box-shadow:0 4px 16px rgba(0,0,0,.28)!important;
+  }
+  .v139-week-title,
+  .v139-week-value b{color:#f5f5f7!important}
+  .v139-week small{color:#a9a9af!important;opacity:1!important}
+  .v139-week-value+.v139-week-value{border-left-color:rgba(255,255,255,.12)!important}
+  .v139-week-diff{background:rgba(52,199,89,.14)!important}
+  .v139-week-diff>b{color:#43d17a!important}
+  .v139-week-diff>b.negativo{color:#ff9f0a!important}
+}
+
+/* iPhone estrecho */
+@media(max-width:390px){
+  #vista-inicio .inicio-mini-card{height:54px!important;min-height:54px!important}
+  #vista-inicio #graficoInicio{width:270px!important;height:270px!important}
+  #vista-inicio .orbita-grafico{transform:scale(.84)!important}
+  #vista-inicio .v145-hoy,
+  #vista-inicio .v139-week{width:calc(100% - 24px)!important;margin-left:12px!important;margin-right:12px!important}
+}
+
+/* Standalone iOS: neutralizar el espacio extra antiguo que ya no hace falta */
+body.modo-standalone #vista-inicio.activa #seccionGraficoInicio{padding-top:2px!important}
+@media(display-mode:standalone){
+  #vista-inicio.activa #seccionGraficoInicio{padding-top:2px!important}
+}
