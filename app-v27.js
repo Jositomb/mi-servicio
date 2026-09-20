@@ -511,7 +511,7 @@ function renderHistorialCopiasV136(){
  return `<div class="v136-backup-row"><span>🕘 ${t}</span><button type="button" onclick="restaurarCopiaV136(${i})">Restaurar</button></div>`;}).join("");
 }
 function configurarEstadoSyncV134(){
-    const a=document.getElementById("versionPublicadaV136");
+    const a=document.getElementById("versionPublicadaV137");
     if(!a||document.getElementById("estadoSyncV134"))return;
     const el=document.createElement("div"); el.id="estadoSyncV134";
     el.style.cssText="font-size:12px;text-align:center;margin-top:6px;font-weight:600;";
@@ -7218,24 +7218,24 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 
 
-function mostrarVersionPublicadaV136() {
+function mostrarVersionPublicadaV137() {
     const destino =
         document.getElementById("estadoOneDrive") ||
         document.getElementById("mensajeOneDrive") ||
         document.querySelector("[data-onedrive]");
 
-    if (!destino || document.getElementById("versionPublicadaV136")) return;
+    if (!destino || document.getElementById("versionPublicadaV137")) return;
 
     const etiqueta = document.createElement("div");
-    etiqueta.id = "versionPublicadaV136";
-    etiqueta.textContent = "Versión publicada: V136";
+    etiqueta.id = "versionPublicadaV137";
+    etiqueta.textContent = "Versión publicada: V137";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(() => { mostrarVersionPublicadaV136(); configurarEstadoSyncV134(); }, 500);
+    setTimeout(() => { mostrarVersionPublicadaV137(); configurarEstadoSyncV134(); }, 500);
 });
 
 
@@ -7305,20 +7305,56 @@ function montarHistorialCopiasV136(){
 function montarComparacionSemanalV136(){
  const viejo=document.getElementById("comparacionSemanalV136");if(viejo)viejo.remove();
  const inicio=document.querySelector('[data-vista="inicio"],#vistaInicio,.vista-inicio');if(!inicio)return;
- const ahora=new Date(),ini=new Date(ahora);ini.setHours(0,0,0,0);ini.setDate(ini.getDate()-((ini.getDay()+6)%7));
- const ant=new Date(ini);ant.setDate(ant.getDate()-7);const antFin=new Date(ini);antFin.setMilliseconds(-1);
+
+ const ahora=new Date(),ini=new Date(ahora);
+ ini.setHours(0,0,0,0);
+ ini.setDate(ini.getDate()-((ini.getDay()+6)%7));
+ const ant=new Date(ini);ant.setDate(ant.getDate()-7);
+ const antFin=new Date(ini);antFin.setMilliseconds(-1);
+
  const total=(a,b)=>{
-  const regs=Array.isArray(estado.registros)?estado.registros:[];
-  return regs.reduce((x,r)=>{
-   const f=new Date(r.fecha);
-   if(Number.isNaN(f.getTime())||f<a||f>b)return x;
-   const mins=Number(r.minutosTotales) || ((Number(r.horas)||0)*60 + (Number(r.minutos)||0));
-   return x+mins;
-  },0);
+   const regs=Array.isArray(estado.registros)?estado.registros:[];
+   return regs.reduce((x,r)=>{
+     const f=new Date(r.fecha);
+     if(Number.isNaN(f.getTime())||f<a||f>b)return x;
+     return x + (Number(r.minutosTotales) || ((Number(r.horas)||0)*60 + (Number(r.minutos)||0)));
+   },0);
  };
- const ac=total(ini,ahora),pr=total(ant,antFin),fmt=m=>`${Math.floor(m/60)} h${m%60?" "+m%60+" min":""}`,dif=ac-pr;
- const el=document.createElement("div");el.id="comparacionSemanalV136";el.className="v136-week";
- el.innerHTML=`<strong>Esta semana: ${fmt(ac)}</strong><span>${dif===0?"igual que la anterior":(dif>0?"+":"−")+fmt(Math.abs(dif))+" respecto a la anterior"}</span>`;
- const frase=inicio.querySelector('[id*="frase"],[class*="frase"]');if(frase)frase.insertAdjacentElement("afterend",el);else inicio.prepend(el);
+ const ac=total(ini,ahora),pr=total(ant,antFin);
+ const fmt=m=>`${Math.floor(m/60)} h${m%60?" "+m%60+" min":""}`;
+ const dif=ac-pr;
+
+ const el=document.createElement("div");
+ el.id="comparacionSemanalV136";
+ el.className="v137-week";
+ el.innerHTML=`
+   <div class="v137-week-title">📊 <strong>Comparación semanal</strong></div>
+   <div class="v137-week-grid">
+     <div><small>Esta semana</small><b>${fmt(ac)}</b></div>
+     <div><small>Semana anterior</small><b>${fmt(pr)}</b></div>
+     <div class="v137-week-diff ${dif>=0?"positivo":"negativo"}">
+       <b>${dif>0?"↑ +":dif<0?"↓ −":""}${dif===0?"=":fmt(Math.abs(dif))}</b>
+       <small>${dif===0?"igual que la anterior":"respecto a la anterior"}</small>
+     </div>
+   </div>`;
+
+ // Colocarla justo DESPUÉS de la tarjeta Objetivo y antes de la navegación inferior.
+ const candidatos=[...inicio.querySelectorAll("h1,h2,h3,h4,div,section")];
+ const tituloObjetivo=candidatos.find(x=>(x.textContent||"").trim()==="Objetivo");
+ let tarjeta=null;
+ if(tituloObjetivo){
+   let n=tituloObjetivo.nextElementSibling;
+   while(n && !n.matches("nav,.bottom-nav,[class*='nav']")){
+     if(n.matches(".card,.tarjeta,section") || n.querySelector?.("progress,[class*='progreso'],[class*='objetivo']")){
+       tarjeta=n;break;
+     }
+     n=n.nextElementSibling;
+   }
+ }
+ if(tarjeta) tarjeta.insertAdjacentElement("afterend",el);
+ else {
+   const nav=inicio.querySelector("nav,.bottom-nav,[class*='bottom'][class*='nav']");
+   if(nav) nav.insertAdjacentElement("beforebegin",el); else inicio.appendChild(el);
+ }
 }
 document.addEventListener("DOMContentLoaded",()=>setTimeout(()=>{montarHistorialCopiasV136();montarComparacionSemanalV136();},850));
