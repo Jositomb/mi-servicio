@@ -8453,3 +8453,9 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 @media(max-width:520px){
   .v135-sync-status{align-items:flex-start; flex-direction:column}
 }
+
+.v136-history{margin-top:8px}.v136-empty{opacity:.6;font-size:13px;padding:8px 2px}
+.v136-backup-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 4px;border-bottom:1px solid rgba(120,120,128,.14);font-size:13px}
+.v136-backup-row button{border:0;border-radius:12px;padding:8px 12px;font-weight:700;color:#1677ff;background:rgba(22,119,255,.10)}
+.v136-week{margin:8px 16px 12px;padding:10px 14px;border-radius:16px;background:rgba(22,119,255,.07);display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:13px}
+.v136-week span{opacity:.65;text-align:right;font-size:12px}@media(max-width:390px){.v136-week{align-items:flex-start;flex-direction:column}.v136-week span{text-align:left}}

@@ -484,13 +484,34 @@ function estadoSyncV134(texto, tipo="ok") {
     el.textContent=`${icono} ${texto}`;
 }
 function guardarSnapshotLocalV134(){
-    return almacenamiento.guardar("miServicio.snapshotAnteriorV134",{
-        formato:"mi-servicio-snapshot-local",version:1,guardadoEn:new Date().toISOString(),
-        registros:estado.registros,preferencias:estado.preferencias,agendaSalidas:estado.agendaSalidas
-    });
+ const snap={formato:"mi-servicio-snapshot-local",version:2,guardadoEn:new Date().toISOString(),
+ registros:estado.registros,preferencias:estado.preferencias,agendaSalidas:estado.agendaSalidas};
+ almacenamiento.guardar("miServicio.snapshotAnteriorV134",snap);
+ const h=almacenamiento.leer("miServicio.historialCopiasV136",[]);
+ const l=Array.isArray(h)?h:[]; l.unshift(snap);
+ almacenamiento.guardar("miServicio.historialCopiasV136",l.slice(0,5)); return true;
+}
+function restaurarCopiaV136(i){
+ const l=almacenamiento.leer("miServicio.historialCopiasV136",[]),c=Array.isArray(l)?l[i]:null;if(!c)return;
+ if(!confirm("¿Restaurar esta copia? Se guardará antes el estado actual."))return;
+ guardarSnapshotLocalV134(); aplicandoDatosOneDrive=true;
+ try{
+  estado.registros=normalizarRegistrosImportados(c.registros||[]);
+  estado.preferencias=normalizarPreferenciasImportadas(c.preferencias||{});
+  estado.agendaSalidas=c.agendaSalidas&&typeof c.agendaSalidas==="object"&&!Array.isArray(c.agendaSalidas)?c.agendaSalidas:{};
+  guardarJSON(STORAGE_KEYS.registros,estado.registros);guardarJSON(STORAGE_KEYS.preferencias,estado.preferencias);guardarJSON(STORAGE_KEYS.agendaSalidas,estado.agendaSalidas);
+ }finally{aplicandoDatosOneDrive=false;}
+ marcarCambioLocalV133();cargarFormularioAjustes();actualizarTodaLaInterfaz();renderHistorialCopiasV136();programarSincronizacionOneDrive();
+}
+function renderHistorialCopiasV136(){
+ const host=document.getElementById("historialCopiasV136");if(!host)return;
+ const l=almacenamiento.leer("miServicio.historialCopiasV136",[]);
+ if(!Array.isArray(l)||!l.length){host.innerHTML='<div class="v136-empty">Todavía no hay copias anteriores.</div>';return;}
+ host.innerHTML=l.map((c,i)=>{const f=new Date(c.guardadoEn);const t=Number.isNaN(f.getTime())?"Copia anterior":f.toLocaleString("es-ES",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
+ return `<div class="v136-backup-row"><span>🕘 ${t}</span><button type="button" onclick="restaurarCopiaV136(${i})">Restaurar</button></div>`;}).join("");
 }
 function configurarEstadoSyncV134(){
-    const a=document.getElementById("versionPublicadaV135");
+    const a=document.getElementById("versionPublicadaV136");
     if(!a||document.getElementById("estadoSyncV134"))return;
     const el=document.createElement("div"); el.id="estadoSyncV134";
     el.style.cssText="font-size:12px;text-align:center;margin-top:6px;font-weight:600;";
@@ -7197,24 +7218,24 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 
 
-function mostrarVersionPublicadaV135() {
+function mostrarVersionPublicadaV136() {
     const destino =
         document.getElementById("estadoOneDrive") ||
         document.getElementById("mensajeOneDrive") ||
         document.querySelector("[data-onedrive]");
 
-    if (!destino || document.getElementById("versionPublicadaV135")) return;
+    if (!destino || document.getElementById("versionPublicadaV136")) return;
 
     const etiqueta = document.createElement("div");
-    etiqueta.id = "versionPublicadaV135";
-    etiqueta.textContent = "Versión publicada: V135";
+    etiqueta.id = "versionPublicadaV136";
+    etiqueta.textContent = "Versión publicada: V136";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(() => { mostrarVersionPublicadaV135(); configurarEstadoSyncV134(); }, 500);
+    setTimeout(() => { mostrarVersionPublicadaV136(); configurarEstadoSyncV134(); }, 500);
 });
 
 
@@ -7274,3 +7295,30 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(organizarCopiasV135, 650);
 });
 
+
+function montarHistorialCopiasV136(){
+ if(document.getElementById("historialCopiasV136"))return;
+ const t=[...document.querySelectorAll("h1,h2,h3,h4,p,div,span")].find(e=>(e.textContent||"").trim().toLowerCase()==="datos y copias de seguridad");if(!t)return;
+ const card=t.closest(".card,.ajustes-card,section")||t.parentElement?.parentElement||t.parentElement;if(!card)return;
+ const b=document.createElement("div");b.className="v136-history";b.innerHTML='<div class="v135-section-label">Copias recuperables</div><div id="historialCopiasV136"></div>';card.appendChild(b);renderHistorialCopiasV136();
+}
+function montarComparacionSemanalV136(){
+ const viejo=document.getElementById("comparacionSemanalV136");if(viejo)viejo.remove();
+ const inicio=document.querySelector('[data-vista="inicio"],#vistaInicio,.vista-inicio');if(!inicio)return;
+ const ahora=new Date(),ini=new Date(ahora);ini.setHours(0,0,0,0);ini.setDate(ini.getDate()-((ini.getDay()+6)%7));
+ const ant=new Date(ini);ant.setDate(ant.getDate()-7);const antFin=new Date(ini);antFin.setMilliseconds(-1);
+ const total=(a,b)=>{
+  const regs=Array.isArray(estado.registros)?estado.registros:[];
+  return regs.reduce((x,r)=>{
+   const f=new Date(r.fecha);
+   if(Number.isNaN(f.getTime())||f<a||f>b)return x;
+   const mins=Number(r.minutosTotales) || ((Number(r.horas)||0)*60 + (Number(r.minutos)||0));
+   return x+mins;
+  },0);
+ };
+ const ac=total(ini,ahora),pr=total(ant,antFin),fmt=m=>`${Math.floor(m/60)} h${m%60?" "+m%60+" min":""}`,dif=ac-pr;
+ const el=document.createElement("div");el.id="comparacionSemanalV136";el.className="v136-week";
+ el.innerHTML=`<strong>Esta semana: ${fmt(ac)}</strong><span>${dif===0?"igual que la anterior":(dif>0?"+":"−")+fmt(Math.abs(dif))+" respecto a la anterior"}</span>`;
+ const frase=inicio.querySelector('[id*="frase"],[class*="frase"]');if(frase)frase.insertAdjacentElement("afterend",el);else inicio.prepend(el);
+}
+document.addEventListener("DOMContentLoaded",()=>setTimeout(()=>{montarHistorialCopiasV136();montarComparacionSemanalV136();},850));
