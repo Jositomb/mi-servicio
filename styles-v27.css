@@ -8509,3 +8509,20 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 .v139-week-diff{padding:7px 8px;border-radius:12px;text-align:center;background:rgba(52,199,89,.09)}
 .v139-week-diff>b{color:#19a45b}.v139-week-diff>b.negativo{color:#c77b00}.v139-week-diff small{font-size:9px;margin-top:3px}
 @media(max-width:390px){#vista-inicio .v139-week{width:calc(100% - 24px);margin:9px 12px 18px;padding:10px 11px}.v139-week-grid{grid-template-columns:.9fr 1.05fr 1.15fr;gap:6px}.v139-week b{font-size:14px}}
+
+/* V140 · copias más informativas */
+.v140-backup-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 4px;border-bottom:1px solid rgba(120,120,128,.14)}
+.v140-backup-info{min-width:0;display:flex;flex-direction:column;gap:3px}
+.v140-backup-info strong{font-size:12px;font-weight:700}
+.v140-backup-info small{font-size:10.5px;opacity:.62}
+.v140-backup-row button{flex:0 0 auto;border:0;border-radius:12px;padding:8px 11px;font-weight:700;color:#1677ff;background:rgba(22,119,255,.10)}
+
+/* V140 · previsión Meta */
+.meta-prevision-v140{overflow:hidden}
+.meta-prevision-cabecera{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.meta-prevision-cabecera small{font-size:10px;font-weight:800;letter-spacing:.05em;opacity:.5}
+.meta-prevision-cabecera h2{margin:3px 0 0}
+.meta-prevision-cabecera>span{font-size:25px}
+.meta-prevision-fecha{display:block;margin-top:14px;font-size:22px;line-height:1.15}
+.meta-prevision-v140.meta-prevision-positiva .meta-prevision-fecha{color:#19a45b}
+.meta-prevision-v140.meta-prevision-atencion .meta-prevision-fecha{color:#c77b00}

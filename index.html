@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=13901"
+        href="./styles-v27.css?v=14001"
     >
 
 
@@ -119,7 +119,7 @@
 }
 </style>
 
-    <meta name="mi-servicio-version" content="V139-INTEGRACION-REAL-INICIO">
+    <meta name="mi-servicio-version" content="V140-COPIAS-Y-PREVISION">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -886,6 +886,18 @@
                     <p id="metaMensaje" class="meta-mensaje"></p>
                 </article>
 
+                <article id="metaPrevisionV140" class="tarjeta meta-prevision-v140">
+                    <div class="meta-prevision-cabecera">
+                        <div>
+                            <small>PREVISIÓN AL RITMO ACTUAL</small>
+                            <h2>¿Cuándo llegarías a las 600 h?</h2>
+                        </div>
+                        <span aria-hidden="true">📅</span>
+                    </div>
+                    <strong id="metaPrevisionFecha" class="meta-prevision-fecha">—</strong>
+                    <p id="metaPrevisionDetalle" class="meta-mensaje">Calculando tu ritmo…</p>
+                </article>
+
                 <article class="tarjeta meta-restante">
                     <h2>De aquí a agosto</h2>
                     <div class="meta-dos-columnas">
@@ -1401,12 +1413,12 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=13901" defer></script>
+<script src="./app-v27.js?v=14001" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js?v=13901", { scope: "./" })
+    navigator.serviceWorker.register("./sw.js?v=14001", { scope: "./" })
       .catch(error => console.warn("Modo sin conexión no disponible:", error));
   });
 }

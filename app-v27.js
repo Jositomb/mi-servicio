@@ -491,9 +491,18 @@ function guardarSnapshotLocalV134(){
  const l=Array.isArray(h)?h:[]; l.unshift(snap);
  almacenamiento.guardar("miServicio.historialCopiasV136",l.slice(0,5)); return true;
 }
+function resumenCopiaV140(copia){
+ const registros=Array.isArray(copia?.registros)?copia.registros:[];
+ const minutos=registros.reduce((sum,r)=>sum+(Number(r.minutosTotales)||((Number(r.horas)||0)*60+(Number(r.minutos)||0))),0);
+ const fecha=new Date(copia?.guardadoEn);
+ const fechaTexto=Number.isNaN(fecha.getTime())?"Fecha desconocida":fecha.toLocaleString("es-ES",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
+ return {registros:registros.length,minutos,fechaTexto};
+}
 function restaurarCopiaV136(i){
  const l=almacenamiento.leer("miServicio.historialCopiasV136",[]),c=Array.isArray(l)?l[i]:null;if(!c)return;
- if(!confirm("¿Restaurar esta copia? Se guardará antes el estado actual."))return;
+ const r=resumenCopiaV140(c);
+ const detalle=`Copia del ${r.fechaTexto}\n${r.registros} registros · ${formatearTiempo(r.minutos)} acumuladas\n\n¿Quieres restaurarla?\nAntes se guardará el estado actual.`;
+ if(!confirm(detalle))return;
  guardarSnapshotLocalV134(); aplicandoDatosOneDrive=true;
  try{
   estado.registros=normalizarRegistrosImportados(c.registros||[]);
@@ -507,11 +516,19 @@ function renderHistorialCopiasV136(){
  const host=document.getElementById("historialCopiasV136");if(!host)return;
  const l=almacenamiento.leer("miServicio.historialCopiasV136",[]);
  if(!Array.isArray(l)||!l.length){host.innerHTML='<div class="v136-empty">Todavía no hay copias anteriores.</div>';return;}
- host.innerHTML=l.map((c,i)=>{const f=new Date(c.guardadoEn);const t=Number.isNaN(f.getTime())?"Copia anterior":f.toLocaleString("es-ES",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
- return `<div class="v136-backup-row"><span>🕘 ${t}</span><button type="button" onclick="restaurarCopiaV136(${i})">Restaurar</button></div>`;}).join("");
+ host.innerHTML=l.map((c,i)=>{
+   const r=resumenCopiaV140(c);
+   return `<div class="v140-backup-row">
+      <div class="v140-backup-info">
+        <strong>🕘 ${r.fechaTexto}</strong>
+        <small>${r.registros} registros · ${formatearTiempo(r.minutos)} acumuladas</small>
+      </div>
+      <button type="button" onclick="restaurarCopiaV136(${i})">Restaurar</button>
+   </div>`;
+ }).join("");
 }
 function configurarEstadoSyncV134(){
-    const a=document.getElementById("versionPublicadaV139");
+    const a=document.getElementById("versionPublicadaV140");
     if(!a||document.getElementById("estadoSyncV134"))return;
     const el=document.createElement("div"); el.id="estadoSyncV134";
     el.style.cssText="font-size:12px;text-align:center;margin-top:6px;font-weight:600;";
@@ -6874,6 +6891,41 @@ function actualizarMeta() {
         ? Math.round(pendiente / mesesEquivalentes)
         : 0;
 
+    // V140 · previsión usando exclusivamente horas COMPUTABLES.
+    // Respeta por tanto la regla de 55 h cuando hay actividad adicional.
+    const diasTranscurridosMeta = Math.max(
+        (ahora.getTime() - rango.inicio.getTime()) / 86400000,
+        1
+    );
+    const ritmoDiarioReal = totalComputable / diasTranscurridosMeta;
+    let previsionTexto = "Aún no hay datos suficientes";
+    let previsionDetalle = "Registra actividad para calcular una previsión.";
+    let previsionEstado = "neutral";
+
+    if (pendiente === 0) {
+        previsionTexto = "Meta alcanzada ✓";
+        previsionDetalle = "Ya has llegado a las 600 h computables.";
+        previsionEstado = "positivo";
+    } else if (ritmoDiarioReal > 0) {
+        const diasNecesarios = Math.ceil(pendiente / ritmoDiarioReal);
+        const fechaPrevista = new Date(ahora);
+        fechaPrevista.setDate(fechaPrevista.getDate() + diasNecesarios);
+        const dentroDelAnio = fechaPrevista <= finExclusivo;
+        previsionTexto = fechaPrevista.toLocaleDateString("es-ES", {
+            day:"numeric", month:"long", year:"numeric"
+        });
+        previsionDetalle = dentroDelAnio
+            ? `Manteniendo tu ritmo computable actual, alcanzarías las 600 h aproximadamente en esa fecha.`
+            : `A tu ritmo computable actual, la previsión queda después del final del año de servicio.`;
+        previsionEstado = dentroDelAnio ? "positivo" : "atencion";
+    }
+
+    ponerTexto("metaPrevisionFecha", previsionTexto);
+    ponerTexto("metaPrevisionDetalle", previsionDetalle);
+    const previsionCard = document.getElementById("metaPrevisionV140");
+    previsionCard?.classList.toggle("meta-prevision-positiva", previsionEstado === "positivo");
+    previsionCard?.classList.toggle("meta-prevision-atencion", previsionEstado === "atencion");
+
     const anioServicio = rango.fin.getFullYear();
     ponerTexto("metaAnioServicio", `Año de servicio ${anioServicio}`);
     ponerTexto(
@@ -7218,24 +7270,24 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 
 
-function mostrarVersionPublicadaV139() {
+function mostrarVersionPublicadaV140() {
     const destino =
         document.getElementById("estadoOneDrive") ||
         document.getElementById("mensajeOneDrive") ||
         document.querySelector("[data-onedrive]");
 
-    if (!destino || document.getElementById("versionPublicadaV139")) return;
+    if (!destino || document.getElementById("versionPublicadaV140")) return;
 
     const etiqueta = document.createElement("div");
-    etiqueta.id = "versionPublicadaV139";
-    etiqueta.textContent = "Versión publicada: V139";
+    etiqueta.id = "versionPublicadaV140";
+    etiqueta.textContent = "Versión publicada: V140";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(() => { mostrarVersionPublicadaV139(); configurarEstadoSyncV134(); }, 500);
+    setTimeout(() => { mostrarVersionPublicadaV140(); configurarEstadoSyncV134(); }, 500);
 });
 
 
