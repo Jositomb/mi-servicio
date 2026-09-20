@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=14001"
+        href="./styles-v27.css?v=14101"
     >
 
 
@@ -119,7 +119,7 @@
 }
 </style>
 
-    <meta name="mi-servicio-version" content="V140-COPIAS-Y-PREVISION">
+    <meta name="mi-servicio-version" content="V141-AGENDA-INTELIGENTE">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -799,7 +799,7 @@
         ================================================== -->
         <section id="vista-meta" class="vista">
             <section class="seccion meta-web">
-                <article class="tarjeta meta-principal">
+                <section id="resumenAgendaV141" class="v141-agenda-resumen"><div class="v141-agenda-head"><strong>Agenda del mes</strong><small data-v141-planes>0 planes</small></div><div class="v141-agenda-grid"><div><small>Previstas</small><b data-v141-previstas>0 h</b></div><div><small>Realizadas ✓</small><b data-v141-realizadas>0 h</b></div><div><small>Pendientes</small><b data-v141-pendientes>0 h</b></div></div></section><article class="tarjeta meta-principal">
                     <div class="meta-cabecera">
                         <div>
                             <h2 id="metaAnioServicio" class="meta-titulo">Año de servicio</h2>
@@ -884,7 +884,7 @@
                         </div>
                     </div>
                     <p id="metaMensaje" class="meta-mensaje"></p>
-                </article>
+                <article id="metaPlanificadoV141" class="tarjeta meta-planificado-v141"><div class="meta-prevision-cabecera"><div><small>CON LO QUE TIENES PLANIFICADO</small><h2>Previsión de este mes</h2></div><span aria-hidden="true">🗓️</span></div><strong class="meta-prevision-fecha" data-v141-proyectado>—</strong><p class="meta-mensaje" data-v141-detalle>Calculando planificación…</p></article></article>
 
                 <article id="metaPrevisionV140" class="tarjeta meta-prevision-v140">
                     <div class="meta-prevision-cabecera">
@@ -1413,12 +1413,12 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=14001" defer></script>
+<script src="./app-v27.js?v=14101" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js?v=14001", { scope: "./" })
+    navigator.serviceWorker.register("./sw.js?v=14101", { scope: "./" })
       .catch(error => console.warn("Modo sin conexión no disponible:", error));
   });
 }

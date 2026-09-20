@@ -528,7 +528,7 @@ function renderHistorialCopiasV136(){
  }).join("");
 }
 function configurarEstadoSyncV134(){
-    const a=document.getElementById("versionPublicadaV140");
+    const a=document.getElementById("versionPublicadaV141");
     if(!a||document.getElementById("estadoSyncV134"))return;
     const el=document.createElement("div"); el.id="estadoSyncV134";
     el.style.cssText="font-size:12px;text-align:center;margin-top:6px;font-weight:600;";
@@ -7270,24 +7270,24 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 
 
-function mostrarVersionPublicadaV140() {
+function mostrarVersionPublicadaV141() {
     const destino =
         document.getElementById("estadoOneDrive") ||
         document.getElementById("mensajeOneDrive") ||
         document.querySelector("[data-onedrive]");
 
-    if (!destino || document.getElementById("versionPublicadaV140")) return;
+    if (!destino || document.getElementById("versionPublicadaV141")) return;
 
     const etiqueta = document.createElement("div");
-    etiqueta.id = "versionPublicadaV140";
-    etiqueta.textContent = "Versión publicada: V140";
+    etiqueta.id = "versionPublicadaV141";
+    etiqueta.textContent = "Versión publicada: V141";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(() => { mostrarVersionPublicadaV140(); configurarEstadoSyncV134(); }, 500);
+    setTimeout(() => { mostrarVersionPublicadaV141(); configurarEstadoSyncV134(); }, 500);
 });
 
 
@@ -7375,3 +7375,41 @@ function actualizarComparacionSemanalV139(){
  el.querySelector("[data-v139-diferencia-sub]").textContent=dif===0?"igual que la anterior":"respecto a la anterior";
 }
 document.addEventListener("DOMContentLoaded",()=>setTimeout(actualizarComparacionSemanalV139,700));
+
+// V141 · agenda inteligente. Estado realizado se deriva de registros: no altera almacenamiento ni OneDrive.
+function minutosPlanificadosV141(p){return p&&typeof p==="object"?(Number(p.minutosTotales)||((Number(p.horas)||0)*60+(Number(p.minutos)||0))):0}
+function planRealizadoV141(fecha,p){
+ const tipo=String(p?.tipo||p?.actividad||"").toLowerCase();
+ return (Array.isArray(estado.registros)?estado.registros:[]).some(r=>{
+  if(String(r.fecha||"").slice(0,10)!==fecha)return false;
+  if(!tipo)return true;
+  const rt=String(r.tipo||r.actividad||"").toLowerCase();return rt===tipo||rt.includes(tipo)||tipo.includes(rt);
+ });
+}
+function resumenAgendaMesV141(ref=new Date()){
+ const a=estado.agendaSalidas&&typeof estado.agendaSalidas==="object"?estado.agendaSalidas:{};
+ let previstos=0,realizados=0,pendientes=0,planes=0;
+ Object.entries(a).forEach(([fecha,v])=>{
+  const f=new Date(`${String(fecha).slice(0,10)}T12:00:00`);
+  if(Number.isNaN(f.getTime())||f.getFullYear()!==ref.getFullYear()||f.getMonth()!==ref.getMonth())return;
+  (Array.isArray(v)?v:[v]).filter(Boolean).forEach(p=>{planes++;const m=minutosPlanificadosV141(p);previstos+=m;if(planRealizadoV141(String(fecha).slice(0,10),p))realizados+=m;else pendientes+=m;});
+ });
+ return{previstos,realizados,pendientes,planes};
+}
+function actualizarAgendaInteligenteV141(){
+ const host=document.getElementById("resumenAgendaV141");if(!host)return;
+ const r=resumenAgendaMesV141(),fmt=m=>`${Math.floor(m/60)} h${m%60?` ${m%60} min`:""}`;
+ host.querySelector("[data-v141-previstas]").textContent=fmt(r.previstos);
+ host.querySelector("[data-v141-realizadas]").textContent=fmt(r.realizados);
+ host.querySelector("[data-v141-pendientes]").textContent=fmt(r.pendientes);
+ host.querySelector("[data-v141-planes]").textContent=`${r.planes} ${r.planes===1?"plan":"planes"}`;
+}
+function actualizarProyeccionPlanificadaV141(){
+ const el=document.getElementById("metaPlanificadoV141");if(!el)return;
+ const ahora=new Date(),r=resumenAgendaMesV141(ahora),ini=new Date(ahora.getFullYear(),ahora.getMonth(),1),fin=new Date(ahora.getFullYear(),ahora.getMonth()+1,1);
+ let hecho=0;(Array.isArray(estado.registros)?estado.registros:[]).forEach(x=>{const f=new Date(`${String(x.fecha||"").slice(0,10)}T12:00:00`);if(!Number.isNaN(f.getTime())&&f>=ini&&f<fin)hecho+=Number(x.minutosTotales)||((Number(x.horas)||0)*60+(Number(x.minutos)||0));});
+ const total=hecho+r.pendientes,fmt=m=>`${Math.floor(m/60)} h${m%60?` ${m%60} min`:""}`;
+ el.querySelector("[data-v141-proyectado]").textContent=fmt(total);
+ el.querySelector("[data-v141-detalle]").textContent=r.pendientes?`Incluye ${fmt(r.pendientes)} que todavía tienes planificadas este mes.`:"No tienes horas pendientes planificadas este mes.";
+}
+document.addEventListener("DOMContentLoaded",()=>setTimeout(()=>{actualizarAgendaInteligenteV141();actualizarProyeccionPlanificadaV141();},800));
