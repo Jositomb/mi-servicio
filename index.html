@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=14301"
+        href="./styles-v27.css?v=14401"
     >
 
 
@@ -119,7 +119,7 @@
 }
 </style>
 
-    <meta name="mi-servicio-version" content="V143-RESUMEN-MENSUAL">
+    <meta name="mi-servicio-version" content="V144-TENDENCIA-MENSUAL">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -573,6 +573,15 @@
                 <div class="v143-rm-dist" data-v143-dist></div>
                 <p class="v143-rm-mensaje" data-v143-mensaje></p>
             </article>
+            <article id="tendenciaV144" class="v144-tendencia">
+                <div class="v144-head">
+                    <div><small>EVOLUCIÓN</small><h2>Últimos 6 meses</h2></div>
+                    <span aria-hidden="true">📈</span>
+                </div>
+                <div class="v144-barras" data-v144-barras></div>
+                <p data-v144-mensaje></p>
+            </article>
+
 <div class="titulo-seccion">
                     <h2>
                         Actividad registrada
@@ -1435,12 +1444,12 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=14301" defer></script>
+<script src="./app-v27.js?v=14401" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js?v=14301", { scope: "./" })
+    navigator.serviceWorker.register("./sw.js?v=14401", { scope: "./" })
       .catch(error => console.warn("Modo sin conexión no disponible:", error));
   });
 }

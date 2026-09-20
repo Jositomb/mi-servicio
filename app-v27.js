@@ -528,7 +528,7 @@ function renderHistorialCopiasV136(){
  }).join("");
 }
 function configurarEstadoSyncV134(){
-    const a=document.getElementById("versionPublicadaV143");
+    const a=document.getElementById("versionPublicadaV144");
     if(!a||document.getElementById("estadoSyncV134"))return;
     const el=document.createElement("div"); el.id="estadoSyncV134";
     el.style.cssText="font-size:12px;text-align:center;margin-top:6px;font-weight:600;";
@@ -7270,24 +7270,24 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 
 
-function mostrarVersionPublicadaV143() {
+function mostrarVersionPublicadaV144() {
     const destino =
         document.getElementById("estadoOneDrive") ||
         document.getElementById("mensajeOneDrive") ||
         document.querySelector("[data-onedrive]");
 
-    if (!destino || document.getElementById("versionPublicadaV143")) return;
+    if (!destino || document.getElementById("versionPublicadaV144")) return;
 
     const etiqueta = document.createElement("div");
-    etiqueta.id = "versionPublicadaV143";
-    etiqueta.textContent = "Versión publicada: V143";
+    etiqueta.id = "versionPublicadaV144";
+    etiqueta.textContent = "Versión publicada: V144";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(() => { mostrarVersionPublicadaV143(); configurarEstadoSyncV134(); }, 500);
+    setTimeout(() => { mostrarVersionPublicadaV144(); configurarEstadoSyncV134(); }, 500);
 });
 
 
@@ -7483,4 +7483,34 @@ function iniciarResumenMensualV143(){
  pintarResumenMensualV143(hoy);
 }
 document.addEventListener("DOMContentLoaded",()=>setTimeout(iniciarResumenMensualV143,850));
+
+
+
+// V144 · Tendencia de los últimos 6 meses. Solo lectura de registros.
+function actualizarTendenciaV144(){
+ const host=document.getElementById("tendenciaV144");if(!host)return;
+ const hoy=new Date(), meses=[];
+ for(let i=5;i>=0;i--){
+  const d=new Date(hoy.getFullYear(),hoy.getMonth()-i,1),r=resumenMesV143(d);
+  meses.push({d,total:r.total});
+ }
+ const max=Math.max(60,...meses.map(x=>x.total));
+ const fmt=m=>`${Math.floor(m/60)}h${m%60?` ${m%60}m`:""}`;
+ const nom=d=>d.toLocaleDateString("es-ES",{month:"short"}).replace(".","");
+ host.querySelector("[data-v144-barras]").innerHTML=meses.map((x,i)=>{
+   const alto=x.total?Math.max(8,Math.round(x.total/max*100)):3;
+   return `<div class="v144-col ${i===meses.length-1?"actual":""}">
+     <div class="v144-valor">${fmt(x.total)}</div>
+     <div class="v144-bar-wrap"><div class="v144-bar" style="height:${alto}%"></div></div>
+     <small>${nom(x.d)}</small>
+   </div>`;
+ }).join("");
+ const primero=meses[0].total,ultimo=meses[meses.length-1].total;
+ const msg=host.querySelector("[data-v144-mensaje]");
+ if(!meses.some(x=>x.total)) msg.textContent="La tendencia aparecerá cuando haya actividad registrada.";
+ else if(ultimo>primero) msg.textContent="Tu actividad reciente está por encima de la de hace cinco meses.";
+ else if(ultimo<primero) msg.textContent="Este mes está por debajo de hace cinco meses; todavía puedes seguir sumando.";
+ else msg.textContent="Tu actividad se mantiene estable respecto a hace cinco meses.";
+}
+document.addEventListener("DOMContentLoaded",()=>setTimeout(actualizarTendenciaV144,900));
 
