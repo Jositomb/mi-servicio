@@ -475,18 +475,27 @@ function guardarJSON(
 // GUARDAR PREFERENCIAS
 // =========================================================
 
+
+function obtenerRevisionLocalV133() {
+    const n = Number(almacenamiento.leer("miServicio.syncRevision", 0));
+    return Number.isFinite(n) && n >= 0 ? Math.floor(n) : 0;
+}
+function establecerRevisionLocalV133(v) {
+    const n = Number(v);
+    almacenamiento.guardar("miServicio.syncRevision",
+        Number.isFinite(n) && n >= 0 ? Math.floor(n) : 0);
+}
+function marcarCambioLocalV133() {
+    establecerRevisionLocalV133(obtenerRevisionLocalV133() + 1);
+    almacenamiento.guardar("miServicio.onedriveCambioLocalPendiente", true);
+    almacenamiento.guardar(STORAGE_KEYS.ultimaModificacionLocal, new Date().toISOString());
+}
 function guardarPreferencias() {
-
-    const guardado = guardarJSON(
-        STORAGE_KEYS.preferencias,
-        estado.preferencias
-    );
-
+    const guardado = guardarJSON(STORAGE_KEYS.preferencias, estado.preferencias);
     if (guardado && !aplicandoDatosOneDrive) {
-        marcarModificacionLocalOneDrive();
+        marcarCambioLocalV133();
         programarSincronizacionOneDrive();
     }
-
     return guardado;
 }
 
@@ -6390,8 +6399,8 @@ async function iniciarOneDrive() {
         const conectado = almacenamiento.leer(STORAGE_KEYS.onedriveConectado, false) && !!cuenta;
         actualizarInterfazOneDrive(conectado, cuenta);
 
-        // V130: no hacemos una descarga automática al arrancar.
-        // Así una copia remota antigua nunca pisa los datos de este dispositivo.
+        // V133: compara local y nube al arrancar.
+        if (conectado) setTimeout(() => sincronizarConOneDrive(false), 650);
     } catch (error) {
         console.error("Error iniciando OneDrive:", error);
         actualizarEstadoOneDrive("No se pudo iniciar OneDrive", false);
@@ -6497,42 +6506,56 @@ async function obtenerTokenOneDrive() {
 }
 
 async function sincronizarConOneDrive(mostrarResultado = false) {
-    if (sincronizandoOneDrive) return;
-    if (!almacenamiento.leer(STORAGE_KEYS.onedriveConectado, false)) return;
-    if (!clienteMSALOneDrive) return;
-
-    sincronizandoOneDrive = true;
-    const indicador = document.getElementById("indicadorOneDrive");
-    if (indicador) indicador.classList.add("sincronizando");
-
+    if (sincronizandoOneDrive || !almacenamiento.leer(STORAGE_KEYS.onedriveConectado,false) || !clienteMSALOneDrive) return;
+    sincronizandoOneDrive=true;
+    const indicador=document.getElementById("indicadorOneDrive");
+    if(indicador) indicador.classList.add("sincronizando");
     try {
-        const token = await obtenerTokenOneDrive();
-        if (!token) return;
+        const token=await obtenerTokenOneDrive(); if(!token) return;
+        const remoto=await descargarDatosOneDrive(token);
+        let localRev=obtenerRevisionLocalV133();
+        const remotoRev=Number(remoto?.revision)||0;
+        const pendiente=almacenamiento.leer("miServicio.onedriveCambioLocalPendiente",false)===true;
+        const ultimaSync=almacenamiento.leer(STORAGE_KEYS.ultimaSyncOneDrive,null);
+        const ultimaSyncMs=ultimaSync?(Date.parse(ultimaSync)||0):0;
+        const remotoMs=remoto?.updatedAt?(Date.parse(remoto.updatedAt)||0):0;
+        const localMs=obtenerFechaModificacionLocalOneDrive();
+        let accion="al día";
 
-        // V130: una sincronización iniciada desde un dispositivo que ya usa la app
-        // SIEMPRE publica el estado local. Nunca descarga encima de cambios locales.
-        await subirDatosOneDrive(token);
+        if(!remoto){
+            if(localRev===0){ establecerRevisionLocalV133(1); localRev=1; }
+            await subirDatosOneDrive(token); accion="subidos";
+        } else if(remotoRev>localRev){
+            if(pendiente && remotoMs>ultimaSyncMs)
+                throw new Error("Hay cambios nuevos en este dispositivo y en OneDrive. No se ha sobrescrito nada.");
+            aplicarDatosDesdeOneDrive(remoto); accion="descargados";
+        } else if(localRev>remotoRev){
+            await subirDatosOneDrive(token); accion="subidos";
+        } else if(localRev===0 && remotoRev===0){
+            if(remotoMs>localMs){
+                if(pendiente && remotoMs>ultimaSyncMs)
+                    throw new Error("Hay cambios nuevos en este dispositivo y en OneDrive. No se ha sobrescrito nada.");
+                aplicarDatosDesdeOneDrive(remoto); accion="descargados";
+            } else if(localMs>remotoMs){
+                establecerRevisionLocalV133(1);
+                await subirDatosOneDrive(token); accion="subidos";
+            } else registrarSincronizacionOneDrive(remoto.updatedAt||new Date().toISOString());
+        } else if(pendiente){
+            establecerRevisionLocalV133(localRev+1);
+            await subirDatosOneDrive(token); accion="subidos";
+        } else registrarSincronizacionOneDrive(remoto.updatedAt||new Date().toISOString());
 
-        const cuenta =
-            clienteMSALOneDrive.getActiveAccount() ||
-            clienteMSALOneDrive.getAllAccounts()[0] ||
-            null;
-        actualizarInterfazOneDrive(true, cuenta);
-
-        if (mostrarResultado) {
-            mostrarMensajeOneDrive("✓ Datos guardados en OneDrive.", false);
-        }
-    } catch (error) {
-        console.error("Error sincronizando OneDrive:", error);
-        if (mostrarResultado) {
-            mostrarMensajeOneDrive(
-                `No se pudo guardar en OneDrive${error?.message ? ": " + error.message : "."}`,
-                true
-            );
-        }
+        const cuenta=clienteMSALOneDrive.getActiveAccount()||clienteMSALOneDrive.getAllAccounts()[0]||null;
+        actualizarInterfazOneDrive(true,cuenta);
+        if(mostrarResultado) mostrarMensajeOneDrive(
+            accion==="descargados"?"✓ Se han recibido los datos más recientes de OneDrive.":
+            accion==="subidos"?"✓ Tus cambios se han guardado en OneDrive.":"✓ OneDrive está al día.",false);
+    } catch(error){
+        console.error("Error sincronizando OneDrive:",error);
+        if(mostrarResultado) mostrarMensajeOneDrive(error?.message||"No se pudo sincronizar con OneDrive.",true);
     } finally {
-        sincronizandoOneDrive = false;
-        if (indicador) indicador.classList.remove("sincronizando");
+        sincronizandoOneDrive=false;
+        if(indicador) indicador.classList.remove("sincronizando");
     }
 }
 
@@ -6570,62 +6593,42 @@ async function subirDatosOneDrive(token) {
     const ahora = new Date().toISOString();
     const paquete = {
         formato: "mi-servicio-onedrive",
-        version: 1,
+        version: 4,
+        revision: obtenerRevisionLocalV133(),
         updatedAt: ahora,
         copia: crearDatosCopiaSeguridad()
     };
-
-    const url = `https://graph.microsoft.com/v1.0/me/drive/special/approot:/${encodeURIComponent(ONEDRIVE_CONFIG.archivo)}:/content`;
-    const respuesta = await fetch(url, {
-        method: "PUT",
-        headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json;charset=utf-8"
-        },
-        body: JSON.stringify(paquete)
-    });
-
-    if (!respuesta.ok) throw new Error(`Graph upload ${respuesta.status}`);
-
+    const respuesta = await fetch(
+        `https://graph.microsoft.com/v1.0/me/drive/special/approot:/${encodeURIComponent(ONEDRIVE_CONFIG.archivo)}:/content`,
+        { method:"PUT",
+          headers:{Authorization:`Bearer ${token}`,"Content-Type":"application/json"},
+          body:JSON.stringify(paquete) }
+    );
+    if (!respuesta.ok) throw new Error(`No se pudo subir la copia a OneDrive (${respuesta.status})`);
     almacenamiento.guardar(STORAGE_KEYS.ultimaModificacionLocal, ahora);
+    almacenamiento.guardar("miServicio.onedriveCambioLocalPendiente", false);
     registrarSincronizacionOneDrive(ahora);
 }
 
 function aplicarDatosDesdeOneDrive(remoto) {
     const copia = remoto.copia;
-    if (!validarCopiaSeguridad(copia)) {
-        throw new Error("La copia de OneDrive no es válida");
-    }
-
+    if (!validarCopiaSeguridad(copia)) throw new Error("La copia de OneDrive no es válida");
     const registros = normalizarRegistrosImportados(copia.registros);
     const preferencias = normalizarPreferenciasImportadas(copia.preferencias);
-    const agendaSalidas =
-        copia.agendaSalidas &&
-        typeof copia.agendaSalidas === "object" &&
-        !Array.isArray(copia.agendaSalidas)
-            ? copia.agendaSalidas
-            : {};
-
+    const agendaSalidas = copia.agendaSalidas && typeof copia.agendaSalidas === "object" &&
+        !Array.isArray(copia.agendaSalidas) ? copia.agendaSalidas : {};
     aplicandoDatosOneDrive = true;
     try {
-        estado.registros = registros;
-        estado.preferencias = preferencias;
-        estado.agendaSalidas = agendaSalidas;
+        estado.registros=registros; estado.preferencias=preferencias; estado.agendaSalidas=agendaSalidas;
         guardarJSON(STORAGE_KEYS.registros, estado.registros);
         guardarJSON(STORAGE_KEYS.preferencias, estado.preferencias);
         guardarJSON(STORAGE_KEYS.agendaSalidas, estado.agendaSalidas);
-        almacenamiento.guardar(
-            STORAGE_KEYS.ultimaModificacionLocal,
-            remoto.updatedAt || new Date().toISOString()
-        );
-        registrarSincronizacionOneDrive(remoto.updatedAt || new Date().toISOString());
-    } finally {
-        aplicandoDatosOneDrive = false;
-    }
-
-    cargarFormularioAjustes();
-    actualizarTodaLaInterfaz();
-    actualizarRecordatorioCopiaSeguridad();
+        establecerRevisionLocalV133(Number(remoto.revision)||0);
+        almacenamiento.guardar("miServicio.onedriveCambioLocalPendiente", false);
+        almacenamiento.guardar(STORAGE_KEYS.ultimaModificacionLocal, remoto.updatedAt||new Date().toISOString());
+        registrarSincronizacionOneDrive(remoto.updatedAt||new Date().toISOString());
+    } finally { aplicandoDatosOneDrive=false; }
+    cargarFormularioAjustes(); actualizarTodaLaInterfaz(); actualizarRecordatorioCopiaSeguridad();
 }
 
 /* V109: registrarSincronizacionOneDrive → registrar.js */
@@ -7162,23 +7165,23 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 
 
-function mostrarVersionPublicadaV132() {
+function mostrarVersionPublicadaV133() {
     const destino =
         document.getElementById("estadoOneDrive") ||
         document.getElementById("mensajeOneDrive") ||
         document.querySelector("[data-onedrive]");
 
-    if (!destino || document.getElementById("versionPublicadaV132")) return;
+    if (!destino || document.getElementById("versionPublicadaV133")) return;
 
     const etiqueta = document.createElement("div");
-    etiqueta.id = "versionPublicadaV132";
-    etiqueta.textContent = "Versión publicada: V132";
+    etiqueta.id = "versionPublicadaV133";
+    etiqueta.textContent = "Versión publicada: V133";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(mostrarVersionPublicadaV132, 500);
+    setTimeout(mostrarVersionPublicadaV133, 500);
 });
 
