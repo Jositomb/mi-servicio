@@ -8687,3 +8687,78 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio{padding-top:2px!
 @media(display-mode:standalone){
   #vista-inicio.activa #seccionGraficoInicio{padding-top:2px!important}
 }
+
+/* =========================================================
+   V147 · Objetivo como el diseño aprobado:
+   personaje apoyado en la línea inferior y bloque más compacto
+   ========================================================= */
+
+/* Quitamos el exceso de alto introducido por la pista del personaje */
+#vista-inicio .seccion:has(#porcentajeObjetivo) .tarjeta{
+  padding:9px 12px 8px!important;
+}
+
+/* El área del personaje queda pegada a la pista inferior */
+#vista-inicio .progreso-personaje{
+  position:relative!important;
+  height:27px!important;
+  margin-top:0!important;
+  margin-bottom:0!important;
+}
+
+/* Línea inferior */
+#vista-inicio .progreso-pista{
+  position:absolute!important;
+  left:1%!important;
+  right:1%!important;
+  bottom:2px!important;
+  height:3px!important;
+  border-radius:999px!important;
+}
+
+/* Personaje literalmente apoyado sobre la línea */
+#vista-inicio .progreso-animal{
+  position:absolute!important;
+  bottom:3px!important;
+  width:31px!important;
+  height:31px!important;
+  font-size:23px!important;
+  transform:translateX(-50%)!important;
+  transform-origin:50% 100%!important;
+  margin:0!important;
+}
+
+/* Meta a la misma altura de la pista */
+#vista-inicio .progreso-meta{
+  position:absolute!important;
+  right:0!important;
+  bottom:3px!important;
+  font-size:18px!important;
+  line-height:1!important;
+}
+
+/* Estado y mensaje juntos, sin hueco vertical */
+#vista-inicio .progreso-estado{
+  margin:2px 0 0!important;
+  min-height:0!important;
+  line-height:1.1!important;
+}
+#vista-inicio #mensajeObjetivo{
+  margin:2px 0 0!important;
+  line-height:1.1!important;
+}
+#vista-inicio #desgloseObjetivo{
+  margin:2px 0 0!important;
+  line-height:1.1!important;
+}
+
+/* Acercamos la frase motivadora al Objetivo */
+#vista-inicio .seccion-frase-animo{
+  margin-top:3px!important;
+}
+
+/* En pantallas pequeñas mantenemos la misma relación */
+@media(max-width:390px){
+  #vista-inicio .progreso-personaje{height:25px!important}
+  #vista-inicio .progreso-animal{width:29px!important;height:29px!important;font-size:22px!important}
+}
