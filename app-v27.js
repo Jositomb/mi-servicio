@@ -528,7 +528,7 @@ function renderHistorialCopiasV136(){
  }).join("");
 }
 function configurarEstadoSyncV134(){
-    const a=document.getElementById("versionPublicadaV144");
+    const a=document.getElementById("versionPublicadaV145");
     if(!a||document.getElementById("estadoSyncV134"))return;
     const el=document.createElement("div"); el.id="estadoSyncV134";
     el.style.cssText="font-size:12px;text-align:center;margin-top:6px;font-weight:600;";
@@ -7270,24 +7270,24 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 
 
-function mostrarVersionPublicadaV144() {
+function mostrarVersionPublicadaV145() {
     const destino =
         document.getElementById("estadoOneDrive") ||
         document.getElementById("mensajeOneDrive") ||
         document.querySelector("[data-onedrive]");
 
-    if (!destino || document.getElementById("versionPublicadaV144")) return;
+    if (!destino || document.getElementById("versionPublicadaV145")) return;
 
     const etiqueta = document.createElement("div");
-    etiqueta.id = "versionPublicadaV144";
-    etiqueta.textContent = "Versión publicada: V144";
+    etiqueta.id = "versionPublicadaV145";
+    etiqueta.textContent = "Versión publicada: V145";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(() => { mostrarVersionPublicadaV144(); configurarEstadoSyncV134(); }, 500);
+    setTimeout(() => { mostrarVersionPublicadaV145(); configurarEstadoSyncV134(); }, 500);
 });
 
 
@@ -7513,4 +7513,48 @@ function actualizarTendenciaV144(){
  else msg.textContent="Tu actividad se mantiene estable respecto a hace cinco meses.";
 }
 document.addEventListener("DOMContentLoaded",()=>setTimeout(actualizarTendenciaV144,900));
+
+
+
+// V145 · Resumen inteligente de hoy. Solo lectura: agenda + registros + tiempo ya existente.
+function resumenHoyV145(){
+ const host=document.getElementById("resumenHoyV145");if(!host)return;
+ const hoy=new Date(), fecha=fechaLocalISOv141(hoy);
+ const agenda=estado.agendaSalidas&&typeof estado.agendaSalidas==="object"?estado.agendaSalidas:{};
+ const raw=agenda[fecha], planes=(Array.isArray(raw)?raw:[raw]).filter(Boolean);
+ const regs=(Array.isArray(estado.registros)?estado.registros:[]).filter(r=>String(r.fecha||"").slice(0,10)===fecha);
+ const minutos=regs.reduce((a,r)=>a+(Number(r.minutosTotales)||((Number(r.horas)||0)*60+(Number(r.minutos)||0))),0);
+ const fmt=m=>`${Math.floor(m/60)} h${m%60?` ${m%60} min`:""}`;
+ const titulo=host.querySelector("[data-v145-titulo]"), detalle=host.querySelector("[data-v145-detalle]"), estadoEl=host.querySelector("[data-v145-estado]");
+ let icono="☀️", t="", d="", e="";
+ if(planes.length){
+   const p=planes[0], realizado=planRealizadoV141(fecha,p);
+   const tipo=p.tipo||p.actividad||"Actividad";
+   const compania=p.companero||p.compañero||p.acompanante||p.persona||"";
+   const previsto=minutosPlanificadosV141(p);
+   icono=realizado?"✓":"📅";
+   t=realizado?"Actividad de hoy completada":`Hoy: ${tipo}${compania?` con ${compania}`:""}`;
+   d=realizado?(minutos?`${fmt(minutos)} registradas hoy.`:"Ya consta un registro correspondiente a la planificación."):(previsto?`${fmt(previsto)} previstas.`:"Actividad planificada para hoy.");
+   e=realizado?"Hecho":"Planificado";
+ } else if(regs.length){
+   icono="✓";t="Actividad de hoy registrada";d=`${fmt(minutos)} · ${regs.length} ${regs.length===1?"registro":"registros"}.`;e="Hecho";
+ } else {
+   let proxima=null;
+   Object.entries(agenda).forEach(([f,v])=>{
+     if(f<=fecha)return;
+     const lista=(Array.isArray(v)?v:[v]).filter(Boolean);if(!lista.length)return;
+     if(!proxima||f<proxima.fecha)proxima={fecha:f,plan:lista[0]};
+   });
+   if(proxima){
+     const f=new Date(`${proxima.fecha}T12:00:00`),tipo=proxima.plan.tipo||proxima.plan.actividad||"Actividad";
+     icono="→";t="Próxima actividad";d=`${tipo} · ${f.toLocaleDateString("es-ES",{weekday:"short",day:"numeric",month:"short"})}`;e="Próximamente";
+   }else{
+     icono="☀️";t="Hoy sin actividad planificada";d="Puedes registrar o planificar cuando quieras.";e="Hoy";
+   }
+ }
+ const weather=document.getElementById("tiempoDescripcion")?.textContent?.trim();
+ if(weather && !/cargando|--|—/i.test(weather)) d += ` · ${weather}`;
+ host.querySelector("[data-v145-icono]").textContent=icono;titulo.textContent=t;detalle.textContent=d;estadoEl.textContent=e;
+}
+document.addEventListener("DOMContentLoaded",()=>setTimeout(resumenHoyV145,1000));
 

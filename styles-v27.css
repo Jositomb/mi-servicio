@@ -8555,3 +8555,11 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
 .v144-col{height:100%;display:grid;grid-template-rows:20px 1fr 18px;align-items:end;text-align:center;min-width:0}.v144-valor{font-size:8.5px;opacity:.6;white-space:nowrap}.v144-bar-wrap{height:100%;display:flex;align-items:flex-end;justify-content:center;border-radius:9px;background:rgba(120,120,128,.05);overflow:hidden}.v144-bar{width:65%;min-height:3px;border-radius:7px 7px 3px 3px;background:rgba(22,119,255,.48)}.v144-col.actual .v144-bar{background:#1677ff}.v144-col small{font-size:9px;opacity:.58;padding-top:4px}
 .v144-tendencia p{margin:10px 0 0;font-size:11px;line-height:1.35;opacity:.68}
 @media(prefers-color-scheme:dark){.v144-tendencia{background:#1c1c1e;color:#f5f5f7;border:1px solid rgba(255,255,255,.06);box-shadow:0 4px 16px rgba(0,0,0,.28)}.v144-bar-wrap{background:#242426}.v144-bar{background:rgba(88,166,255,.5)}.v144-col.actual .v144-bar{background:#5b9dff}}
+
+/* V145 · resumen de hoy, compacto y solo en Inicio */
+#vista-inicio .v145-hoy{box-sizing:border-box;width:calc(100% - 32px);margin:10px 16px 8px;padding:11px 12px;border-radius:17px;background:rgba(255,255,255,.9);box-shadow:0 4px 16px rgba(30,55,90,.06);display:grid;grid-template-columns:34px 1fr auto;gap:9px;align-items:center}
+.v145-hoy-icono{width:34px;height:34px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(22,119,255,.09);font-size:18px}
+.v145-hoy-texto{min-width:0;display:flex;flex-direction:column;gap:2px}.v145-hoy-texto small{font-size:8.5px;font-weight:800;letter-spacing:.06em;opacity:.48}.v145-hoy-texto strong{font-size:12.5px;line-height:1.2}.v145-hoy-texto span{font-size:10px;line-height:1.25;opacity:.62;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v145-hoy-estado{font-size:9px;font-weight:750;color:#1677ff;background:rgba(22,119,255,.09);padding:6px 7px;border-radius:10px;white-space:nowrap}
+@media(prefers-color-scheme:dark){#vista-inicio .v145-hoy{background:#1c1c1e;color:#f5f5f7;border:1px solid rgba(255,255,255,.06);box-shadow:0 4px 16px rgba(0,0,0,.28)}.v145-hoy-icono,.v145-hoy-estado{background:rgba(88,166,255,.12)}.v145-hoy-estado{color:#6aa8ff}}
+@media(max-width:390px){#vista-inicio .v145-hoy{width:calc(100% - 24px);margin-left:12px;margin-right:12px}}

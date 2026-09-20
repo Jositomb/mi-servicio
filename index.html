@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=14401"
+        href="./styles-v27.css?v=14501"
     >
 
 
@@ -119,7 +119,7 @@
 }
 </style>
 
-    <meta name="mi-servicio-version" content="V144-TENDENCIA-MENSUAL">
+    <meta name="mi-servicio-version" content="V145-RESUMEN-HOY">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -334,7 +334,17 @@
             </section>
         
         
-            <section id="comparacionSemanalV139" class="v139-week" aria-label="Comparación semanal">
+            
+            <section id="resumenHoyV145" class="v145-hoy">
+                <div class="v145-hoy-icono" data-v145-icono>☀️</div>
+                <div class="v145-hoy-texto">
+                    <small>RESUMEN DE HOY</small>
+                    <strong data-v145-titulo>Preparando el día…</strong>
+                    <span data-v145-detalle></span>
+                </div>
+                <div class="v145-hoy-estado" data-v145-estado>Hoy</div>
+            </section>
+<section id="comparacionSemanalV139" class="v139-week" aria-label="Comparación semanal">
                 <div class="v139-week-title">📊 <strong>Comparación semanal</strong></div>
                 <div class="v139-week-grid">
                     <div class="v139-week-value"><small>Esta semana</small><b data-v139-actual>—</b></div>
@@ -1444,12 +1454,12 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=14401" defer></script>
+<script src="./app-v27.js?v=14501" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js?v=14401", { scope: "./" })
+    navigator.serviceWorker.register("./sw.js?v=14501", { scope: "./" })
       .catch(error => console.warn("Modo sin conexión no disponible:", error));
   });
 }
