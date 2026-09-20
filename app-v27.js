@@ -511,7 +511,7 @@ function renderHistorialCopiasV136(){
  return `<div class="v136-backup-row"><span>🕘 ${t}</span><button type="button" onclick="restaurarCopiaV136(${i})">Restaurar</button></div>`;}).join("");
 }
 function configurarEstadoSyncV134(){
-    const a=document.getElementById("versionPublicadaV138");
+    const a=document.getElementById("versionPublicadaV139");
     if(!a||document.getElementById("estadoSyncV134"))return;
     const el=document.createElement("div"); el.id="estadoSyncV134";
     el.style.cssText="font-size:12px;text-align:center;margin-top:6px;font-weight:600;";
@@ -7218,24 +7218,24 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 
 
-function mostrarVersionPublicadaV138() {
+function mostrarVersionPublicadaV139() {
     const destino =
         document.getElementById("estadoOneDrive") ||
         document.getElementById("mensajeOneDrive") ||
         document.querySelector("[data-onedrive]");
 
-    if (!destino || document.getElementById("versionPublicadaV138")) return;
+    if (!destino || document.getElementById("versionPublicadaV139")) return;
 
     const etiqueta = document.createElement("div");
-    etiqueta.id = "versionPublicadaV138";
-    etiqueta.textContent = "Versión publicada: V138";
+    etiqueta.id = "versionPublicadaV139";
+    etiqueta.textContent = "Versión publicada: V139";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(() => { mostrarVersionPublicadaV138(); configurarEstadoSyncV134(); }, 500);
+    setTimeout(() => { mostrarVersionPublicadaV139(); configurarEstadoSyncV134(); }, 500);
 });
 
 
@@ -7302,73 +7302,24 @@ function montarHistorialCopiasV136(){
  const card=t.closest(".card,.ajustes-card,section")||t.parentElement?.parentElement||t.parentElement;if(!card)return;
  const b=document.createElement("div");b.className="v136-history";b.innerHTML='<div class="v135-section-label">Copias recuperables</div><div id="historialCopiasV136"></div>';card.appendChild(b);renderHistorialCopiasV136();
 }
-function montarComparacionSemanalV136(){
-    const viejo=document.getElementById("comparacionSemanalV136");
-    if(viejo) viejo.remove();
 
-    // IMPORTANTE V138: el elemento vive dentro de la vista Inicio real.
-    // Nunca se añade al body ni al contenedor general de vistas.
-    const inicio =
-        document.getElementById("vistaInicio") ||
-        document.querySelector('.vista[data-vista="inicio"]') ||
-        document.querySelector('[data-vista="inicio"]');
-    if(!inicio) return;
+document.addEventListener("DOMContentLoaded",()=>setTimeout(()=>{montarHistorialCopiasV136();},850));
 
-    const ahora=new Date();
-    const ini=new Date(ahora);
-    ini.setHours(0,0,0,0);
-    ini.setDate(ini.getDate()-((ini.getDay()+6)%7));
-    const ant=new Date(ini); ant.setDate(ant.getDate()-7);
-    const antFin=new Date(ini); antFin.setMilliseconds(-1);
-
-    const total=(a,b)=>{
-        const regs=Array.isArray(estado.registros)?estado.registros:[];
-        return regs.reduce((sum,r)=>{
-            const f=new Date(r.fecha);
-            if(Number.isNaN(f.getTime()) || f<a || f>b) return sum;
-            const mins=Number(r.minutosTotales) ||
-                ((Number(r.horas)||0)*60 + (Number(r.minutos)||0));
-            return sum+mins;
-        },0);
-    };
-
-    const actual=total(ini,ahora);
-    const anterior=total(ant,antFin);
-    const dif=actual-anterior;
-    const fmt=m=>`${Math.floor(m/60)} h${m%60 ? " "+(m%60)+" min" : ""}`;
-
-    const el=document.createElement("section");
-    el.id="comparacionSemanalV136";
-    el.className="v138-week";
-    el.innerHTML=`
-      <div class="v138-week-title">📊 <strong>Comparación semanal</strong></div>
-      <div class="v138-week-grid">
-        <div class="v138-week-value">
-          <small>Esta semana</small><b>${fmt(actual)}</b>
-        </div>
-        <div class="v138-week-value">
-          <small>Semana anterior</small><b>${fmt(anterior)}</b>
-        </div>
-        <div class="v138-week-diff ${dif<0?"negativo":"positivo"}">
-          <b>${dif>0?"↑ +":dif<0?"↓ −":"="}${dif===0?"":fmt(Math.abs(dif))}</b>
-          <small>${dif===0?"igual que la anterior":"respecto a la anterior"}</small>
-        </div>
-      </div>`;
-
-    // Buscar el bloque Objetivo DENTRO de Inicio.
-    const titulo=[...inicio.querySelectorAll("h1,h2,h3,h4")]
-        .find(x=>(x.textContent||"").trim()==="Objetivo");
-
-    if(titulo){
-        // La tarjeta de objetivo es el siguiente bloque hermano.
-        let tarjeta=titulo.nextElementSibling;
-        if(tarjeta){
-            tarjeta.insertAdjacentElement("afterend",el);
-            return;
-        }
-    }
-
-    // Fallback seguro: sigue dentro de Inicio.
-    inicio.appendChild(el);
+function actualizarComparacionSemanalV139(){
+ const el=document.getElementById("comparacionSemanalV139");if(!el)return;
+ const ahora=new Date(),ini=new Date(ahora);ini.setHours(0,0,0,0);ini.setDate(ini.getDate()-((ini.getDay()+6)%7));
+ const ant=new Date(ini);ant.setDate(ant.getDate()-7);const fin=new Date(ini);fin.setMilliseconds(-1);
+ const sumar=(a,b)=>(Array.isArray(estado.registros)?estado.registros:[]).reduce((sum,r)=>{
+   const f=new Date(r.fecha);if(Number.isNaN(f.getTime())||f<a||f>b)return sum;
+   return sum + (Number(r.minutosTotales) || ((Number(r.horas)||0)*60 + (Number(r.minutos)||0)));
+ },0);
+ const ac=sumar(ini,ahora),pr=sumar(ant,fin),dif=ac-pr;
+ const fmt=m=>`${Math.floor(m/60)} h${m%60?" "+m%60+" min":""}`;
+ el.querySelector("[data-v139-actual]").textContent=fmt(ac);
+ el.querySelector("[data-v139-anterior]").textContent=fmt(pr);
+ const d=el.querySelector("[data-v139-diferencia]");
+ d.textContent=dif>0?`↑ +${fmt(dif)}`:dif<0?`↓ −${fmt(Math.abs(dif))}`:"=";
+ d.classList.toggle("negativo",dif<0);
+ el.querySelector("[data-v139-diferencia-sub]").textContent=dif===0?"igual que la anterior":"respecto a la anterior";
 }
-document.addEventListener("DOMContentLoaded",()=>setTimeout(()=>{montarHistorialCopiasV136();montarComparacionSemanalV136();},850));
+document.addEventListener("DOMContentLoaded",()=>setTimeout(actualizarComparacionSemanalV139,700));

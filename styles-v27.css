@@ -8497,3 +8497,15 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
  .v138-week-grid{grid-template-columns:.9fr 1.05fr 1.15fr;gap:7px}
  .v138-week b{font-size:14px}
 }
+
+/* V139: comparison is physically inside #vista-inicio */
+#comparacionSemanalV136{display:none!important}
+#vista-inicio .v139-week{position:static!important;inset:auto!important;float:none!important;box-sizing:border-box;width:calc(100% - 32px);margin:10px 16px 20px;padding:11px 13px;border-radius:17px;background:rgba(255,255,255,.9);box-shadow:0 4px 16px rgba(30,55,90,.07);z-index:auto!important}
+.v139-week-title{display:flex;align-items:center;gap:6px;font-size:14px;margin-bottom:9px}
+.v139-week-grid{display:grid;grid-template-columns:1fr 1fr 1.15fr;gap:9px;align-items:center}
+.v139-week-value+.v139-week-value{border-left:1px solid rgba(120,120,128,.18);padding-left:9px}
+.v139-week small{display:block;font-size:10px;opacity:.62;line-height:1.15;margin-bottom:3px}
+.v139-week b{display:block;font-size:15px;line-height:1.15;white-space:nowrap}
+.v139-week-diff{padding:7px 8px;border-radius:12px;text-align:center;background:rgba(52,199,89,.09)}
+.v139-week-diff>b{color:#19a45b}.v139-week-diff>b.negativo{color:#c77b00}.v139-week-diff small{font-size:9px;margin-top:3px}
+@media(max-width:390px){#vista-inicio .v139-week{width:calc(100% - 24px);margin:9px 12px 18px;padding:10px 11px}.v139-week-grid{grid-template-columns:.9fr 1.05fr 1.15fr;gap:6px}.v139-week b{font-size:14px}}
