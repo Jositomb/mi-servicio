@@ -490,7 +490,7 @@ function guardarSnapshotLocalV134(){
     });
 }
 function configurarEstadoSyncV134(){
-    const a=document.getElementById("versionPublicadaV134");
+    const a=document.getElementById("versionPublicadaV135");
     if(!a||document.getElementById("estadoSyncV134"))return;
     const el=document.createElement("div"); el.id="estadoSyncV134";
     el.style.cssText="font-size:12px;text-align:center;margin-top:6px;font-weight:600;";
@@ -7197,23 +7197,80 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 
 
-function mostrarVersionPublicadaV134() {
+function mostrarVersionPublicadaV135() {
     const destino =
         document.getElementById("estadoOneDrive") ||
         document.getElementById("mensajeOneDrive") ||
         document.querySelector("[data-onedrive]");
 
-    if (!destino || document.getElementById("versionPublicadaV134")) return;
+    if (!destino || document.getElementById("versionPublicadaV135")) return;
 
     const etiqueta = document.createElement("div");
-    etiqueta.id = "versionPublicadaV134";
-    etiqueta.textContent = "Versión publicada: V134";
+    etiqueta.id = "versionPublicadaV135";
+    etiqueta.textContent = "Versión publicada: V135";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(() => { mostrarVersionPublicadaV134(); configurarEstadoSyncV134(); }, 500);
+    setTimeout(() => { mostrarVersionPublicadaV135(); configurarEstadoSyncV134(); }, 500);
+});
+
+
+
+function organizarCopiasV135() {
+    const textos = [...document.querySelectorAll("h1,h2,h3,h4,p,div,span")];
+    const titulo = textos.find(el =>
+        (el.textContent || "").trim().toLowerCase() === "datos y copias de seguridad"
+    );
+    if (!titulo) return;
+
+    const card =
+        titulo.closest(".card, .ajustes-card, section") ||
+        titulo.parentElement?.parentElement ||
+        titulo.parentElement;
+    if (!card || card.dataset.v135Organizado === "1") return;
+    card.dataset.v135Organizado = "1";
+    card.classList.add("v135-backup-card");
+
+    const botones = [...card.querySelectorAll("button,a")];
+
+    // Con OneDrive activo, "Exportar para iPhone" duplica la finalidad
+    // de la copia/exportación general y se oculta visualmente.
+    const exportarIphone = botones.find(b =>
+        /exportar para iphone/i.test((b.textContent || "").trim())
+    );
+    if (exportarIphone) exportarIphone.classList.add("v135-hide-redundant");
+
+    // Etiqueta "Otras opciones" antes de acceso a inicio.
+    const acceso = botones.find(b =>
+        /preparar acceso a pantalla de inicio/i.test((b.textContent || "").trim())
+    );
+    if (acceso && !card.querySelector(".v135-section-label")) {
+        const label=document.createElement("div");
+        label.className="v135-section-label";
+        label.textContent="Otras opciones";
+        acceso.insertAdjacentElement("beforebegin",label);
+    }
+
+    // Los botones secundarios quedan uniformes.
+    const secundarios = botones.filter(b =>
+        /preparar acceso a pantalla de inicio|importar copia de seguridad/i
+        .test((b.textContent || "").trim())
+    );
+    secundarios.forEach(b => b.style.width="100%");
+
+    // Estado visual compacto usando la información real existente.
+    const estado=document.getElementById("estadoSyncV134");
+    if (estado) {
+        estado.style.padding="10px 12px";
+        estado.style.borderRadius="14px";
+        estado.style.background="rgba(52,199,89,.08)";
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(organizarCopiasV135, 650);
 });
 

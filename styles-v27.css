@@ -8422,3 +8422,34 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
         max-width: 40%;
     }
 }
+
+
+/* =========================================================
+   V135 · AJUSTES / DATOS Y COPIAS DE SEGURIDAD
+   Solo presentación. No modifica lógica ni IDs.
+   ========================================================= */
+.v135-backup-card{
+  display:flex; flex-direction:column; gap:12px;
+}
+.v135-sync-status{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px; padding:12px 14px; border-radius:18px;
+  background:rgba(52,199,89,.10);
+}
+.v135-sync-status strong{font-size:15px}
+.v135-sync-status small{display:block; opacity:.65; margin-top:2px}
+.v135-section-label{
+  font-size:12px; font-weight:800; letter-spacing:.05em;
+  opacity:.5; margin:18px 4px 2px; text-transform:uppercase;
+}
+.v135-secondary-stack{display:grid; gap:10px}
+.v135-secondary-stack button,
+.v135-secondary-stack .boton,
+.v135-secondary-stack a{
+  width:100%; min-height:54px; border-radius:16px;
+}
+.v135-hide-redundant{display:none !important}
+#estadoSyncV134{margin:2px 0 8px !important}
+@media(max-width:520px){
+  .v135-sync-status{align-items:flex-start; flex-direction:column}
+}
