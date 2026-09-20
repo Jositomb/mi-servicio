@@ -528,7 +528,7 @@ function renderHistorialCopiasV136(){
  }).join("");
 }
 function configurarEstadoSyncV134(){
-    const a=document.getElementById("versionPublicadaV142");
+    const a=document.getElementById("versionPublicadaV143");
     if(!a||document.getElementById("estadoSyncV134"))return;
     const el=document.createElement("div"); el.id="estadoSyncV134";
     el.style.cssText="font-size:12px;text-align:center;margin-top:6px;font-weight:600;";
@@ -7270,24 +7270,24 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 
 
-function mostrarVersionPublicadaV142() {
+function mostrarVersionPublicadaV143() {
     const destino =
         document.getElementById("estadoOneDrive") ||
         document.getElementById("mensajeOneDrive") ||
         document.querySelector("[data-onedrive]");
 
-    if (!destino || document.getElementById("versionPublicadaV142")) return;
+    if (!destino || document.getElementById("versionPublicadaV143")) return;
 
     const etiqueta = document.createElement("div");
-    etiqueta.id = "versionPublicadaV142";
-    etiqueta.textContent = "Versión publicada: V142";
+    etiqueta.id = "versionPublicadaV143";
+    etiqueta.textContent = "Versión publicada: V143";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(() => { mostrarVersionPublicadaV142(); configurarEstadoSyncV134(); }, 500);
+    setTimeout(() => { mostrarVersionPublicadaV143(); configurarEstadoSyncV134(); }, 500);
 });
 
 
@@ -7413,3 +7413,74 @@ function actualizarProyeccionPlanificadaV141(){
  el.querySelector("[data-v141-detalle]").textContent=r.pendientes?`Incluye ${fmt(r.pendientes)} que todavía tienes planificadas este mes.`:"No tienes horas pendientes planificadas este mes.";
 }
 document.addEventListener("DOMContentLoaded",()=>setTimeout(()=>{actualizarAgendaInteligenteV141();actualizarProyeccionPlanificadaV141();},800));
+
+
+// =========================================================
+// V143 · RESUMEN MENSUAL AUTOMÁTICO
+// Solo calcula a partir de los registros existentes.
+// =========================================================
+function claveMesV143(fecha){
+ const d=new Date(fecha); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
+}
+function nombreMesV143(fecha){
+ return fecha.toLocaleDateString("es-ES",{month:"long",year:"numeric"}).replace(/^./,c=>c.toUpperCase());
+}
+function minutosRegistroV143(r){
+ return Number(r?.minutosTotales)||((Number(r?.horas)||0)*60+(Number(r?.minutos)||0));
+}
+function resumenMesV143(ref){
+ const ini=new Date(ref.getFullYear(),ref.getMonth(),1),fin=new Date(ref.getFullYear(),ref.getMonth()+1,1);
+ const regs=(Array.isArray(estado.registros)?estado.registros:[]).filter(r=>{
+  const f=new Date(`${String(r.fecha||"").slice(0,10)}T12:00:00`);
+  return !Number.isNaN(f.getTime())&&f>=ini&&f<fin;
+ });
+ let total=0; const dias=new Set(),tipos={},semanas={};
+ regs.forEach(r=>{
+  const mins=minutosRegistroV143(r); total+=mins;
+  const fecha=String(r.fecha||"").slice(0,10); if(fecha)dias.add(fecha);
+  const tipo=String(r.tipo||r.actividad||"Ministerio"); tipos[tipo]=(tipos[tipo]||0)+mins;
+  const f=new Date(`${fecha}T12:00:00`);
+  if(!Number.isNaN(f.getTime())){
+   const lun=new Date(f); lun.setDate(lun.getDate()-((lun.getDay()+6)%7));
+   const k=fechaLocalISOv141(lun); semanas[k]=(semanas[k]||0)+mins;
+  }
+ });
+ const mejor=Math.max(0,...Object.values(semanas));
+ return {total,dias:dias.size,tipos,mejor,registros:regs.length};
+}
+function pintarResumenMensualV143(ref){
+ const host=document.getElementById("resumenMensualV143");if(!host)return;
+ const actual=resumenMesV143(ref),anterior=resumenMesV143(new Date(ref.getFullYear(),ref.getMonth()-1,1));
+ const fmt=m=>`${Math.floor(m/60)} h${m%60?` ${m%60} min`:""}`;
+ const dif=actual.total-anterior.total;
+ const difTxt=dif>0?`↑ +${fmt(dif)}`:dif<0?`↓ −${fmt(Math.abs(dif))}`:"=";
+ host.querySelector("[data-v143-mes]").textContent=nombreMesV143(ref);
+ host.querySelector("[data-v143-total]").textContent=fmt(actual.total);
+ host.querySelector("[data-v143-dias]").textContent=actual.dias;
+ host.querySelector("[data-v143-semana]").textContent=fmt(actual.mejor);
+ host.querySelector("[data-v143-compara]").textContent=anterior.total?`${difTxt} frente al mes anterior`:"Sin comparación anterior";
+ const dist=host.querySelector("[data-v143-dist]");
+ const orden=["Ministerio","LDC","Asambleas","Asamblea","Otras"];
+ const entradas=Object.entries(actual.tipos).sort((a,b)=>{
+  const ia=orden.indexOf(a[0]),ib=orden.indexOf(b[0]);return (ia<0?99:ia)-(ib<0?99:ib);
+ });
+ dist.innerHTML=entradas.length?entradas.map(([t,m])=>`<div><span>${t}</span><b>${fmt(m)}</b></div>`).join(""):'<div class="v143-vacio">Todavía no hay actividad registrada.</div>';
+ const msg=host.querySelector("[data-v143-mensaje]");
+ msg.textContent=actual.total===0?"Un nuevo mes es una nueva oportunidad para avanzar paso a paso.":
+   dif>0?"Este mes has avanzado más que el anterior. ¡Sigue así!":
+   actual.dias>=8?"La constancia también se construye paso a paso.":
+   "Cada registro cuenta. Sigue avanzando a tu ritmo.";
+}
+function cambiarMesResumenV143(delta){
+ const input=document.getElementById("mesResumenV143");if(!input)return;
+ const [y,m]=input.value.split("-").map(Number);
+ const d=new Date(y,m-1+delta,1); input.value=claveMesV143(d); pintarResumenMensualV143(d);
+}
+function iniciarResumenMensualV143(){
+ const input=document.getElementById("mesResumenV143");if(!input)return;
+ const hoy=new Date(); input.value=claveMesV143(hoy);
+ input.addEventListener("change",()=>{const [y,m]=input.value.split("-").map(Number);pintarResumenMensualV143(new Date(y,m-1,1));});
+ pintarResumenMensualV143(hoy);
+}
+document.addEventListener("DOMContentLoaded",()=>setTimeout(iniciarResumenMensualV143,850));
+

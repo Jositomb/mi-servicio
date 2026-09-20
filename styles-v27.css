@@ -8538,3 +8538,12 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio .titulo-seccion 
  .v141-agenda-head small,.v141-agenda-grid small{color:#a9a9af!important;opacity:1!important}
  .v141-agenda-grid>div{background:#242426!important;color:#f5f5f7!important}
 }
+
+/* V143 · ficha mensual en Historial */
+.v143-resumen-mensual{box-sizing:border-box;margin:8px 16px 16px;padding:15px;border-radius:20px;background:rgba(255,255,255,.92);box-shadow:0 5px 18px rgba(30,55,90,.07)}
+.v143-rm-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.v143-rm-head small{font-size:9px;font-weight:800;letter-spacing:.06em;opacity:.5}.v143-rm-head h2{margin:3px 0 0;font-size:18px}
+.v143-rm-nav{display:flex;align-items:center;gap:4px}.v143-rm-nav button{width:30px;height:30px;border:0;border-radius:10px;background:rgba(22,119,255,.10);color:#1677ff;font-size:22px}.v143-rm-nav input{max-width:116px;border:0;background:transparent;font:inherit;font-size:11px}
+.v143-rm-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:13px}.v143-rm-stats>div{padding:9px;border-radius:13px;background:rgba(120,120,128,.06)}.v143-rm-stats small{display:block;font-size:9px;opacity:.55;margin-bottom:3px}.v143-rm-stats b{font-size:14px}
+.v143-rm-compara{margin:10px 0;padding:8px 10px;border-radius:12px;background:rgba(52,199,89,.08);font-size:11px;font-weight:700}
+.v143-rm-dist{display:grid;gap:5px}.v143-rm-dist>div{display:flex;justify-content:space-between;font-size:11px;padding:3px 1px}.v143-rm-mensaje{margin:10px 0 0;font-size:11px;opacity:.68;line-height:1.35}
+@media(prefers-color-scheme:dark){.v143-resumen-mensual{background:#1c1c1e;color:#f5f5f7;border:1px solid rgba(255,255,255,.06);box-shadow:0 4px 16px rgba(0,0,0,.28)}.v143-rm-stats>div{background:#242426}.v143-rm-nav input{color:#f5f5f7;color-scheme:dark}.v143-rm-compara{background:rgba(52,199,89,.12)}}

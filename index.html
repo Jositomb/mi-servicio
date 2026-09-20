@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=14201"
+        href="./styles-v27.css?v=14301"
     >
 
 
@@ -119,7 +119,7 @@
 }
 </style>
 
-    <meta name="mi-servicio-version" content="V142-AGENDA-MODO-OSCURO">
+    <meta name="mi-servicio-version" content="V143-RESUMEN-MENSUAL">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -551,7 +551,29 @@
             class="vista"
         >
             <section class="seccion">
-                <div class="titulo-seccion">
+                
+            <article id="resumenMensualV143" class="v143-resumen-mensual">
+                <div class="v143-rm-head">
+                    <div>
+                        <small>RESUMEN MENSUAL</small>
+                        <h2 data-v143-mes>—</h2>
+                    </div>
+                    <div class="v143-rm-nav">
+                        <button type="button" onclick="cambiarMesResumenV143(-1)" aria-label="Mes anterior">‹</button>
+                        <input id="mesResumenV143" type="month" aria-label="Elegir mes">
+                        <button type="button" onclick="cambiarMesResumenV143(1)" aria-label="Mes siguiente">›</button>
+                    </div>
+                </div>
+                <div class="v143-rm-stats">
+                    <div><small>Total</small><b data-v143-total>—</b></div>
+                    <div><small>Días activos</small><b data-v143-dias>—</b></div>
+                    <div><small>Mejor semana</small><b data-v143-semana>—</b></div>
+                </div>
+                <div class="v143-rm-compara" data-v143-compara>—</div>
+                <div class="v143-rm-dist" data-v143-dist></div>
+                <p class="v143-rm-mensaje" data-v143-mensaje></p>
+            </article>
+<div class="titulo-seccion">
                     <h2>
                         Actividad registrada
                     </h2>
@@ -1413,12 +1435,12 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=14201" defer></script>
+<script src="./app-v27.js?v=14301" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js?v=14201", { scope: "./" })
+    navigator.serviceWorker.register("./sw.js?v=14301", { scope: "./" })
       .catch(error => console.warn("Modo sin conexión no disponible:", error));
   });
 }
