@@ -7280,7 +7280,7 @@ function mostrarVersionPublicadaV156() {
 
     const etiqueta = document.createElement("div");
     etiqueta.id = "versionPublicadaV156";
-    etiqueta.textContent = "Versión publicada: V157";
+    etiqueta.textContent = "Versión publicada: V158";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
@@ -7594,3 +7594,7 @@ function actualizarFechaCalendarioInicioV157(){
   el.textContent=`${dd}/${mm}/${d.getFullYear()}`;
 }
 document.addEventListener("DOMContentLoaded", actualizarFechaCalendarioInicioV157);
+
+function ponerPersonajeV158(id){const c=document.getElementById(id),o=document.querySelector("#animalProgreso img,#animalProgreso .personaje-cuerpo-img");if(!c||!o)return;let i=c.querySelector("img");if(!i){i=document.createElement("img");i.alt="";c.appendChild(i)}i.src=o.src}
+function estadoInicioV158(){const d=new Date(),hoy=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");const ag=(window.estado&&estado.agendaSalidas)||{};const p=ag[hoy];const rs=(window.estado&&Array.isArray(estado.registros)?estado.registros:(Array.isArray(window.registros)?window.registros:[]));const rh=rs.filter(r=>String(r.fecha||"").slice(0,10)===hoy);let tipo="descanso",titulo="Hoy toca descansar",texto="Sin actividad planificada para hoy. También descansar es parte del camino.";if(p){let hecho=false;try{hecho=typeof planRealizadoV141==="function"?planRealizadoV141(hoy,p):rh.length>0}catch(e){hecho=rh.length>0}if(hecho){tipo="celebra";titulo="¡Actividad realizada! ✨";texto="Buen trabajo. Cada paso cuenta."}else{tipo="preparado";titulo="¡Preparado para hoy!";const a=p.tipo||p.actividad||"Actividad",c=p.companero||p["compañero"]||p.acompanante||p.persona||"";texto=a+(c?" · con "+c:"")+"."}}else if(rh.length){tipo="celebra";titulo="¡Buen trabajo hoy! ✨";texto="Ya tienes actividad registrada. Sigue así."}const card=document.getElementById("resumenHoyV145");if(card){card.classList.remove("estado-descanso-v158","estado-preparado-v158","estado-celebra-v158");card.classList.add("estado-"+tipo+"-v158")}const t=document.getElementById("resumenEstadoTituloV158"),x=document.getElementById("resumenEstadoTextoV158"),et=document.getElementById("escenaTituloV158"),es=document.getElementById("escenaSubtituloV158");if(t)t.textContent=titulo;if(x)x.textContent=texto;if(tipo==="descanso"){if(et)et.textContent="¡Cada paso cuenta para Jehová!";if(es)es.textContent="Hoy, disfruta también del descanso"}if(tipo==="preparado"){if(et)et.textContent="¡Listo para servir!";if(es)es.textContent="Tienes actividad planificada para hoy"}if(tipo==="celebra"){if(et)et.textContent="¡Muy bien! ✨";if(es)es.textContent="Otro pequeño paso conseguido"}ponerPersonajeV158("escenaPersonajeV158");ponerPersonajeV158("resumenEstadoPersonajeV158")}
+document.addEventListener("DOMContentLoaded",()=>{setTimeout(estadoInicioV158,900);setTimeout(estadoInicioV158,1800)});
