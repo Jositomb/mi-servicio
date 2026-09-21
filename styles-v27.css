@@ -8790,3 +8790,30 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio{padding-top:2px!
  #vista-inicio .progreso-personaje{height:32px!important}
  #vista-inicio .progreso-animal{bottom:-1px!important;width:30px!important;height:30px!important;font-size:23px!important}
 }
+
+/* V149 · corrección real:
+   el selector antiguo #animalProgreso[data-personaje] mantenía el personaje arriba.
+   La pista NO se mueve. Solo baja el personaje visualmente hasta caminar sobre ella. */
+#vista-inicio #animalProgreso[data-personaje]{
+  top:auto!important;
+  bottom:-1px!important;
+  margin:0!important;
+  transform:translateX(-50%)!important;
+  transform-origin:50% 100%!important;
+}
+#vista-inicio #animalProgreso[data-personaje] .personaje-cuerpo-img{
+  transform:translateY(13px)!important;
+  transform-origin:50% 100%!important;
+}
+/* La bandera y la línea quedan exactamente donde estaban */
+#vista-inicio .progreso-pista{
+  bottom:2px!important;
+}
+#vista-inicio .progreso-meta{
+  bottom:1px!important;
+}
+@media(max-width:390px){
+  #vista-inicio #animalProgreso[data-personaje] .personaje-cuerpo-img{
+    transform:translateY(12px)!important;
+  }
+}
