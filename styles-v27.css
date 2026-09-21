@@ -9184,15 +9184,14 @@ html.light #vista-meta .meta-v152-bocadillo,body.light #vista-meta .meta-v152-bo
  #vista-estadisticas #historialResumenV153>#tendenciaV144{padding-left:7px!important}
 }
 
-/* V157 · Inicio: fecha actual en la tarjeta que abre Calendario */
-#vista-inicio #fechaCalendarioV157{
-  font-weight:700!important;
+/* V157 corregida: fecha en cabecera de Calendario, sin dibujo */
+#vista-inicio #fechaCalendarioInicioV157{
   font-size:15px!important;
+  font-weight:700!important;
+  line-height:1.15!important;
   white-space:nowrap!important;
+  letter-spacing:0!important;
 }
-/* Quita únicamente el dibujo/icono de esa tarjeta */
-#vista-inicio .calendario-card .icono,
-#vista-inicio .calendario-card [class*="icono"],
-#vista-inicio .calendario-card [class*="calendar-icon"]{
-  display:none!important;
+#vista-inicio .inicio-calendario-card{
+  min-height:0!important;
 }
