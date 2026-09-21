@@ -9183,3 +9183,16 @@ html.light #vista-meta .meta-v152-bocadillo,body.light #vista-meta .meta-v152-bo
  #vista-estadisticas #historialResumenV153>#resumenMensualV143{padding-right:7px!important}
  #vista-estadisticas #historialResumenV153>#tendenciaV144{padding-left:7px!important}
 }
+
+/* V157 · Inicio: fecha actual en la tarjeta que abre Calendario */
+#vista-inicio #fechaCalendarioV157{
+  font-weight:700!important;
+  font-size:15px!important;
+  white-space:nowrap!important;
+}
+/* Quita únicamente el dibujo/icono de esa tarjeta */
+#vista-inicio .calendario-card .icono,
+#vista-inicio .calendario-card [class*="icono"],
+#vista-inicio .calendario-card [class*="calendar-icon"]{
+  display:none!important;
+}

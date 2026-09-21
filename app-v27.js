@@ -528,7 +528,7 @@ function renderHistorialCopiasV136(){
  }).join("");
 }
 function configurarEstadoSyncV134(){
-    const a=document.getElementById("versionPublicadaV156");
+    const a=document.getElementById("versionPublicadaV157");
     if(!a||document.getElementById("estadoSyncV134"))return;
     const el=document.createElement("div"); el.id="estadoSyncV134";
     el.style.cssText="font-size:12px;text-align:center;margin-top:6px;font-weight:600;";
@@ -7270,24 +7270,24 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 
 
-function mostrarVersionPublicadaV156() {
+function mostrarVersionPublicadaV157() {
     const destino =
         document.getElementById("estadoOneDrive") ||
         document.getElementById("mensajeOneDrive") ||
         document.querySelector("[data-onedrive]");
 
-    if (!destino || document.getElementById("versionPublicadaV156")) return;
+    if (!destino || document.getElementById("versionPublicadaV157")) return;
 
     const etiqueta = document.createElement("div");
-    etiqueta.id = "versionPublicadaV156";
-    etiqueta.textContent = "Versión publicada: V156";
+    etiqueta.id = "versionPublicadaV157";
+    etiqueta.textContent = "Versión publicada: V157";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(() => { mostrarVersionPublicadaV156(); configurarEstadoSyncV134(); }, 500);
+    setTimeout(() => { mostrarVersionPublicadaV157(); configurarEstadoSyncV134(); }, 500);
 });
 
 
@@ -7583,3 +7583,15 @@ function sincronizarMetaVisualV152(){
 }
 document.addEventListener("DOMContentLoaded",()=>{setTimeout(sincronizarMetaVisualV152,900);setTimeout(sincronizarMetaVisualV152,1800)});
 document.addEventListener("click",e=>{if(e.target.closest?.('[data-vista="meta"],[data-tab="meta"],[href="#meta"]')) setTimeout(sincronizarMetaVisualV152,250)});
+
+// V157 · muestra siempre la fecha local del día en Inicio.
+function actualizarFechaCalendarioV157(){
+  const el=document.getElementById("fechaCalendarioV157");
+  if(!el) return;
+  const d=new Date();
+  el.textContent =
+    String(d.getDate()).padStart(2,"0") + "/" +
+    String(d.getMonth()+1).padStart(2,"0") + "/" +
+    d.getFullYear();
+}
+document.addEventListener("DOMContentLoaded", actualizarFechaCalendarioV157);

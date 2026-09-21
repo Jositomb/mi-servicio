@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=15601"
+        href="./styles-v27.css?v=15701"
     >
 
 
@@ -120,7 +120,7 @@
 </style>
 
     <meta name="mi-servicio-version" content="V151-META-REORGANIZADA">
-<meta name="mi-servicio-build" content="V156-15601">
+<meta name="mi-servicio-build" content="V157-15701">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -173,7 +173,7 @@
                     </div>
                 </article>
 
-                <button id="botonCalendarioInicio" class="tarjeta inicio-mini-card inicio-calendario-card" type="button" aria-expanded="false" aria-controls="panelCalendarioInicio">
+                <button id="boton<span id="fechaCalendarioV157">21/09/2026</span>Inicio" class="tarjeta inicio-mini-card inicio-calendario-card" type="button" aria-expanded="false" aria-controls="panelCalendarioInicio">
                     <div class="inicio-mini-cabecera">
                         <div>
                             <p class="inicio-mini-titulo">Calendario</p>
@@ -1409,12 +1409,12 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=15601" defer></script>
+<script src="./app-v27.js?v=15701" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js?v=15601", { scope: "./" })
+    navigator.serviceWorker.register("./sw.js?v=15701", { scope: "./" })
       .catch(error => console.warn("Modo sin conexión no disponible:", error));
   });
 }
