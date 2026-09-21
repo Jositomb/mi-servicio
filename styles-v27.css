@@ -9050,3 +9050,45 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio{padding-top:2px!
  #vista-meta .meta-v152-cuatro small{font-size:7.5px}
  #vista-meta .meta-v152-cuatro strong{font-size:13px}
 }
+
+/* V153 · HISTORIAL: Resumen mensual + Evolución en una sola tarjeta compacta */
+#vista-historial #historialResumenV153{
+  margin:10px 16px 12px!important;padding:11px!important;border-radius:20px!important;
+  background:rgba(28,28,30,.96)!important;border:1px solid rgba(255,255,255,.10)!important;
+  display:grid!important;grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr)!important;
+  gap:0!important;overflow:hidden!important;
+}
+#vista-historial #historialResumenV153>#resumenMensualV143,
+#vista-historial #historialResumenV153>#tendenciaV144{
+  margin:0!important;padding:0!important;background:transparent!important;border:0!important;
+  box-shadow:none!important;border-radius:0!important;
+}
+#vista-historial #historialResumenV153>#resumenMensualV143{padding-right:10px!important}
+#vista-historial #historialResumenV153>#tendenciaV144{
+  padding-left:10px!important;border-left:1px solid rgba(255,255,255,.12)!important;
+}
+/* Cabeceras */
+#vista-historial #historialResumenV153 h2{font-size:14px!important;line-height:1.1!important;margin:1px 0 4px!important}
+#vista-historial #historialResumenV153 small{font-size:7.5px!important;line-height:1.1!important}
+#vista-historial #historialResumenV153 p{font-size:8px!important;line-height:1.15!important;margin:2px 0!important}
+/* Controles del mes */
+#vista-historial #historialResumenV153 select,
+#vista-historial #historialResumenV153 input{min-height:25px!important;font-size:9px!important;padding:3px 5px!important}
+#vista-historial #historialResumenV153 button{min-width:25px!important;min-height:25px!important;padding:3px 5px!important;font-size:9px!important}
+/* Resumen: métricas mucho más juntas */
+#vista-historial #resumenMensualV143 [class*="grid"]{gap:4px!important}
+#vista-historial #resumenMensualV143 [class*="dato"],
+#vista-historial #resumenMensualV143 [class*="item"]{padding:4px!important}
+#vista-historial #resumenMensualV143 strong,
+#vista-historial #resumenMensualV143 b{font-size:12px!important}
+/* Evolución: barras compactas en la mitad derecha */
+#vista-historial #tendenciaV144 [class*="barras"],
+#vista-historial #tendenciaV144 [class*="grafico"]{min-height:72px!important;max-height:86px!important}
+#vista-historial #tendenciaV144 [class*="barra"]{max-width:24px!important}
+#vista-historial #tendenciaV144 strong,
+#vista-historial #tendenciaV144 b{font-size:11px!important}
+@media(max-width:390px){
+ #vista-historial #historialResumenV153{margin-left:10px!important;margin-right:10px!important;padding:9px!important}
+ #vista-historial #historialResumenV153>#resumenMensualV143{padding-right:7px!important}
+ #vista-historial #historialResumenV153>#tendenciaV144{padding-left:7px!important}
+}
