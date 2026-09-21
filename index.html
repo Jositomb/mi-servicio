@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=15001"
+        href="./styles-v27.css?v=15101"
     >
 
 
@@ -119,8 +119,8 @@
 }
 </style>
 
-    <meta name="mi-servicio-version" content="V150-META-COMPACTA-CACHE">
-<meta name="mi-servicio-build" content="V150-15001">
+    <meta name="mi-servicio-version" content="V151-META-REORGANIZADA">
+<meta name="mi-servicio-build" content="V151-15101">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -841,7 +841,7 @@
         ================================================== -->
         <section id="vista-meta" class="vista">
             <section class="seccion meta-web">
-                <section id="resumenAgendaV141" class="v141-agenda-resumen"><div class="v141-agenda-head"><strong>Agenda del mes</strong><small data-v141-planes>0 planes</small></div><div class="v141-agenda-grid"><div><small>Previstas</small><b data-v141-previstas>0 h</b></div><div><small>Realizadas ✓</small><b data-v141-realizadas>0 h</b></div><div><small>Pendientes</small><b data-v141-pendientes>0 h</b></div></div></section><article class="tarjeta meta-principal">
+                <article class="tarjeta meta-principal">
                     <div class="meta-cabecera">
                         <div>
                             <h2 id="metaAnioServicio" class="meta-titulo">Año de servicio</h2>
@@ -879,7 +879,8 @@
                     </div>
                 </article>
 
-                <article class="tarjeta meta-mes-computo">
+                <section class="meta-claves-v151" aria-label="Resumen de meta">
+<article class="tarjeta meta-mes-computo">
                     <div class="meta-mes-computo-cabecera">
                         <div>
                             <small>Este mes</small>
@@ -928,7 +929,10 @@
                     <p id="metaMensaje" class="meta-mensaje"></p>
                 <article id="metaPlanificadoV141" class="tarjeta meta-planificado-v141"><div class="meta-prevision-cabecera"><div><small>CON LO QUE TIENES PLANIFICADO</small><h2>Previsión de este mes</h2></div><span aria-hidden="true">🗓️</span></div><strong class="meta-prevision-fecha" data-v141-proyectado>—</strong><p class="meta-mensaje" data-v141-detalle>Calculando planificación…</p></article></article>
 
-                <article id="metaPrevisionV140" class="tarjeta meta-prevision-v140">
+                
+</section>
+<section id="resumenAgendaV141" class="v141-agenda-resumen"><div class="v141-agenda-head"><strong>Agenda del mes</strong><small data-v141-planes>0 planes</small></div><div class="v141-agenda-grid"><div><small>Previstas</small><b data-v141-previstas>0 h</b></div><div><small>Realizadas ✓</small><b data-v141-realizadas>0 h</b></div><div><small>Pendientes</small><b data-v141-pendientes>0 h</b></div></div></section>
+<article id="metaPrevisionV140" class="tarjeta meta-prevision-v140">
                     <div class="meta-prevision-cabecera">
                         <div>
                             <small>PREVISIÓN AL RITMO ACTUAL</small>
@@ -1455,12 +1459,12 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=15001" defer></script>
+<script src="./app-v27.js?v=15101" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js?v=15001", { scope: "./" })
+    navigator.serviceWorker.register("./sw.js?v=15101", { scope: "./" })
       .catch(error => console.warn("Modo sin conexión no disponible:", error));
   });
 }
