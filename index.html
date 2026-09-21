@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=14901"
+        href="./styles-v27.css?v=15001"
     >
 
 
@@ -119,7 +119,8 @@
 }
 </style>
 
-    <meta name="mi-servicio-version" content="V149-PANTERA-CAMINA-EN-LINEA">
+    <meta name="mi-servicio-version" content="V150-META-COMPACTA-CACHE">
+<meta name="mi-servicio-build" content="V150-15001">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -1454,12 +1455,12 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=14901" defer></script>
+<script src="./app-v27.js?v=15001" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js?v=14901", { scope: "./" })
+    navigator.serviceWorker.register("./sw.js?v=15001", { scope: "./" })
       .catch(error => console.warn("Modo sin conexión no disponible:", error));
   });
 }

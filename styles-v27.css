@@ -8817,3 +8817,38 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio{padding-top:2px!
     transform:translateY(12px)!important;
   }
 }
+
+/* V150 · Meta compacta: Año de servicio conserva protagonismo;
+   el resto se ordena visualmente de información principal a secundaria. */
+#vista-meta{padding-bottom:92px!important}
+#vista-meta .tarjeta{margin-top:8px!important;margin-bottom:8px!important;padding:12px 13px!important;border-radius:18px!important}
+#vista-meta .meta-principal{padding:15px!important;margin-bottom:10px!important}
+#vista-meta .meta-principal h2{margin:3px 0 7px!important}
+#vista-meta .meta-principal .meta-numero-grande{line-height:1!important;margin:4px 0!important}
+
+/* Las tarjetas informativas posteriores ocupan menos alto */
+#vista-meta .meta-prevision-v140,
+#vista-meta .meta-planificado-v141,
+#vista-meta .meta-restante{padding:11px 12px!important}
+#vista-meta .meta-prevision-cabecera{align-items:center!important}
+#vista-meta .meta-prevision-cabecera small{font-size:8.5px!important}
+#vista-meta .meta-prevision-cabecera h2{font-size:14px!important;line-height:1.1!important;margin:2px 0 0!important}
+#vista-meta .meta-prevision-cabecera>span{font-size:20px!important}
+#vista-meta .meta-prevision-fecha{font-size:18px!important;margin-top:8px!important}
+#vista-meta .meta-mensaje{font-size:10px!important;line-height:1.25!important;margin:4px 0 0!important}
+
+/* Agenda: resumen importante en una sola línea de tres datos */
+#vista-meta .v141-agenda-resumen{margin:8px 16px!important;padding:10px 11px!important;border-radius:16px!important}
+#vista-meta .v141-agenda-head{margin-bottom:7px!important}
+#vista-meta .v141-agenda-head strong{font-size:12px!important}
+#vista-meta .v141-agenda-grid{gap:5px!important}
+#vista-meta .v141-agenda-grid>div{padding:6px!important;border-radius:10px!important}
+#vista-meta .v141-agenda-grid small{font-size:8px!important}
+#vista-meta .v141-agenda-grid b{font-size:12px!important}
+
+/* Métricas/filas de Meta más juntas */
+#vista-meta .meta-grid,
+#vista-meta .meta-resumen-grid{gap:7px!important}
+#vista-meta .meta-grid>div,
+#vista-meta .meta-resumen-grid>div{padding:8px!important}
+#vista-meta p{margin-top:4px;margin-bottom:4px}
