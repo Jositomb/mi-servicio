@@ -9105,3 +9105,14 @@ html.light #vista-historial #historialResumenV153,body.light #vista-historial #h
 html.light #vista-historial #historialResumenV153 :is(h1,h2,h3,strong,b),body.light #vista-historial #historialResumenV153 :is(h1,h2,h3,strong,b),[data-theme="light"] #vista-historial #historialResumenV153 :is(h1,h2,h3,strong,b),.tema-claro #vista-historial #historialResumenV153 :is(h1,h2,h3,strong,b){color:#111!important}
 html.light #vista-historial #historialResumenV153 :is(p,small,label),body.light #vista-historial #historialResumenV153 :is(p,small,label),[data-theme="light"] #vista-historial #historialResumenV153 :is(p,small,label),.tema-claro #vista-historial #historialResumenV153 :is(p,small,label){color:#6e6e73!important}
 @media(max-width:390px){#vista-historial #historialResumenV153{margin-left:0!important;margin-right:0!important;width:100%!important}}
+
+/* V155 */
+#vista-inicio .frase-motivadora,#vista-inicio #resumenHoyV145,#vista-inicio #comparacionSemanalV139,#vista-inicio .v139-week{width:100%!important;max-width:none!important;margin-left:0!important;margin-right:0!important;box-sizing:border-box!important}
+@media (prefers-color-scheme:light){
+#vista-meta .meta-v152-ritmo{background:#fff!important;color:#111!important;border-color:rgba(0,0,0,.08)!important}
+#vista-meta .meta-v152-bocadillo{background:linear-gradient(135deg,#eef5ff,#e4edf7)!important;border-color:rgba(55,110,170,.22)!important;color:#111!important}
+#vista-meta .meta-v152-bocadillo:before{background:#e9f1fa!important;border-left-color:rgba(55,110,170,.22)!important;border-bottom-color:rgba(55,110,170,.22)!important}
+#vista-meta .meta-v152-bocadillo strong{color:#111!important} #vista-meta .meta-v152-bocadillo p{color:#6e6e73!important}
+}
+html.light #vista-meta .meta-v152-ritmo,body.light #vista-meta .meta-v152-ritmo,[data-theme="light"] #vista-meta .meta-v152-ritmo,.tema-claro #vista-meta .meta-v152-ritmo{background:#fff!important;color:#111!important}
+html.light #vista-meta .meta-v152-bocadillo,body.light #vista-meta .meta-v152-bocadillo,[data-theme="light"] #vista-meta .meta-v152-bocadillo,.tema-claro #vista-meta .meta-v152-bocadillo{background:linear-gradient(135deg,#eef5ff,#e4edf7)!important;color:#111!important}
