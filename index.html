@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=15101"
+        href="./styles-v27.css?v=15201"
     >
 
 
@@ -120,7 +120,7 @@
 </style>
 
     <meta name="mi-servicio-version" content="V151-META-REORGANIZADA">
-<meta name="mi-servicio-build" content="V151-15101">
+<meta name="mi-servicio-build" content="V152-15201">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -840,130 +840,74 @@
              META DEL AÑO DE SERVICIO
         ================================================== -->
         <section id="vista-meta" class="vista">
-            <section class="seccion meta-web">
-                <article class="tarjeta meta-principal">
-                    <div class="meta-cabecera">
-                        <div>
-                            <h2 id="metaAnioServicio" class="meta-titulo">Año de servicio</h2>
-                            <p id="metaPeriodo" class="meta-subtitulo">septiembre – agosto</p>
-                        </div>
-                        <span class="meta-icono" aria-hidden="true">◎</span>
-                    </div>
-                    <div class="meta-progreso-fila">
-                        <div id="metaAnillo" class="meta-anillo">
-                            <div class="meta-anillo-centro">
-                                <strong id="metaPorcentaje">0%</strong>
-                                <small>completado</small>
-                            </div>
-                        </div>
-                        <div class="meta-progreso-datos">
-                            <strong id="metaTotal" class="meta-total">0 h</strong>
-                            <span id="metaObjetivoTexto">de 600 h</span>
-                            <div class="meta-barra"><span id="metaBarraRelleno"></span></div>
-                            <small>Meta del año de servicio</small>
-                            <div class="meta-actividad-total">
-                                <span>Actividad total registrada</span>
-                                <strong id="metaActividadTotal">0 h</strong>
-                            </div>
-                            <div class="meta-computo-resumen">
-                                <div class="meta-computo-fila meta-computable">
-                                    <span>✓ Computa para las 600 h</span>
-                                    <strong id="metaComputableClaro">0 h</strong>
-                                </div>
-                                <div class="meta-computo-fila meta-excedente">
-                                    <span>Excedente que no computa</span>
-                                    <strong id="metaExcedente">0 h</strong>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </article>
+            <section class="seccion meta-web meta-v152">
+  <article class="tarjeta meta-principal meta-v152-anio">
+    <div class="meta-v152-top">
+      <div><h2 id="metaAnioServicio" class="meta-titulo">Año de servicio</h2><p id="metaPeriodo" class="meta-subtitulo">septiembre – agosto</p></div>
+      <div class="meta-v152-porcentaje"><strong id="metaPorcentaje">0%</strong><span> completado</span></div>
+    </div>
+    <div class="meta-v152-anio-cuerpo">
+      <div id="metaAnillo" class="meta-anillo"><div class="meta-anillo-centro"><strong data-v152-ringpct>0%</strong><small>600 h</small></div></div>
+      <div class="meta-progreso-datos">
+        <strong id="metaTotal" class="meta-total">0 h</strong><span id="metaObjetivoTexto">de 600 h</span>
+        <div class="meta-barra"><span id="metaBarraRelleno"></span></div>
+        <div class="meta-v152-computos">
+          <div class="meta-computo-fila meta-computable"><span>✓ Computa</span><strong id="metaComputableClaro">0 h</strong></div>
+          <div class="meta-computo-fila meta-excedente"><span>◷ Excedente</span><strong id="metaExcedente">0 min</strong></div>
+        </div>
+        <div class="meta-actividad-total"><span>Actividad total registrada</span><strong id="metaActividadTotal">0 h</strong></div>
+      </div>
+    </div>
+  </article>
 
-                <section class="meta-claves-v151" aria-label="Resumen de meta">
-<article class="tarjeta meta-mes-computo">
-                    <div class="meta-mes-computo-cabecera">
-                        <div>
-                            <small>Este mes</small>
-                            <strong id="metaMesActividad">0 h de actividad</strong>
-                        </div>
-                        <span id="metaMesEstado" class="meta-mes-badge">Computa todo</span>
-                    </div>
-                    <div class="meta-mes-computo-grid">
-                        <div>
-                            <small>Computa</small>
-                            <strong id="metaMesComputable">0 h</strong>
-                        </div>
-                        <div>
-                            <small>Excedente</small>
-                            <strong id="metaMesExcedente">0 h</strong>
-                        </div>
-                    </div>
-                    <p id="metaMesExplicacion" class="meta-mes-explicacion"></p>
-                </article>
+  <article class="tarjeta meta-v152-mes">
+    <div class="meta-mes-computo-cabecera">
+      <div><small>Este mes</small><strong id="metaMesActividad">0 h de actividad</strong></div>
+      <span id="metaMesEstado" class="meta-mes-badge">Computa todo</span>
+    </div>
+    <div class="meta-v152-mes-principal">
+      <div class="meta-v152-mini-ring"><strong id="metaMesComputable">0 h</strong><small>computan</small></div>
+      <div class="meta-v152-mes-barra"><strong data-v152-mes-total>0 h</strong><span>de 55 h</span><div class="meta-barra"><span data-v152-mes-fill></span></div></div>
+    </div>
+    <div class="meta-v152-cuatro">
+      <div><small>✓ Llevas</small><strong id="metaLlevas">0 h</strong></div>
+      <div><small>🎯 Te queda</small><strong id="metaQueda">0 h</strong></div>
+      <div><small>▥ Previsión</small><strong id="metaPrevisionFecha">—</strong></div>
+      <div><small>🗓 De aquí a agosto</small><strong id="metaTiempoRestante">—</strong></div>
+    </div>
+    <div class="meta-v152-ocultos">
+      <strong id="metaMesExcedente">0 h</strong><p id="metaMesExplicacion"></p>
+      <p id="metaPrevisionDetalle"></p><strong id="metaRitmoNecesario">—</strong>
+    </div>
+  </article>
 
-                <div class="meta-dos-columnas">
-                    <article class="tarjeta meta-mini">
-                        <span class="meta-mini-icono meta-azul" aria-hidden="true">↑</span>
-                        <small>Llevas</small>
-                        <strong id="metaLlevas">0 h</strong>
-                    </article>
-                    <article class="tarjeta meta-mini">
-                        <span class="meta-mini-icono meta-naranja" aria-hidden="true">◷</span>
-                        <small>Te queda</small>
-                        <strong id="metaQueda">0 h</strong>
-                    </article>
-                </div>
+  <section id="resumenAgendaV141" class="v141-agenda-resumen meta-v152-agenda">
+    <div class="v141-agenda-head"><strong>Agenda del mes</strong><small data-v141-planes>0 planes</small></div>
+    <div class="v141-agenda-grid">
+      <div><small>🗓 Previstas</small><b data-v141-previstas>0 h</b></div>
+      <div><small>✓ Realizadas</small><b data-v141-realizadas>0 h</b></div>
+      <div><small>◷ Pendientes</small><b data-v141-pendientes>0 h</b></div>
+    </div>
+  </section>
 
-                <article class="tarjeta meta-ritmo">
-                    <h2>Cómo vas ahora</h2>
-                    <div class="meta-dos-columnas meta-ritmo-datos">
-                        <div>
-                            <small>A estas alturas deberías llevar</small>
-                            <strong id="metaEsperado">0 h</strong>
-                        </div>
-                        <div class="meta-derecha">
-                            <small id="metaDiferenciaTitulo">Vas por delante</small>
-                            <strong id="metaDiferencia">0 h</strong>
-                        </div>
-                    </div>
-                    <p id="metaMensaje" class="meta-mensaje"></p>
-                <article id="metaPlanificadoV141" class="tarjeta meta-planificado-v141"><div class="meta-prevision-cabecera"><div><small>CON LO QUE TIENES PLANIFICADO</small><h2>Previsión de este mes</h2></div><span aria-hidden="true">🗓️</span></div><strong class="meta-prevision-fecha" data-v141-proyectado>—</strong><p class="meta-mensaje" data-v141-detalle>Calculando planificación…</p></article></article>
+  <article class="tarjeta meta-ritmo meta-v152-ritmo">
+    <h2>Cómo vas ahora</h2>
+    <div class="meta-v152-personaje" aria-hidden="true"></div>
+    <div class="meta-v152-bocadillo">
+      <strong id="metaDiferenciaTitulo">¡Buen ritmo!</strong>
+      <p id="metaMensaje" class="meta-mensaje">Constancia, calma y a seguir. 🌿</p>
+    </div>
+    <div class="meta-v152-ocultos">
+      <strong id="metaEsperado">0 h</strong><strong id="metaDiferencia">0 h</strong>
+      <article id="metaPlanificadoV141"><strong data-v141-proyectado>—</strong><p data-v141-detalle>Calculando planificación…</p></article>
+    </div>
+  </article>
 
-                
+  <article id="metaSinObjetivo" class="tarjeta meta-sin-objetivo oculto">
+    <span aria-hidden="true">◎</span><h2>No hay una meta anual activa</h2>
+    <p>La meta anual se muestra para precursores regulares.</p>
+  </article>
 </section>
-<section id="resumenAgendaV141" class="v141-agenda-resumen"><div class="v141-agenda-head"><strong>Agenda del mes</strong><small data-v141-planes>0 planes</small></div><div class="v141-agenda-grid"><div><small>Previstas</small><b data-v141-previstas>0 h</b></div><div><small>Realizadas ✓</small><b data-v141-realizadas>0 h</b></div><div><small>Pendientes</small><b data-v141-pendientes>0 h</b></div></div></section>
-<article id="metaPrevisionV140" class="tarjeta meta-prevision-v140">
-                    <div class="meta-prevision-cabecera">
-                        <div>
-                            <small>PREVISIÓN AL RITMO ACTUAL</small>
-                            <h2>¿Cuándo llegarías a las 600 h?</h2>
-                        </div>
-                        <span aria-hidden="true">📅</span>
-                    </div>
-                    <strong id="metaPrevisionFecha" class="meta-prevision-fecha">—</strong>
-                    <p id="metaPrevisionDetalle" class="meta-mensaje">Calculando tu ritmo…</p>
-                </article>
-
-                <article class="tarjeta meta-restante">
-                    <h2>De aquí a agosto</h2>
-                    <div class="meta-dos-columnas">
-                        <div class="meta-cajita">
-                            <small>Tiempo restante</small>
-                            <strong id="metaTiempoRestante">—</strong>
-                        </div>
-                        <div class="meta-cajita">
-                            <small>Ritmo necesario</small>
-                            <strong id="metaRitmoNecesario">—</strong>
-                        </div>
-                    </div>
-                </article>
-
-                <article id="metaSinObjetivo" class="tarjeta meta-sin-objetivo oculto">
-                    <span aria-hidden="true">◎</span>
-                    <h2>No hay una meta anual activa</h2>
-                    <p>La meta anual se muestra para precursores regulares.</p>
-                </article>
-            </section>
         <article id="planInteligenteMes" class="tarjeta plan-inteligente-mes">
 <div class="plan-inteligente-cabecera"><div><span>PLAN INTELIGENTE</span><h3>Organiza lo que queda de mes</h3></div><b>🎯</b></div>
 <div class="plan-inteligente-grid"><div><small>Te faltan</small><strong id="planHorasRestantes">—</strong></div><div><small>Ritmo sugerido</small><strong id="planRitmoSugerido">—</strong></div></div>
@@ -1459,12 +1403,12 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=15101" defer></script>
+<script src="./app-v27.js?v=15201" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js?v=15101", { scope: "./" })
+    navigator.serviceWorker.register("./sw.js?v=15201", { scope: "./" })
       .catch(error => console.warn("Modo sin conexión no disponible:", error));
   });
 }

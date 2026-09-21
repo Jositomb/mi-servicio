@@ -528,7 +528,7 @@ function renderHistorialCopiasV136(){
  }).join("");
 }
 function configurarEstadoSyncV134(){
-    const a=document.getElementById("versionPublicadaV151");
+    const a=document.getElementById("versionPublicadaV152");
     if(!a||document.getElementById("estadoSyncV134"))return;
     const el=document.createElement("div"); el.id="estadoSyncV134";
     el.style.cssText="font-size:12px;text-align:center;margin-top:6px;font-weight:600;";
@@ -7270,24 +7270,24 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 
 
-function mostrarVersionPublicadaV151() {
+function mostrarVersionPublicadaV152() {
     const destino =
         document.getElementById("estadoOneDrive") ||
         document.getElementById("mensajeOneDrive") ||
         document.querySelector("[data-onedrive]");
 
-    if (!destino || document.getElementById("versionPublicadaV151")) return;
+    if (!destino || document.getElementById("versionPublicadaV152")) return;
 
     const etiqueta = document.createElement("div");
-    etiqueta.id = "versionPublicadaV151";
-    etiqueta.textContent = "Versión publicada: V151";
+    etiqueta.id = "versionPublicadaV152";
+    etiqueta.textContent = "Versión publicada: V152";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(() => { mostrarVersionPublicadaV151(); configurarEstadoSyncV134(); }, 500);
+    setTimeout(() => { mostrarVersionPublicadaV152(); configurarEstadoSyncV134(); }, 500);
 });
 
 
@@ -7558,3 +7558,28 @@ function resumenHoyV145(){
 }
 document.addEventListener("DOMContentLoaded",()=>setTimeout(resumenHoyV145,1000));
 
+
+
+// V152 · sincroniza el nuevo diseño de Meta sin tocar los cálculos existentes.
+function sincronizarMetaVisualV152(){
+  try{
+    const pct=document.getElementById("metaPorcentaje")?.textContent||"0%";
+    const rp=document.querySelector("[data-v152-ringpct]"); if(rp) rp.textContent=pct;
+    const mes=document.getElementById("metaMesActividad")?.textContent||"0 h";
+    const total=(mes.match(/[\d.,]+\s*h/)||["0 h"])[0];
+    const mt=document.querySelector("[data-v152-mes-total]"); if(mt) mt.textContent=total;
+    const n=parseFloat((total.match(/[\d.,]+/)||["0"])[0].replace(",","."))||0;
+    const fill=document.querySelector("[data-v152-mes-fill]"); if(fill) fill.style.width=Math.max(0,Math.min(100,n/55*100))+"%";
+    const ring=document.querySelector(".meta-v152-mini-ring"); if(ring){
+      const p=Math.max(0,Math.min(100,n/55*100));
+      ring.style.background=`conic-gradient(#ff4f9a 0 ${p}%, #253044 ${p}% 100%)`;
+    }
+    const dst=document.querySelector(".meta-v152-personaje");
+    const src=document.querySelector("#animalProgreso img, #animalProgreso .personaje-cuerpo-img, #animalProgreso .pantera-personaje-img");
+    if(dst && src && !dst.querySelector("img")){
+      const img=src.cloneNode(true); img.removeAttribute("id"); img.removeAttribute("style"); dst.appendChild(img);
+    }
+  }catch(e){console.warn("V152 visual",e)}
+}
+document.addEventListener("DOMContentLoaded",()=>{setTimeout(sincronizarMetaVisualV152,900);setTimeout(sincronizarMetaVisualV152,1800)});
+document.addEventListener("click",e=>{if(e.target.closest?.('[data-vista="meta"],[data-tab="meta"],[href="#meta"]')) setTimeout(sincronizarMetaVisualV152,250)});

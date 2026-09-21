@@ -8979,3 +8979,74 @@ body.modo-standalone #vista-inicio.activa #seccionGraficoInicio{padding-top:2px!
  #vista-meta .meta-mes-explicacion{font-size:9.5px!important}
  #vista-meta .meta-mini strong{font-size:17px!important}
 }
+
+/* V152 · Meta tal cual a la referencia aprobada */
+#vista-meta .meta-v152{display:flex!important;flex-direction:column!important;gap:10px!important}
+#vista-meta .meta-v152>.tarjeta,#vista-meta .meta-v152>section{margin:0!important}
+#vista-meta .meta-v152-anio{padding:13px 14px!important;border-radius:20px!important}
+#vista-meta .meta-v152-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+#vista-meta .meta-v152-top h2{font-size:19px!important;margin:0 0 2px!important}
+#vista-meta .meta-v152-top p{font-size:12px!important;margin:0!important}
+#vista-meta .meta-v152-porcentaje{white-space:nowrap;font-size:12px;opacity:.86}
+#vista-meta .meta-v152-porcentaje strong{font-size:18px;color:#5b9cff}
+#vista-meta .meta-v152-anio-cuerpo{display:grid;grid-template-columns:100px 1fr;gap:12px;align-items:center;margin-top:9px}
+#vista-meta .meta-v152-anio .meta-anillo{width:94px!important;height:94px!important}
+#vista-meta .meta-v152-anio .meta-anillo-centro strong{font-size:21px!important}
+#vista-meta .meta-v152-anio .meta-anillo-centro small{font-size:10px!important}
+#vista-meta .meta-v152-anio .meta-total{font-size:24px!important;line-height:1!important}
+#vista-meta .meta-v152-anio .meta-progreso-datos>span{font-size:12px!important}
+#vista-meta .meta-v152-anio .meta-barra{margin:5px 0 7px!important}
+#vista-meta .meta-v152-computos{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid rgba(255,255,255,.08);padding-top:7px;margin-top:2px}
+#vista-meta .meta-v152-computos .meta-computo-fila{padding:0 7px!important;display:flex!important;gap:5px!important;justify-content:center!important;font-size:11px!important;border:0!important}
+#vista-meta .meta-v152-computos .meta-computo-fila+div{border-left:1px solid rgba(255,255,255,.16)!important}
+#vista-meta .meta-v152-computos strong{font-size:14px!important}
+#vista-meta .meta-v152-anio .meta-actividad-total{display:none!important}
+
+/* Este mes */
+#vista-meta .meta-v152-mes{padding:12px 14px!important;border-radius:20px!important}
+#vista-meta .meta-v152-mes .meta-mes-computo-cabecera strong{font-size:20px!important}
+#vista-meta .meta-v152-mes-principal{display:grid;grid-template-columns:94px 1fr;gap:12px;align-items:center;margin:8px 0}
+#vista-meta .meta-v152-mini-ring{width:86px;height:86px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:conic-gradient(#ff4f9a 0 69%,#253044 69% 100%);position:relative}
+#vista-meta .meta-v152-mini-ring:after{content:"";position:absolute;inset:10px;border-radius:50%;background:var(--tarjeta,#1c1c1e)}
+#vista-meta .meta-v152-mini-ring>*{position:relative;z-index:1}
+#vista-meta .meta-v152-mini-ring strong{font-size:16px;color:#fff}
+#vista-meta .meta-v152-mini-ring small{font-size:8px;opacity:.7}
+#vista-meta .meta-v152-mes-barra strong{font-size:25px;display:block}
+#vista-meta .meta-v152-mes-barra>span{font-size:12px;opacity:.65}
+#vista-meta .meta-v152-mes-barra .meta-barra{margin-top:7px!important}
+#vista-meta .meta-v152-mes-barra .meta-barra span{background:#ff4f9a!important;width:69%}
+#vista-meta .meta-v152-cuatro{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(255,255,255,.1);padding-top:9px}
+#vista-meta .meta-v152-cuatro>div{padding:0 8px;min-width:0}
+#vista-meta .meta-v152-cuatro>div+div{border-left:1px solid rgba(255,255,255,.12)}
+#vista-meta .meta-v152-cuatro small{display:block;font-size:8.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.72}
+#vista-meta .meta-v152-cuatro strong{display:block;font-size:15px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#vista-meta .meta-v152-cuatro>div:nth-child(1) strong{color:#34c759}
+#vista-meta .meta-v152-cuatro>div:nth-child(3) strong,#vista-meta .meta-v152-cuatro>div:nth-child(4) strong{color:#5b9cff}
+#vista-meta .meta-v152-ocultos{display:none!important}
+
+/* Agenda */
+#vista-meta .meta-v152-agenda{padding:10px 12px!important;border-radius:20px!important}
+#vista-meta .meta-v152-agenda .v141-agenda-head strong{font-size:15px!important}
+#vista-meta .meta-v152-agenda .v141-agenda-grid{gap:7px!important}
+#vista-meta .meta-v152-agenda .v141-agenda-grid>div{padding:7px 8px!important;display:block!important}
+#vista-meta .meta-v152-agenda .v141-agenda-grid small{font-size:9px!important}
+#vista-meta .meta-v152-agenda .v141-agenda-grid b{font-size:14px!important;margin-top:2px;display:block}
+
+/* Cómo vas + personaje elegido */
+#vista-meta .meta-v152-ritmo{padding:11px 13px!important;border-radius:20px!important;display:grid!important;grid-template-columns:76px 1fr;grid-template-rows:auto 1fr;column-gap:10px;align-items:center}
+#vista-meta .meta-v152-ritmo h2{grid-column:1/-1;font-size:16px!important;margin:0 0 7px!important}
+#vista-meta .meta-v152-personaje{height:72px;display:flex;align-items:flex-end;justify-content:center;overflow:visible}
+#vista-meta .meta-v152-personaje img{max-height:72px;max-width:72px;object-fit:contain;filter:drop-shadow(0 4px 7px rgba(0,0,0,.25))}
+#vista-meta .meta-v152-bocadillo{background:linear-gradient(135deg,rgba(50,75,105,.42),rgba(30,42,55,.58));border:1px solid rgba(110,160,220,.32);border-radius:13px;padding:10px 12px;position:relative}
+#vista-meta .meta-v152-bocadillo:before{content:"";position:absolute;left:-8px;top:24px;width:14px;height:14px;background:#243342;border-left:1px solid rgba(110,160,220,.32);border-bottom:1px solid rgba(110,160,220,.32);transform:rotate(45deg)}
+#vista-meta .meta-v152-bocadillo strong{font-size:14px}
+#vista-meta .meta-v152-bocadillo p{font-size:11px!important;margin:3px 0 0!important;line-height:1.25!important}
+
+@media(max-width:390px){
+ #vista-meta .meta-v152-anio-cuerpo,#vista-meta .meta-v152-mes-principal{grid-template-columns:82px 1fr}
+ #vista-meta .meta-v152-anio .meta-anillo{width:78px!important;height:78px!important}
+ #vista-meta .meta-v152-mini-ring{width:76px;height:76px}
+ #vista-meta .meta-v152-cuatro>div{padding:0 5px}
+ #vista-meta .meta-v152-cuatro small{font-size:7.5px}
+ #vista-meta .meta-v152-cuatro strong{font-size:13px}
+}
