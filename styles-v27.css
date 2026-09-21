@@ -9116,3 +9116,70 @@ html.light #vista-historial #historialResumenV153 :is(p,small,label),body.light 
 }
 html.light #vista-meta .meta-v152-ritmo,body.light #vista-meta .meta-v152-ritmo,[data-theme="light"] #vista-meta .meta-v152-ritmo,.tema-claro #vista-meta .meta-v152-ritmo{background:#fff!important;color:#111!important}
 html.light #vista-meta .meta-v152-bocadillo,body.light #vista-meta .meta-v152-bocadillo,[data-theme="light"] #vista-meta .meta-v152-bocadillo,.tema-claro #vista-meta .meta-v152-bocadillo{background:linear-gradient(135deg,#eef5ff,#e4edf7)!important;color:#111!important}
+
+/* =========================================================
+   V156 · LIMPIEZA DE PESTAÑAS
+   Inicio = situación actual.
+   Historial = registros.
+   Estadísticas = análisis/comparaciones.
+   Meta = objetivo anual y planificación.
+   ========================================================= */
+
+/* El resumen mensual/evolución ahora pertenece a Estadísticas */
+#vista-estadisticas #historialResumenV153{
+  width:100%!important;
+  max-width:none!important;
+  margin:10px 0!important;
+  box-sizing:border-box!important;
+}
+/* Neutraliza selectores antiguos ligados a Historial */
+#vista-estadisticas #historialResumenV153{
+  padding:11px!important;border-radius:20px!important;
+  background:rgba(28,28,30,.96)!important;
+  border:1px solid rgba(255,255,255,.10)!important;
+  display:grid!important;grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr)!important;
+  gap:0!important;overflow:hidden!important;
+}
+#vista-estadisticas #historialResumenV153>#resumenMensualV143,
+#vista-estadisticas #historialResumenV153>#tendenciaV144{
+  margin:0!important;padding:0!important;background:transparent!important;border:0!important;
+  box-shadow:none!important;border-radius:0!important;
+}
+#vista-estadisticas #historialResumenV153>#resumenMensualV143{padding-right:10px!important}
+#vista-estadisticas #historialResumenV153>#tendenciaV144{
+  padding-left:10px!important;border-left:1px solid rgba(255,255,255,.12)!important;
+}
+#vista-estadisticas #historialResumenV153 h2{font-size:14px!important;line-height:1.1!important;margin:1px 0 4px!important}
+#vista-estadisticas #historialResumenV153 small{font-size:7.5px!important}
+#vista-estadisticas #historialResumenV153 p{font-size:8px!important;line-height:1.15!important;margin:2px 0!important}
+
+/* Comparación semanal también es análisis, no Inicio */
+#vista-estadisticas #comparacionSemanalV139{
+  width:100%!important;max-width:none!important;margin:0 0 10px!important;box-sizing:border-box!important;
+}
+
+/* Historial queda limpio: filtros + registros */
+#vista-historial>.seccion{padding-top:4px!important}
+#vista-historial .titulo-seccion{margin-top:4px!important}
+
+/* Meta: la tarjeta mensual se interpreta como cómputo anual; reduce texto redundante */
+#vista-meta .meta-v152-mes .meta-mes-computo-cabecera small{font-size:0!important}
+#vista-meta .meta-v152-mes .meta-mes-computo-cabecera small:after{
+  content:"Cómputo de este mes";font-size:12px!important;
+}
+
+/* Modo claro para los bloques trasladados */
+@media(prefers-color-scheme:light){
+ #vista-estadisticas #historialResumenV153{
+   background:#fff!important;border-color:rgba(0,0,0,.08)!important;
+   box-shadow:0 8px 24px rgba(0,0,0,.05)!important;color:#111!important;
+ }
+ #vista-estadisticas #historialResumenV153>#tendenciaV144{border-left-color:rgba(0,0,0,.10)!important}
+ #vista-estadisticas #historialResumenV153 :is(h1,h2,h3,strong,b){color:#111!important}
+ #vista-estadisticas #historialResumenV153 :is(p,small,label){color:#6e6e73!important}
+}
+@media(max-width:390px){
+ #vista-estadisticas #historialResumenV153{padding:9px!important}
+ #vista-estadisticas #historialResumenV153>#resumenMensualV143{padding-right:7px!important}
+ #vista-estadisticas #historialResumenV153>#tendenciaV144{padding-left:7px!important}
+}
