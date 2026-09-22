@@ -7280,7 +7280,7 @@ function mostrarVersionPublicadaV156() {
 
     const etiqueta = document.createElement("div");
     etiqueta.id = "versionPublicadaV156";
-    etiqueta.textContent = "Versión publicada: V160";
+    etiqueta.textContent = "Versión publicada: V161";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
@@ -7595,15 +7595,80 @@ function actualizarFechaCalendarioInicioV157(){
 }
 document.addEventListener("DOMContentLoaded", actualizarFechaCalendarioInicioV157);
 
-function actualizarCaminoV159(){const d=new Date(),rs=(window.estado&&Array.isArray(estado.registros))?estado.registros:(Array.isArray(window.registros)?window.registros:[]);let mins=0;rs.forEach(r=>{const f=new Date(String(r.fecha||"")+"T12:00:00");if(!isNaN(f)&&f.getFullYear()===d.getFullYear()&&f.getMonth()===d.getMonth())mins+=Number(r.minutosTotales)||((Number(r.horas)||0)*60+(Number(r.minutos)||0))});let meta=70*60;try{const p=estado.preferencias||{};meta=Number(p.objetivoMensualMinutos)||Number(p.objetivoPersonalizadoMinutos)||meta}catch(e){}const pct=Math.max(0,Math.min(1,mins/meta));const he=document.getElementById("caminoHorasV159"),me=document.getElementById("caminoMetaV159");if(he)he.textContent=(mins/60).toLocaleString("es-ES",{maximumFractionDigits:1})+" h";if(me)me.textContent=(meta/60).toLocaleString("es-ES",{maximumFractionDigits:1})+" h";const r=document.getElementById("caminoRecorridoV159");if(r)r.style.width=(pct*100)+"%";const c=document.getElementById("caminoPersonajeV159"),o=document.querySelector("#animalProgreso img,#animalProgreso .personaje-cuerpo-img");if(c&&o&&o.src){let i=c.querySelector("img");if(!i){i=document.createElement("img");c.appendChild(i)}i.src=o.src;c.style.left=`calc(45px + (100% - 90px) * ${pct})`}const falta=Math.max(0,meta-mins),fh=Math.floor(falta/60),fm=Math.round(falta%60),x=document.getElementById("faltanMesV159");if(x)x.textContent=falta<=0?"Meta mensual alcanzada ✨":`Te faltan ${fh} h${fm?" "+fm+" min":""} para completar el mes.`}document.addEventListener("DOMContentLoaded",()=>{setTimeout(actualizarCaminoV159,1000);setTimeout(actualizarCaminoV159,1800)});
-
-// V160 · comprobar actualización también al abrir desde el icono de Inicio.
-async function comprobarActualizacionV160(){
-  if(!("serviceWorker" in navigator)) return;
+// =========================================================
+// V161 · camino mensual + personaje elegido + resumen compacto
+// =========================================================
+function registrosV161(){
+  if(window.estado&&Array.isArray(estado.registros)) return estado.registros;
+  if(Array.isArray(window.registros)) return window.registros;
   try{
-    const reg=await navigator.serviceWorker.getRegistration("./");
-    if(reg) await reg.update();
-  }catch(e){}
+    const r=localStorage.getItem("miServicio.registros");
+    return r?JSON.parse(r):[];
+  }catch(e){return []}
 }
-document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")comprobarActualizacionV160()});
-window.addEventListener("pageshow",comprobarActualizacionV160);
+function minutosRegistroV161(r){
+  if(Number.isFinite(Number(r.minutosTotales))) return Number(r.minutosTotales);
+  return (Number(r.horas)||0)*60+(Number(r.minutos)||0);
+}
+function totalMesV161(){
+  const d=new Date(), y=d.getFullYear(), m=d.getMonth();
+  return registrosV161().reduce((s,r)=>{
+    const raw=String(r.fecha||"").slice(0,10), p=raw.split("-");
+    if(p.length!==3)return s;
+    return Number(p[0])===y&&Number(p[1])===m+1?s+minutosRegistroV161(r):s;
+  },0);
+}
+function metaMensualV161(){
+  try{
+    const p=(window.estado&&estado.preferencias)||{};
+    if(Number(p.objetivoMensualMinutos)>0)return Number(p.objetivoMensualMinutos);
+    if(Number(p.objetivoPersonalizadoMinutos)>0)return Number(p.objetivoPersonalizadoMinutos);
+  }catch(e){}
+  /* La app mostraba 55 h como objetivo actual en Inicio */
+  return 55*60;
+}
+function srcPersonajeV161(){
+ const o=document.querySelector("#animalProgreso img,#animalProgreso .personaje-cuerpo-img");
+ return o&&o.src?o.src:"";
+}
+function ponerImgV161(id){
+ const c=document.getElementById(id),src=srcPersonajeV161();if(!c||!src)return;
+ let i=c.querySelector("img");if(!i){i=document.createElement("img");i.alt="";c.appendChild(i)}i.src=src;
+}
+function hoyISOv161(){
+ const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+function actualizarInicioV161(){
+ const mins=totalMesV161(),meta=metaMensualV161(),pct=Math.max(0,Math.min(1,meta?mins/meta:0));
+ const horas=mins/60,mh=meta/60;
+ const he=document.getElementById("caminoHorasV161"),me=document.getElementById("caminoMetaV161");
+ if(he)he.textContent=horas.toLocaleString("es-ES",{maximumFractionDigits:1})+" h";
+ if(me)me.textContent=mh.toLocaleString("es-ES",{maximumFractionDigits:1})+" h";
+ const hecho=document.getElementById("senderoHechoV161");if(hecho)hecho.style.width=(pct*100)+"%";
+ const pj=document.getElementById("caminoPersonajeV161");
+ if(pj)pj.style.left=`calc(55px + (100% - 110px) * ${pct})`;
+ ponerImgV161("caminoPersonajeV161");
+ ponerImgV161("resumenPersonajeV161");
+
+ const falta=Math.max(0,meta-mins),fh=Math.floor(falta/60),fm=Math.round(falta%60);
+ const faltaEl=document.getElementById("resumenFaltaV161");
+ if(faltaEl)faltaEl.textContent=falta<=0?"Meta del mes alcanzada ✨":`Faltan ${fh} h${fm?" "+fm+" min":""} este mes`;
+
+ const hoy=hoyISOv161(), rs=registrosV161().filter(r=>String(r.fecha||"").slice(0,10)===hoy);
+ const agenda=(window.estado&&estado.agendaSalidas)||{};
+ const plan=agenda[hoy];
+ let titulo="Hoy toca descansar",detalle="Sin actividad planificada";
+ if(plan){
+   let realizado=false;
+   try{realizado=typeof planRealizadoV141==="function"?planRealizadoV141(hoy,plan):rs.length>0}catch(e){realizado=rs.length>0}
+   if(realizado){titulo="¡Actividad realizada! ✨";detalle="Buen trabajo. Cada paso cuenta."}
+   else{
+     titulo="¡Preparado para hoy!";
+     const a=plan.tipo||plan.actividad||"Actividad",c=plan.companero||plan["compañero"]||plan.acompanante||plan.persona||"";
+     detalle=a+(c?" · con "+c:"");
+   }
+ }else if(rs.length){titulo="¡Buen trabajo hoy! ✨";detalle="Ya tienes actividad registrada";}
+ const t=document.getElementById("resumenTituloV161"),d=document.getElementById("resumenDetalleV161");
+ if(t)t.textContent=titulo;if(d)d.textContent=detalle;
+}
+document.addEventListener("DOMContentLoaded",()=>{setTimeout(actualizarInicioV161,700);setTimeout(actualizarInicioV161,1600)});

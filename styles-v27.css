@@ -9196,26 +9196,75 @@ html.light #vista-meta .meta-v152-bocadillo,body.light #vista-meta .meta-v152-bo
   min-height:0!important;
 }
 
-#vista-inicio #caminoProgresoV159{position:relative;height:230px;margin:0 0 10px;border-radius:24px;overflow:hidden;background:radial-gradient(circle at 65% 48%,rgba(255,190,92,.28),transparent 24%),linear-gradient(180deg,rgba(43,116,190,.08),rgba(85,125,72,.15))}
-#vista-inicio .camino-frase-v159{position:absolute;left:14px;top:26px;width:31%;font-size:18px;line-height:1.05;font-weight:800;font-style:italic}
-#vista-inicio .camino-inicio-v159,#vista-inicio .camino-meta-v159{position:absolute;bottom:20px;z-index:5;display:flex;flex-direction:column;align-items:center;padding:5px 8px;border-radius:7px;background:linear-gradient(#b87d48,#8e582e);color:#25160d}
-#vista-inicio .camino-inicio-v159{left:10px}#vista-inicio .camino-meta-v159{right:10px}
-#vista-inicio .camino-inicio-v159 strong,#vista-inicio .camino-meta-v159 strong{font-size:16px}#vista-inicio .camino-inicio-v159 span,#vista-inicio .camino-meta-v159 span{font-size:9px;font-weight:700}
-#vista-inicio .camino-bandera-v159{position:absolute;top:-25px;font-size:24px!important}
-#vista-inicio .camino-linea-v159{position:absolute;left:45px;right:45px;bottom:33px;height:4px;border-radius:999px;background:linear-gradient(90deg,#4da6ff,#79bfff 34%,#ff8dc7 68%,#ff4f9d);z-index:3}
-#vista-inicio .camino-recorrido-v159{height:100%;width:0;border-radius:999px;background:rgba(255,255,255,.5)}
-#vista-inicio .camino-personaje-v159{position:absolute;bottom:30px;left:45px;width:125px;height:155px;z-index:4;display:flex;align-items:flex-end;justify-content:center;transform:translateX(-50%);transition:left .55s ease}
-#vista-inicio .camino-personaje-v159 img{max-width:100%;max-height:100%;object-fit:contain;filter:drop-shadow(0 8px 8px rgba(0,0,0,.18))}
-#vista-inicio .faltan-mes-v159{font-size:12px;opacity:.78;margin:2px 0 5px}
-#vista-inicio .objetivo-card,#vista-inicio [class*="objetivo-card"]{display:none!important}
-@media(prefers-color-scheme:dark){#vista-inicio #caminoProgresoV159{background:radial-gradient(circle at 65% 48%,rgba(255,171,74,.18),transparent 24%),linear-gradient(180deg,rgba(18,65,105,.24),rgba(49,73,46,.17))}#vista-inicio .camino-frase-v159{color:#fff}}
-
-/* V160: el camino sustituye de verdad al Objetivo antiguo */
-#vista-inicio .objetivo-legado-v160{
- position:absolute!important;
- width:1px!important;height:1px!important;
- overflow:hidden!important;clip:rect(0 0 0 0)!important;
- clip-path:inset(50%)!important;white-space:nowrap!important;
- opacity:0!important;pointer-events:none!important;
+/* =========================================================
+ V161 · INICIO: camino limpio acordado
+ ========================================================= */
+#vista-inicio .objetivo-legado-v161{
+ position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;
+ clip-path:inset(50%)!important;opacity:0!important;pointer-events:none!important;
 }
-#vista-inicio #caminoProgresoV159{margin-top:6px!important;margin-bottom:12px!important}
+#vista-inicio #caminoProgresoV161{
+ position:relative;height:190px;margin:2px 0 10px;border-radius:0;overflow:hidden;
+ background:transparent!important;
+}
+#vista-inicio .camino-frase-v161{
+ position:absolute;left:6px;top:20px;width:30%;z-index:4;
+ font-size:17px;line-height:1.08;font-weight:800;font-style:italic;
+}
+#vista-inicio .sendero-v161{
+ position:absolute;left:55px;right:55px;bottom:30px;height:4px;border-radius:999px;
+ background:rgba(120,120,128,.18);z-index:2;
+}
+#vista-inicio .sendero-hecho-v161{
+ height:100%;width:0;border-radius:999px;
+ background:linear-gradient(90deg,#4d9dff,#77b8ff 45%,#ef82bd);
+ transition:width .55s ease;
+}
+#vista-inicio .poste-v161{
+ position:absolute;bottom:12px;z-index:5;min-width:55px;padding:5px 7px;border-radius:6px;
+ display:flex;flex-direction:column;align-items:center;
+ background:linear-gradient(#b87d48,#8d572e);color:#21140b;
+ box-shadow:0 3px 7px rgba(0,0,0,.18)
+}
+#vista-inicio .poste-inicio-v161{left:4px}
+#vista-inicio .poste-meta-v161{right:4px}
+#vista-inicio .poste-v161 strong{font-size:16px;line-height:1}
+#vista-inicio .poste-v161 span{font-size:9px;font-weight:800}
+#vista-inicio .poste-meta-v161 .bandera-v161{position:absolute;top:-27px;font-size:25px}
+#vista-inicio .camino-personaje-v161{
+ position:absolute;left:55px;bottom:30px;width:118px;height:145px;z-index:3;
+ transform:translateX(-50%);display:flex;align-items:flex-end;justify-content:center;
+ transition:left .65s ease;
+}
+#vista-inicio .camino-personaje-v161 img{
+ max-width:100%;max-height:100%;object-fit:contain;
+ filter:drop-shadow(0 7px 7px rgba(0,0,0,.16))
+}
+
+/* Resumen de hoy: estrecho y horizontal */
+#vista-inicio #resumenHoyV145{
+ width:calc(100% - 34px)!important;max-width:620px!important;margin:7px auto 10px!important;
+ min-height:0!important;padding:8px 11px!important;border-radius:18px!important;
+}
+#vista-inicio #resumenHoyV145>*:not(#resumenCompactoV161){display:none!important}
+#vista-inicio .resumen-compacto-v161{
+ min-height:64px;display:grid;grid-template-columns:66px minmax(0,1fr) auto;
+ gap:9px;align-items:center;
+}
+#vista-inicio .resumen-personaje-v161{
+ width:66px;height:58px;display:flex;align-items:flex-end;justify-content:center;
+}
+#vista-inicio .resumen-personaje-v161 img{max-width:100%;max-height:100%;object-fit:contain}
+#vista-inicio .resumen-texto-v161{min-width:0;display:flex;flex-direction:column;gap:2px}
+#vista-inicio .resumen-texto-v161 small{font-size:8px;letter-spacing:1.2px;font-weight:800;opacity:.55}
+#vista-inicio .resumen-texto-v161 strong{font-size:13px;line-height:1.15}
+#vista-inicio .resumen-texto-v161 span{font-size:10px;opacity:.65;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#vista-inicio .resumen-falta-v161{
+ font-size:11px;line-height:1.15;text-align:right;font-weight:700;max-width:92px;
+}
+@media(max-width:390px){
+ #vista-inicio #caminoProgresoV161{height:178px}
+ #vista-inicio .camino-personaje-v161{width:108px;height:135px}
+ #vista-inicio .camino-frase-v161{font-size:16px}
+ #vista-inicio #resumenHoyV145{width:calc(100% - 22px)!important}
+}

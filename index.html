@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=16001"
+        href="./styles-v27.css?v=16101"
     >
 
 
@@ -119,10 +119,10 @@
 }
 </style>
 
-    <meta name="mi-servicio-version" content="V160-CAMINO-PROGRESO">
-<meta name="mi-servicio-build" content="V160-16001">
+    <meta name="mi-servicio-version" content="V151-META-REORGANIZADA">
+<meta name="mi-servicio-build" content="V161-16101">
 </head>
-<body data-mi-servicio-version="160.0">
+<body data-mi-servicio-version="40.0">
 <div class="app">
     <!-- =====================================================
          CABECERA
@@ -259,13 +259,13 @@
                 </article>
             </section>
             <!-- OBJETIVO -->
-            <section id="caminoProgresoV159" class="camino-v159">
-<div class="camino-frase-v159">¡Cada paso cuenta<br>para Jehová!</div>
-<div class="camino-inicio-v159"><strong id="caminoHorasV159">0 h</strong><span>ahora</span></div>
-<div id="caminoPersonajeV159" class="camino-personaje-v159"></div>
-<div class="camino-meta-v159"><span class="camino-bandera-v159">🏁</span><strong id="caminoMetaV159">70 h</strong><span>meta</span></div>
-<div class="camino-linea-v159"><div id="caminoRecorridoV159" class="camino-recorrido-v159"></div></div>
-</section><section class="seccion objetivo-legado-v160" aria-hidden="true">
+            <section id="caminoProgresoV161" class="camino-v161" aria-label="Progreso mensual">
+  <div class="camino-frase-v161" id="caminoFraseV161">¡Cada paso cuenta<br>para Jehová!</div>
+  <div class="poste-v161 poste-inicio-v161"><strong id="caminoHorasV161">0 h</strong><span>llevas</span></div>
+  <div class="sendero-v161"><div id="senderoHechoV161" class="sendero-hecho-v161"></div></div>
+  <div id="caminoPersonajeV161" class="camino-personaje-v161"></div>
+  <div class="poste-v161 poste-meta-v161"><span class="bandera-v161">🏁</span><strong id="caminoMetaV161">55 h</strong><span>meta</span></div>
+</section><section class="objetivo-legado-v161" aria-hidden="true" class="seccion">
                 <div class="titulo-seccion">
                     <h2>
                         Objetivo
@@ -342,7 +342,15 @@
         
         
             
-            <section id="resumenHoyV145" class="v145-hoy"><div id="faltanMesV159" class="faltan-mes-v159"></div>
+            <section id="resumenHoyV145" class="v145-hoy"><div id="resumenCompactoV161" class="resumen-compacto-v161">
+  <div id="resumenPersonajeV161" class="resumen-personaje-v161"></div>
+  <div class="resumen-texto-v161">
+    <small>RESUMEN DE HOY</small>
+    <strong id="resumenTituloV161">Preparando el día…</strong>
+    <span id="resumenDetalleV161"></span>
+  </div>
+  <div id="resumenFaltaV161" class="resumen-falta-v161"></div>
+</div>
                 <div class="v145-hoy-icono" data-v145-icono>☀️</div>
                 <div class="v145-hoy-texto">
                     <small>RESUMEN DE HOY</small>
@@ -1415,12 +1423,12 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=16001" defer></script>
+<script src="./app-v27.js?v=16101" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js?v=16001", { scope: "./", updateViaCache: "none" })
+    navigator.serviceWorker.register("./sw.js?v=16101", { scope: "./" })
       .catch(error => console.warn("Modo sin conexión no disponible:", error));
   });
 }
