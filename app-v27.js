@@ -7280,7 +7280,7 @@ function mostrarVersionPublicadaV156() {
 
     const etiqueta = document.createElement("div");
     etiqueta.id = "versionPublicadaV156";
-    etiqueta.textContent = "Versión publicada: V162";
+    etiqueta.textContent = "Versión publicada: V163";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
@@ -7608,7 +7608,7 @@ function sincronizarInicioV162(){
  const objetivo=Number(estado?.preferencias?.objetivoMensualMinutos||0);
  const meta=objetivo>0?formatearTiempo(objetivo):"—";
  const h=document.getElementById("horasCaminoV162"),m=document.getElementById("metaCaminoV162"),bar=document.getElementById("caminoHechoV162"),pj=document.getElementById("personajeCaminoV162");
- if(h)h.textContent=horas;if(m)m.textContent=meta;if(bar)bar.style.width=pct+"%";if(pj)pj.style.left=`calc(57px + (100% - 118px) * ${pct/100})`;
+ if(h)h.textContent=horas;if(m)m.textContent=meta;if(bar)bar.style.width=pct+"%";if(pj)pj.style.left=`calc(68px + (100% - 136px) * ${pct/100})`;
  clonarPersonajeV162("personajeCaminoV162");clonarPersonajeV162("personajeResumenV162");
  const ahora=new Date();
  let totalMes=0;
@@ -7630,7 +7630,7 @@ function sincronizarInicioV162(){
 document.addEventListener("DOMContentLoaded",()=>{setTimeout(sincronizarInicioV162,1100);setTimeout(sincronizarInicioV162,2100)});
 
 // V162 — actualización fiable del acceso directo sin borrar datos.
-const BUILD_V162="16201";
+const BUILD_V162="16301";
 async function comprobarBuildV162(){
  try{
    const r=await fetch("./version.json?t="+Date.now(),{cache:"no-store"});

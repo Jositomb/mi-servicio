@@ -9222,3 +9222,106 @@ html.light #vista-meta .meta-v152-bocadillo,body.light #vista-meta .meta-v152-bo
 #vista-inicio .personaje-resumen-v162{height:80px;display:flex;align-items:flex-end;justify-content:center}.personaje-resumen-v162 img{max-height:100%;max-width:100%;object-fit:contain}.hoy-v162{padding:7px 9px;border-radius:14px;background:rgba(37,126,230,.32);font-size:13px;font-weight:800;text-align:center}
 @media(prefers-color-scheme:light){#vista-inicio #escenaProgresoV162{box-shadow:0 10px 28px rgba(24,66,89,.15)}}
 @media(max-width:390px){#vista-inicio #escenaProgresoV162{height:355px}.personaje-camino-v162{width:145px!important;height:205px!important}.frase-camino-v162{font-size:20px!important}.resumen-v162{grid-template-columns:48px minmax(0,1fr) 82px 42px!important}.personaje-resumen-v162{height:68px!important}}
+
+/* =========================================================
+ V163 · ESCENA LIMPIA: más cercana a la referencia aprobada
+ ========================================================= */
+#vista-inicio #escenaProgresoV162{
+ height:330px!important;
+ margin:2px 0 9px!important;
+ border-radius:24px!important;
+ overflow:hidden!important;
+ background:
+   radial-gradient(circle at 72% 37%,rgba(255,238,150,.98) 0 3%,rgba(255,188,94,.56) 4%,transparent 17%),
+   linear-gradient(180deg,#236ca3 0%,#5ea3c8 34%,#f0a56d 57%,#315b45 76%,#17372c 100%)!important;
+ box-shadow:0 9px 24px rgba(24,66,89,.15)!important;
+}
+#vista-inicio #escenaProgresoV162 .cielo-v162{
+ inset:0!important;
+ background:
+   radial-gradient(ellipse at 74% 52%,rgba(255,230,145,.55),transparent 24%),
+   linear-gradient(180deg,rgba(8,50,92,.12),transparent 58%)!important;
+}
+#vista-inicio #escenaProgresoV162 .montanas-v162{
+ left:-6%!important;right:-6%!important;bottom:88px!important;height:125px!important;opacity:.92!important;
+ background:
+   linear-gradient(145deg,transparent 0 20%,#687986 21% 31%,transparent 32%),
+   linear-gradient(218deg,transparent 0 25%,#506b70 26% 38%,transparent 39%),
+   linear-gradient(155deg,transparent 0 43%,#365c58 44% 58%,transparent 59%)!important;
+}
+#vista-inicio #escenaProgresoV162 .suelo-v162{
+ left:-7%!important;right:-7%!important;bottom:-34px!important;height:150px!important;
+ background:
+   radial-gradient(ellipse at 50% 0%,rgba(212,170,103,.85) 0 15%,rgba(111,122,65,.88) 34%,#274a37 65%,#163326 100%)!important;
+}
+#vista-inicio #escenaProgresoV162 .frase-camino-v162{
+ left:16px!important;top:18px!important;width:34%!important;
+ font-size:20px!important;line-height:1.06!important;font-weight:800!important;
+ color:#fff!important;text-shadow:0 2px 8px rgba(0,0,0,.35)!important;
+}
+#vista-inicio #escenaProgresoV162 .camino-v162{
+ left:60px!important;right:64px!important;bottom:39px!important;height:5px!important;
+ background:rgba(255,255,255,.30)!important;
+ transform:rotate(1.4deg)!important;
+}
+#vista-inicio #escenaProgresoV162 .camino-hecho-v162{
+ background:linear-gradient(90deg,#36d9ff,#9b8cff 52%,#ff4fa3)!important;
+ box-shadow:0 0 9px rgba(85,205,255,.9)!important;
+}
+#vista-inicio #escenaProgresoV162 .camino-v162 i{
+ width:12px!important;height:12px!important;border-width:2px!important;background:#7eb7e8!important;
+}
+#vista-inicio #escenaProgresoV162 .cartel-v162{
+ bottom:17px!important;min-width:60px!important;padding:5px 6px!important;border-radius:5px!important;
+}
+#vista-inicio #escenaProgresoV162 .cartel-horas-v162{left:5px!important}
+#vista-inicio #escenaProgresoV162 .cartel-meta-v162{right:5px!important}
+#vista-inicio #escenaProgresoV162 .cartel-v162 strong{font-size:18px!important}
+#vista-inicio #escenaProgresoV162 .cartel-meta-v162 b{top:-30px!important;font-size:27px!important}
+#vista-inicio #escenaProgresoV162 .personaje-camino-v162{
+ bottom:38px!important;width:125px!important;height:170px!important;
+ transform:translateX(-50%)!important;
+}
+#vista-inicio #escenaProgresoV162 .personaje-camino-v162 img{
+ max-height:165px!important;max-width:120px!important;object-fit:contain!important;
+}
+
+/* Resumen de hoy: una banda de verdad, sin heredar tamaños de V145 */
+#vista-inicio #resumenHoyV145{
+ display:block!important;
+ width:calc(100% - 4px)!important;
+ height:86px!important;min-height:86px!important;max-height:86px!important;
+ margin:6px 2px 8px!important;padding:0!important;border-radius:19px!important;
+ overflow:hidden!important;position:relative!important;
+}
+#vista-inicio #resumenHoyV145>*:not(#resumenV162){display:none!important}
+#vista-inicio #resumenV162{
+ position:absolute!important;inset:0!important;
+ height:auto!important;min-height:0!important;
+ display:grid!important;
+ grid-template-columns:50px minmax(0,1fr) 78px 43px!important;
+ gap:7px!important;align-items:center!important;
+ padding:7px 9px!important;box-sizing:border-box!important;
+ background:linear-gradient(110deg,#063b56,#0a5260)!important;color:#fff!important;
+}
+#vista-inicio #resumenV162 .resumen-sol-v162{font-size:30px!important}
+#vista-inicio #resumenV162 .resumen-copy-v162{min-width:0!important}
+#vista-inicio #resumenV162 .resumen-copy-v162 small{font-size:7px!important;letter-spacing:1.1px!important}
+#vista-inicio #resumenV162 .resumen-copy-v162 strong{font-size:13px!important;line-height:1.12!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#vista-inicio #resumenV162 .resumen-copy-v162 span{font-size:10px!important;line-height:1.15!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#vista-inicio #resumenV162 .resumen-copy-v162 em{font-size:9px!important;line-height:1.1!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#vista-inicio #resumenV162 .personaje-resumen-v162{
+ width:78px!important;height:70px!important;overflow:hidden!important;align-self:end!important;
+}
+#vista-inicio #resumenV162 .personaje-resumen-v162 img{
+ max-width:76px!important;max-height:68px!important;object-fit:contain!important;
+}
+#vista-inicio #resumenV162 .hoy-v162{
+ padding:6px 5px!important;border-radius:13px!important;font-size:11px!important;
+}
+@media(max-width:390px){
+ #vista-inicio #escenaProgresoV162{height:305px!important}
+ #vista-inicio #escenaProgresoV162 .personaje-camino-v162{width:112px!important;height:154px!important}
+ #vista-inicio #escenaProgresoV162 .personaje-camino-v162 img{max-width:108px!important;max-height:150px!important}
+ #vista-inicio #escenaProgresoV162 .frase-camino-v162{font-size:18px!important}
+}
