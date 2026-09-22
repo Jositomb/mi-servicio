@@ -1,0 +1,12 @@
+{
+  "name": "Mi Servicio",
+  "short_name": "Mi Servicio",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F2F2F7",
+  "theme_color": "#F2F2F7",
+  "icons": [
+    {"src":"./icon-apple.png","sizes":"any","type":"image/png","purpose":"any maskable"}
+  ]
+}
