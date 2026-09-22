@@ -1,4 +1,4 @@
-/* Mi Servicio · eventos-calendario.js · V175
+/* Mi Servicio · eventos-calendario.js · V176
    Agenda personal local preparada para futura importación/sincronización con Apple Calendar.
    No modifica registros, Meta, OneDrive ni la lógica de actividad.
 */
@@ -798,6 +798,143 @@
     if(texto)aplicarAtajoV174(texto,true);
   }
 
+
+  // =========================================================
+  // V176 · SINCRONIZACIÓN ICLOUD AUTOMÁTICA
+  // El enlace público de iCloud NO se guarda en GitHub.
+  // La web solo conoce la URL del pequeño puente/proxy.
+  // =========================================================
+  const KEY_PROXY_V176="miServicio.proxyCalendarioV176";
+  const KEY_SYNC_V176="miServicio.ultimaSyncCalendarioV176";
+
+  function normalizarProxyV176(v){
+    let s=String(v||"").trim();
+    if(!s)return "";
+    if(!/^https:\/\//i.test(s))s="https://"+s.replace(/^\/+/,"");
+    return s.replace(/\/+$/,"/");
+  }
+
+  function leerProxyV176(){
+    try{return localStorage.getItem(KEY_PROXY_V176)||""}catch(e){return ""}
+  }
+
+  function guardarProxyV176(url){
+    try{
+      if(url)localStorage.setItem(KEY_PROXY_V176,url);
+      else localStorage.removeItem(KEY_PROXY_V176);
+      return true;
+    }catch(e){return false}
+  }
+
+  function estadoSyncV176(texto,ok){
+    estadoImportV173(texto,ok);
+  }
+
+  async function fetchConTimeoutV176(url,ms=7000){
+    const ctrl=new AbortController();
+    const t=setTimeout(()=>ctrl.abort(),ms);
+    try{
+      const r=await fetch(url,{
+        method:"GET",
+        cache:"no-store",
+        credentials:"omit",
+        signal:ctrl.signal,
+        headers:{"Accept":"text/calendar,text/plain;q=0.9,*/*;q=0.5"}
+      });
+      if(!r.ok)throw new Error(`HTTP ${r.status}`);
+      return await r.text();
+    }finally{
+      clearTimeout(t);
+    }
+  }
+
+  async function sincronizarCalendarioV176(silencioso=false){
+    const input=document.getElementById("proxyCalendarioV176");
+    const proxy=normalizarProxyV176(input?.value || leerProxyV176());
+
+    if(!proxy){
+      if(!silencioso)estadoSyncV176("Añade primero la dirección del puente de calendario.",false);
+      return false;
+    }
+
+    if(input)input.value=proxy;
+
+    if(!silencioso)estadoSyncV176("Sincronizando con Apple Calendar…",false);
+
+    try{
+      const texto=await fetchConTimeoutV176(proxy,7000);
+      if(!/BEGIN:VCALENDAR/i.test(texto)){
+        throw new Error("La respuesta no es un calendario iCalendar.");
+      }
+
+      const importados=parseICSV173(texto);
+      if(!importados.length){
+        throw new Error("El calendario no contiene eventos utilizables.");
+      }
+
+      const manuales=leer().filter(e=>e.origen!=="apple");
+      if(!guardar([...manuales,...importados])){
+        throw new Error("No se pudieron guardar los eventos.");
+      }
+
+      const ahora=new Date();
+      localStorage.setItem(KEY_IMPORT_V173,JSON.stringify({
+        total:importados.length,
+        fecha:ahora.toISOString(),
+        archivo:"iCloud automático"
+      }));
+      localStorage.setItem(KEY_SYNC_V176,ahora.toISOString());
+
+      estadoSyncV176(
+        `${importados.length} ${importados.length===1?"evento sincronizado":"eventos sincronizados"} · ${ahora.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})}`,
+        true
+      );
+
+      refrescar();
+      return true;
+
+    }catch(e){
+      console.warn("Calendario iCloud V176:",e);
+      const st=leerEstadoImportV173();
+      if(st?.total){
+        estadoSyncV176(
+          `Sin conexión con el calendario. Se mantiene la última copia (${st.total} ${st.total===1?"evento":"eventos"}).`,
+          false
+        );
+      }else if(!silencioso){
+        estadoSyncV176("No se pudo sincronizar el calendario. Revisa la dirección del puente.",false);
+      }
+      return false;
+    }
+  }
+
+  function instalarSyncV176(){
+    const input=document.getElementById("proxyCalendarioV176");
+    if(input)input.value=leerProxyV176();
+
+    document.getElementById("guardarProxyCalendarioV176")?.addEventListener("click",async()=>{
+      const url=normalizarProxyV176(input?.value||"");
+      if(!url){
+        estadoSyncV176("Escribe la dirección del puente.",false);
+        return;
+      }
+      guardarProxyV176(url);
+      if(input)input.value=url;
+      await sincronizarCalendarioV176(false);
+    });
+
+    document.getElementById("sincronizarCalendarioV176")?.addEventListener("click",()=>{
+      sincronizarCalendarioV176(false);
+    });
+
+    // Sincronización en segundo plano: nunca bloquea Inicio.
+    const proxy=leerProxyV176();
+    if(proxy){
+      setTimeout(()=>sincronizarCalendarioV176(true),1800);
+    }
+  }
+
+
   function instalarImportadorV173(){
     const btn=document.getElementById("importarCalendarioAppleV173");
     const input=document.getElementById("archivoCalendarioAppleV173");
@@ -817,6 +954,7 @@
 
   function instalar(){
     instalarImportadorV173();
+    instalarSyncV176();
     // Enriquecer calendario sin tocar su lógica original.
     if(typeof actualizarCalendarioInicio==="function"){
       const originalCal=actualizarCalendarioInicio;

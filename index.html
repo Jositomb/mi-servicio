@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=17501"
+        href="./styles-v27.css?v=17601"
     >
 
 
@@ -120,7 +120,7 @@
 </style>
 
     <meta name="mi-servicio-version" content="V151-META-REORGANIZADA">
-<meta name="mi-servicio-build" content="V175-17501">
+<meta name="mi-servicio-build" content="V176-17601">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -1115,12 +1115,27 @@
                         </div>
                     </div>
 
-                    <button id="importarCalendarioAppleV173" class="boton-guardar" type="button">
+                    <div class="v176-sync-auto">
+                        <strong>Sincronización automática</strong>
+                        <p>Conecta Mi Servicio con tu calendario público de iCloud mediante un pequeño puente privado.</p>
+                        <input id="proxyCalendarioV176" class="campo-texto" type="url"
+                               placeholder="https://tu-puente.workers.dev/">
+                        <button id="guardarProxyCalendarioV176" class="boton-guardar" type="button">
+                            Guardar y sincronizar
+                        </button>
+                        <button id="sincronizarCalendarioV176" class="boton-secundario" type="button">
+                            ↻ Sincronizar ahora
+                        </button>
+                    </div>
+
+                    <div class="v176-separador"><span>o</span></div>
+
+                    <button id="importarCalendarioAppleV173" class="boton-secundario" type="button">
                         Importar calendario (.ics)
                     </button>
                     <input id="archivoCalendarioAppleV173" type="file" accept=".ics,text/calendar" hidden>
 
-                    <button id="pegarCalendarioAtajoV174" class="boton-secundario" type="button">
+                    <button id="pegarCalendarioAtajoV174" class="boton-secundario v176-respaldo" type="button">
                         Pegar desde Atajo
                     </button>
 
@@ -1132,7 +1147,7 @@
                         Todavía no has importado un calendario.
                     </p>
                     <small class="v173-calendario-ayuda">
-                        Los eventos que hayas añadido manualmente se conservan. El Atajo o una nueva importación sustituyen solo los eventos procedentes de Apple Calendar.
+                        Los eventos manuales se conservan. La sincronización sustituye únicamente los eventos procedentes de Apple Calendar. Si no hay internet, Mi Servicio mantiene la última copia guardada.
                     </small>
                 </article>
             </section>
@@ -1492,13 +1507,13 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=17501" defer></script>
-<script src="./eventos-calendario.js?v=17501" defer></script>
+<script src="./app-v27.js?v=17601" defer></script>
+<script src="./eventos-calendario.js?v=17601" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    window.addEventListener("load",()=>{setTimeout(()=>navigator.serviceWorker.register("./sw.js?v=17501", { scope: "./" })
+    window.addEventListener("load",()=>{setTimeout(()=>navigator.serviceWorker.register("./sw.js?v=17601", { scope: "./" })
       .catch(error => console.warn("Modo sin conexión no disponible:", error)).catch(()=>{}),1200)},{once:true});
   });
 }

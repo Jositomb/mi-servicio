@@ -9373,3 +9373,48 @@ body.light #vista-meta .meta-v152-mini-ring strong,
 #pegarCalendarioAtajoV174{
   margin-top:-2px;
 }
+
+
+/* =========================================================
+   V176 · SINCRONIZACIÓN ICLOUD AUTOMÁTICA
+   ========================================================= */
+.v176-sync-auto{
+  display:grid;
+  gap:9px;
+  padding:12px;
+  border-radius:14px;
+  background:rgba(127,127,127,.07);
+}
+.v176-sync-auto strong{font-size:15px}
+.v176-sync-auto p{
+  margin:0;
+  font-size:13px;
+  line-height:1.35;
+  color:var(--texto-secundario,#74767d);
+}
+.v176-sync-auto .campo-texto{
+  width:100%;
+  box-sizing:border-box;
+  min-height:42px;
+  border-radius:12px;
+  padding:10px 12px;
+  border:1px solid rgba(127,127,127,.20);
+  background:var(--fondo-tarjeta,#fff);
+  color:inherit;
+  font:inherit;
+}
+.v176-separador{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  color:var(--texto-secundario,#74767d);
+  font-size:12px;
+  text-transform:uppercase;
+}
+.v176-separador::before,.v176-separador::after{
+  content:"";
+  height:1px;
+  background:rgba(127,127,127,.16);
+  flex:1;
+}
+.v176-respaldo{opacity:.86}
