@@ -7280,7 +7280,7 @@ function mostrarVersionPublicadaV156() {
 
     const etiqueta = document.createElement("div");
     etiqueta.id = "versionPublicadaV156";
-    etiqueta.textContent = "Versión publicada: V166";
+    etiqueta.textContent = "Versión publicada: V167";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
@@ -7594,3 +7594,18 @@ function actualizarFechaCalendarioInicioV157(){
   el.textContent=`${dd}/${mm}/${d.getFullYear()}`;
 }
 document.addEventListener("DOMContentLoaded", actualizarFechaCalendarioInicioV157);
+
+// V167 · microanimaciones puramente visuales.
+function animarInicioV167(){
+  const vista=document.getElementById("vista-inicio");
+  if(!vista)return;
+  vista.classList.remove("v167-animar");
+  void vista.offsetWidth;
+  vista.classList.add("v167-animar");
+  setTimeout(()=>vista.classList.remove("v167-animar"),800);
+}
+document.addEventListener("DOMContentLoaded",()=>setTimeout(animarInicioV167,120));
+document.addEventListener("click",e=>{
+  const destino=e.target.closest?.('[data-vista="inicio"],[data-tab="inicio"],a[href="#inicio"]');
+  if(destino)setTimeout(animarInicioV167,40);
+});

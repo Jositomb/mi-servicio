@@ -9228,3 +9228,41 @@ html.light #vista-meta .meta-v152-mini-ring strong,
 body.light #vista-meta .meta-v152-mini-ring strong,
 [data-theme="light"] #vista-meta .meta-v152-mini-ring strong,
 .tema-claro #vista-meta .meta-v152-mini-ring strong{color:#1c1c1e!important}
+
+/* =========================================================
+   V167 · MICROANIMACIONES SUAVES
+   Solo visual. Sin cambios en datos, cálculos ni estructura.
+   ========================================================= */
+@keyframes v167EntradaSuave{
+  from{opacity:.55;transform:translateY(5px) scale(.985)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+@keyframes v167PulsoSuave{
+  0%,100%{filter:brightness(1);transform:translate(-50%,-50%) scale(1)}
+  45%{filter:brightness(1.055);transform:translate(-50%,-50%) scale(1.025)}
+}
+#vista-inicio.v167-animar .inicio-mini-card{
+  animation:v167EntradaSuave .34s ease-out both;
+}
+#vista-inicio.v167-animar .inicio-mini-card:nth-child(2){animation-delay:.045s}
+#vista-inicio.v167-animar .orbita-grafico{
+  animation:v167EntradaSuave .42s .07s ease-out both;
+}
+#vista-inicio.v167-animar .frase-animo-card,
+#vista-inicio.v167-animar #resumenHoyV145,
+#vista-inicio.v167-animar .v139-week{
+  animation:v167EntradaSuave .34s .11s ease-out both;
+}
+#vista-inicio .orbita-actividad.v167-pulso{
+  animation:v167PulsoSuave .46s ease-out both!important;
+}
+@media (prefers-reduced-motion: reduce){
+  #vista-inicio.v167-animar .inicio-mini-card,
+  #vista-inicio.v167-animar .orbita-grafico,
+  #vista-inicio.v167-animar .frase-animo-card,
+  #vista-inicio.v167-animar #resumenHoyV145,
+  #vista-inicio.v167-animar .v139-week,
+  #vista-inicio .orbita-actividad.v167-pulso{
+    animation:none!important;
+  }
+}
