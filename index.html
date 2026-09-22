@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=16801"
+        href="./styles-v27.css?v=16901"
     >
 
 
@@ -120,7 +120,7 @@
 </style>
 
     <meta name="mi-servicio-version" content="V151-META-REORGANIZADA">
-<meta name="mi-servicio-build" content="V168-16801">
+<meta name="mi-servicio-build" content="V169-16901">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -1389,7 +1389,7 @@
      JAVASCRIPT
 ========================================================== -->
 <script
-    src="https://alcdn.msauth.net/browser/2.35.0/js/msal-browser.min.js"
+    defer src="https://alcdn.msauth.net/browser/2.35.0/js/msal-browser.min.js"
     integrity="sha384-PARf28kmic36Ve+O3DnUerRXFtOQ7ZDqRDGpLcbljly5/N39T2OV3kt3QsWOKeAX"
     crossorigin="anonymous"
     defer
@@ -1409,12 +1409,12 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=16801" defer></script>
+<script src="./app-v27.js?v=16901" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    window.addEventListener("load",()=>{setTimeout(()=>navigator.serviceWorker.register("./sw.js?v=16801", { scope: "./" })
+    window.addEventListener("load",()=>{setTimeout(()=>navigator.serviceWorker.register("./sw.js?v=16901", { scope: "./" })
       .catch(error => console.warn("Modo sin conexión no disponible:", error)).catch(()=>{}),1200)},{once:true});
   });
 }

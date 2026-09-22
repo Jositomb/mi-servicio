@@ -9266,3 +9266,16 @@ body.light #vista-meta .meta-v152-mini-ring strong,
     animation:none!important;
   }
 }
+
+/* V169 · círculos y personaje visibles inmediatamente */
+#vista-inicio .orbita-grafico,
+#vista-inicio #animalProgreso{
+  opacity:1!important;
+}
+#vista-inicio.v167-animar .orbita-grafico{
+  animation-duration:.20s!important;
+  animation-delay:0s!important;
+}
+#vista-inicio #animalProgreso img{
+  content-visibility:auto;
+}

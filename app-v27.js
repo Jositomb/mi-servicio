@@ -7280,7 +7280,7 @@ function mostrarVersionPublicadaV156() {
 
     const etiqueta = document.createElement("div");
     etiqueta.id = "versionPublicadaV156";
-    etiqueta.textContent = "Versión publicada: V168";
+    etiqueta.textContent = "Versión publicada: V169";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
@@ -7642,3 +7642,24 @@ window.addEventListener("load",()=>{
     setTimeout(tareasRedDiferidasV168,1400);
   }
 },{once:true});
+
+// V169 · Prioridad visual a círculos y personaje.
+// Usa exclusivamente las funciones existentes y datos locales.
+function pintarInicioPrioritarioV169(){
+  try{
+    if(typeof actualizarInicio==="function") actualizarInicio();
+  }catch(e){}
+  try{
+    if(typeof actualizarGraficoInicio==="function") actualizarGraficoInicio();
+  }catch(e){}
+  try{
+    if(typeof actualizarPersonajeProgreso==="function") actualizarPersonajeProgreso();
+  }catch(e){}
+}
+if(document.readyState==="loading"){
+  document.addEventListener("DOMContentLoaded",()=>{
+    requestAnimationFrame(()=>pintarInicioPrioritarioV169());
+  },{once:true});
+}else{
+  requestAnimationFrame(()=>pintarInicioPrioritarioV169());
+}
