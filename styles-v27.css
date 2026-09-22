@@ -9367,3 +9367,9 @@ body.light #vista-meta .meta-v152-mini-ring strong,
   display:grid;place-items:center;background:rgba(127,127,127,.09);
   font-weight:800;color:var(--texto-secundario,#74767d)
 }
+
+
+/* V174 · Atajo Apple Calendar */
+#pegarCalendarioAtajoV174{
+  margin-top:-2px;
+}

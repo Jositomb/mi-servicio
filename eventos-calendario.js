@@ -1,4 +1,4 @@
-/* Mi Servicio · eventos-calendario.js · V173
+/* Mi Servicio · eventos-calendario.js · V174
    Agenda personal local preparada para futura importación/sincronización con Apple Calendar.
    No modifica registros, Meta, OneDrive ni la lógica de actividad.
 */
@@ -527,6 +527,174 @@
     }
   }
 
+
+  // =========================================================
+  // V174 · RECEPCIÓN DESDE ATAJOS DE APPLE
+  // El bloque viaja en Base64 dentro del fragmento #mscal=...
+  // El fragmento no se envía al servidor y se limpia al recibirlo.
+  // =========================================================
+
+  function base64AUTF8V174(valor){
+    try{
+      const bin=atob(String(valor||"").trim());
+      const bytes=Uint8Array.from(bin,c=>c.charCodeAt(0));
+      return new TextDecoder("utf-8").decode(bytes);
+    }catch(e){
+      try{return decodeURIComponent(escape(atob(String(valor||"").trim())))}catch(_){return ""}
+    }
+  }
+
+  function parseAtajoV174(texto){
+    const lineas=String(texto||"")
+      .replace(/\r\n/g,"\n")
+      .replace(/\r/g,"\n")
+      .split("\n");
+
+    const salida=[];
+    let ultimo=null;
+
+    for(const raw of lineas){
+      if(!raw.trim())continue;
+
+      const partes=raw.split("¦");
+      const fecha=(partes[0]||"").trim();
+
+      // Si un título contenía un salto de línea, lo añadimos al evento anterior.
+      if(!/^\d{4}-\d{2}-\d{2}$/.test(fecha)){
+        if(ultimo)ultimo.titulo=`${ultimo.titulo} ${raw.trim()}`.trim().slice(0,100);
+        continue;
+      }
+
+      const hora=(partes[1]||"").trim();
+      const flag=(partes[2]||"").trim().toLowerCase();
+      const titulo=partes.slice(3).join("¦").trim().slice(0,100);
+      if(!titulo)continue;
+
+      const todoElDia=["1","true","yes","si","sí","s","y"].includes(flag);
+      const evento=normalizarEvento({
+        id:`apple-shortcut-${fecha}-${hora}-${salida.length}`,
+        fecha,
+        hora:todoElDia?"":hora,
+        todoElDia,
+        titulo,
+        tipo:tipoAutomaticoV173(titulo),
+        origen:"apple",
+        uid:`shortcut-${fecha}-${hora}-${salida.length}`,
+        calendario:"Apple Calendar"
+      });
+
+      if(evento){
+        salida.push(evento);
+        ultimo=evento;
+      }
+    }
+
+    // Deduplicación prudente.
+    const mapa=new Map();
+    salida.forEach(e=>{
+      const k=`${e.fecha}|${e.hora}|${e.todoElDia?"1":"0"}|${e.titulo}`;
+      if(!mapa.has(k))mapa.set(k,e);
+    });
+    return [...mapa.values()];
+  }
+
+  function aplicarAtajoV174(textoCodificado,mostrarMensaje=true){
+    const limpio=String(textoCodificado||"").trim();
+    if(!limpio)return false;
+
+    // Permite tanto Base64 (modo normal) como texto plano para el botón Pegar.
+    const decodificado=/^\d{4}-\d{2}-\d{2}¦/.test(limpio)
+      ? limpio
+      : base64AUTF8V174(limpio);
+
+    const importados=parseAtajoV174(decodificado);
+    if(!importados.length){
+      if(mostrarMensaje)estadoImportV173("No encontré eventos válidos enviados por el Atajo.",false);
+      return false;
+    }
+
+    // Conserva todos los eventos manuales. Sustituye únicamente los de Apple.
+    const manuales=leer().filter(e=>e.origen!=="apple");
+    if(!guardar([...manuales,...importados])){
+      if(mostrarMensaje)estadoImportV173("No se pudieron guardar los eventos del Atajo.",false);
+      return false;
+    }
+
+    localStorage.setItem(KEY_IMPORT_V173,JSON.stringify({
+      total:importados.length,
+      fecha:new Date().toISOString(),
+      archivo:"Atajo iPhone"
+    }));
+
+    if(mostrarMensaje){
+      estadoImportV173(
+        `${importados.length} ${importados.length===1?"evento recibido":"eventos recibidos"} desde el Atajo.`,
+        true
+      );
+    }
+    refrescar();
+    return true;
+  }
+
+  function datosAtajoEnURLV174(){
+    try{
+      // Principal: fragmento #mscal=... para que los eventos no viajen al servidor.
+      const hash=location.hash.startsWith("#")?location.hash.slice(1):location.hash;
+      const hp=new URLSearchParams(hash);
+      let dato=hp.get("mscal");
+
+      // Compatibilidad por si alguna vez se abre como parámetro normal.
+      if(!dato){
+        const qp=new URLSearchParams(location.search);
+        dato=qp.get("mscal");
+      }
+      return dato||"";
+    }catch(e){return ""}
+  }
+
+  function limpiarDatosAtajoURLV174(){
+    try{
+      const url=new URL(location.href);
+      url.hash="";
+      url.searchParams.delete("mscal");
+      history.replaceState(null,"",url.pathname+(url.search||""));
+    }catch(e){}
+  }
+
+  function recibirAtajoURLV174(){
+    const dato=datosAtajoEnURLV174();
+    if(!dato)return false;
+    const ok=aplicarAtajoV174(dato,false);
+    limpiarDatosAtajoURLV174();
+
+    if(ok){
+      // Mensaje visible tras limpiar la URL.
+      setTimeout(()=>{
+        const st=leerEstadoImportV173();
+        const n=Number(st?.total||0);
+        estadoImportV173(
+          `${n} ${n===1?"evento recibido":"eventos recibidos"} desde el Atajo.`,
+          true
+        );
+      },120);
+    }
+    return ok;
+  }
+
+  async function pegarDesdeAtajoV174(){
+    let texto="";
+    try{
+      if(navigator.clipboard?.readText){
+        texto=await navigator.clipboard.readText();
+      }
+    }catch(e){}
+
+    if(!texto){
+      texto=prompt("Pega aquí los datos copiados por el Atajo:","")||"";
+    }
+    if(texto)aplicarAtajoV174(texto,true);
+  }
+
   function instalarImportadorV173(){
     const btn=document.getElementById("importarCalendarioAppleV173");
     const input=document.getElementById("archivoCalendarioAppleV173");
@@ -537,7 +705,11 @@
       input.value="";
     });
     document.getElementById("quitarCalendarioAppleV173")?.addEventListener("click",quitarImportadosV173);
-    mostrarEstadoImportV173();
+    document.getElementById("pegarCalendarioAtajoV174")?.addEventListener("click",pegarDesdeAtajoV174);
+
+    // Si la app llegó desde el Atajo, importa primero y limpia la URL.
+    const recibido=recibirAtajoURLV174();
+    if(!recibido)mostrarEstadoImportV173();
   }
 
   function instalar(){

@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=17301"
+        href="./styles-v27.css?v=17401"
     >
 
 
@@ -120,7 +120,7 @@
 </style>
 
     <meta name="mi-servicio-version" content="V151-META-REORGANIZADA">
-<meta name="mi-servicio-build" content="V173-17301">
+<meta name="mi-servicio-build" content="V174-17401">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -1120,6 +1120,10 @@
                     </button>
                     <input id="archivoCalendarioAppleV173" type="file" accept=".ics,text/calendar" hidden>
 
+                    <button id="pegarCalendarioAtajoV174" class="boton-secundario" type="button">
+                        Pegar desde Atajo
+                    </button>
+
                     <button id="quitarCalendarioAppleV173" class="boton-secundario" type="button">
                         Quitar eventos importados
                     </button>
@@ -1128,7 +1132,7 @@
                         Todavía no has importado un calendario.
                     </p>
                     <small class="v173-calendario-ayuda">
-                        Los eventos que hayas añadido manualmente se conservan. Al volver a importar, solo se sustituyen los eventos procedentes del calendario.
+                        Los eventos que hayas añadido manualmente se conservan. El Atajo o una nueva importación sustituyen solo los eventos procedentes de Apple Calendar.
                     </small>
                 </article>
             </section>
@@ -1488,13 +1492,13 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=17301" defer></script>
-<script src="./eventos-calendario.js?v=17301" defer></script>
+<script src="./app-v27.js?v=17401" defer></script>
+<script src="./eventos-calendario.js?v=17401" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    window.addEventListener("load",()=>{setTimeout(()=>navigator.serviceWorker.register("./sw.js?v=17301", { scope: "./" })
+    window.addEventListener("load",()=>{setTimeout(()=>navigator.serviceWorker.register("./sw.js?v=17401", { scope: "./" })
       .catch(error => console.warn("Modo sin conexión no disponible:", error)).catch(()=>{}),1200)},{once:true});
   });
 }
