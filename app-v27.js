@@ -7280,7 +7280,7 @@ function mostrarVersionPublicadaV156() {
 
     const etiqueta = document.createElement("div");
     etiqueta.id = "versionPublicadaV156";
-    etiqueta.textContent = "Versión publicada: V167";
+    etiqueta.textContent = "Versión publicada: V168";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
@@ -7609,3 +7609,36 @@ document.addEventListener("click",e=>{
   const destino=e.target.closest?.('[data-vista="inicio"],[data-tab="inicio"],a[href="#inicio"]');
   if(destino)setTimeout(animarInicioV167,40);
 });
+
+// =========================================================
+// V168 · ARRANQUE RÁPIDO / OFFLINE-FIRST
+// La interfaz y localStorage mandan al abrir.
+// Red, clima y sincronización se despiertan después.
+// =========================================================
+window.miServicioArranqueRapidoV168 = true;
+
+function tareasRedDiferidasV168(){
+  if(document.visibilityState==="hidden") return;
+  // Clima: si la función existe, refresca después de mostrar ya la app.
+  try{
+    if(typeof actualizarTiempoInicio==="function"){
+      setTimeout(()=>{ try{ actualizarTiempoInicio(); }catch(e){} },350);
+    }
+  }catch(e){}
+  // Sincronización: solo si existe y sin bloquear la primera pintura.
+  try{
+    const sync =
+      (typeof sincronizarConOneDrive==="function" && sincronizarConOneDrive) ||
+      (typeof sincronizarOneDrive==="function" && sincronizarOneDrive) ||
+      null;
+    if(sync) setTimeout(()=>{ try{ sync(); }catch(e){} },900);
+  }catch(e){}
+}
+
+window.addEventListener("load",()=>{
+  if("requestIdleCallback" in window){
+    requestIdleCallback(tareasRedDiferidasV168,{timeout:2200});
+  }else{
+    setTimeout(tareasRedDiferidasV168,1400);
+  }
+},{once:true});

@@ -1,9 +1,9 @@
-const CACHE = "mi-servicio-v16701";
+const CACHE = "mi-servicio-v16801";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles-v27.css?v=16701",
-  "./app-v27.js?v=16701",
+  "./styles-v27.css?v=16801",
+  "./app-v27.js?v=16801",
   "./icon-apple.png",
   "./manifest.webmanifest",
   "./core/config.js",
@@ -39,38 +39,55 @@ self.addEventListener("activate", event => {
   );
 });
 
+
 self.addEventListener("fetch", event => {
-  const req = event.request;
-  if (req.method !== "GET") return;
+  const req=event.request;
+  if(req.method!=="GET") return;
+  const url=new URL(req.url);
+  if(url.origin!==self.location.origin) return;
 
-  const url = new URL(req.url);
-  if (url.origin !== self.location.origin) return;
-
-  // Red primero: una mejora publicada se recoge sin cambiar números a mano.
-  // Sin cobertura: se usa automáticamente la última copia guardada.
-  event.respondWith(
-    fetch(req)
-      .then(res => {
-        if (res && res.ok) {
-          const copy = res.clone();
-          caches.open(CACHE).then(cache => {
-            cache.put(req, copy);
-            if (req.mode === "navigate") {
-              cache.put("./index.html", res.clone());
-            }
-          });
+  // Navegación: intenta red, pero no deja la app inutilizable sin cobertura.
+  if(req.mode==="navigate"){
+    event.respondWith((async()=>{
+      const cached=await caches.match("./index.html");
+      const network=fetch(req).then(async res=>{
+        if(res && res.ok){
+          const c=await caches.open(CACHE);
+          c.put("./index.html",res.clone());
         }
         return res;
-      })
-      .catch(async () => {
-        const exact = await caches.match(req);
-        if (exact) return exact;
+      }).catch(()=>null);
+      // Con señal mala no esperamos indefinidamente si ya tenemos la app local.
+      if(cached){
+        const timeout=new Promise(resolve=>setTimeout(()=>resolve(cached),650));
+        return (await Promise.race([network,timeout])) || cached;
+      }
+      return (await network) || Response.error();
+    })());
+    return;
+  }
 
-        if (req.mode === "navigate") {
-          const index = await caches.match("./index.html");
-          if (index) return index;
+  // Assets propios: cache primero, actualización silenciosa detrás.
+  event.respondWith((async()=>{
+    const cached=await caches.match(req);
+    if(cached){
+      event.waitUntil(fetch(req).then(async res=>{
+        if(res && res.ok){
+          const c=await caches.open(CACHE);
+          await c.put(req,res.clone());
         }
-        return Response.error();
-      })
-  );
+      }).catch(()=>{}));
+      return cached;
+    }
+    try{
+      const res=await fetch(req);
+      if(res && res.ok){
+        const c=await caches.open(CACHE);
+        await c.put(req,res.clone());
+      }
+      return res;
+    }catch(e){
+      return Response.error();
+    }
+  })());
 });
