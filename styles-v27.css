@@ -9325,3 +9325,56 @@ html.light #vista-meta .meta-v152-bocadillo,body.light #vista-meta .meta-v152-bo
  #vista-inicio #escenaProgresoV162 .personaje-camino-v162 img{max-width:108px!important;max-height:150px!important}
  #vista-inicio #escenaProgresoV162 .frase-camino-v162{font-size:18px!important}
 }
+
+/* V164 · paisaje real como fondo; datos y personaje siguen dinámicos */
+#vista-inicio #escenaProgresoV162{
+ height:340px!important;
+ margin:2px 0 9px!important;
+ border-radius:24px!important;
+ overflow:hidden!important;
+ background-image:
+   linear-gradient(180deg,rgba(3,27,48,.02),rgba(3,30,26,.10)),
+   url("./camino-fondo-v164.jpg")!important;
+ background-size:cover!important;
+ background-position:center center!important;
+ box-shadow:0 10px 26px rgba(24,66,89,.17)!important;
+}
+#vista-inicio #escenaProgresoV162 .cielo-v162,
+#vista-inicio #escenaProgresoV162 .montanas-v162,
+#vista-inicio #escenaProgresoV162 .suelo-v162{display:none!important}
+
+#vista-inicio #escenaProgresoV162 .frase-camino-v162{
+ left:15px!important;top:18px!important;width:35%!important;
+ font-size:21px!important;line-height:1.04!important;
+ color:#fff!important;font-style:italic!important;
+ text-shadow:0 2px 7px rgba(0,0,0,.45)!important;
+}
+#vista-inicio #escenaProgresoV162 .camino-v162{
+ left:62px!important;right:65px!important;bottom:38px!important;height:5px!important;
+ background:rgba(255,255,255,.42)!important;
+ transform:rotate(1.2deg)!important;
+ box-shadow:0 0 8px rgba(255,255,255,.35)!important;
+}
+#vista-inicio #escenaProgresoV162 .camino-hecho-v162{
+ background:linear-gradient(90deg,#28d8ff,#9d8cff 52%,#ff4da4)!important;
+ box-shadow:0 0 9px rgba(85,205,255,.9)!important;
+}
+#vista-inicio #escenaProgresoV162 .personaje-camino-v162{
+ bottom:39px!important;width:120px!important;height:170px!important;
+ z-index:7!important;
+}
+#vista-inicio #escenaProgresoV162 .personaje-camino-v162 img{
+ max-width:116px!important;max-height:166px!important;
+ filter:drop-shadow(0 8px 7px rgba(0,0,0,.28))!important;
+}
+#vista-inicio #escenaProgresoV162 .cartel-v162{
+ bottom:17px!important;z-index:8!important;
+ background:linear-gradient(#d29759,#92572d)!important;
+ border:1px solid rgba(76,42,18,.42)!important;
+ box-shadow:0 4px 9px rgba(0,0,0,.28)!important;
+}
+#vista-inicio #escenaProgresoV162 .cartel-horas-v162{left:5px!important}
+#vista-inicio #escenaProgresoV162 .cartel-meta-v162{right:5px!important}
+
+/* Conservamos el resumen compacto V163 exactamente en su concepto */
+#vista-inicio #resumenHoyV145{height:86px!important;min-height:86px!important;max-height:86px!important}

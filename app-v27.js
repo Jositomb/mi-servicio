@@ -7280,7 +7280,7 @@ function mostrarVersionPublicadaV156() {
 
     const etiqueta = document.createElement("div");
     etiqueta.id = "versionPublicadaV156";
-    etiqueta.textContent = "Versión publicada: V163";
+    etiqueta.textContent = "Versión publicada: V164";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
@@ -7630,7 +7630,7 @@ function sincronizarInicioV162(){
 document.addEventListener("DOMContentLoaded",()=>{setTimeout(sincronizarInicioV162,1100);setTimeout(sincronizarInicioV162,2100)});
 
 // V162 — actualización fiable del acceso directo sin borrar datos.
-const BUILD_V162="16301";
+const BUILD_V162="16401";
 async function comprobarBuildV162(){
  try{
    const r=await fetch("./version.json?t="+Date.now(),{cache:"no-store"});
