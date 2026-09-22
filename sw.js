@@ -1,9 +1,9 @@
-const CACHE = "mi-servicio-v16101";
+const CACHE = "mi-servicio-v16201";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles-v27.css?v=16101",
-  "./app-v27.js?v=16101",
+  "./styles-v27.css?v=16201",
+  "./app-v27.js?v=16201",
   "./icon-apple.png",
   "./manifest.webmanifest",
   "./core/config.js",
@@ -40,37 +40,14 @@ self.addEventListener("activate", event => {
 });
 
 self.addEventListener("fetch", event => {
-  const req = event.request;
-  if (req.method !== "GET") return;
-
-  const url = new URL(req.url);
-  if (url.origin !== self.location.origin) return;
-
-  // Red primero: una mejora publicada se recoge sin cambiar números a mano.
-  // Sin cobertura: se usa automáticamente la última copia guardada.
-  event.respondWith(
-    fetch(req)
-      .then(res => {
-        if (res && res.ok) {
-          const copy = res.clone();
-          caches.open(CACHE).then(cache => {
-            cache.put(req, copy);
-            if (req.mode === "navigate") {
-              cache.put("./index.html", res.clone());
-            }
-          });
-        }
-        return res;
-      })
-      .catch(async () => {
-        const exact = await caches.match(req);
-        if (exact) return exact;
-
-        if (req.mode === "navigate") {
-          const index = await caches.match("./index.html");
-          if (index) return index;
-        }
-        return Response.error();
-      })
-  );
+ const req=event.request;if(req.method!=="GET")return;
+ const url=new URL(req.url);if(url.origin!==self.location.origin)return;
+ if(req.mode==="navigate" || url.pathname.endsWith("/version.json")){
+   event.respondWith(fetch(req,{cache:"no-store"}).catch(()=>caches.match("./index.html")));
+   return;
+ }
+ event.respondWith(fetch(req,{cache:"no-store"}).then(res=>{
+   if(res&&res.ok){const c=res.clone();caches.open(CACHE).then(cache=>cache.put(req,c));}
+   return res;
+ }).catch(()=>caches.match(req)));
 });

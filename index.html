@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=16101"
+        href="./styles-v27.css?v=16201"
     >
 
 
@@ -120,7 +120,7 @@
 </style>
 
     <meta name="mi-servicio-version" content="V151-META-REORGANIZADA">
-<meta name="mi-servicio-build" content="V161-16101">
+<meta name="mi-servicio-build" content="V162-16201">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -259,13 +259,14 @@
                 </article>
             </section>
             <!-- OBJETIVO -->
-            <section id="caminoProgresoV161" class="camino-v161" aria-label="Progreso mensual">
-  <div class="camino-frase-v161" id="caminoFraseV161">¡Cada paso cuenta<br>para Jehová!</div>
-  <div class="poste-v161 poste-inicio-v161"><strong id="caminoHorasV161">0 h</strong><span>llevas</span></div>
-  <div class="sendero-v161"><div id="senderoHechoV161" class="sendero-hecho-v161"></div></div>
-  <div id="caminoPersonajeV161" class="camino-personaje-v161"></div>
-  <div class="poste-v161 poste-meta-v161"><span class="bandera-v161">🏁</span><strong id="caminoMetaV161">55 h</strong><span>meta</span></div>
-</section><section class="objetivo-legado-v161" aria-hidden="true" class="seccion">
+            <section id="escenaProgresoV162" class="escena-progreso-v162" aria-label="Camino hacia la meta mensual">
+  <div class="cielo-v162"></div><div class="montanas-v162"></div><div class="suelo-v162"></div>
+  <div class="frase-camino-v162">¡Cada paso cuenta<br>para Jehová!</div>
+  <div class="cartel-v162 cartel-horas-v162"><strong id="horasCaminoV162">0 h</strong><span>llevas</span></div>
+  <div class="camino-v162"><div id="caminoHechoV162" class="camino-hecho-v162"></div><i></i><i></i><i></i><i></i><i></i></div>
+  <div id="personajeCaminoV162" class="personaje-camino-v162"></div>
+  <div class="cartel-v162 cartel-meta-v162"><b>🏁</b><strong id="metaCaminoV162">—</strong><span>meta</span></div>
+</section><section class="objetivo-legado-v162" aria-hidden="true">
                 <div class="titulo-seccion">
                     <h2>
                         Objetivo
@@ -342,14 +343,11 @@
         
         
             
-            <section id="resumenHoyV145" class="v145-hoy"><div id="resumenCompactoV161" class="resumen-compacto-v161">
-  <div id="resumenPersonajeV161" class="resumen-personaje-v161"></div>
-  <div class="resumen-texto-v161">
-    <small>RESUMEN DE HOY</small>
-    <strong id="resumenTituloV161">Preparando el día…</strong>
-    <span id="resumenDetalleV161"></span>
-  </div>
-  <div id="resumenFaltaV161" class="resumen-falta-v161"></div>
+            <section id="resumenHoyV145" class="v145-hoy"><div id="resumenV162" class="resumen-v162">
+ <div class="resumen-sol-v162" id="resumenIconoV162">☀️</div>
+ <div class="resumen-copy-v162"><small>RESUMEN DE HOY</small><strong id="resumenTituloV162">Preparando el día…</strong><span id="resumenFaltaV162"></span><em id="resumenDetalleV162"></em></div>
+ <div id="personajeResumenV162" class="personaje-resumen-v162"></div>
+ <div class="hoy-v162">Hoy</div>
 </div>
                 <div class="v145-hoy-icono" data-v145-icono>☀️</div>
                 <div class="v145-hoy-texto">
@@ -1423,12 +1421,12 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=16101" defer></script>
+<script src="./app-v27.js?v=16201" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js?v=16101", { scope: "./" })
+    navigator.serviceWorker.register("./sw.js?v=16201", { scope: "./", updateViaCache: "none" }).then(r=>r.update())
       .catch(error => console.warn("Modo sin conexión no disponible:", error));
   });
 }

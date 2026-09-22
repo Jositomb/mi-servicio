@@ -9196,75 +9196,29 @@ html.light #vista-meta .meta-v152-bocadillo,body.light #vista-meta .meta-v152-bo
   min-height:0!important;
 }
 
-/* =========================================================
- V161 · INICIO: camino limpio acordado
- ========================================================= */
-#vista-inicio .objetivo-legado-v161{
- position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;
- clip-path:inset(50%)!important;opacity:0!important;pointer-events:none!important;
+/* V162 — Inicio según la composición aprobada */
+#vista-inicio .objetivo-legado-v162{display:none!important}
+#vista-inicio #escenaProgresoV162{
+ position:relative;height:390px;margin:0 -4px 8px;border-radius:26px;overflow:hidden;
+ background:linear-gradient(180deg,#0e5b91 0%,#3f91bd 35%,#f5a85f 62%,#183d2f 100%);
+ box-shadow:inset 0 0 55px rgba(0,0,0,.18);
 }
-#vista-inicio #caminoProgresoV161{
- position:relative;height:190px;margin:2px 0 10px;border-radius:0;overflow:hidden;
- background:transparent!important;
-}
-#vista-inicio .camino-frase-v161{
- position:absolute;left:6px;top:20px;width:30%;z-index:4;
- font-size:17px;line-height:1.08;font-weight:800;font-style:italic;
-}
-#vista-inicio .sendero-v161{
- position:absolute;left:55px;right:55px;bottom:30px;height:4px;border-radius:999px;
- background:rgba(120,120,128,.18);z-index:2;
-}
-#vista-inicio .sendero-hecho-v161{
- height:100%;width:0;border-radius:999px;
- background:linear-gradient(90deg,#4d9dff,#77b8ff 45%,#ef82bd);
- transition:width .55s ease;
-}
-#vista-inicio .poste-v161{
- position:absolute;bottom:12px;z-index:5;min-width:55px;padding:5px 7px;border-radius:6px;
- display:flex;flex-direction:column;align-items:center;
- background:linear-gradient(#b87d48,#8d572e);color:#21140b;
- box-shadow:0 3px 7px rgba(0,0,0,.18)
-}
-#vista-inicio .poste-inicio-v161{left:4px}
-#vista-inicio .poste-meta-v161{right:4px}
-#vista-inicio .poste-v161 strong{font-size:16px;line-height:1}
-#vista-inicio .poste-v161 span{font-size:9px;font-weight:800}
-#vista-inicio .poste-meta-v161 .bandera-v161{position:absolute;top:-27px;font-size:25px}
-#vista-inicio .camino-personaje-v161{
- position:absolute;left:55px;bottom:30px;width:118px;height:145px;z-index:3;
- transform:translateX(-50%);display:flex;align-items:flex-end;justify-content:center;
- transition:left .65s ease;
-}
-#vista-inicio .camino-personaje-v161 img{
- max-width:100%;max-height:100%;object-fit:contain;
- filter:drop-shadow(0 7px 7px rgba(0,0,0,.16))
-}
-
-/* Resumen de hoy: estrecho y horizontal */
-#vista-inicio #resumenHoyV145{
- width:calc(100% - 34px)!important;max-width:620px!important;margin:7px auto 10px!important;
- min-height:0!important;padding:8px 11px!important;border-radius:18px!important;
-}
-#vista-inicio #resumenHoyV145>*:not(#resumenCompactoV161){display:none!important}
-#vista-inicio .resumen-compacto-v161{
- min-height:64px;display:grid;grid-template-columns:66px minmax(0,1fr) auto;
- gap:9px;align-items:center;
-}
-#vista-inicio .resumen-personaje-v161{
- width:66px;height:58px;display:flex;align-items:flex-end;justify-content:center;
-}
-#vista-inicio .resumen-personaje-v161 img{max-width:100%;max-height:100%;object-fit:contain}
-#vista-inicio .resumen-texto-v161{min-width:0;display:flex;flex-direction:column;gap:2px}
-#vista-inicio .resumen-texto-v161 small{font-size:8px;letter-spacing:1.2px;font-weight:800;opacity:.55}
-#vista-inicio .resumen-texto-v161 strong{font-size:13px;line-height:1.15}
-#vista-inicio .resumen-texto-v161 span{font-size:10px;opacity:.65;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#vista-inicio .resumen-falta-v161{
- font-size:11px;line-height:1.15;text-align:right;font-weight:700;max-width:92px;
-}
-@media(max-width:390px){
- #vista-inicio #caminoProgresoV161{height:178px}
- #vista-inicio .camino-personaje-v161{width:108px;height:135px}
- #vista-inicio .camino-frase-v161{font-size:16px}
- #vista-inicio #resumenHoyV145{width:calc(100% - 22px)!important}
-}
+#vista-inicio .cielo-v162{position:absolute;inset:0;background:radial-gradient(circle at 72% 45%,#ffe48b 0 4%,rgba(255,190,80,.62) 5%,transparent 22%),linear-gradient(180deg,rgba(5,45,90,.15),transparent 55%)}
+#vista-inicio .montanas-v162{position:absolute;left:-8%;right:-8%;bottom:91px;height:145px;opacity:.7;background:linear-gradient(145deg,transparent 0 23%,#6b7180 24% 34%,transparent 35%),linear-gradient(215deg,transparent 0 28%,#596b72 29% 41%,transparent 42%),linear-gradient(160deg,transparent 0 45%,#324f50 46% 59%,transparent 60%)}
+#vista-inicio .suelo-v162{position:absolute;left:-5%;right:-5%;bottom:-20px;height:150px;background:radial-gradient(ellipse at center,#9b7645 0 18%,#496137 38%,#17392c 72%);transform:perspective(300px) rotateX(18deg)}
+#vista-inicio .frase-camino-v162{position:absolute;left:13px;top:26px;width:35%;z-index:4;color:#fff;font-size:23px;line-height:1.08;font-weight:800;font-style:italic;text-shadow:0 2px 8px rgba(0,0,0,.28)}
+#vista-inicio .camino-v162{position:absolute;left:57px;right:61px;bottom:50px;height:7px;border-radius:999px;background:rgba(255,255,255,.35);z-index:4;box-shadow:0 0 8px rgba(255,255,255,.35)}
+#vista-inicio .camino-hecho-v162{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#27d7ff,#a78cff,#ff4fa3);box-shadow:0 0 9px #70cfff}
+#vista-inicio .camino-v162 i{position:absolute;top:50%;width:14px;height:14px;border:2px solid #fff;border-radius:50%;transform:translate(-50%,-50%);background:#86b9e7}
+#vista-inicio .camino-v162 i:nth-of-type(1){left:12%}.camino-v162 i:nth-of-type(2){left:30%}.camino-v162 i:nth-of-type(3){left:50%}.camino-v162 i:nth-of-type(4){left:70%}.camino-v162 i:nth-of-type(5){left:88%}
+#vista-inicio .cartel-v162{position:absolute;bottom:29px;z-index:6;min-width:63px;padding:6px 7px 5px;border-radius:5px;text-align:center;background:linear-gradient(#c88a50,#8e5429);color:#21140c;box-shadow:0 4px 10px rgba(0,0,0,.3);border:1px solid rgba(75,39,14,.35)}
+#vista-inicio .cartel-v162 strong{display:block;font-size:20px;line-height:1}.cartel-v162 span{font-size:10px;font-weight:800}.cartel-horas-v162{left:4px}.cartel-meta-v162{right:4px}.cartel-meta-v162 b{position:absolute;left:17px;top:-34px;font-size:31px}
+#vista-inicio .personaje-camino-v162{position:absolute;left:57px;bottom:48px;width:165px;height:230px;z-index:5;display:flex;align-items:flex-end;justify-content:center;transform:translateX(-50%);transition:left .7s ease}
+#vista-inicio .personaje-camino-v162 img{max-width:100%;max-height:100%;object-fit:contain;filter:drop-shadow(0 9px 8px rgba(0,0,0,.3))}
+#vista-inicio #resumenHoyV145{width:calc(100% - 6px)!important;max-width:none!important;min-height:0!important;margin:7px 3px 8px!important;padding:0!important;border-radius:19px!important;overflow:hidden!important}
+#vista-inicio #resumenHoyV145>*:not(#resumenV162){display:none!important}
+#vista-inicio .resumen-v162{height:96px;display:grid;grid-template-columns:56px minmax(0,1fr) 110px 48px;gap:8px;align-items:center;padding:8px 10px;background:linear-gradient(110deg,rgba(4,42,66,.95),rgba(9,60,74,.88));color:#fff}
+#vista-inicio .resumen-sol-v162{font-size:34px;text-align:center}.resumen-copy-v162{display:flex;flex-direction:column;min-width:0}.resumen-copy-v162 small{font-size:8px;letter-spacing:1.3px;opacity:.7;font-weight:800}.resumen-copy-v162 strong{font-size:14px;line-height:1.2}.resumen-copy-v162 span{font-size:11px;margin-top:2px}.resumen-copy-v162 em{font-size:10px;margin-top:3px;font-style:normal;opacity:.8}
+#vista-inicio .personaje-resumen-v162{height:80px;display:flex;align-items:flex-end;justify-content:center}.personaje-resumen-v162 img{max-height:100%;max-width:100%;object-fit:contain}.hoy-v162{padding:7px 9px;border-radius:14px;background:rgba(37,126,230,.32);font-size:13px;font-weight:800;text-align:center}
+@media(prefers-color-scheme:light){#vista-inicio #escenaProgresoV162{box-shadow:0 10px 28px rgba(24,66,89,.15)}}
+@media(max-width:390px){#vista-inicio #escenaProgresoV162{height:355px}.personaje-camino-v162{width:145px!important;height:205px!important}.frase-camino-v162{font-size:20px!important}.resumen-v162{grid-template-columns:48px minmax(0,1fr) 82px 42px!important}.personaje-resumen-v162{height:68px!important}}

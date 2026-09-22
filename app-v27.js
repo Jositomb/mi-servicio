@@ -7280,7 +7280,7 @@ function mostrarVersionPublicadaV156() {
 
     const etiqueta = document.createElement("div");
     etiqueta.id = "versionPublicadaV156";
-    etiqueta.textContent = "Versión publicada: V161";
+    etiqueta.textContent = "Versión publicada: V162";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
@@ -7595,80 +7595,51 @@ function actualizarFechaCalendarioInicioV157(){
 }
 document.addEventListener("DOMContentLoaded", actualizarFechaCalendarioInicioV157);
 
-// =========================================================
-// V161 · camino mensual + personaje elegido + resumen compacto
-// =========================================================
-function registrosV161(){
-  if(window.estado&&Array.isArray(estado.registros)) return estado.registros;
-  if(Array.isArray(window.registros)) return window.registros;
-  try{
-    const r=localStorage.getItem("miServicio.registros");
-    return r?JSON.parse(r):[];
-  }catch(e){return []}
+// V162 — usa los cálculos YA existentes del Objetivo; no vuelve a calcular registros.
+function clonarPersonajeV162(id){
+ const dst=document.getElementById(id),src=document.querySelector("#animalProgreso img");
+ if(!dst||!src||!src.src)return;
+ let img=dst.querySelector("img");if(!img){img=document.createElement("img");img.alt="";dst.appendChild(img)}img.src=src.src;
 }
-function minutosRegistroV161(r){
-  if(Number.isFinite(Number(r.minutosTotales))) return Number(r.minutosTotales);
-  return (Number(r.horas)||0)*60+(Number(r.minutos)||0);
-}
-function totalMesV161(){
-  const d=new Date(), y=d.getFullYear(), m=d.getMonth();
-  return registrosV161().reduce((s,r)=>{
-    const raw=String(r.fecha||"").slice(0,10), p=raw.split("-");
-    if(p.length!==3)return s;
-    return Number(p[0])===y&&Number(p[1])===m+1?s+minutosRegistroV161(r):s;
-  },0);
-}
-function metaMensualV161(){
-  try{
-    const p=(window.estado&&estado.preferencias)||{};
-    if(Number(p.objetivoMensualMinutos)>0)return Number(p.objetivoMensualMinutos);
-    if(Number(p.objetivoPersonalizadoMinutos)>0)return Number(p.objetivoPersonalizadoMinutos);
-  }catch(e){}
-  /* La app mostraba 55 h como objetivo actual en Inicio */
-  return 55*60;
-}
-function srcPersonajeV161(){
- const o=document.querySelector("#animalProgreso img,#animalProgreso .personaje-cuerpo-img");
- return o&&o.src?o.src:"";
-}
-function ponerImgV161(id){
- const c=document.getElementById(id),src=srcPersonajeV161();if(!c||!src)return;
- let i=c.querySelector("img");if(!i){i=document.createElement("img");i.alt="";c.appendChild(i)}i.src=src;
-}
-function hoyISOv161(){
- const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-}
-function actualizarInicioV161(){
- const mins=totalMesV161(),meta=metaMensualV161(),pct=Math.max(0,Math.min(1,meta?mins/meta:0));
- const horas=mins/60,mh=meta/60;
- const he=document.getElementById("caminoHorasV161"),me=document.getElementById("caminoMetaV161");
- if(he)he.textContent=horas.toLocaleString("es-ES",{maximumFractionDigits:1})+" h";
- if(me)me.textContent=mh.toLocaleString("es-ES",{maximumFractionDigits:1})+" h";
- const hecho=document.getElementById("senderoHechoV161");if(hecho)hecho.style.width=(pct*100)+"%";
- const pj=document.getElementById("caminoPersonajeV161");
- if(pj)pj.style.left=`calc(55px + (100% - 110px) * ${pct})`;
- ponerImgV161("caminoPersonajeV161");
- ponerImgV161("resumenPersonajeV161");
-
- const falta=Math.max(0,meta-mins),fh=Math.floor(falta/60),fm=Math.round(falta%60);
- const faltaEl=document.getElementById("resumenFaltaV161");
- if(faltaEl)faltaEl.textContent=falta<=0?"Meta del mes alcanzada ✨":`Faltan ${fh} h${fm?" "+fm+" min":""} este mes`;
-
- const hoy=hoyISOv161(), rs=registrosV161().filter(r=>String(r.fecha||"").slice(0,10)===hoy);
- const agenda=(window.estado&&estado.agendaSalidas)||{};
- const plan=agenda[hoy];
- let titulo="Hoy toca descansar",detalle="Sin actividad planificada";
- if(plan){
-   let realizado=false;
-   try{realizado=typeof planRealizadoV141==="function"?planRealizadoV141(hoy,plan):rs.length>0}catch(e){realizado=rs.length>0}
-   if(realizado){titulo="¡Actividad realizada! ✨";detalle="Buen trabajo. Cada paso cuenta."}
-   else{
-     titulo="¡Preparado para hoy!";
-     const a=plan.tipo||plan.actividad||"Actividad",c=plan.companero||plan["compañero"]||plan.acompanante||plan.persona||"";
-     detalle=a+(c?" · con "+c:"");
+function sincronizarInicioV162(){
+ const horas=document.getElementById("valorObjetivo")?.textContent?.trim()||"0 h";
+ const pctText=document.getElementById("porcentajeObjetivo")?.textContent||"0%";
+ const pct=Math.max(0,Math.min(100,parseFloat(pctText)||0));
+ const objetivo=Number(estado?.preferencias?.objetivoMensualMinutos||0);
+ const meta=objetivo>0?formatearTiempo(objetivo):"—";
+ const h=document.getElementById("horasCaminoV162"),m=document.getElementById("metaCaminoV162"),bar=document.getElementById("caminoHechoV162"),pj=document.getElementById("personajeCaminoV162");
+ if(h)h.textContent=horas;if(m)m.textContent=meta;if(bar)bar.style.width=pct+"%";if(pj)pj.style.left=`calc(57px + (100% - 118px) * ${pct/100})`;
+ clonarPersonajeV162("personajeCaminoV162");clonarPersonajeV162("personajeResumenV162");
+ const ahora=new Date();
+ let totalMes=0;
+ const listaMes=Array.isArray(estado && estado.registros)?estado.registros:[];
+ listaMes.forEach(function(r){
+   const d=new Date(String(r.fecha||"")+"T12:00:00");
+   if(!isNaN(d) && d.getFullYear()===ahora.getFullYear() && d.getMonth()===ahora.getMonth()){
+     totalMes += Number(r.minutosTotales) || ((Number(r.horas)||0)*60 + (Number(r.minutos)||0));
    }
- }else if(rs.length){titulo="¡Buen trabajo hoy! ✨";detalle="Ya tienes actividad registrada";}
- const t=document.getElementById("resumenTituloV161"),d=document.getElementById("resumenDetalleV161");
- if(t)t.textContent=titulo;if(d)d.textContent=detalle;
+ });
+ const falta=Math.max(0,objetivo-totalMes);
+ const fe=document.getElementById("resumenFaltaV162");if(fe)fe.textContent=objetivo<=0?"Configura tu meta mensual":falta<=0?"Meta mensual alcanzada ✨":`Te faltan ${formatearTiempo(falta)} para completar el mes.`;
+ const old=document.getElementById("resumenHoyV145");
+ const t=old?.querySelector("[data-v145-titulo]")?.textContent?.trim(),d=old?.querySelector("[data-v145-detalle]")?.textContent?.trim(),ic=old?.querySelector("[data-v145-icono]")?.textContent?.trim();
+ if(t)document.getElementById("resumenTituloV162").textContent=t;
+ if(d)document.getElementById("resumenDetalleV162").textContent=d;
+ if(ic)document.getElementById("resumenIconoV162").textContent=ic;
 }
-document.addEventListener("DOMContentLoaded",()=>{setTimeout(actualizarInicioV161,700);setTimeout(actualizarInicioV161,1600)});
+document.addEventListener("DOMContentLoaded",()=>{setTimeout(sincronizarInicioV162,1100);setTimeout(sincronizarInicioV162,2100)});
+
+// V162 — actualización fiable del acceso directo sin borrar datos.
+const BUILD_V162="16201";
+async function comprobarBuildV162(){
+ try{
+   const r=await fetch("./version.json?t="+Date.now(),{cache:"no-store"});
+   if(!r.ok)return;
+   const v=await r.json();
+   const anterior=sessionStorage.getItem("miServicio.build.v162");
+   sessionStorage.setItem("miServicio.build.v162",v.build);
+   if(anterior && anterior!==v.build) location.reload();
+ }catch(e){}
+}
+window.addEventListener("pageshow",comprobarBuildV162);
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")comprobarBuildV162()});
