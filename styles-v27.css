@@ -9343,3 +9343,27 @@ body.light #vista-meta .meta-v152-mini-ring strong,
   .v172-eventos-add{background:rgba(167,139,250,.12);color:#b59bff}
   #vista-inicio .calendario-dia-evento-v172{color:#b59bff}
 }
+
+
+/* =========================================================
+   V173 · CALENDARIO APPLE (.ICS)
+   ========================================================= */
+.v173-calendario-apple{display:grid;gap:12px}
+.v173-calendario-head{display:flex;align-items:flex-start;gap:12px}
+.v173-calendario-icono{
+  width:42px;height:42px;border-radius:13px;display:grid;place-items:center;
+  background:rgba(77,139,255,.12);font-size:22px;flex:0 0 auto
+}
+.v173-calendario-head strong{display:block;font-size:16px;margin:1px 0 4px}
+.v173-calendario-head p{margin:0;color:var(--texto-secundario,#74767d);font-size:13px;line-height:1.35}
+.v173-calendario-estado{
+  margin:2px 0 0;padding:10px 12px;border-radius:12px;
+  background:rgba(127,127,127,.08);font-size:13px;color:var(--texto-secundario,#74767d)
+}
+.v173-calendario-estado.v173-ok{background:rgba(52,199,89,.10);color:inherit}
+.v173-calendario-ayuda{color:var(--texto-secundario,#74767d);line-height:1.35}
+.v173-evento-apple{
+  margin-left:auto;min-width:30px;height:30px;border-radius:10px;
+  display:grid;place-items:center;background:rgba(127,127,127,.09);
+  font-weight:800;color:var(--texto-secundario,#74767d)
+}

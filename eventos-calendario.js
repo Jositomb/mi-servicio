@@ -1,4 +1,4 @@
-/* Mi Servicio · eventos-calendario.js · V172
+/* Mi Servicio · eventos-calendario.js · V173
    Agenda personal local preparada para futura importación/sincronización con Apple Calendar.
    No modifica registros, Meta, OneDrive ni la lógica de actividad.
 */
@@ -33,7 +33,9 @@
     return {
       id:String(e.id||idNuevo()),fecha,titulo,tipo,todoElDia,
       hora:todoElDia?"":hora,
-      origen:String(e.origen||"manual")
+      origen:String(e.origen||"manual"),
+      uid:String(e.uid||""),
+      calendario:String(e.calendario||"")
     };
   }
 
@@ -154,10 +156,21 @@
         const icon=document.createElement("span");icon.className="v172-evento-icono";icon.textContent=meta.icono;
         const txt=document.createElement("div");txt.className="v172-evento-texto";
         const strong=document.createElement("strong");strong.textContent=e.titulo;
-        const small=document.createElement("small");small.textContent=`${meta.nombre} · ${horaLegible(e)}`;
+        const small=document.createElement("small");
+        small.textContent=e.origen==="apple"
+          ? `Apple Calendar · ${horaLegible(e)}`
+          : `${meta.nombre} · ${horaLegible(e)}`;
         txt.append(strong,small);
-        const edit=document.createElement("button");edit.type="button";edit.className="v172-evento-editar";edit.textContent="Editar";edit.onclick=()=>abrirModal(fecha,e.id);
-        fila.append(icon,txt,edit);box.appendChild(fila);
+        if(e.origen==="apple"){
+          const fuente=document.createElement("span");
+          fuente.className="v173-evento-apple";
+          fuente.textContent="";
+          fila.append(icon,txt,fuente);
+        }else{
+          const edit=document.createElement("button");edit.type="button";edit.className="v172-evento-editar";edit.textContent="Editar";edit.onclick=()=>abrirModal(fecha,e.id);
+          fila.append(icon,txt,edit);
+        }
+        box.appendChild(fila);
       });
     }
     const agenda=detalle.querySelector(".detalle-dia-agenda");
@@ -209,7 +222,7 @@
         row.append(i,t,hora);lista.appendChild(row);
       });
     }
-    const aviso=document.createElement("div");aviso.className="v172-agenda-aviso";aviso.textContent="Eventos personales guardados solo en este dispositivo por ahora.";lista.appendChild(aviso);
+    const aviso=document.createElement("div");aviso.className="v172-agenda-aviso";aviso.textContent="Agenda combinada: actividad de Mi Servicio + eventos personales y de Apple Calendar.";lista.appendChild(aviso);
   }
 
   function refrescar(fechaSeleccionada){
@@ -222,7 +235,313 @@
     }
   }
 
+
+  // =========================================================
+  // V173 · IMPORTACIÓN SEGURA DE APPLE CALENDAR (.ics)
+  // Mantiene eventos manuales y sustituye solo los importados.
+  // =========================================================
+  const KEY_IMPORT_V173="miServicio.calendarioAppleImportV173";
+
+  function desescaparICS(v){
+    return String(v||"")
+      .replace(/\\n/gi,"\n")
+      .replace(/\\,/g,",")
+      .replace(/\\;/g,";")
+      .replace(/\\\\/g,"\\")
+      .trim();
+  }
+
+  function lineasICS(texto){
+    const raw=String(texto||"").replace(/\r\n/g,"\n").replace(/\r/g,"\n").split("\n");
+    const out=[];
+    raw.forEach(linea=>{
+      if((linea.startsWith(" ")||linea.startsWith("\t"))&&out.length){
+        out[out.length-1]+=linea.slice(1);
+      }else{
+        out.push(linea);
+      }
+    });
+    return out;
+  }
+
+  function propiedadICS(linea){
+    const p=linea.indexOf(":");
+    if(p<0)return null;
+    const izq=linea.slice(0,p),valor=linea.slice(p+1);
+    const partes=izq.split(";");
+    const nombre=partes.shift().toUpperCase();
+    const params={};
+    partes.forEach(x=>{
+      const q=x.indexOf("=");
+      if(q>0)params[x.slice(0,q).toUpperCase()]=x.slice(q+1);
+    });
+    return {nombre,params,valor};
+  }
+
+  function fechaICS(valor,params){
+    valor=String(valor||"").trim();
+    const soloFecha=(params?.VALUE||"").toUpperCase()==="DATE" || /^\d{8}$/.test(valor);
+    if(soloFecha){
+      const y=Number(valor.slice(0,4)),m=Number(valor.slice(4,6)),d=Number(valor.slice(6,8));
+      if(!y||!m||!d)return null;
+      return {date:new Date(y,m-1,d,12,0,0),todoElDia:true,hora:""};
+    }
+    const m=valor.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})?(Z)?$/);
+    if(!m)return null;
+    let date;
+    if(m[7]){
+      date=new Date(Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5],+(m[6]||0)));
+    }else{
+      // Para un ICS con TZID conservamos el día/hora de calendario tal como lo ve el usuario.
+      date=new Date(+m[1],+m[2]-1,+m[3],+m[4],+m[5],+(m[6]||0));
+    }
+    return {date,todoElDia:false,hora:`${String(date.getHours()).padStart(2,"0")}:${String(date.getMinutes()).padStart(2,"0")}`};
+  }
+
+  function isoDeDate(d){
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  }
+
+  function sumarDias(d,n){
+    const x=new Date(d);x.setDate(x.getDate()+n);return x;
+  }
+
+  function sumarMeses(d,n){
+    const x=new Date(d),dia=x.getDate();
+    x.setDate(1);x.setMonth(x.getMonth()+n);
+    const ultimo=new Date(x.getFullYear(),x.getMonth()+1,0).getDate();
+    x.setDate(Math.min(dia,ultimo));return x;
+  }
+
+  function sumarAnios(d,n){
+    const x=new Date(d);x.setFullYear(x.getFullYear()+n);return x;
+  }
+
+  function tipoAutomaticoV173(titulo){
+    const t=String(titulo||"").toLowerCase();
+    if(/\b(vacaciones|vacación|vacacion|holiday|holidays|descanso)\b/.test(t))return "vacaciones";
+    if(/\b(viaje|vuelo|avión|avion|tren|hotel|aeropuerto)\b/.test(t))return "viaje";
+    if(/\b(médico|medico|dentista|hospital|consulta|cita)\b/.test(t))return "cita";
+    if(/\b(trabajo|turno|oficina|reunión de trabajo|reunion de trabajo)\b/.test(t))return "trabajo";
+    return "personal";
+  }
+
+  function parseRRULE(valor){
+    const o={};
+    String(valor||"").split(";").forEach(par=>{
+      const [k,...rest]=par.split("=");
+      if(k)o[k.toUpperCase()]=rest.join("=");
+    });
+    return o;
+  }
+
+  function limiteImportV173(){
+    const hoy=new Date();
+    return {
+      desde:new Date(hoy.getFullYear()-1,hoy.getMonth(),hoy.getDate(),0,0,0),
+      hasta:new Date(hoy.getFullYear()+2,hoy.getMonth(),hoy.getDate(),23,59,59)
+    };
+  }
+
+  function expandirRecurrenciaV173(base,regla,exdates){
+    const limites=limiteImportV173();
+    if(!regla?.FREQ)return [base];
+    const interval=Math.max(1,Number(regla.INTERVAL)||1);
+    const count=Math.min(1500,Math.max(1,Number(regla.COUNT)||1500));
+    const untilInfo=regla.UNTIL?fechaICS(regla.UNTIL,{}):null;
+    const until=untilInfo?.date || limites.hasta;
+    const byday=String(regla.BYDAY||"").split(",").filter(Boolean).map(x=>x.replace(/^[+-]?\d+/,""));
+    const diasMap={SU:0,MO:1,TU:2,WE:3,TH:4,FR:5,SA:6};
+    const out=[];
+    const ex=new Set(exdates||[]);
+
+    if(regla.FREQ==="WEEKLY" && byday.length){
+      let cursor=new Date(base.date);
+      cursor.setHours(base.date.getHours(),base.date.getMinutes(),base.date.getSeconds(),0);
+      let vistos=0,iter=0;
+      while(cursor<=until && cursor<=limites.hasta && vistos<count && iter<5000){
+        const semanas=Math.floor((cursor-base.date)/(7*86400000));
+        if(semanas>=0 && semanas%interval===0 && byday.some(x=>diasMap[x]===cursor.getDay())){
+          const key=isoDeDate(cursor);
+          if(!ex.has(key)){out.push({...base,date:new Date(cursor)});vistos++}
+        }
+        cursor=sumarDias(cursor,1);iter++;
+      }
+      return out;
+    }
+
+    let actual={...base,date:new Date(base.date)},i=0;
+    while(actual.date<=until && actual.date<=limites.hasta && i<count && i<1500){
+      const key=isoDeDate(actual.date);
+      if(!ex.has(key))out.push({...actual,date:new Date(actual.date)});
+      i++;
+      if(regla.FREQ==="DAILY")actual.date=sumarDias(actual.date,interval);
+      else if(regla.FREQ==="WEEKLY")actual.date=sumarDias(actual.date,7*interval);
+      else if(regla.FREQ==="MONTHLY")actual.date=sumarMeses(actual.date,interval);
+      else if(regla.FREQ==="YEARLY")actual.date=sumarAnios(actual.date,interval);
+      else break;
+    }
+    return out;
+  }
+
+  function convertirEventoICSV173(obj){
+    const titulo=desescaparICS(obj.SUMMARY?.valor||"");
+    if(!titulo||!obj.DTSTART)return [];
+    const ini=fechaICS(obj.DTSTART.valor,obj.DTSTART.params);
+    if(!ini)return [];
+
+    const uid=desescaparICS(obj.UID?.valor||`${titulo}-${obj.DTSTART.valor}`);
+    const tipo=tipoAutomaticoV173(titulo);
+    const calendario=desescaparICS(obj["X-WR-CALNAME"]?.valor||"Apple Calendar");
+    const exdates=[];
+    (obj.EXDATE||[]).forEach(ex=>{
+      String(ex.valor||"").split(",").forEach(v=>{
+        const x=fechaICS(v,ex.params);if(x)exdates.push(isoDeDate(x.date));
+      });
+    });
+
+    const base={date:ini.date,todoElDia:ini.todoElDia,hora:ini.hora};
+    const ocurrencias=obj.RRULE
+      ? expandirRecurrenciaV173(base,parseRRULE(obj.RRULE.valor),exdates)
+      : [base];
+
+    // Evento de día completo de varios días: DTEND es exclusivo en iCalendar.
+    let duracionDias=1;
+    if(ini.todoElDia && obj.DTEND){
+      const fin=fechaICS(obj.DTEND.valor,obj.DTEND.params);
+      if(fin){
+        duracionDias=Math.max(1,Math.round((fin.date-ini.date)/86400000));
+      }
+    }
+
+    const res=[];
+    ocurrencias.forEach((oc,idx)=>{
+      if(oc.date<limiteImportV173().desde || oc.date>limiteImportV173().hasta)return;
+      const dias=ini.todoElDia?duracionDias:1;
+      for(let d=0;d<dias;d++){
+        const fecha=sumarDias(oc.date,d);
+        res.push(normalizarEvento({
+          id:`apple-${uid}-${isoDeDate(fecha)}-${idx}-${d}`,
+          uid,fecha:isoDeDate(fecha),titulo,tipo,
+          todoElDia:ini.todoElDia,
+          hora:ini.todoElDia?"":oc.hora,
+          origen:"apple",calendario
+        }));
+      }
+    });
+    return res.filter(Boolean);
+  }
+
+  function parseICSV173(texto){
+    const lines=lineasICS(texto);
+    const eventos=[];
+    let actual=null;
+    let calName="Apple Calendar";
+    lines.forEach(linea=>{
+      const p=propiedadICS(linea);if(!p)return;
+      if(p.nombre==="X-WR-CALNAME"&&!actual){calName=desescaparICS(p.valor)||calName;return}
+      if(p.nombre==="BEGIN"&&p.valor.toUpperCase()==="VEVENT"){actual={};return}
+      if(p.nombre==="END"&&p.valor.toUpperCase()==="VEVENT"){
+        if(actual){
+          actual["X-WR-CALNAME"]={valor:calName,params:{}};
+          eventos.push(...convertirEventoICSV173(actual));
+        }
+        actual=null;return;
+      }
+      if(!actual)return;
+      if(p.nombre==="EXDATE"){
+        if(!Array.isArray(actual.EXDATE))actual.EXDATE=[];
+        actual.EXDATE.push(p);
+      }else if(!actual[p.nombre]){
+        actual[p.nombre]=p;
+      }
+    });
+
+    const dedup=new Map();
+    eventos.forEach(e=>{
+      const k=`${e.uid}|${e.fecha}|${e.hora}|${e.titulo}`;
+      if(!dedup.has(k))dedup.set(k,e);
+    });
+    return [...dedup.values()].sort((a,b)=>
+      a.fecha.localeCompare(b.fecha)||(a.hora||"").localeCompare(b.hora||"")||a.titulo.localeCompare(b.titulo)
+    );
+  }
+
+  function estadoImportV173(texto,ok){
+    const el=document.getElementById("estadoCalendarioAppleV173");
+    if(!el)return;
+    el.textContent=texto;
+    el.classList.toggle("v173-ok",Boolean(ok));
+  }
+
+  function leerEstadoImportV173(){
+    try{return JSON.parse(localStorage.getItem(KEY_IMPORT_V173)||"null")}catch(e){return null}
+  }
+
+  function mostrarEstadoImportV173(){
+    const st=leerEstadoImportV173();
+    if(!st){estadoImportV173("Todavía no has importado un calendario.",false);return}
+    const fecha=new Date(st.fecha);
+    estadoImportV173(
+      `${st.total} ${st.total===1?"evento importado":"eventos importados"} · ${fecha.toLocaleString("es-ES",{dateStyle:"short",timeStyle:"short"})}`,
+      true
+    );
+  }
+
+  async function importarArchivoV173(file){
+    if(!file)return;
+    estadoImportV173("Leyendo calendario…",false);
+    try{
+      const texto=await file.text();
+      if(!/BEGIN:VCALENDAR/i.test(texto)){
+        estadoImportV173("Ese archivo no parece ser un calendario .ics válido.",false);return;
+      }
+      const importados=parseICSV173(texto);
+      if(!importados.length){
+        estadoImportV173("No encontré eventos utilizables en ese calendario.",false);return;
+      }
+      const manuales=leer().filter(e=>e.origen!=="apple");
+      const combinado=[...manuales,...importados];
+      if(!guardar(combinado)){
+        estadoImportV173("No se pudieron guardar los eventos.",false);return;
+      }
+      localStorage.setItem(KEY_IMPORT_V173,JSON.stringify({
+        total:importados.length,fecha:new Date().toISOString(),archivo:file.name||"Calendario.ics"
+      }));
+      mostrarEstadoImportV173();
+      refrescar();
+    }catch(e){
+      console.error("Importación calendario:",e);
+      estadoImportV173("No se pudo leer el calendario.",false);
+    }
+  }
+
+  function quitarImportadosV173(){
+    const importados=leer().filter(e=>e.origen==="apple");
+    if(!importados.length){estadoImportV173("No hay eventos importados que quitar.",false);return}
+    if(!confirm(`¿Quitar ${importados.length} ${importados.length===1?"evento importado":"eventos importados"}? Tus eventos manuales se conservarán.`))return;
+    const manuales=leer().filter(e=>e.origen!=="apple");
+    if(guardar(manuales)){
+      localStorage.removeItem(KEY_IMPORT_V173);
+      mostrarEstadoImportV173();refrescar();
+    }
+  }
+
+  function instalarImportadorV173(){
+    const btn=document.getElementById("importarCalendarioAppleV173");
+    const input=document.getElementById("archivoCalendarioAppleV173");
+    btn?.addEventListener("click",()=>input?.click());
+    input?.addEventListener("change",()=>{
+      const f=input.files?.[0];
+      importarArchivoV173(f);
+      input.value="";
+    });
+    document.getElementById("quitarCalendarioAppleV173")?.addEventListener("click",quitarImportadosV173);
+    mostrarEstadoImportV173();
+  }
+
   function instalar(){
+    instalarImportadorV173();
     // Enriquecer calendario sin tocar su lógica original.
     if(typeof actualizarCalendarioInicio==="function"){
       const originalCal=actualizarCalendarioInicio;

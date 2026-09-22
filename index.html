@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=17201"
+        href="./styles-v27.css?v=17301"
     >
 
 
@@ -120,7 +120,7 @@
 </style>
 
     <meta name="mi-servicio-version" content="V151-META-REORGANIZADA">
-<meta name="mi-servicio-build" content="V172-17201">
+<meta name="mi-servicio-build" content="V173-17301">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -1100,6 +1100,39 @@
                     ></p>
                 </article>
             </section>
+
+            <!-- CALENDARIO APPLE · V173 -->
+            <section class="seccion" id="seccionCalendarioAppleV173">
+                <div class="titulo-seccion">
+                    <h2>Calendario Apple</h2>
+                </div>
+                <article class="tarjeta v173-calendario-apple">
+                    <div class="v173-calendario-head">
+                        <div class="v173-calendario-icono">📅</div>
+                        <div>
+                            <strong>Importar eventos</strong>
+                            <p>Trae tus citas, vacaciones, viajes y otros eventos a Mi Servicio sin tener que escribirlos uno por uno.</p>
+                        </div>
+                    </div>
+
+                    <button id="importarCalendarioAppleV173" class="boton-guardar" type="button">
+                        Importar calendario (.ics)
+                    </button>
+                    <input id="archivoCalendarioAppleV173" type="file" accept=".ics,text/calendar" hidden>
+
+                    <button id="quitarCalendarioAppleV173" class="boton-secundario" type="button">
+                        Quitar eventos importados
+                    </button>
+
+                    <p id="estadoCalendarioAppleV173" class="v173-calendario-estado">
+                        Todavía no has importado un calendario.
+                    </p>
+                    <small class="v173-calendario-ayuda">
+                        Los eventos que hayas añadido manualmente se conservan. Al volver a importar, solo se sustituyen los eventos procedentes del calendario.
+                    </small>
+                </article>
+            </section>
+
             <!-- DATOS -->
             <section class="seccion">
                 <div class="titulo-seccion">
@@ -1455,13 +1488,13 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=17201" defer></script>
-<script src="./eventos-calendario.js?v=17201" defer></script>
+<script src="./app-v27.js?v=17301" defer></script>
+<script src="./eventos-calendario.js?v=17301" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    window.addEventListener("load",()=>{setTimeout(()=>navigator.serviceWorker.register("./sw.js?v=17201", { scope: "./" })
+    window.addEventListener("load",()=>{setTimeout(()=>navigator.serviceWorker.register("./sw.js?v=17301", { scope: "./" })
       .catch(error => console.warn("Modo sin conexión no disponible:", error)).catch(()=>{}),1200)},{once:true});
   });
 }
