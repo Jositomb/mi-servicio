@@ -9279,3 +9279,67 @@ body.light #vista-meta .meta-v152-mini-ring strong,
 #vista-inicio #animalProgreso img{
   content-visibility:auto;
 }
+
+
+/* =========================================================
+   V172 · AGENDA PERSONAL PREPARADA PARA CALENDARIO APPLE
+   Solo eventos locales por ahora. No altera cálculos ni OneDrive.
+   ========================================================= */
+#vista-inicio .calendario-dia.con-evento-v172{
+  box-shadow:inset 0 0 0 1px rgba(139,92,246,.20);
+}
+#vista-inicio .calendario-dia-evento-v172{
+  width:100%;max-width:42px;display:block;overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap;text-align:center;font-size:7px;font-weight:800;line-height:1.1;
+  color:#7c3aed;opacity:.94;
+}
+#vista-inicio .calendario-dia-evento-v172 .v172-contador{font-size:6.5px;opacity:.72}
+
+.v172-eventos-dia{
+  margin:9px 0 10px;padding:10px;border-radius:13px;
+  background:color-mix(in srgb, #8b5cf6 7%, var(--card-background));
+  border:1px solid color-mix(in srgb, #8b5cf6 16%, transparent);
+}
+.v172-eventos-dia-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:7px}
+.v172-eventos-dia-head strong{font-size:13px}
+.v172-eventos-add{border:0;background:rgba(124,58,237,.10);color:#7c3aed;border-radius:9px;padding:6px 9px;font-size:10px;font-weight:800}
+.v172-eventos-vacio{margin:0;color:var(--text-secondary);font-size:11px}
+.v172-evento-fila{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid var(--divider)}
+.v172-evento-fila:first-of-type{border-top:0}
+.v172-evento-icono{width:26px;height:26px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:rgba(124,58,237,.09);font-size:14px;flex:0 0 auto}
+.v172-evento-texto{min-width:0;display:flex;flex-direction:column;gap:1px;flex:1}
+.v172-evento-texto strong{font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v172-evento-texto small{font-size:9.5px;color:var(--text-secondary)}
+.v172-evento-editar{border:0;background:transparent;color:var(--primary);font-size:10px;font-weight:800;padding:5px}
+
+#vista-inicio .v145-hoy{grid-template-rows:auto auto}
+#vista-inicio .v172-agenda-hoy-lista{grid-column:1/-1;display:flex;flex-direction:column;gap:5px;margin-top:4px;padding-top:7px;border-top:1px solid var(--divider)}
+.v172-agenda-item{display:grid;grid-template-columns:20px 1fr auto;gap:7px;align-items:center;min-width:0}
+.v172-agenda-item-icono{font-size:13px;text-align:center}
+.v172-agenda-item-texto{min-width:0;display:flex;flex-direction:column;gap:1px}
+.v172-agenda-item-texto strong{font-size:10.5px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v172-agenda-item-texto small{font-size:8.5px;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v172-agenda-item-hora{font-size:9px;font-weight:800;color:var(--text-secondary);white-space:nowrap}
+.v172-agenda-vacio{font-size:9.5px;color:var(--text-secondary);padding:1px 0}
+.v172-agenda-aviso{font-size:8px;color:var(--text-secondary);opacity:.75;margin-top:1px}
+
+.modal-evento-v172{max-width:430px}
+.v172-evento-hora-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:end}
+.v172-check-todo-dia{min-height:48px;display:flex;align-items:center;gap:8px;padding:0 2px;font-size:13px;font-weight:700}
+.v172-check-todo-dia input{width:18px;height:18px}
+.v172-campo-hora{margin:0!important}
+.v172-campo-hora.v172-deshabilitada{opacity:.42}
+.v172-modal-botones{display:flex;align-items:center;gap:8px}
+.v172-modal-spacer{flex:1}
+.v172-eliminar-evento{margin-right:auto}
+
+@media(max-width:390px){
+  #vista-inicio .calendario-dia-evento-v172{font-size:6.5px;max-width:38px}
+  .v172-evento-hora-grid{grid-template-columns:1fr}
+  .v172-check-todo-dia{min-height:34px}
+}
+@media(prefers-color-scheme:dark){
+  .v172-eventos-dia{background:rgba(139,92,246,.08);border-color:rgba(167,139,250,.14)}
+  .v172-eventos-add{background:rgba(167,139,250,.12);color:#b59bff}
+  #vista-inicio .calendario-dia-evento-v172{color:#b59bff}
+}

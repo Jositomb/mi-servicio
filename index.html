@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=17101"
+        href="./styles-v27.css?v=17201"
     >
 
 
@@ -120,7 +120,7 @@
 </style>
 
     <meta name="mi-servicio-version" content="V151-META-REORGANIZADA">
-<meta name="mi-servicio-build" content="V171-17101">
+<meta name="mi-servicio-build" content="V172-17201">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -344,6 +344,7 @@
                     <span data-v145-detalle></span>
                 </div>
                 <div class="v145-hoy-estado" data-v145-estado>Hoy</div>
+                <div id="agendaHoyV172" class="v172-agenda-hoy-lista" aria-live="polite"></div>
             </section>
 
 </section>
@@ -1285,6 +1286,51 @@
             </div>
         </div>
     </div>
+<!-- MODAL EVENTO PERSONAL · V172 -->
+<div id="modalEventoCalendarioV172" class="modal oculto" aria-hidden="true">
+    <div class="modal-fondo" id="fondoModalEventoV172"></div>
+    <div class="modal-contenido modal-evento-v172" role="dialog" aria-modal="true" aria-labelledby="tituloModalEventoV172">
+        <h2 id="tituloModalEventoV172">Añadir evento</h2>
+        <p id="fechaModalEventoV172" class="texto-secundario"></p>
+
+        <label class="campo-editar">
+            <span>Tipo</span>
+            <select id="tipoEventoV172">
+                <option value="personal">Personal</option>
+                <option value="vacaciones">Vacaciones</option>
+                <option value="trabajo">Trabajo</option>
+                <option value="cita">Cita</option>
+                <option value="viaje">Viaje</option>
+                <option value="otro">Otro</option>
+            </select>
+        </label>
+
+        <label class="campo-editar">
+            <span>Evento</span>
+            <input id="tituloEventoV172" type="text" maxlength="100" autocomplete="off" placeholder="Ej. Médico, vacaciones, comida…">
+        </label>
+
+        <div class="v172-evento-hora-grid">
+            <label class="v172-check-todo-dia">
+                <input id="todoDiaEventoV172" type="checkbox">
+                <span>Todo el día</span>
+            </label>
+            <label class="campo-editar v172-campo-hora">
+                <span>Hora</span>
+                <input id="horaEventoV172" type="time">
+            </label>
+        </div>
+
+        <p id="mensajeEventoV172" class="mensaje-formulario"></p>
+        <div class="modal-botones v172-modal-botones">
+            <button id="eliminarEventoV172" class="boton-modal eliminar v172-eliminar-evento" type="button" hidden>Eliminar</button>
+            <span class="v172-modal-spacer"></span>
+            <button id="cancelarEventoV172" class="boton-modal cancelar" type="button">Cancelar</button>
+            <button id="guardarEventoV172" class="boton-modal boton-guardar-edicion" type="button">Guardar</button>
+        </div>
+    </div>
+</div>
+
 <div
     id="modalBorrar"
     class="modal oculto"
@@ -1409,12 +1455,13 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=17101" defer></script>
+<script src="./app-v27.js?v=17201" defer></script>
+<script src="./eventos-calendario.js?v=17201" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    window.addEventListener("load",()=>{setTimeout(()=>navigator.serviceWorker.register("./sw.js?v=17101", { scope: "./" })
+    window.addEventListener("load",()=>{setTimeout(()=>navigator.serviceWorker.register("./sw.js?v=17201", { scope: "./" })
       .catch(error => console.warn("Modo sin conexión no disponible:", error)).catch(()=>{}),1200)},{once:true});
   });
 }

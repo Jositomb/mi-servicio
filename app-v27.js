@@ -7280,7 +7280,7 @@ function mostrarVersionPublicadaV156() {
 
     const etiqueta = document.createElement("div");
     etiqueta.id = "versionPublicadaV156";
-    etiqueta.textContent = "Versión publicada: V171";
+    etiqueta.textContent = "Versión publicada: V172";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
