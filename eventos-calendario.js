@@ -1,4 +1,4 @@
-/* Mi Servicio · eventos-calendario.js · V174
+/* Mi Servicio · eventos-calendario.js · V175
    Agenda personal local preparada para futura importación/sincronización con Apple Calendar.
    No modifica registros, Meta, OneDrive ni la lógica de actividad.
 */
@@ -544,6 +544,92 @@
     }
   }
 
+
+  // =========================================================
+  // V175 · PARSER ROBUSTO PARA ATAJOS
+  // Acepta el formato V174 y un formato simplificado V4.
+  // =========================================================
+
+  function mesNumeroV175(txt){
+    const t=String(txt||"").toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+    const meses={
+      ene:1,enero:1,jan:1,january:1,
+      feb:2,febrero:2,february:2,
+      mar:3,marzo:3,march:3,
+      abr:4,abril:4,apr:4,april:4,
+      may:5,mayo:5,
+      jun:6,junio:6,june:6,
+      jul:7,julio:7,july:7,
+      ago:8,agosto:8,aug:8,august:8,
+      sep:9,sept:9,septiembre:9,september:9,
+      oct:10,octubre:10,october:10,
+      nov:11,noviembre:11,november:11,
+      dic:12,diciembre:12,dec:12,december:12
+    };
+    for(const k of Object.keys(meses)){
+      if(t.includes(k))return meses[k];
+    }
+    return 0;
+  }
+
+  function fechaHoraFlexibleV175(raw){
+    const s=String(raw||"").trim();
+    if(!s)return null;
+
+    // ISO yyyy-MM-dd [HH:mm]
+    let m=s.match(/(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})(?:[T,\s]+(\d{1,2}):(\d{2}))?/);
+    if(m){
+      const y=+m[1],mo=+m[2],d=+m[3],hh=+(m[4]||0),mm=+(m[5]||0);
+      return {
+        fecha:`${String(y).padStart(4,"0")}-${String(mo).padStart(2,"0")}-${String(d).padStart(2,"0")}`,
+        hora:m[4]!==undefined?`${String(hh).padStart(2,"0")}:${String(mm).padStart(2,"0")}`:""
+      };
+    }
+
+    // dd/MM/yyyy [HH:mm] o dd-MM-yyyy
+    m=s.match(/(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})(?:[,\s]+(\d{1,2}):(\d{2}))?/);
+    if(m){
+      let y=+m[3]; if(y<100)y+=2000;
+      const mo=+m[2],d=+m[1],hh=+(m[4]||0),mm=+(m[5]||0);
+      return {
+        fecha:`${String(y).padStart(4,"0")}-${String(mo).padStart(2,"0")}-${String(d).padStart(2,"0")}`,
+        hora:m[4]!==undefined?`${String(hh).padStart(2,"0")}:${String(mm).padStart(2,"0")}`:""
+      };
+    }
+
+    // d septiembre 2026, 18:30 / Sep 22, 2026 18:30
+    const mo=mesNumeroV175(s);
+    if(mo){
+      const nums=(s.match(/\d+/g)||[]).map(Number);
+      let y=nums.find(n=>n>=2000&&n<=2100);
+      if(!y)y=new Date().getFullYear();
+      let d=nums.find(n=>n>=1&&n<=31&&n!==y);
+      const tm=s.match(/(\d{1,2}):(\d{2})/);
+      if(d){
+        return {
+          fecha:`${String(y).padStart(4,"0")}-${String(mo).padStart(2,"0")}-${String(d).padStart(2,"0")}`,
+          hora:tm?`${String(+tm[1]).padStart(2,"0")}:${tm[2]}`:""
+        };
+      }
+    }
+
+    // Último recurso: Date del navegador.
+    const d=new Date(s);
+    if(!Number.isNaN(d.getTime())){
+      return {
+        fecha:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`,
+        hora:`${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`
+      };
+    }
+    return null;
+  }
+
+  function booleanoFlexibleV175(v){
+    const s=String(v||"").trim().toLowerCase();
+    return ["1","true","yes","si","sí","s","y","verdadero"].includes(s);
+  }
+
   function parseAtajoV174(texto){
     const lineas=String(texto||"")
       .replace(/\r\n/g,"\n")
@@ -551,26 +637,42 @@
       .split("\n");
 
     const salida=[];
-    let ultimo=null;
 
-    for(const raw of lineas){
-      if(!raw.trim())continue;
+    for(const raw0 of lineas){
+      const raw=raw0.trim();
+      if(!raw)continue;
 
-      const partes=raw.split("¦");
-      const fecha=(partes[0]||"").trim();
+      // Preferente: separador que usa Mi Servicio.
+      let partes=raw.split("¦");
 
-      // Si un título contenía un salto de línea, lo añadimos al evento anterior.
-      if(!/^\d{4}-\d{2}-\d{2}$/.test(fecha)){
-        if(ultimo)ultimo.titulo=`${ultimo.titulo} ${raw.trim()}`.trim().slice(0,100);
+      // Compatibilidad con tabuladores por si Atajos los transforma.
+      if(partes.length<3 && raw.includes("\t"))partes=raw.split("\t");
+
+      let fecha="",hora="",flag="",titulo="";
+
+      if(partes.length>=4){
+        // V174: fecha ¦ hora ¦ todoElDia ¦ titulo
+        const fh=fechaHoraFlexibleV175(partes[0]);
+        if(!fh)continue;
+        fecha=fh.fecha;
+        hora=(partes[1]||"").trim() || fh.hora;
+        flag=(partes[2]||"").trim();
+        titulo=partes.slice(3).join("¦").trim();
+      }else if(partes.length>=3){
+        // V4: fecha+hora ¦ todoElDia ¦ titulo
+        const fh=fechaHoraFlexibleV175(partes[0]);
+        if(!fh)continue;
+        fecha=fh.fecha;
+        hora=fh.hora;
+        flag=(partes[1]||"").trim();
+        titulo=partes.slice(2).join("¦").trim();
+      }else{
         continue;
       }
 
-      const hora=(partes[1]||"").trim();
-      const flag=(partes[2]||"").trim().toLowerCase();
-      const titulo=partes.slice(3).join("¦").trim().slice(0,100);
       if(!titulo)continue;
 
-      const todoElDia=["1","true","yes","si","sí","s","y"].includes(flag);
+      const todoElDia=booleanoFlexibleV175(flag);
       const evento=normalizarEvento({
         id:`apple-shortcut-${fecha}-${hora}-${salida.length}`,
         fecha,
@@ -583,13 +685,9 @@
         calendario:"Apple Calendar"
       });
 
-      if(evento){
-        salida.push(evento);
-        ultimo=evento;
-      }
+      if(evento)salida.push(evento);
     }
 
-    // Deduplicación prudente.
     const mapa=new Map();
     salida.forEach(e=>{
       const k=`${e.fecha}|${e.hora}|${e.todoElDia?"1":"0"}|${e.titulo}`;
@@ -667,17 +765,22 @@
     const ok=aplicarAtajoV174(dato,false);
     limpiarDatosAtajoURLV174();
 
-    if(ok){
-      // Mensaje visible tras limpiar la URL.
-      setTimeout(()=>{
+    setTimeout(()=>{
+      if(ok){
         const st=leerEstadoImportV173();
         const n=Number(st?.total||0);
         estadoImportV173(
           `${n} ${n===1?"evento recibido":"eventos recibidos"} desde el Atajo.`,
           true
         );
-      },120);
-    }
+      }else{
+        estadoImportV173(
+          "El Atajo llegó a Mi Servicio, pero los datos no tenían un formato reconocible.",
+          false
+        );
+      }
+    },120);
+
     return ok;
   }
 
