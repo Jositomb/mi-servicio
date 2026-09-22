@@ -1,11 +1,20 @@
-const CACHE = "mi-servicio-v17001";
+const CACHE = "mi-servicio-v17101";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles-v27.css?v=17001",
-  "./app-v27.js?v=17001",
+  "./styles-v27.css?v=17101",
+  "./app-v27.js?v=17101",
   "./icon-apple.png",
   "./manifest.webmanifest",
+  "./personaje-51219b70e7f1.png",
+  "./personaje-5638b822e9ec.png",
+  "./personaje-56dd433b1692.png",
+  "./personaje-635d3bce67f2.png",
+  "./personaje-698db747b8fb.png",
+  "./personaje-95d7b35c957c.png",
+  "./personaje-e4168da17cdf.png",
+  "./personaje-e524cff3980b.png",
+  "./personaje-ff4383d3590d.png",
   "./core/config.js",
   "./core/storage.js",
   "./tiempo.js",
