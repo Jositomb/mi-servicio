@@ -7280,7 +7280,7 @@ function mostrarVersionPublicadaV156() {
 
     const etiqueta = document.createElement("div");
     etiqueta.id = "versionPublicadaV156";
-    etiqueta.textContent = "Versión publicada: V159";
+    etiqueta.textContent = "Versión publicada: V160";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
@@ -7596,3 +7596,14 @@ function actualizarFechaCalendarioInicioV157(){
 document.addEventListener("DOMContentLoaded", actualizarFechaCalendarioInicioV157);
 
 function actualizarCaminoV159(){const d=new Date(),rs=(window.estado&&Array.isArray(estado.registros))?estado.registros:(Array.isArray(window.registros)?window.registros:[]);let mins=0;rs.forEach(r=>{const f=new Date(String(r.fecha||"")+"T12:00:00");if(!isNaN(f)&&f.getFullYear()===d.getFullYear()&&f.getMonth()===d.getMonth())mins+=Number(r.minutosTotales)||((Number(r.horas)||0)*60+(Number(r.minutos)||0))});let meta=70*60;try{const p=estado.preferencias||{};meta=Number(p.objetivoMensualMinutos)||Number(p.objetivoPersonalizadoMinutos)||meta}catch(e){}const pct=Math.max(0,Math.min(1,mins/meta));const he=document.getElementById("caminoHorasV159"),me=document.getElementById("caminoMetaV159");if(he)he.textContent=(mins/60).toLocaleString("es-ES",{maximumFractionDigits:1})+" h";if(me)me.textContent=(meta/60).toLocaleString("es-ES",{maximumFractionDigits:1})+" h";const r=document.getElementById("caminoRecorridoV159");if(r)r.style.width=(pct*100)+"%";const c=document.getElementById("caminoPersonajeV159"),o=document.querySelector("#animalProgreso img,#animalProgreso .personaje-cuerpo-img");if(c&&o&&o.src){let i=c.querySelector("img");if(!i){i=document.createElement("img");c.appendChild(i)}i.src=o.src;c.style.left=`calc(45px + (100% - 90px) * ${pct})`}const falta=Math.max(0,meta-mins),fh=Math.floor(falta/60),fm=Math.round(falta%60),x=document.getElementById("faltanMesV159");if(x)x.textContent=falta<=0?"Meta mensual alcanzada ✨":`Te faltan ${fh} h${fm?" "+fm+" min":""} para completar el mes.`}document.addEventListener("DOMContentLoaded",()=>{setTimeout(actualizarCaminoV159,1000);setTimeout(actualizarCaminoV159,1800)});
+
+// V160 · comprobar actualización también al abrir desde el icono de Inicio.
+async function comprobarActualizacionV160(){
+  if(!("serviceWorker" in navigator)) return;
+  try{
+    const reg=await navigator.serviceWorker.getRegistration("./");
+    if(reg) await reg.update();
+  }catch(e){}
+}
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")comprobarActualizacionV160()});
+window.addEventListener("pageshow",comprobarActualizacionV160);

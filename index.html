@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=15901"
+        href="./styles-v27.css?v=16001"
     >
 
 
@@ -119,10 +119,10 @@
 }
 </style>
 
-    <meta name="mi-servicio-version" content="V151-META-REORGANIZADA">
-<meta name="mi-servicio-build" content="V159-15901">
+    <meta name="mi-servicio-version" content="V160-CAMINO-PROGRESO">
+<meta name="mi-servicio-build" content="V160-16001">
 </head>
-<body data-mi-servicio-version="40.0">
+<body data-mi-servicio-version="160.0">
 <div class="app">
     <!-- =====================================================
          CABECERA
@@ -259,15 +259,15 @@
                 </article>
             </section>
             <!-- OBJETIVO -->
-            <section class="seccion">
-                <div class="titulo-seccion">
-                    <section id="caminoProgresoV159" class="camino-v159">
+            <section id="caminoProgresoV159" class="camino-v159">
 <div class="camino-frase-v159">¡Cada paso cuenta<br>para Jehová!</div>
 <div class="camino-inicio-v159"><strong id="caminoHorasV159">0 h</strong><span>ahora</span></div>
 <div id="caminoPersonajeV159" class="camino-personaje-v159"></div>
 <div class="camino-meta-v159"><span class="camino-bandera-v159">🏁</span><strong id="caminoMetaV159">70 h</strong><span>meta</span></div>
 <div class="camino-linea-v159"><div id="caminoRecorridoV159" class="camino-recorrido-v159"></div></div>
-</section><h2>
+</section><section class="seccion objetivo-legado-v160" aria-hidden="true">
+                <div class="titulo-seccion">
+                    <h2>
                         Objetivo
                     </h2>
                 </div>
@@ -1415,12 +1415,12 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=15901" defer></script>
+<script src="./app-v27.js?v=16001" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js?v=15901", { scope: "./" })
+    navigator.serviceWorker.register("./sw.js?v=16001", { scope: "./", updateViaCache: "none" })
       .catch(error => console.warn("Modo sin conexión no disponible:", error));
   });
 }

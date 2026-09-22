@@ -9209,3 +9209,13 @@ html.light #vista-meta .meta-v152-bocadillo,body.light #vista-meta .meta-v152-bo
 #vista-inicio .faltan-mes-v159{font-size:12px;opacity:.78;margin:2px 0 5px}
 #vista-inicio .objetivo-card,#vista-inicio [class*="objetivo-card"]{display:none!important}
 @media(prefers-color-scheme:dark){#vista-inicio #caminoProgresoV159{background:radial-gradient(circle at 65% 48%,rgba(255,171,74,.18),transparent 24%),linear-gradient(180deg,rgba(18,65,105,.24),rgba(49,73,46,.17))}#vista-inicio .camino-frase-v159{color:#fff}}
+
+/* V160: el camino sustituye de verdad al Objetivo antiguo */
+#vista-inicio .objetivo-legado-v160{
+ position:absolute!important;
+ width:1px!important;height:1px!important;
+ overflow:hidden!important;clip:rect(0 0 0 0)!important;
+ clip-path:inset(50%)!important;white-space:nowrap!important;
+ opacity:0!important;pointer-events:none!important;
+}
+#vista-inicio #caminoProgresoV159{margin-top:6px!important;margin-bottom:12px!important}
