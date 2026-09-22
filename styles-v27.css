@@ -9195,3 +9195,36 @@ html.light #vista-meta .meta-v152-bocadillo,body.light #vista-meta .meta-v152-bo
 #vista-inicio .inicio-calendario-card{
   min-height:0!important;
 }
+
+/* V166 · Cómputo de este mes: anillo correcto en modo claro */
+@media (prefers-color-scheme: light) {
+  #vista-meta .meta-v152-mini-ring{
+    background:conic-gradient(#ff4f9a 0 69%,#e8edf5 69% 100%)!important;
+  }
+  #vista-meta .meta-v152-mini-ring:after{
+    background:#ffffff!important;
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,.025)!important;
+  }
+  #vista-meta .meta-v152-mini-ring strong{
+    color:#1c1c1e!important;
+  }
+  #vista-meta .meta-v152-mini-ring small{
+    color:#6e6e73!important;
+  }
+}
+html.light #vista-meta .meta-v152-mini-ring,
+body.light #vista-meta .meta-v152-mini-ring,
+[data-theme="light"] #vista-meta .meta-v152-mini-ring,
+.tema-claro #vista-meta .meta-v152-mini-ring{
+  background:conic-gradient(#ff4f9a 0 69%,#e8edf5 69% 100%)!important;
+}
+html.light #vista-meta .meta-v152-mini-ring:after,
+body.light #vista-meta .meta-v152-mini-ring:after,
+[data-theme="light"] #vista-meta .meta-v152-mini-ring:after,
+.tema-claro #vista-meta .meta-v152-mini-ring:after{
+  background:#fff!important;
+}
+html.light #vista-meta .meta-v152-mini-ring strong,
+body.light #vista-meta .meta-v152-mini-ring strong,
+[data-theme="light"] #vista-meta .meta-v152-mini-ring strong,
+.tema-claro #vista-meta .meta-v152-mini-ring strong{color:#1c1c1e!important}
