@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=15801"
+        href="./styles-v27.css?v=15901"
     >
 
 
@@ -120,7 +120,7 @@
 </style>
 
     <meta name="mi-servicio-version" content="V151-META-REORGANIZADA">
-<meta name="mi-servicio-build" content="V158-15801">
+<meta name="mi-servicio-build" content="V159-15901">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -261,12 +261,13 @@
             <!-- OBJETIVO -->
             <section class="seccion">
                 <div class="titulo-seccion">
-                    <section id="inicioEscenaV158" class="inicio-escena-v158">
-<div class="escena-mensaje-v158"><strong id="escenaTituloV158">¡Cada paso cuenta para Jehová!</strong><span id="escenaSubtituloV158">Sigue así</span></div>
-<div id="escenaPersonajeV158" class="escena-personaje-v158"></div>
-<div class="escena-senales-v158"><span>SERVIR</span><span>PROGRESAR</span><span>¡SEGUIR ASÍ!</span></div>
-</section>
-<h2>
+                    <section id="caminoProgresoV159" class="camino-v159">
+<div class="camino-frase-v159">¡Cada paso cuenta<br>para Jehová!</div>
+<div class="camino-inicio-v159"><strong id="caminoHorasV159">0 h</strong><span>ahora</span></div>
+<div id="caminoPersonajeV159" class="camino-personaje-v159"></div>
+<div class="camino-meta-v159"><span class="camino-bandera-v159">🏁</span><strong id="caminoMetaV159">70 h</strong><span>meta</span></div>
+<div class="camino-linea-v159"><div id="caminoRecorridoV159" class="camino-recorrido-v159"></div></div>
+</section><h2>
                         Objetivo
                     </h2>
                 </div>
@@ -341,9 +342,7 @@
         
         
             
-            <section id="resumenHoyV145" class="v145-hoy"><div id="resumenSituacionV158" class="resumen-situacion-v158">
-<div class="resumen-estado-texto-v158"><strong id="resumenEstadoTituloV158">Resumen de hoy</strong><span id="resumenEstadoTextoV158">Preparando el día…</span></div>
-<div id="resumenEstadoPersonajeV158" class="resumen-estado-personaje-v158"></div></div>
+            <section id="resumenHoyV145" class="v145-hoy"><div id="faltanMesV159" class="faltan-mes-v159"></div>
                 <div class="v145-hoy-icono" data-v145-icono>☀️</div>
                 <div class="v145-hoy-texto">
                     <small>RESUMEN DE HOY</small>
@@ -1416,12 +1415,12 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=15801" defer></script>
+<script src="./app-v27.js?v=15901" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js?v=15801", { scope: "./" })
+    navigator.serviceWorker.register("./sw.js?v=15901", { scope: "./" })
       .catch(error => console.warn("Modo sin conexión no disponible:", error));
   });
 }

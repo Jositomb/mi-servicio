@@ -9196,17 +9196,16 @@ html.light #vista-meta .meta-v152-bocadillo,body.light #vista-meta .meta-v152-bo
   min-height:0!important;
 }
 
-/* V158 Inicio vivo */
-#vista-inicio .inicio-escena-v158{position:relative;min-height:205px;margin:3px 0 12px;overflow:hidden;border-radius:24px;background:radial-gradient(circle at 54% 88%,rgba(255,184,92,.32),transparent 24%),linear-gradient(180deg,rgba(48,120,205,.08),rgba(255,181,102,.14))}
-#vista-inicio .inicio-escena-v158:after{content:"";position:absolute;left:0;right:0;bottom:0;height:34%;background:linear-gradient(180deg,transparent,rgba(70,115,64,.16))}
-#vista-inicio .escena-mensaje-v158{position:absolute;left:13px;bottom:38px;width:31%;z-index:3;display:flex;flex-direction:column;gap:4px}
-#vista-inicio .escena-mensaje-v158 strong{font-size:18px;line-height:1.05;font-weight:800} #vista-inicio .escena-mensaje-v158 span{font-size:11px;opacity:.7}
-#vista-inicio .escena-personaje-v158{position:absolute;left:50%;bottom:2px;transform:translateX(-50%);width:180px;height:180px;z-index:2;display:flex;align-items:flex-end;justify-content:center}
-#vista-inicio .escena-personaje-v158 img{max-width:100%;max-height:100%;object-fit:contain;filter:drop-shadow(0 10px 10px rgba(0,0,0,.18))}
-#vista-inicio .escena-senales-v158{position:absolute;right:9px;bottom:34px;z-index:3;width:29%;display:flex;flex-direction:column;gap:5px;align-items:flex-end}
-#vista-inicio .escena-senales-v158 span{padding:5px 7px;border-radius:5px;background:linear-gradient(#bd824c,#8f5a31);color:#27170d;font-size:9px;font-weight:900;box-shadow:0 2px 5px rgba(0,0,0,.18)}
-#vista-inicio .resumen-situacion-v158{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:72px}
-#vista-inicio .resumen-estado-texto-v158{display:flex;flex-direction:column;gap:4px;flex:1} #vista-inicio .resumen-estado-texto-v158 strong{font-size:14px} #vista-inicio .resumen-estado-texto-v158 span{font-size:12px;line-height:1.25;opacity:.75}
-#vista-inicio .resumen-estado-personaje-v158{width:100px;height:72px;flex:0 0 100px;display:flex;align-items:flex-end;justify-content:center} #vista-inicio .resumen-estado-personaje-v158 img{max-width:100%;max-height:100%;object-fit:contain}
-#vista-inicio .estado-descanso-v158{background:linear-gradient(135deg,rgba(82,144,211,.10),rgba(255,192,94,.10))} #vista-inicio .estado-preparado-v158{background:linear-gradient(135deg,rgba(70,150,255,.12),rgba(80,210,150,.10))} #vista-inicio .estado-celebra-v158{background:linear-gradient(135deg,rgba(255,195,70,.16),rgba(255,91,165,.10))}
-@media(prefers-color-scheme:dark){#vista-inicio .inicio-escena-v158{background:radial-gradient(circle at 54% 88%,rgba(255,171,74,.20),transparent 24%),linear-gradient(180deg,rgba(16,50,82,.28),rgba(75,53,42,.18))}#vista-inicio .escena-mensaje-v158 strong{color:#fff}}
+#vista-inicio #caminoProgresoV159{position:relative;height:230px;margin:0 0 10px;border-radius:24px;overflow:hidden;background:radial-gradient(circle at 65% 48%,rgba(255,190,92,.28),transparent 24%),linear-gradient(180deg,rgba(43,116,190,.08),rgba(85,125,72,.15))}
+#vista-inicio .camino-frase-v159{position:absolute;left:14px;top:26px;width:31%;font-size:18px;line-height:1.05;font-weight:800;font-style:italic}
+#vista-inicio .camino-inicio-v159,#vista-inicio .camino-meta-v159{position:absolute;bottom:20px;z-index:5;display:flex;flex-direction:column;align-items:center;padding:5px 8px;border-radius:7px;background:linear-gradient(#b87d48,#8e582e);color:#25160d}
+#vista-inicio .camino-inicio-v159{left:10px}#vista-inicio .camino-meta-v159{right:10px}
+#vista-inicio .camino-inicio-v159 strong,#vista-inicio .camino-meta-v159 strong{font-size:16px}#vista-inicio .camino-inicio-v159 span,#vista-inicio .camino-meta-v159 span{font-size:9px;font-weight:700}
+#vista-inicio .camino-bandera-v159{position:absolute;top:-25px;font-size:24px!important}
+#vista-inicio .camino-linea-v159{position:absolute;left:45px;right:45px;bottom:33px;height:4px;border-radius:999px;background:linear-gradient(90deg,#4da6ff,#79bfff 34%,#ff8dc7 68%,#ff4f9d);z-index:3}
+#vista-inicio .camino-recorrido-v159{height:100%;width:0;border-radius:999px;background:rgba(255,255,255,.5)}
+#vista-inicio .camino-personaje-v159{position:absolute;bottom:30px;left:45px;width:125px;height:155px;z-index:4;display:flex;align-items:flex-end;justify-content:center;transform:translateX(-50%);transition:left .55s ease}
+#vista-inicio .camino-personaje-v159 img{max-width:100%;max-height:100%;object-fit:contain;filter:drop-shadow(0 8px 8px rgba(0,0,0,.18))}
+#vista-inicio .faltan-mes-v159{font-size:12px;opacity:.78;margin:2px 0 5px}
+#vista-inicio .objetivo-card,#vista-inicio [class*="objetivo-card"]{display:none!important}
+@media(prefers-color-scheme:dark){#vista-inicio #caminoProgresoV159{background:radial-gradient(circle at 65% 48%,rgba(255,171,74,.18),transparent 24%),linear-gradient(180deg,rgba(18,65,105,.24),rgba(49,73,46,.17))}#vista-inicio .camino-frase-v159{color:#fff}}
