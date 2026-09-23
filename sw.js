@@ -1,10 +1,10 @@
-const CACHE = "mi-servicio-v17601";
+const CACHE = "mi-servicio-v17801";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles-v27.css?v=17601",
-  "./app-v27.js?v=17601",
-  "./eventos-calendario.js?v=17601",
+  "./styles-v27.css?v=17801",
+  "./app-v27.js?v=17801",
+  "./eventos-calendario.js?v=17801",
   "./icon-apple.png",
   "./manifest.webmanifest",
   "./personaje-51219b70e7f1.png",
@@ -30,11 +30,22 @@ const APP_SHELL = [
 ];
 
 self.addEventListener("install", event => {
-  event.waitUntil(
-    caches.open(CACHE)
-      .then(cache => cache.addAll(APP_SHELL))
-      .then(() => self.skipWaiting())
-  );
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE);
+
+    // Un único archivo que falle no debe impedir que se instale el modo offline.
+    await Promise.all(
+      APP_SHELL.map(async recurso => {
+        try {
+          await cache.add(recurso);
+        } catch (error) {
+          console.warn("[Mi Servicio] No se pudo precargar:", recurso);
+        }
+      })
+    );
+
+    await self.skipWaiting();
+  })());
 });
 
 self.addEventListener("activate", event => {

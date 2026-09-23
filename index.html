@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=17601"
+        href="./styles-v27.css?v=17801"
     >
 
 
@@ -120,7 +120,7 @@
 </style>
 
     <meta name="mi-servicio-version" content="V151-META-REORGANIZADA">
-<meta name="mi-servicio-build" content="V176-17601">
+<meta name="mi-servicio-build" content="V178-17801">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -1507,15 +1507,24 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=17601" defer></script>
-<script src="./eventos-calendario.js?v=17601" defer></script>
+<script src="./app-v27.js?v=17801" defer></script>
+<script src="./eventos-calendario.js?v=17801" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    window.addEventListener("load",()=>{setTimeout(()=>navigator.serviceWorker.register("./sw.js?v=17601", { scope: "./" })
-      .catch(error => console.warn("Modo sin conexión no disponible:", error)).catch(()=>{}),1200)},{once:true});
-  });
+    setTimeout(async () => {
+      try {
+        const registro = await navigator.serviceWorker.register(
+          "./sw.js?v=17801",
+          { scope: "./", updateViaCache: "none" }
+        );
+        registro.update().catch(() => {});
+      } catch (error) {
+        console.warn("Modo sin conexión no disponible:", error);
+      }
+    }, 300);
+  }, { once: true });
 }
 </script>
 
