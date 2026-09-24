@@ -9418,3 +9418,70 @@ body.light #vista-meta .meta-v152-mini-ring strong,
   flex:1;
 }
 .v176-respaldo{opacity:.86}
+
+
+/* =========================================================
+   V179 · AJUSTES EN DESPLEGABLES
+   Solo presentación: no toca lógica ni datos.
+   ========================================================= */
+#vista-ajustes > .ajustes-acordeon-v179{
+  margin:10px 0;
+  border:1px solid rgba(127,127,127,.14);
+  border-radius:17px;
+  background:var(--fondo-tarjeta,#fff);
+  overflow:hidden;
+  box-shadow:0 2px 10px rgba(0,0,0,.035);
+}
+
+#vista-ajustes > .ajustes-acordeon-v179 > summary{
+  list-style:none;
+  display:grid;
+  grid-template-columns:34px 1fr 24px;
+  align-items:center;
+  gap:10px;
+  min-height:58px;
+  padding:10px 14px;
+  cursor:pointer;
+  font-weight:750;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;
+}
+
+#vista-ajustes > .ajustes-acordeon-v179 > summary::-webkit-details-marker{display:none}
+
+#vista-ajustes .ajustes-acordeon-icono{
+  width:32px;height:32px;
+  display:grid;place-items:center;
+  border-radius:10px;
+  background:rgba(127,127,127,.09);
+  font-size:17px;
+}
+
+#vista-ajustes .ajustes-acordeon-titulo{font-size:15.5px}
+
+#vista-ajustes .ajustes-acordeon-flecha{
+  justify-self:end;
+  color:var(--texto-secundario,#74767d);
+  font-size:25px;
+  line-height:1;
+  transition:transform .18s ease;
+}
+
+#vista-ajustes .ajustes-acordeon-v179[open] .ajustes-acordeon-flecha{
+  transform:rotate(90deg);
+}
+
+#vista-ajustes .ajustes-acordeon-cuerpo{padding:0 10px 10px}
+#vista-ajustes .ajustes-acordeon-cuerpo > section.seccion{
+  margin:0!important;padding:0!important;
+}
+#vista-ajustes .ajustes-acordeon-cuerpo > section.seccion > article.tarjeta{
+  margin-top:0!important;
+  box-shadow:none;
+  border:0;
+  padding-top:6px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  #vista-ajustes .ajustes-acordeon-flecha{transition:none}
+}
