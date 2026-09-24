@@ -1,4 +1,4 @@
-/* Mi Servicio · eventos-calendario.js · V176
+/* Mi Servicio · eventos-calendario.js · V181
    Agenda personal local preparada para futura importación/sincronización con Apple Calendar.
    No modifica registros, Meta, OneDrive ni la lógica de actividad.
 */
@@ -47,7 +47,11 @@
   }
 
   function guardar(lista){
-    try{localStorage.setItem(KEY,JSON.stringify(lista));return true}catch(e){return false}
+    try{
+      localStorage.setItem(KEY,JSON.stringify(lista));
+      try{window.dispatchEvent(new CustomEvent("miServicio:eventosCalendarioActualizados"))}catch(e){}
+      return true;
+    }catch(e){return false}
   }
 
   function eventosDeFecha(fecha){

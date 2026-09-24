@@ -9533,3 +9533,93 @@ body.dark #vista-ajustes .ajustes-acordeon-titulo,
 [data-theme="dark"] #vista-ajustes .ajustes-acordeon-titulo{
   color:#f5f5f7!important;
 }
+
+
+/* =========================================================
+   V181 · CONTEXTO DE CALENDARIO EN PROGRESO
+   ========================================================= */
+#vista-inicio .contexto-calendario-progreso-v181{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin:8px 0 5px;
+  padding:8px 10px;
+  border-radius:13px;
+  background:rgba(90,140,255,.08);
+  border:1px solid rgba(90,140,255,.10);
+  line-height:1.2;
+}
+
+#vista-inicio .contexto-calendario-progreso-v181.oculto{
+  display:none!important;
+}
+
+#vista-inicio .contexto-icono-v181{
+  width:30px;
+  height:30px;
+  display:grid;
+  place-items:center;
+  flex:0 0 auto;
+  border-radius:10px;
+  background:rgba(127,127,127,.08);
+  font-size:17px;
+}
+
+#vista-inicio .contexto-calendario-progreso-v181 strong{
+  display:block;
+  font-size:12.5px;
+}
+
+#vista-inicio .contexto-calendario-progreso-v181 small{
+  display:block;
+  margin-top:2px;
+  color:var(--texto-secundario,#74767d);
+  font-size:11px;
+}
+
+#vista-inicio .progreso-eventos-v181{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:-4px;
+  height:18px;
+  pointer-events:none;
+  z-index:8;
+}
+
+#vista-inicio .progreso-evento-marca-v181{
+  position:absolute;
+  transform:translateX(-50%);
+  font-size:12px;
+  line-height:1;
+  filter:drop-shadow(0 1px 1px rgba(0,0,0,.18));
+}
+
+#vista-inicio .progreso-evento-marca-v181.tipo-vacaciones,
+#vista-inicio .progreso-evento-marca-v181.tipo-viaje{
+  font-size:13px;
+}
+
+#vista-inicio .progreso-personaje.ritmo-pausa::before{
+  content:"⏸ pausa planificada"!important;
+}
+
+#vista-inicio .progreso-personaje.ritmo-pausa .progreso-pista{
+  transform:rotate(0deg)!important;
+  opacity:.75;
+}
+
+#vista-inicio .progreso-personaje.ritmo-pausa #animalProgreso::after{
+  content:"🏖️";
+  position:absolute;
+  right:-12px;
+  top:-8px;
+  font-size:15px;
+}
+
+@media (prefers-color-scheme: dark){
+  #vista-inicio .contexto-calendario-progreso-v181{
+    background:rgba(90,140,255,.10);
+    border-color:rgba(120,165,255,.13);
+  }
+}

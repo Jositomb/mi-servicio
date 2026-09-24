@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=18001"
+        href="./styles-v27.css?v=18101"
     >
 
 
@@ -120,7 +120,7 @@
 </style>
 
     <meta name="mi-servicio-version" content="V151-META-REORGANIZADA">
-<meta name="mi-servicio-build" content="V180-18001">
+<meta name="mi-servicio-build" content="V181-18101">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -309,6 +309,11 @@
                             🏁
                         </div>
                     </div>
+                    <div
+                        id="contextoCalendarioProgresoV181"
+                        class="contexto-calendario-progreso-v181 oculto"
+                        aria-live="polite"
+                    ></div>
                     <p
                         id="estadoAnimal"
                         class="progreso-estado"
@@ -1507,8 +1512,8 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=18001" defer></script>
-<script src="./eventos-calendario.js?v=18001" defer></script>
+<script src="./app-v27.js?v=18101" defer></script>
+<script src="./eventos-calendario.js?v=18101" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
@@ -1516,7 +1521,7 @@ if ("serviceWorker" in navigator) {
     setTimeout(async () => {
       try {
         const registro = await navigator.serviceWorker.register(
-          "./sw.js?v=18001",
+          "./sw.js?v=18101",
           { scope: "./", updateViaCache: "none" }
         );
         registro.update().catch(() => {});

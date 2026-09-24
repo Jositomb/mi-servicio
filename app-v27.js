@@ -2579,6 +2579,11 @@ function actualizarPersonajeProgreso(porcentaje) {
     }
 
     actualizarHitosProgreso(progreso);
+    aplicarContextoCalendarioProgresoV181(
+        progreso,
+        estadoPersonaje,
+        contenedor
+    );
 
 }
 
@@ -7280,7 +7285,7 @@ function mostrarVersionPublicadaV156() {
 
     const etiqueta = document.createElement("div");
     etiqueta.id = "versionPublicadaV156";
-    etiqueta.textContent = "Versión publicada: V180";
+    etiqueta.textContent = "Versión publicada: V181";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
@@ -7644,3 +7649,268 @@ window.addEventListener("load",()=>{
 },{once:true});
 
 
+
+
+// =========================================================
+// V181 · CONTEXTO DEL CALENDARIO EN EL PROGRESO
+// - No modifica horas ni el objetivo mensual.
+// - Vacaciones / viajes de día completo ajustan únicamente
+//   la interpretación del ritmo.
+// - Los eventos se muestran como contexto visual.
+// =========================================================
+
+const EVENTOS_CALENDARIO_KEY_V181 = "miServicio.eventosCalendarioV172";
+
+function leerEventosCalendarioV181(){
+    try{
+        const raw = JSON.parse(localStorage.getItem(EVENTOS_CALENDARIO_KEY_V181) || "[]");
+        return Array.isArray(raw) ? raw.filter(Boolean) : [];
+    }catch(e){
+        return [];
+    }
+}
+
+function fechaLocalV181(d){
+    const y=d.getFullYear();
+    const m=String(d.getMonth()+1).padStart(2,"0");
+    const dia=String(d.getDate()).padStart(2,"0");
+    return `${y}-${m}-${dia}`;
+}
+
+function tipoContextoV181(e){
+    const tipo=String(e?.tipo||"").toLowerCase();
+    const titulo=String(e?.titulo||e?.title||"").toLowerCase();
+
+    if(tipo==="vacaciones" || /vacacion|vacación|vacaciones|holiday|descanso/.test(titulo)){
+        return {tipo:"vacaciones",icono:"🏖️",nombre:"Vacaciones",bloquea:true};
+    }
+    if(tipo==="viaje" || /viaje|vuelo|avión|avion|tren|hotel|aeropuerto/.test(titulo)){
+        return {tipo:"viaje",icono:"✈️",nombre:"Viaje",bloquea:Boolean(e?.todoElDia)};
+    }
+    if(tipo==="trabajo"){
+        return {tipo:"trabajo",icono:"💼",nombre:"Trabajo",bloquea:false};
+    }
+    if(tipo==="cita"){
+        return {tipo:"cita",icono:"📍",nombre:"Cita",bloquea:false};
+    }
+    return {tipo:"personal",icono:"🗓️",nombre:"Evento",bloquea:false};
+}
+
+function eventosMesV181(ref=new Date()){
+    const y=ref.getFullYear();
+    const m=ref.getMonth()+1;
+    const pref=`${y}-${String(m).padStart(2,"0")}-`;
+
+    return leerEventosCalendarioV181()
+        .filter(e=>String(e?.fecha||"").startsWith(pref))
+        .map(e=>({...e,_ctx:tipoContextoV181(e)}))
+        .sort((a,b)=>String(a.fecha).localeCompare(String(b.fecha)) || String(a.hora||"").localeCompare(String(b.hora||"")));
+}
+
+function resumenDisponibilidadV181(ref=new Date()){
+    const eventos=eventosMesV181(ref);
+    const diasMes=new Date(ref.getFullYear(),ref.getMonth()+1,0).getDate();
+    const hoy=Math.min(ref.getDate(),diasMes);
+
+    const bloqueados=new Set(
+        eventos
+            .filter(e=>e._ctx.bloquea)
+            .map(e=>String(e.fecha))
+    );
+
+    let disponiblesTotales=0;
+    let disponiblesTranscurridos=0;
+    let disponiblesRestantes=0;
+
+    for(let dia=1;dia<=diasMes;dia++){
+        const d=new Date(ref.getFullYear(),ref.getMonth(),dia,12,0,0);
+        const iso=fechaLocalV181(d);
+        if(bloqueados.has(iso)) continue;
+
+        disponiblesTotales++;
+        if(dia<=hoy) disponiblesTranscurridos++;
+        if(dia>=hoy) disponiblesRestantes++;
+    }
+
+    const esperado=disponiblesTotales>0
+        ? (disponiblesTranscurridos/disponiblesTotales)*100
+        : (hoy/diasMes)*100;
+
+    const hoyISO=fechaLocalV181(ref);
+    const hoyEventos=eventos.filter(e=>e.fecha===hoyISO);
+    const hoyBloqueado=hoyEventos.some(e=>e._ctx.bloquea);
+
+    return {
+        eventos,
+        bloqueados,
+        diasMes,
+        esperado,
+        disponiblesTotales,
+        disponiblesTranscurridos,
+        disponiblesRestantes,
+        hoyEventos,
+        hoyBloqueado
+    };
+}
+
+function asegurarMarcadoresV181(contenedor){
+    let host=contenedor?.querySelector(".progreso-eventos-v181");
+    if(!host && contenedor){
+        host=document.createElement("div");
+        host.className="progreso-eventos-v181";
+        host.setAttribute("aria-hidden","true");
+        contenedor.appendChild(host);
+    }
+    return host;
+}
+
+function renderMarcadoresV181(contenedor,resumen){
+    const host=asegurarMarcadoresV181(contenedor);
+    if(!host) return;
+
+    host.innerHTML="";
+    const porFecha=new Map();
+
+    resumen.eventos.forEach(e=>{
+        if(!porFecha.has(e.fecha)) porFecha.set(e.fecha,e);
+        else if(e._ctx.bloquea && !porFecha.get(e.fecha)._ctx.bloquea) porFecha.set(e.fecha,e);
+    });
+
+    [...porFecha.values()].forEach(e=>{
+        const dia=Number(String(e.fecha).slice(8,10));
+        if(!dia) return;
+
+        const marker=document.createElement("span");
+        marker.className=`progreso-evento-marca-v181 tipo-${e._ctx.tipo}`;
+        marker.textContent=e._ctx.icono;
+        marker.style.left=`${((dia-.5)/resumen.diasMes)*100}%`;
+        marker.title=`${dia} · ${e.titulo || e._ctx.nombre}`;
+        host.appendChild(marker);
+    });
+}
+
+function textoContextoV181(resumen){
+    const vacas=[...resumen.bloqueados].length;
+    const hoyEvt=resumen.hoyEventos[0];
+
+    if(resumen.hoyBloqueado && hoyEvt){
+        return {
+            icono:hoyEvt._ctx.icono,
+            fuerte:"Pausa planificada",
+            detalle:`${hoyEvt._ctx.nombre} hoy · el objetivo no cambia`
+        };
+    }
+
+    if(vacas>0){
+        const palabra=vacas===1?"día":"días";
+        return {
+            icono:"🏖️",
+            fuerte:`${vacas} ${palabra} no disponible${vacas===1?"":"s"} este mes`,
+            detalle:`${resumen.disponiblesRestantes} días disponibles desde hoy · ritmo ajustado`
+        };
+    }
+
+    if(hoyEvt){
+        return {
+            icono:hoyEvt._ctx.icono,
+            fuerte:`${hoyEvt._ctx.nombre} hoy`,
+            detalle:"Se muestra como contexto; tus horas y objetivo siguen iguales"
+        };
+    }
+
+    const futuro=resumen.eventos.find(e=>e.fecha>fechaLocalV181(new Date()));
+    if(futuro){
+        const dia=Number(String(futuro.fecha).slice(8,10));
+        return {
+            icono:futuro._ctx.icono,
+            fuerte:`${futuro._ctx.nombre} el ${dia}`,
+            detalle:"Evento próximo reflejado en la línea de progreso"
+        };
+    }
+
+    return null;
+}
+
+function aplicarContextoCalendarioProgresoV181(progreso, estadoPersonaje, contenedor){
+    const box=document.getElementById("contextoCalendarioProgresoV181");
+    if(!box || !contenedor) return;
+
+    const resumen=resumenDisponibilidadV181(new Date());
+    renderMarcadoresV181(contenedor,resumen);
+
+    const contexto=textoContextoV181(resumen);
+    if(contexto){
+        box.innerHTML=
+            `<span class="contexto-icono-v181">${contexto.icono}</span>`+
+            `<span><strong>${contexto.fuerte}</strong><small>${contexto.detalle}</small></span>`;
+        box.classList.remove("oculto");
+    }else{
+        box.innerHTML="";
+        box.classList.add("oculto");
+    }
+
+    // Si no hay días que afecten al ritmo, respetamos exactamente el cálculo anterior.
+    if(!resumen.bloqueados.size) return;
+
+    const valor=Math.max(0,Math.min(100,Number(progreso)||0));
+    const diferencia=valor-resumen.esperado;
+    const margen=5;
+
+    contenedor.classList.remove(
+        "ritmo-atrasado",
+        "ritmo-en-ritmo",
+        "ritmo-adelantado",
+        "ritmo-pausa"
+    );
+
+    if(resumen.hoyBloqueado){
+        contenedor.classList.add("ritmo-pausa");
+        if(estadoPersonaje){
+            estadoPersonaje.textContent="🏖️ Pausa planificada. Tu objetivo sigue igual.";
+        }
+        return;
+    }
+
+    if(valor>=100){
+        return;
+    }
+
+    if(diferencia>=margen){
+        contenedor.classList.add("ritmo-adelantado");
+        if(estadoPersonaje) estadoPersonaje.textContent="Ritmo ajustado: vas por delante ✨";
+    }else if(diferencia<=-margen){
+        contenedor.classList.add("ritmo-atrasado");
+        if(estadoPersonaje) estadoPersonaje.textContent="Ritmo ajustado: aún puedes recuperar el ritmo.";
+    }else{
+        contenedor.classList.add("ritmo-en-ritmo");
+        if(estadoPersonaje) estadoPersonaje.textContent="Ritmo ajustado: vas bien ✨";
+    }
+}
+
+function refrescarContextoProgresoV181(){
+    try{
+        const objetivo=Number(estado?.preferencias?.objetivoMensualMinutos)||0;
+        const regs=(typeof obtenerRegistrosMesActual==="function")
+            ? obtenerRegistrosMesActual()
+            : (Array.isArray(estado?.registros)?estado.registros:[]);
+        const total=typeof sumarMinutos==="function" ? sumarMinutos(regs) : 0;
+        const pct=objetivo>0?Math.min(100,Math.max(0,(total/objetivo)*100)):0;
+        const cont=document.getElementById("progresoPersonaje");
+        const est=document.getElementById("estadoAnimal");
+        aplicarContextoCalendarioProgresoV181(pct,est,cont);
+    }catch(e){
+        console.warn("Contexto progreso V181",e);
+    }
+}
+
+window.addEventListener("miServicio:eventosCalendarioActualizados",()=>{
+    setTimeout(refrescarContextoProgresoV181,80);
+});
+
+document.addEventListener("DOMContentLoaded",()=>{
+    setTimeout(refrescarContextoProgresoV181,1100);
+});
+
+document.addEventListener("visibilitychange",()=>{
+    if(!document.hidden) setTimeout(refrescarContextoProgresoV181,120);
+});
