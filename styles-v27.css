@@ -9485,3 +9485,51 @@ body.light #vista-meta .meta-v152-mini-ring strong,
 @media (prefers-reduced-motion: reduce){
   #vista-ajustes .ajustes-acordeon-flecha{transition:none}
 }
+
+
+/* =========================================================
+   V180 · AJUSTES DESPLEGABLES · MODO OSCURO
+   Corrige únicamente fondo/borde/texto de los desplegables.
+   ========================================================= */
+@media (prefers-color-scheme: dark){
+  #vista-ajustes > .ajustes-acordeon-v179{
+    background:#17181c!important;
+    border-color:rgba(255,255,255,.10)!important;
+    box-shadow:none!important;
+  }
+
+  #vista-ajustes > .ajustes-acordeon-v179 > summary{
+    color:#f5f5f7!important;
+    background:#17181c!important;
+  }
+
+  #vista-ajustes .ajustes-acordeon-titulo{
+    color:#f5f5f7!important;
+  }
+
+  #vista-ajustes .ajustes-acordeon-icono{
+    background:rgba(255,255,255,.07)!important;
+  }
+
+  #vista-ajustes .ajustes-acordeon-flecha{
+    color:#9a9aa0!important;
+  }
+
+  #vista-ajustes .ajustes-acordeon-cuerpo{
+    background:#17181c!important;
+  }
+}
+
+/* Compatibilidad con clases de tema usadas por la propia app */
+html.dark #vista-ajustes > .ajustes-acordeon-v179,
+body.dark #vista-ajustes > .ajustes-acordeon-v179,
+[data-theme="dark"] #vista-ajustes > .ajustes-acordeon-v179{
+  background:#17181c!important;
+  border-color:rgba(255,255,255,.10)!important;
+}
+
+html.dark #vista-ajustes .ajustes-acordeon-titulo,
+body.dark #vista-ajustes .ajustes-acordeon-titulo,
+[data-theme="dark"] #vista-ajustes .ajustes-acordeon-titulo{
+  color:#f5f5f7!important;
+}
