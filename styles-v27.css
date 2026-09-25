@@ -9623,3 +9623,16 @@ body.dark #vista-ajustes .ajustes-acordeon-titulo,
     border-color:rgba(120,165,255,.13);
   }
 }
+
+/* V182 · evento dinámico */
+#vista-inicio .contexto-calendario-progreso-v181.tipo-vacaciones{background:rgba(52,199,89,.10);border-color:rgba(52,199,89,.18)}
+#vista-inicio .contexto-calendario-progreso-v181.tipo-viaje{background:rgba(0,122,255,.09);border-color:rgba(0,122,255,.16)}
+#vista-inicio .contexto-calendario-progreso-v181.tipo-celebracion{background:rgba(175,82,222,.09);border-color:rgba(175,82,222,.16)}
+#vista-inicio .contexto-calendario-progreso-v181.tipo-cita{background:rgba(255,149,0,.09);border-color:rgba(255,149,0,.16)}
+#vista-inicio .contexto-calendario-progreso-v181.tipo-trabajo{background:rgba(88,86,214,.08);border-color:rgba(88,86,214,.14)}
+#vista-inicio .contexto-calendario-progreso-v181.tipo-asamblea{background:rgba(0,199,190,.09);border-color:rgba(0,199,190,.16)}
+#vista-inicio .contexto-calendario-progreso-v181.tipo-ldc{background:rgba(255,45,140,.09);border-color:rgba(255,45,140,.16)}
+#vista-inicio .contexto-calendario-progreso-v181.tipo-servicio{background:rgba(10,132,255,.08);border-color:rgba(10,132,255,.15)}
+#vista-inicio .contexto-calendario-progreso-v181.tipo-familia{background:rgba(255,204,0,.09);border-color:rgba(255,204,0,.15)}
+#vista-inicio .contexto-calendario-progreso-v181.tipo-personal{background:rgba(142,142,147,.08);border-color:rgba(142,142,147,.14)}
+#vista-inicio .contexto-calendario-progreso-v181 .contexto-icono-v181{font-size:20px;width:34px;height:34px}

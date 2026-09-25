@@ -7285,7 +7285,7 @@ function mostrarVersionPublicadaV156() {
 
     const etiqueta = document.createElement("div");
     etiqueta.id = "versionPublicadaV156";
-    etiqueta.textContent = "Versión publicada: V181";
+    etiqueta.textContent = "Versión publicada: V182";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
@@ -7679,21 +7679,38 @@ function fechaLocalV181(d){
 
 function tipoContextoV181(e){
     const tipo=String(e?.tipo||"").toLowerCase();
-    const titulo=String(e?.titulo||e?.title||"").toLowerCase();
+    const titulo=String(e?.titulo||e?.title||"").toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+    const tiene=(re)=>re.test(titulo);
 
-    if(tipo==="vacaciones" || /vacacion|vacación|vacaciones|holiday|descanso/.test(titulo)){
-        return {tipo:"vacaciones",icono:"🏖️",nombre:"Vacaciones",bloquea:true};
+    if(tipo==="vacaciones" || tiene(/\b(vacacion|vacaciones|holiday|descanso|libre|dias libres|dia libre)\b/)){
+        return {tipo:"vacaciones",icono:"🌴",nombre:"Vacaciones",tituloHoy:"Vacaciones hoy",bloquea:true};
     }
-    if(tipo==="viaje" || /viaje|vuelo|avión|avion|tren|hotel|aeropuerto/.test(titulo)){
-        return {tipo:"viaje",icono:"✈️",nombre:"Viaje",bloquea:Boolean(e?.todoElDia)};
+    if(tipo==="viaje" || tiene(/\b(viaje|vuelo|avion|tren|hotel|aeropuerto|ferry|barco|maleta)\b/)){
+        return {tipo:"viaje",icono:"🧳",nombre:"Viaje",tituloHoy:"Viaje hoy",bloquea:Boolean(e?.todoElDia)};
     }
-    if(tipo==="trabajo"){
-        return {tipo:"trabajo",icono:"💼",nombre:"Trabajo",bloquea:false};
+    if(tiene(/\b(cumple|cumpleanos|aniversario|fiesta|celebracion|boda)\b/)){
+        return {tipo:"celebracion",icono:"🎉",nombre:"Celebración",tituloHoy:"Celebración hoy",bloquea:false};
     }
-    if(tipo==="cita"){
-        return {tipo:"cita",icono:"📍",nombre:"Cita",bloquea:false};
+    if(tipo==="cita" || tiene(/\b(medico|medica|dentista|hospital|consulta|revision|analisis|cita)\b/)){
+        return {tipo:"cita",icono:"🩺",nombre:"Cita",tituloHoy:"Cita hoy",bloquea:false};
     }
-    return {tipo:"personal",icono:"🗓️",nombre:"Evento",bloquea:false};
+    if(tipo==="trabajo" || tiene(/\b(trabajo|oficina|reunion|curso|formacion)\b/)){
+        return {tipo:"trabajo",icono:"💼",nombre:"Compromiso",tituloHoy:"Compromiso hoy",bloquea:false};
+    }
+    if(tipo==="asamblea" || tiene(/\b(asamblea|congreso)\b/)){
+        return {tipo:"asamblea",icono:"🎤",nombre:"Asamblea",tituloHoy:"Asamblea hoy",bloquea:false};
+    }
+    if(tipo==="ldc" || tiene(/\b(ldc|construccion|mantenimiento|obra)\b/)){
+        return {tipo:"ldc",icono:"🛠️",nombre:"LDC",tituloHoy:"LDC hoy",bloquea:false};
+    }
+    if(tipo==="ministerio" || tiene(/\b(predicacion|servicio|ministerio|revisita|curso biblico)\b/)){
+        return {tipo:"servicio",icono:"📖",nombre:"Servicio",tituloHoy:"Servicio hoy",bloquea:false};
+    }
+    if(tiene(/\b(familia|comida|cena|almuerzo|visita|merienda)\b/)){
+        return {tipo:"familia",icono:"🍽️",nombre:"Plan familiar",tituloHoy:"Plan familiar hoy",bloquea:false};
+    }
+    return {tipo:"personal",icono:"✨",nombre:"Evento",tituloHoy:"Evento hoy",bloquea:false};
 }
 
 function eventosMesV181(ref=new Date()){
@@ -7813,8 +7830,9 @@ function textoContextoV181(resumen){
     if(hoyEvt){
         return {
             icono:hoyEvt._ctx.icono,
-            fuerte:`${hoyEvt._ctx.nombre} hoy`,
-            detalle:"Se muestra como contexto; tus horas y objetivo siguen iguales"
+            fuerte:hoyEvt._ctx.tituloHoy || `${hoyEvt._ctx.nombre} hoy`,
+            detalle:"Se muestra como contexto; tus horas y objetivo siguen iguales",
+            tipo:hoyEvt._ctx.tipo
         };
     }
 
@@ -7840,13 +7858,14 @@ function aplicarContextoCalendarioProgresoV181(progreso, estadoPersonaje, conten
 
     const contexto=textoContextoV181(resumen);
     if(contexto){
+        box.className="contexto-calendario-progreso-v181";
+        box.classList.add(`tipo-${contexto.tipo||"personal"}`);
         box.innerHTML=
             `<span class="contexto-icono-v181">${contexto.icono}</span>`+
             `<span><strong>${contexto.fuerte}</strong><small>${contexto.detalle}</small></span>`;
-        box.classList.remove("oculto");
     }else{
         box.innerHTML="";
-        box.classList.add("oculto");
+        box.className="contexto-calendario-progreso-v181 oculto";
     }
 
     // Si no hay días que afecten al ritmo, respetamos exactamente el cálculo anterior.
