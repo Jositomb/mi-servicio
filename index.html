@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=18201"
+        href="./styles-v27.css?v=18301"
     >
 
 
@@ -120,7 +120,7 @@
 </style>
 
     <meta name="mi-servicio-version" content="V151-META-REORGANIZADA">
-<meta name="mi-servicio-build" content="V182-18201">
+<meta name="mi-servicio-build" content="V183-18301">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -641,6 +641,37 @@
             id="vista-estadisticas"
             class="vista"
         >
+            <section id="historialResumenV153" class="v153-historial-resumen stats-v183-resumen-visible">
+  <article id="resumenMensualV143" class="v143-resumen-mensual">
+                <div class="v143-rm-head">
+                    <div>
+                        <small>RESUMEN MENSUAL</small>
+                        <h2 data-v143-mes>—</h2>
+                    </div>
+                    <div class="v143-rm-nav">
+                        <button type="button" onclick="cambiarMesResumenV143(-1)" aria-label="Mes anterior">‹</button>
+                        <input id="mesResumenV143" type="month" aria-label="Elegir mes">
+                        <button type="button" onclick="cambiarMesResumenV143(1)" aria-label="Mes siguiente">›</button>
+                    </div>
+                </div>
+                <div class="v143-rm-stats">
+                    <div><small>Total</small><b data-v143-total>—</b></div>
+                    <div><small>Días activos</small><b data-v143-dias>—</b></div>
+                    <div><small>Mejor semana</small><b data-v143-semana>—</b></div>
+                </div>
+                <div class="v143-rm-compara" data-v143-compara>—</div>
+                <div class="v143-rm-dist" data-v143-dist></div>
+                <p class="v143-rm-mensaje" data-v143-mensaje></p>
+            </article>
+            </section>
+
+            <details class="stats-accordion-v183" id="statsPeriodoV183">
+                <summary>
+                    <span class="stats-accordion-icono-v183">📊</span>
+                    <span>Estadísticas por periodo</span>
+                    <span class="stats-accordion-flecha-v183">›</span>
+                </summary>
+                <div class="stats-accordion-cuerpo-v183">
             <div class="selector-periodo">
                 <button
                     class="periodo-boton activo"
@@ -664,47 +695,6 @@
                     Año
                 </button>
             </div>
-<section id="historialResumenV153" class="v153-historial-resumen">
-  <article id="resumenMensualV143" class="v143-resumen-mensual">
-                <div class="v143-rm-head">
-                    <div>
-                        <small>RESUMEN MENSUAL</small>
-                        <h2 data-v143-mes>—</h2>
-                    </div>
-                    <div class="v143-rm-nav">
-                        <button type="button" onclick="cambiarMesResumenV143(-1)" aria-label="Mes anterior">‹</button>
-                        <input id="mesResumenV143" type="month" aria-label="Elegir mes">
-                        <button type="button" onclick="cambiarMesResumenV143(1)" aria-label="Mes siguiente">›</button>
-                    </div>
-                </div>
-                <div class="v143-rm-stats">
-                    <div><small>Total</small><b data-v143-total>—</b></div>
-                    <div><small>Días activos</small><b data-v143-dias>—</b></div>
-                    <div><small>Mejor semana</small><b data-v143-semana>—</b></div>
-                </div>
-                <div class="v143-rm-compara" data-v143-compara>—</div>
-                <div class="v143-rm-dist" data-v143-dist></div>
-                <p class="v143-rm-mensaje" data-v143-mensaje></p>
-            </article>
-  <article id="tendenciaV144" class="v144-tendencia">
-                <div class="v144-head">
-                    <div><small>EVOLUCIÓN</small><h2>Últimos 6 meses</h2></div>
-                    <span aria-hidden="true">📈</span>
-                </div>
-                <div class="v144-barras" data-v144-barras></div>
-                <p data-v144-mensaje></p>
-            </article>
-</section>
-<section id="comparacionSemanalV139" class="v139-week" aria-label="Comparación semanal">
-                <div class="v139-week-title">📊 <strong>Comparación semanal</strong></div>
-                <div class="v139-week-grid">
-                    <div class="v139-week-value"><small>Esta semana</small><b data-v139-actual>—</b></div>
-                    <div class="v139-week-value"><small>Semana anterior</small><b data-v139-anterior>—</b></div>
-                    <div class="v139-week-diff"><b data-v139-diferencia>—</b><small data-v139-diferencia-sub>respecto a la anterior</small></div>
-                </div>
-            </section>
-
-
             <section class="navegador-periodo">
                 <button
                     id="periodoAnterior"
@@ -831,7 +821,53 @@
                     </article>
                 </div>
             </section>
-            <!-- TRIMESTRES -->
+                </div>
+            </details>
+
+            <details class="stats-accordion-v183" id="statsComparacionV183">
+                <summary>
+                    <span class="stats-accordion-icono-v183">📈</span>
+                    <span>Comparación semanal</span>
+                    <span class="stats-accordion-flecha-v183">›</span>
+                </summary>
+                <div class="stats-accordion-cuerpo-v183">
+<section id="comparacionSemanalV139" class="v139-week" aria-label="Comparación semanal">
+                <div class="v139-week-title">📊 <strong>Comparación semanal</strong></div>
+                <div class="v139-week-grid">
+                    <div class="v139-week-value"><small>Esta semana</small><b data-v139-actual>—</b></div>
+                    <div class="v139-week-value"><small>Semana anterior</small><b data-v139-anterior>—</b></div>
+                    <div class="v139-week-diff"><b data-v139-diferencia>—</b><small data-v139-diferencia-sub>respecto a la anterior</small></div>
+                </div>
+            </section>
+                </div>
+            </details>
+
+            <details class="stats-accordion-v183" id="statsEvolucionV183">
+                <summary>
+                    <span class="stats-accordion-icono-v183">📉</span>
+                    <span>Evolución · últimos 6 meses</span>
+                    <span class="stats-accordion-flecha-v183">›</span>
+                </summary>
+                <div class="stats-accordion-cuerpo-v183">
+  <article id="tendenciaV144" class="v144-tendencia">
+                <div class="v144-head">
+                    <div><small>EVOLUCIÓN</small><h2>Últimos 6 meses</h2></div>
+                    <span aria-hidden="true">📈</span>
+                </div>
+                <div class="v144-barras" data-v144-barras></div>
+                <p data-v144-mensaje></p>
+            </article>
+
+                </div>
+            </details>
+
+            <details class="stats-accordion-v183 stats-trimestres-v183" id="statsTrimestresV183">
+                <summary>
+                    <span class="stats-accordion-icono-v183">🗓️</span>
+                    <span>Trimestres</span>
+                    <span class="stats-accordion-flecha-v183">›</span>
+                </summary>
+                <div class="stats-accordion-cuerpo-v183">
             <section
                 id="seccionTrimestres"
                 class="seccion oculto"
@@ -847,6 +883,8 @@
                     class="lista-trimestres"
                 ></div>
             </section>
+                </div>
+            </details>
         </section>
         <!-- =================================================
              META DEL AÑO DE SERVICIO
@@ -1512,8 +1550,8 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=18201" defer></script>
-<script src="./eventos-calendario.js?v=18201" defer></script>
+<script src="./app-v27.js?v=18301" defer></script>
+<script src="./eventos-calendario.js?v=18301" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
@@ -1521,7 +1559,7 @@ if ("serviceWorker" in navigator) {
     setTimeout(async () => {
       try {
         const registro = await navigator.serviceWorker.register(
-          "./sw.js?v=18201",
+          "./sw.js?v=18301",
           { scope: "./", updateViaCache: "none" }
         );
         registro.update().catch(() => {});
@@ -1589,6 +1627,23 @@ document.addEventListener("DOMContentLoaded", () => {
     details.addEventListener("toggle", () => {
       if (!details.open) return;
       vista.querySelectorAll("details.ajustes-acordeon-v179[open]").forEach(otro => {
+        if (otro !== details) otro.open = false;
+      });
+    });
+  });
+});
+</script>
+
+
+<script id="estadisticasAcordeonV183">
+document.addEventListener("DOMContentLoaded", () => {
+  const vista = document.getElementById("vista-estadisticas");
+  if (!vista) return;
+
+  vista.querySelectorAll("details.stats-accordion-v183").forEach(details => {
+    details.addEventListener("toggle", () => {
+      if (!details.open) return;
+      vista.querySelectorAll("details.stats-accordion-v183[open]").forEach(otro => {
         if (otro !== details) otro.open = false;
       });
     });

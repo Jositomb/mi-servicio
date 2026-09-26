@@ -9636,3 +9636,110 @@ body.dark #vista-ajustes .ajustes-acordeon-titulo,
 #vista-inicio .contexto-calendario-progreso-v181.tipo-familia{background:rgba(255,204,0,.09);border-color:rgba(255,204,0,.15)}
 #vista-inicio .contexto-calendario-progreso-v181.tipo-personal{background:rgba(142,142,147,.08);border-color:rgba(142,142,147,.14)}
 #vista-inicio .contexto-calendario-progreso-v181 .contexto-icono-v181{font-size:20px;width:34px;height:34px}
+
+
+/* =========================================================
+   V183 · ESTADÍSTICAS EN DESPLEGABLES
+   Resumen mensual permanece siempre visible.
+   ========================================================= */
+
+#vista-estadisticas .stats-v183-resumen-visible{
+  margin-bottom:10px;
+}
+
+#vista-estadisticas .stats-v183-resumen-visible #resumenMensualV143{
+  margin-bottom:0;
+}
+
+#vista-estadisticas .stats-accordion-v183{
+  margin:10px 0;
+  border:1px solid rgba(127,127,127,.14);
+  border-radius:17px;
+  background:var(--fondo-tarjeta,#fff);
+  overflow:hidden;
+  box-shadow:0 2px 10px rgba(0,0,0,.035);
+}
+
+#vista-estadisticas .stats-accordion-v183 > summary{
+  list-style:none;
+  display:grid;
+  grid-template-columns:34px 1fr 24px;
+  align-items:center;
+  gap:10px;
+  min-height:58px;
+  padding:10px 14px;
+  cursor:pointer;
+  font-weight:750;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;
+}
+
+#vista-estadisticas .stats-accordion-v183 > summary::-webkit-details-marker{
+  display:none;
+}
+
+#vista-estadisticas .stats-accordion-icono-v183{
+  width:32px;
+  height:32px;
+  display:grid;
+  place-items:center;
+  border-radius:10px;
+  background:rgba(127,127,127,.09);
+  font-size:17px;
+}
+
+#vista-estadisticas .stats-accordion-flecha-v183{
+  justify-self:end;
+  color:var(--texto-secundario,#74767d);
+  font-size:25px;
+  line-height:1;
+  transition:transform .18s ease;
+}
+
+#vista-estadisticas .stats-accordion-v183[open] .stats-accordion-flecha-v183{
+  transform:rotate(90deg);
+}
+
+#vista-estadisticas .stats-accordion-cuerpo-v183{
+  padding:0 10px 10px;
+}
+
+#vista-estadisticas .stats-accordion-cuerpo-v183 > section,
+#vista-estadisticas .stats-accordion-cuerpo-v183 > article{
+  margin-top:8px;
+}
+
+/* Evitar tarjetas dobles demasiado pesadas dentro del acordeón */
+#vista-estadisticas .stats-accordion-cuerpo-v183 #comparacionSemanalV139,
+#vista-estadisticas .stats-accordion-cuerpo-v183 #tendenciaV144{
+  margin:0;
+}
+
+/* Si Trimestres está oculto por la lógica existente, también se oculta su desplegable */
+#vista-estadisticas .stats-trimestres-v183:has(#seccionTrimestres.oculto){
+  display:none;
+}
+
+@media (prefers-color-scheme: dark){
+  #vista-estadisticas .stats-accordion-v183{
+    background:#17181c;
+    border-color:rgba(255,255,255,.10);
+    box-shadow:none;
+  }
+  #vista-estadisticas .stats-accordion-v183 > summary{
+    color:#f5f5f7;
+    background:#17181c;
+  }
+  #vista-estadisticas .stats-accordion-icono-v183{
+    background:rgba(255,255,255,.07);
+  }
+  #vista-estadisticas .stats-accordion-flecha-v183{
+    color:#9a9aa0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  #vista-estadisticas .stats-accordion-flecha-v183{
+    transition:none;
+  }
+}
