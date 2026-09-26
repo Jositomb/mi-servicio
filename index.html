@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=18301"
+        href="./styles-v27.css?v=18401"
     >
 
 
@@ -120,7 +120,7 @@
 </style>
 
     <meta name="mi-servicio-version" content="V151-META-REORGANIZADA">
-<meta name="mi-servicio-build" content="V183-18301">
+<meta name="mi-servicio-build" content="V184-18401">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -341,16 +341,21 @@
         
         
             
-            <section id="resumenHoyV145" class="v145-hoy">
-                <div class="v145-hoy-icono" data-v145-icono>☀️</div>
-                <div class="v145-hoy-texto">
-                    <small>RESUMEN DE HOY</small>
-                    <strong data-v145-titulo>Preparando el día…</strong>
-                    <span data-v145-detalle></span>
+            <details id="resumenHoyV145" class="v145-hoy v184-hoy-desplegable">
+                <summary class="v184-hoy-summary">
+                    <div class="v145-hoy-icono" data-v145-icono>☀️</div>
+                    <div class="v145-hoy-texto">
+                        <small>RESUMEN DE HOY</small>
+                        <strong data-v145-titulo>Preparando el día…</strong>
+                    </div>
+                    <div class="v145-hoy-estado" data-v145-estado>Hoy</div>
+                    <span class="v184-hoy-flecha" aria-hidden="true">›</span>
+                </summary>
+                <div class="v184-hoy-cuerpo">
+                    <span class="v184-hoy-detalle" data-v145-detalle></span>
+                    <div id="agendaHoyV172" class="v172-agenda-hoy-lista" aria-live="polite"></div>
                 </div>
-                <div class="v145-hoy-estado" data-v145-estado>Hoy</div>
-                <div id="agendaHoyV172" class="v172-agenda-hoy-lista" aria-live="polite"></div>
-            </section>
+            </details>
 
 </section>
         <!-- =================================================
@@ -1550,8 +1555,8 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=18301" defer></script>
-<script src="./eventos-calendario.js?v=18301" defer></script>
+<script src="./app-v27.js?v=18401" defer></script>
+<script src="./eventos-calendario.js?v=18401" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
@@ -1559,7 +1564,7 @@ if ("serviceWorker" in navigator) {
     setTimeout(async () => {
       try {
         const registro = await navigator.serviceWorker.register(
-          "./sw.js?v=18301",
+          "./sw.js?v=18401",
           { scope: "./", updateViaCache: "none" }
         );
         registro.update().catch(() => {});
