@@ -10058,3 +10058,180 @@ details[open] > summary{
     transition:none!important;
   }
 }
+
+
+/* =========================================================
+   V186 · Inicio más vivo, pista refinada y modo consistente
+   Solo presentación: no cambia cálculos ni estructura.
+   ========================================================= */
+
+#vista-inicio .barra{
+  height:6px;
+  border-radius:999px;
+  overflow:hidden;
+  background:linear-gradient(90deg, rgba(120,120,128,.10), rgba(120,120,128,.18));
+  box-shadow: inset 0 1px 1px rgba(255,255,255,.4), inset 0 -1px 1px rgba(0,0,0,.04);
+}
+
+#vista-inicio .barra-progreso{
+  border-radius:999px;
+  box-shadow:0 0 0 1px rgba(255,255,255,.16) inset, 0 3px 10px rgba(52,120,246,.18);
+}
+
+#vista-inicio .progreso-personaje{
+  height:64px;
+  margin-top:10px;
+  overflow:visible;
+}
+
+#vista-inicio .progreso-pista{
+  bottom:9px;
+  height:4px;
+  border-radius:999px;
+  background:linear-gradient(90deg, rgba(52,120,246,.10), rgba(52,120,246,.22) 35%, rgba(52,120,246,.12));
+  box-shadow: inset 0 1px 1px rgba(255,255,255,.5), 0 1px 4px rgba(30,45,90,.06);
+}
+
+#vista-inicio .progreso-pista::after{
+  content:"";
+  position:absolute;
+  left:0; right:0; top:50%;
+  height:1px;
+  transform:translateY(-50%);
+  background:repeating-linear-gradient(90deg, rgba(52,120,246,.18) 0 14px, rgba(52,120,246,.02) 14px 22px);
+  opacity:.8;
+}
+
+#vista-inicio .progreso-animal{
+  bottom:10px;
+  width:50px;
+  height:50px;
+  z-index:3;
+  filter:drop-shadow(0 5px 10px rgba(20,24,35,.14));
+}
+
+#vista-inicio #animalProgreso[data-personaje] .personaje-cuerpo-img{
+  position:relative;
+  z-index:2;
+}
+
+#vista-inicio .personaje-sombra-suelo-v186{
+  position:absolute;
+  left:50%;
+  bottom:-2px;
+  width:24px;
+  height:7px;
+  border-radius:999px;
+  background:rgba(28,28,30,.16);
+  transform:translateX(-50%);
+  filter:blur(2px);
+  z-index:1;
+}
+
+#vista-inicio .personaje-accesorio-v186{
+  position:absolute;
+  right:-7px;
+  top:-6px;
+  width:22px;
+  height:22px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:999px;
+  background:rgba(255,255,255,.92);
+  box-shadow:0 3px 10px rgba(20,24,35,.16);
+  font-size:13px;
+  line-height:1;
+  z-index:4;
+}
+
+#vista-inicio #animalProgreso.contexto-vacaciones-v186 .personaje-cuerpo-img{
+  animation:v186BalanceoVacaciones 3.1s ease-in-out infinite;
+}
+
+#vista-inicio #animalProgreso.contexto-viaje-v186 .personaje-cuerpo-img{
+  animation:v186PasoViaje 1.9s ease-in-out infinite;
+}
+
+@keyframes v186BalanceoVacaciones{
+  0%,100%{ transform:rotate(-2deg) translateY(0); }
+  50%{ transform:rotate(2deg) translateY(-1px); }
+}
+
+@keyframes v186PasoViaje{
+  0%,100%{ transform:translateY(0); }
+  50%{ transform:translateY(-1.5px); }
+}
+
+#vista-inicio .progreso-personaje.ritmo-pausa #animalProgreso::after{
+  display:none!important;
+}
+
+#vista-inicio .progreso-eventos-v181{
+  bottom:-2px;
+}
+
+#vista-inicio .progreso-meta{
+  bottom:11px;
+  font-size:22px;
+  filter:drop-shadow(0 2px 5px rgba(20,24,35,.12));
+}
+
+#vista-inicio .contexto-calendario-progreso-v181,
+#vista-inicio .v184-hoy-desplegable,
+#vista-ajustes > .ajustes-acordeon-v179,
+#vista-estadisticas .stats-accordion-v183,
+#vista-estadisticas #resumenMensualV143,
+#vista-estadisticas #comparacionSemanalV139,
+#vista-estadisticas #tendenciaV144,
+#vista-meta .tarjeta,
+#vista-historial .tarjeta,
+#vista-historial article,
+#vista-inicio .tarjeta{
+  transition:background-color .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+
+@media (prefers-color-scheme: light){
+  #vista-inicio .contexto-calendario-progreso-v181{
+    background:rgba(255,255,255,.72);
+    border:1px solid rgba(80,90,120,.08);
+    box-shadow:0 6px 18px rgba(20,24,35,.06);
+  }
+}
+
+@media (prefers-color-scheme: dark){
+  #vista-inicio .barra{
+    background:linear-gradient(90deg, rgba(255,255,255,.08), rgba(255,255,255,.12));
+    box-shadow: inset 0 1px 1px rgba(255,255,255,.04), inset 0 -1px 1px rgba(0,0,0,.35);
+  }
+
+  #vista-inicio .progreso-pista{
+    background:linear-gradient(90deg, rgba(115,165,255,.16), rgba(115,165,255,.32) 35%, rgba(115,165,255,.14));
+    box-shadow: inset 0 1px 1px rgba(255,255,255,.03), 0 1px 4px rgba(0,0,0,.18);
+  }
+
+  #vista-inicio .personaje-accesorio-v186{
+    background:rgba(24,24,27,.95);
+    box-shadow:0 4px 12px rgba(0,0,0,.34);
+  }
+
+  #vista-inicio .personaje-sombra-suelo-v186{
+    background:rgba(0,0,0,.32);
+  }
+
+  #vista-inicio .contexto-calendario-progreso-v181,
+  #vista-inicio .v184-hoy-desplegable,
+  #vista-ajustes > .ajustes-acordeon-v179,
+  #vista-estadisticas .stats-accordion-v183,
+  #vista-estadisticas #resumenMensualV143,
+  #vista-estadisticas #comparacionSemanalV139,
+  #vista-estadisticas #tendenciaV144,
+  #vista-meta .tarjeta,
+  #vista-historial .tarjeta,
+  #vista-historial article,
+  #vista-inicio .tarjeta{
+    background:rgba(24,24,27,.92)!important;
+    border-color:rgba(255,255,255,.07)!important;
+    box-shadow:0 10px 24px rgba(0,0,0,.24)!important;
+  }
+}

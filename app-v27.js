@@ -2487,11 +2487,18 @@ function actualizarPersonajeProgreso(porcentaje) {
     }
 
     const imagenesPersonaje={hombre:"personaje-95d7b35c957c.png",mujer:"personaje-635d3bce67f2.png",koala:"personaje-56dd433b1692.png",mariposa:"personaje-ff4383d3590d.png",pantera:"personaje-698db747b8fb.png",tortuga:"personaje-5638b822e9ec.png",liebre:"personaje-e4168da17cdf.png",corazon:"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxODAiIGhlaWdodD0iMjMwIiB2aWV3Qm94PSIwIDAgMTgwIDIzMCI+CjxnIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgPHBhdGggZD0iTTkwIDE2OUM2OSAxNDYgMjUgMTE2IDI1IDcyQzI1IDQ0IDQzIDI3IDY2IDI3Qzc5IDI3IDg4IDM0IDkwIDQ1Qzk0IDM0IDEwMyAyNyAxMTYgMjdDMTM5IDI3IDE1NyA0NCAxNTcgNzJDMTU3IDExNiAxMTIgMTQ2IDkwIDE2OVoiIGZpbGw9IiNmZjRmN2QiLz4KICA8ZWxsaXBzZSBjeD0iNjkiIGN5PSI3NSIgcng9IjgiIHJ5PSIxMCIgZmlsbD0iI2ZmZiIvPjxlbGxpcHNlIGN4PSIxMTIiIGN5PSI3NSIgcng9IjgiIHJ5PSIxMCIgZmlsbD0iI2ZmZiIvPgogIDxjaXJjbGUgY3g9IjcyIiBjeT0iNzciIHI9IjQiIGZpbGw9IiMyNDI0MmEiLz48Y2lyY2xlIGN4PSIxMTUiIGN5PSI3NyIgcj0iNCIgZmlsbD0iIzI0MjQyYSIvPgogIDxwYXRoIGQ9Ik03NCAxMDFROTEgMTE2IDEwOCAxMDEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzdiMTczNiIgc3Ryb2tlLXdpZHRoPSI2Ii8+CiAgPHBhdGggZD0iTTM5IDEwNFExNiAxMTYgMTggMTM5IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZjRmN2QiIHN0cm9rZS13aWR0aD0iMTIiLz4KICA8cGF0aCBkPSJNMTQzIDEwNFExNjUgOTQgMTcxIDc2IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZjRmN2QiIHN0cm9rZS13aWR0aD0iMTIiLz4KICA8cGF0aCBkPSJNNzIgMTU3UTY1IDE4NCA1MyAyMDciIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmNGY3ZCIgc3Ryb2tlLXdpZHRoPSIxNCIvPgogIDxwYXRoIGQ9Ik0xMDggMTU3UTExNiAxODEgMTM1IDIwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmY0ZjdkIiBzdHJva2Utd2lkdGg9IjE0Ii8+CiAgPHBhdGggZD0iTTQwIDIxMFE1MyAyMDQgNjUgMjExIiBmaWxsPSJub25lIiBzdHJva2U9IiMzMDMyM2EiIHN0cm9rZS13aWR0aD0iMTMiLz4KICA8cGF0aCBkPSJNMTI2IDIwNFExMzkgMTk2IDE1MSAyMDIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzMwMzIzYSIgc3Ryb2tlLXdpZHRoPSIxMyIvPgogIDxjaXJjbGUgY3g9IjE2OSIgY3k9IjcyIiByPSI3IiBmaWxsPSIjZmY0ZjdkIi8+CjwvZz48L3N2Zz4=",pajarito:"personaje-e524cff3980b.png",gatito:"personaje-51219b70e7f1.png"};
-    personaje.innerHTML = `<img class="personaje-cuerpo-img" src="${imagenesPersonaje[personajeElegido] || imagenesPersonaje.hombre}" alt="">`;
+    const contextoVisual = obtenerContextoVisualPersonajeV186();
+    const accesorioVisual = contextoVisual?.accesorio
+        ? `<span class="personaje-accesorio-v186" aria-hidden="true">${contextoVisual.accesorio}</span>`
+        : "";
+    personaje.innerHTML = `<span class="personaje-sombra-suelo-v186" aria-hidden="true"></span><img class="personaje-cuerpo-img" src="${imagenesPersonaje[personajeElegido] || imagenesPersonaje.hombre}" alt="">${accesorioVisual}`;
     personaje.dataset.personaje = personajeElegido;
+    personaje.dataset.contexto = contextoVisual?.tipo || "normal";
     personaje.setAttribute(
         "aria-label",
-        aria
+        contextoVisual?.descripcion
+            ? `${aria} · ${contextoVisual.descripcion}`
+            : aria
     );
 
     personaje.classList.remove(
@@ -2499,11 +2506,18 @@ function actualizarPersonajeProgreso(porcentaje) {
         "estado-en-ritmo",
         "estado-adelantado",
         "estado-completado",
-        "moviendo"
+        "moviendo",
+        "contexto-vacaciones-v186",
+        "contexto-viaje-v186",
+        "contexto-normal-v186"
     );
 
     personaje.classList.add(
         `estado-${estadoRitmo}`
+    );
+
+    personaje.classList.add(
+        `contexto-${contextoVisual?.tipo || "normal"}-v186`
     );
 
     contenedor.classList.remove(
@@ -7285,7 +7299,7 @@ function mostrarVersionPublicadaV156() {
 
     const etiqueta = document.createElement("div");
     etiqueta.id = "versionPublicadaV156";
-    etiqueta.textContent = "Versión publicada: V185";
+    etiqueta.textContent = "Versión publicada: V186";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
@@ -7916,7 +7930,8 @@ function refrescarContextoProgresoV181(){
         const pct=objetivo>0?Math.min(100,Math.max(0,(total/objetivo)*100)):0;
         const cont=document.getElementById("progresoPersonaje");
         const est=document.getElementById("estadoAnimal");
-        aplicarContextoCalendarioProgresoV181(pct,est,cont);
+        if(typeof actualizarPersonajeProgreso === "function") actualizarPersonajeProgreso(pct);
+        else aplicarContextoCalendarioProgresoV181(pct,est,cont);
     }catch(e){
         console.warn("Contexto progreso V181",e);
     }
@@ -7933,3 +7948,33 @@ document.addEventListener("DOMContentLoaded",()=>{
 document.addEventListener("visibilitychange",()=>{
     if(!document.hidden) setTimeout(refrescarContextoProgresoV181,120);
 });
+
+
+// V186 · contexto visual del personaje en Inicio
+function obtenerContextoVisualPersonajeV186(){
+    try{
+        if(typeof resumenDisponibilidadV181 !== "function") return null;
+        const resumen = resumenDisponibilidadV181(new Date());
+        const hoyEvt = Array.isArray(resumen?.hoyEventos) ? resumen.hoyEventos[0] : null;
+        const tipo = hoyEvt?._ctx?.tipo || "";
+        if(tipo === "vacaciones"){
+            return {
+                tipo:"vacaciones",
+                accesorio:"😎",
+                descripcion:"Contexto del día: vacaciones",
+                tono:"relajado"
+            };
+        }
+        if(tipo === "viaje"){
+            return {
+                tipo:"viaje",
+                accesorio:"🧳",
+                descripcion:"Contexto del día: viaje",
+                tono:"desplazamiento"
+            };
+        }
+        return null;
+    }catch(e){
+        return null;
+    }
+}

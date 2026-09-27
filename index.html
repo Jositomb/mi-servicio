@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=18501"
+        href="./styles-v27.css?v=18601"
     >
 
 
@@ -120,7 +120,7 @@
 </style>
 
     <meta name="mi-servicio-version" content="V151-META-REORGANIZADA">
-<meta name="mi-servicio-build" content="V185-18501">
+<meta name="mi-servicio-build" content="V186-18601">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -1555,8 +1555,8 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=18501" defer></script>
-<script src="./eventos-calendario.js?v=18501" defer></script>
+<script src="./app-v27.js?v=18601" defer></script>
+<script src="./eventos-calendario.js?v=18601" defer></script>
 
 <script>
 if ("serviceWorker" in navigator) {
@@ -1564,7 +1564,7 @@ if ("serviceWorker" in navigator) {
     setTimeout(async () => {
       try {
         const registro = await navigator.serviceWorker.register(
-          "./sw.js?v=18501",
+          "./sw.js?v=18601",
           { scope: "./", updateViaCache: "none" }
         );
         registro.update().catch(() => {});
