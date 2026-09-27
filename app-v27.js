@@ -2520,6 +2520,19 @@ function actualizarPersonajeProgreso(porcentaje) {
         `contexto-${contextoVisual?.tipo || "normal"}-v186`
     );
 
+    personaje.classList.remove(
+        "animacion-vacaciones-v187",
+        "animacion-viaje-v187",
+        "animacion-normal-v187"
+    );
+    personaje.classList.add(
+        contextoVisual?.tipo === "vacaciones"
+            ? "animacion-vacaciones-v187"
+            : contextoVisual?.tipo === "viaje"
+                ? "animacion-viaje-v187"
+                : "animacion-normal-v187"
+    );
+
     contenedor.classList.remove(
         "ritmo-atrasado",
         "ritmo-en-ritmo",
@@ -7299,7 +7312,7 @@ function mostrarVersionPublicadaV156() {
 
     const etiqueta = document.createElement("div");
     etiqueta.id = "versionPublicadaV156";
-    etiqueta.textContent = "Versión publicada: V186";
+    etiqueta.textContent = "Versión publicada: V187";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);

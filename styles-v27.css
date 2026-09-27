@@ -10235,3 +10235,57 @@ details[open] > summary{
     box-shadow:0 10px 24px rgba(0,0,0,.24)!important;
   }
 }
+
+/* =========================================================
+   V187 · ANIMACIÓN DEL PERSONAJE SEGÚN EL EVENTO DEL DÍA
+   ========================================================= */
+#vista-inicio #animalProgreso.animacion-vacaciones-v187 .personaje-cuerpo-img{
+  animation:v187Vacaciones 3.6s ease-in-out infinite!important;
+  transform-origin:50% 100%;
+}
+#vista-inicio #animalProgreso.animacion-viaje-v187 .personaje-cuerpo-img{
+  animation:v187Viaje 1.75s ease-in-out infinite!important;
+  transform-origin:50% 100%;
+}
+#vista-inicio #animalProgreso.animacion-normal-v187 .personaje-cuerpo-img{
+  animation:none!important;
+}
+#vista-inicio #animalProgreso.animacion-vacaciones-v187 .personaje-accesorio-v186{
+  animation:v187AccesorioRelax 2.8s ease-in-out infinite;
+}
+#vista-inicio #animalProgreso.animacion-viaje-v187 .personaje-accesorio-v186{
+  animation:v187MaletaPaso 1.75s ease-in-out infinite;
+}
+@keyframes v187Vacaciones{
+  0%,100%{transform:translateY(0) rotate(-1deg)}
+  50%{transform:translateY(-1px) rotate(1.5deg)}
+}
+@keyframes v187Viaje{
+  0%,100%{transform:translateY(0) rotate(0deg)}
+  35%{transform:translateY(-2px) rotate(-1.5deg)}
+  70%{transform:translateY(0) rotate(1deg)}
+}
+@keyframes v187AccesorioRelax{
+  0%,100%{transform:translateY(0) rotate(0deg)}
+  50%{transform:translateY(-1px) rotate(6deg)}
+}
+@keyframes v187MaletaPaso{
+  0%,100%{transform:translateY(0) rotate(0deg)}
+  50%{transform:translateY(1px) rotate(-5deg)}
+}
+#vista-inicio .progreso-personaje:not(.ritmo-pausa) .progreso-pista::after{
+  animation:v187Camino 5.5s linear infinite;
+}
+@keyframes v187Camino{
+  from{background-position:0 0}
+  to{background-position:44px 0}
+}
+#vista-inicio .progreso-personaje.ritmo-pausa .progreso-pista::after{
+  animation:none!important;
+  opacity:.42;
+}
+@media (prefers-reduced-motion: reduce){
+  #vista-inicio #animalProgreso .personaje-cuerpo-img,
+  #vista-inicio #animalProgreso .personaje-accesorio-v186,
+  #vista-inicio .progreso-pista::after{animation:none!important}
+}
