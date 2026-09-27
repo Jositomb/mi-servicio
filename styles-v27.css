@@ -10289,3 +10289,167 @@ details[open] > summary{
   #vista-inicio #animalProgreso .personaje-accesorio-v186,
   #vista-inicio .progreso-pista::after{animation:none!important}
 }
+
+
+/* =========================================================
+   V188 · MICROANIMACIONES + MÁS AIRE ENTRE BLOQUES
+   ========================================================= */
+
+/* Pequeñas respuestas visuales */
+.micro-toast-v188{
+  position:fixed;
+  left:50%;
+  bottom:calc(92px + env(safe-area-inset-bottom));
+  transform:translate(-50%,12px) scale(.96);
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  max-width:calc(100vw - 34px);
+  padding:9px 13px;
+  border-radius:999px;
+  background:rgba(28,28,30,.90);
+  color:#fff;
+  box-shadow:0 8px 26px rgba(0,0,0,.20);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  font-size:12px;
+  font-weight:750;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .20s ease, transform .20s ease;
+}
+
+.micro-toast-v188.visible{
+  opacity:1;
+  transform:translate(-50%,0) scale(1);
+}
+
+.micro-toast-icono-v188{
+  font-size:14px;
+  line-height:1;
+}
+
+.micro-guardado-v188{
+  animation:v188Guardado .62s ease;
+}
+
+.micro-sync-v188{
+  animation:v188Sync .72s ease;
+}
+
+.micro-mensaje-v188{
+  animation:v188Mensaje .68s ease;
+}
+
+.micro-objetivo-v188{
+  animation:v188Objetivo .78s ease;
+}
+
+.micro-personaje-meta-v188{
+  animation:v188PersonajeMeta .76s ease!important;
+}
+
+@keyframes v188Guardado{
+  0%,100%{transform:scale(1)}
+  45%{transform:scale(.975)}
+  72%{transform:scale(1.018)}
+}
+
+@keyframes v188Sync{
+  0%,100%{transform:scale(1)}
+  45%{transform:scale(.98) rotate(-1deg)}
+  70%{transform:scale(1.015) rotate(1deg)}
+}
+
+@keyframes v188Mensaje{
+  0%{opacity:.45;transform:translateY(2px)}
+  55%{opacity:1;transform:translateY(-1px)}
+  100%{opacity:1;transform:translateY(0)}
+}
+
+@keyframes v188Objetivo{
+  0%,100%{
+    box-shadow:var(--v185-shadow,0 8px 24px rgba(20,24,35,.06));
+  }
+  42%{
+    box-shadow:
+      0 0 0 3px rgba(52,199,89,.12),
+      0 12px 30px rgba(52,199,89,.12);
+  }
+}
+
+@keyframes v188PersonajeMeta{
+  0%,100%{transform:translateY(0) rotate(0)}
+  30%{transform:translateY(-4px) rotate(-3deg)}
+  60%{transform:translateY(0) rotate(3deg)}
+}
+
+/* Más aire vertical: separar bloques sin alargar en exceso */
+.vista > .seccion,
+.vista > section.seccion{
+  margin-bottom:18px;
+}
+
+.vista > .seccion:last-of-type,
+.vista > section.seccion:last-of-type{
+  margin-bottom:24px;
+}
+
+/* Inicio: un poco más de respiración entre bloques principales */
+#vista-inicio > .seccion{
+  margin-bottom:20px;
+}
+
+/* Estadísticas / Meta / Historial: separar grupos visuales */
+#vista-estadisticas > *,
+#vista-meta > *,
+#vista-historial > *{
+  margin-bottom:12px;
+}
+
+#vista-estadisticas > *:last-child,
+#vista-meta > *:last-child,
+#vista-historial > *:last-child{
+  margin-bottom:28px;
+}
+
+/* Ajustes: aire adicional entre desplegables */
+#vista-ajustes > .ajustes-acordeon-v179{
+  margin-top:12px;
+  margin-bottom:12px;
+}
+
+#vista-ajustes > .ajustes-acordeon-v179:last-of-type{
+  margin-bottom:28px;
+}
+
+/* Zona final de cada pantalla */
+.vista.activa{
+  padding-bottom:28px;
+}
+
+/* Evita animaciones cuando el sistema pide reducir movimiento */
+@media (prefers-reduced-motion:reduce){
+  .micro-toast-v188{
+    transition:none!important;
+  }
+
+  .micro-guardado-v188,
+  .micro-sync-v188,
+  .micro-mensaje-v188,
+  .micro-objetivo-v188,
+  .micro-personaje-meta-v188{
+    animation:none!important;
+  }
+}
+
+/* Toast adaptado a modo claro sin cambiar tamaño ni colocación */
+@media (prefers-color-scheme:light){
+  .micro-toast-v188{
+    background:rgba(255,255,255,.94);
+    color:#1c1c1e;
+    border:1px solid rgba(60,60,67,.10);
+    box-shadow:0 8px 24px rgba(20,24,35,.12);
+  }
+}

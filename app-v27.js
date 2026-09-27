@@ -2361,6 +2361,8 @@ function actualizarObjetivo(
         objetivo
     ) {
 
+        celebrarObjetivoV188(mensaje);
+
         const superado =
             totalComputableMes -
             objetivo;
@@ -2385,6 +2387,8 @@ function actualizarObjetivo(
     // -----------------------------------------
     // Objetivo pendiente
     // -----------------------------------------
+
+    reiniciarObjetivoV188(mensaje);
 
     const restante =
         objetivo -
@@ -7312,7 +7316,7 @@ function mostrarVersionPublicadaV156() {
 
     const etiqueta = document.createElement("div");
     etiqueta.id = "versionPublicadaV156";
-    etiqueta.textContent = "Versión publicada: V187";
+    etiqueta.textContent = "Versión publicada: V188";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
@@ -7991,3 +7995,80 @@ function obtenerContextoVisualPersonajeV186(){
         return null;
     }
 }
+
+
+// =========================================================
+// V188 · MICROANIMACIONES DISCRETAS
+// =========================================================
+
+function pulsoVisualV188(elemento,clase="micro-pulso-v188"){
+    if(!elemento) return;
+    elemento.classList.remove(clase);
+    void elemento.offsetWidth;
+    elemento.classList.add(clase);
+    setTimeout(()=>elemento.classList.remove(clase),760);
+}
+
+function destelloV188(icono,texto){
+    let toast=document.getElementById("microToastV188");
+    if(!toast){
+        toast=document.createElement("div");
+        toast.id="microToastV188";
+        toast.className="micro-toast-v188";
+        toast.setAttribute("aria-live","polite");
+        document.body.appendChild(toast);
+    }
+
+    toast.innerHTML=
+        `<span class="micro-toast-icono-v188">${icono}</span>`+
+        `<span>${texto}</span>`;
+
+    toast.classList.remove("visible");
+    void toast.offsetWidth;
+    toast.classList.add("visible");
+
+    clearTimeout(destelloV188._t);
+    destelloV188._t=setTimeout(()=>{
+        toast.classList.remove("visible");
+    },1350);
+}
+
+function celebrarObjetivoV188(mensaje){
+    const tarjeta=mensaje?.closest(".tarjeta");
+    if(!tarjeta) return;
+
+    if(tarjeta.dataset.v188ObjetivoAlcanzado==="1") return;
+    tarjeta.dataset.v188ObjetivoAlcanzado="1";
+
+    pulsoVisualV188(tarjeta,"micro-objetivo-v188");
+    destelloV188("✨","Objetivo conseguido");
+
+    const personaje=document.getElementById("animalProgreso");
+    if(personaje) pulsoVisualV188(personaje,"micro-personaje-meta-v188");
+}
+
+function reiniciarObjetivoV188(mensaje){
+    const tarjeta=mensaje?.closest(".tarjeta");
+    if(tarjeta) tarjeta.dataset.v188ObjetivoAlcanzado="0";
+}
+
+window.addEventListener("miServicio:registroGuardadoV188",()=>{
+    const mensaje=document.getElementById("mensajeRegistrar")
+        || document.querySelector("#vista-registrar .mensaje-formulario");
+    const boton=document.querySelector("#vista-registrar button[type='submit'], #vista-registrar .boton-guardar");
+
+    pulsoVisualV188(boton,"micro-guardado-v188");
+    if(mensaje) pulsoVisualV188(mensaje,"micro-mensaje-v188");
+    destelloV188("✓","Registro guardado");
+});
+
+window.addEventListener("miServicio:calendarioSincronizadoV188",(e)=>{
+    const boton=document.getElementById("sincronizarCalendarioV176");
+    const estado=document.getElementById("estadoCalendarioAppleV173");
+
+    pulsoVisualV188(boton,"micro-sync-v188");
+    if(estado) pulsoVisualV188(estado,"micro-mensaje-v188");
+
+    const total=Number(e?.detail?.total||0);
+    destelloV188("↻",total===1?"1 evento sincronizado":`${total} eventos sincronizados`);
+});

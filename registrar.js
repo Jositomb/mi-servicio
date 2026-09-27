@@ -591,6 +591,12 @@ function registrarActividad() {
         false
     );
 
+    try{
+        window.dispatchEvent(
+            new CustomEvent("miServicio:registroGuardadoV188")
+        );
+    }catch(e){}
+
 
     // -----------------------------------------
     // Actualizar aplicación

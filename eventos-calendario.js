@@ -894,6 +894,14 @@
         true
       );
 
+      try{
+        window.dispatchEvent(
+          new CustomEvent("miServicio:calendarioSincronizadoV188",{
+            detail:{total:importados.length}
+          })
+        );
+      }catch(e){}
+
       refrescar();
       return true;
 
