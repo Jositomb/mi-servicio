@@ -9824,3 +9824,237 @@ body.dark #vista-ajustes .ajustes-acordeon-titulo,
     transition:none;
   }
 }
+
+
+/* =========================================================
+   V185 · PULIDO VISUAL GENERAL
+   Solo presentación. No toca lógica, datos ni cálculos.
+   ========================================================= */
+
+:root{
+  --v185-radius-xl:20px;
+  --v185-radius-lg:16px;
+  --v185-shadow:0 8px 24px rgba(20,24,35,.06);
+  --v185-border:rgba(127,127,127,.11);
+}
+
+.vista{
+  padding-bottom:18px;
+}
+
+.tarjeta,
+article.tarjeta,
+section.tarjeta,
+.v145-hoy,
+.v153-historial-resumen,
+.meta-principal,
+.meta-v152-mes,
+.meta-v152-agenda,
+.meta-v152-ritmo{
+  border-radius:var(--v185-radius-xl)!important;
+  border-color:var(--v185-border)!important;
+  box-shadow:var(--v185-shadow)!important;
+}
+
+button,
+.boton-guardar,
+.boton-principal,
+.boton-secundario{
+  border-radius:14px!important;
+  font-weight:700;
+  letter-spacing:-.01em;
+}
+
+.boton-guardar,
+.boton-principal{
+  min-height:48px;
+  box-shadow:0 5px 14px rgba(0,122,255,.10);
+}
+
+.boton-secundario{
+  min-height:44px;
+}
+
+input,
+select,
+textarea,
+.campo-texto{
+  border-radius:13px!important;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+.campo-texto:focus{
+  outline:none;
+  box-shadow:0 0 0 3px rgba(0,122,255,.12);
+}
+
+.titulo-seccion{
+  margin-bottom:8px;
+}
+
+.titulo-seccion h2{
+  letter-spacing:-.018em;
+}
+
+/* Ajustes */
+#vista-ajustes > .ajustes-acordeon-v179{
+  border-radius:18px!important;
+  box-shadow:0 5px 18px rgba(20,24,35,.045)!important;
+}
+
+#vista-ajustes > .ajustes-acordeon-v179 > summary{
+  min-height:56px!important;
+  padding:11px 14px!important;
+}
+
+#vista-ajustes .ajustes-acordeon-icono{
+  width:31px!important;
+  height:31px!important;
+  border-radius:10px!important;
+}
+
+#vista-ajustes .ajustes-acordeon-titulo{
+  font-size:15px!important;
+  letter-spacing:-.01em;
+}
+
+#vista-ajustes .ajustes-acordeon-flecha{
+  font-size:23px!important;
+  opacity:.72;
+}
+
+/* Estadísticas */
+#vista-estadisticas .stats-accordion-v183{
+  border-radius:18px!important;
+  box-shadow:0 5px 18px rgba(20,24,35,.045)!important;
+}
+
+#vista-estadisticas .stats-accordion-v183 > summary{
+  min-height:56px!important;
+  padding:11px 14px!important;
+}
+
+#vista-estadisticas .stats-accordion-icono-v183{
+  width:31px!important;
+  height:31px!important;
+  border-radius:10px!important;
+}
+
+#vista-estadisticas .stats-accordion-flecha-v183{
+  font-size:23px!important;
+  opacity:.72;
+}
+
+/* Inicio */
+#vista-inicio .v184-hoy-desplegable{
+  border-radius:18px!important;
+  box-shadow:0 5px 18px rgba(20,24,35,.045)!important;
+}
+
+#vista-inicio .v184-hoy-desplegable > summary{
+  min-height:56px;
+}
+
+#vista-inicio .v145-hoy-texto strong{
+  letter-spacing:-.012em;
+}
+
+#vista-inicio .contexto-calendario-progreso-v181{
+  border-radius:14px!important;
+  box-shadow:none!important;
+}
+
+#vista-inicio .contexto-calendario-progreso-v181 strong{
+  letter-spacing:-.01em;
+}
+
+#vista-inicio .progreso-pista{
+  opacity:.92;
+}
+
+/* Estadísticas internas */
+#vista-estadisticas #resumenMensualV143,
+#vista-estadisticas #comparacionSemanalV139,
+#vista-estadisticas #tendenciaV144{
+  border-radius:17px!important;
+}
+
+/* Meta */
+#vista-meta .tarjeta,
+#vista-meta article{
+  border-radius:18px!important;
+}
+
+/* Historial */
+#vista-historial .tarjeta,
+#vista-historial article,
+#vista-historial .grupo-fecha{
+  border-radius:17px;
+}
+
+/* Barra inferior */
+.barra-navegacion,
+nav.barra-navegacion{
+  backdrop-filter:saturate(145%) blur(16px);
+  -webkit-backdrop-filter:saturate(145%) blur(16px);
+}
+
+.barra-navegacion button,
+nav.barra-navegacion button{
+  transition:transform .12s ease, opacity .12s ease;
+}
+
+.barra-navegacion button:active,
+nav.barra-navegacion button:active{
+  transform:scale(.96);
+}
+
+/* Microinteracciones */
+button:active,
+summary:active{
+  transform:scale(.992);
+}
+
+details > summary{
+  transition:background .16s ease;
+}
+
+details[open] > summary{
+  background:rgba(127,127,127,.035);
+}
+
+@media (prefers-color-scheme:dark){
+  :root{
+    --v185-shadow:0 8px 22px rgba(0,0,0,.18);
+    --v185-border:rgba(255,255,255,.08);
+  }
+
+  .tarjeta,
+  article.tarjeta,
+  section.tarjeta,
+  .v145-hoy,
+  .v153-historial-resumen{
+    box-shadow:var(--v185-shadow)!important;
+  }
+
+  details[open] > summary{
+    background:rgba(255,255,255,.025);
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus,
+  .campo-texto:focus{
+    box-shadow:0 0 0 3px rgba(90,150,255,.16);
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  button,
+  summary,
+  .barra-navegacion button{
+    transition:none!important;
+  }
+}
