@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=19101"
+        href="./styles-v27.css?v=19201"
     >
 
 
@@ -120,7 +120,7 @@
 </style>
 
     <meta name="mi-servicio-version" content="V151-META-REORGANIZADA">
-<meta name="mi-servicio-build" content="V191-19101">
+<meta name="mi-servicio-build" content="V192-19201">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -1659,15 +1659,15 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=19101" defer></script>
-<script src="./eventos-calendario.js?v=19101" defer></script>
+<script src="./app-v27.js?v=19201" defer></script>
+<script src="./eventos-calendario.js?v=19201" defer></script>
 
 <script id="swRegistroV189">
 if ("serviceWorker" in navigator) {
   // V189: registrar cuanto antes. No dependemos de que termine de cargar
   // una CDN o una petición lenta para activar el modo local.
   navigator.serviceWorker.register(
-    "./sw.js?v=19101",
+    "./sw.js?v=19201",
     { scope:"./", updateViaCache:"none" }
   ).then(registro=>{
     registro.update().catch(()=>{});

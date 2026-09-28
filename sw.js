@@ -1,12 +1,12 @@
-const CACHE = "mi-servicio-v19101";
+const CACHE = "mi-servicio-v19201";
 const CACHE_PREFIX = "mi-servicio-";
 
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles-v27.css?v=19101",
-  "./app-v27.js?v=19101",
-  "./eventos-calendario.js?v=19101",
+  "./styles-v27.css?v=19201",
+  "./app-v27.js?v=19201",
+  "./eventos-calendario.js?v=19201",
   "./icon-apple.png",
   "./manifest.webmanifest",
   "./personaje-51219b70e7f1.png",
@@ -33,8 +33,8 @@ const APP_SHELL = [
 
 const CRITICOS = [
   "./index.html",
-  "./styles-v27.css?v=19101",
-  "./app-v27.js?v=19101",
+  "./styles-v27.css?v=19201",
+  "./app-v27.js?v=19201",
   "./core/config.js",
   "./core/storage.js"
 ];
