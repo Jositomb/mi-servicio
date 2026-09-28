@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=18801"
+        href="./styles-v27.css?v=18901"
     >
 
 
@@ -120,7 +120,7 @@
 </style>
 
     <meta name="mi-servicio-version" content="V151-META-REORGANIZADA">
-<meta name="mi-servicio-build" content="V188-18801">
+<meta name="mi-servicio-build" content="V189-18901">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -1534,12 +1534,36 @@
 <!-- =========================================================
      JAVASCRIPT
 ========================================================== -->
-<script
-    defer src="https://alcdn.msauth.net/browser/2.35.0/js/msal-browser.min.js"
-    integrity="sha384-PARf28kmic36Ve+O3DnUerRXFtOQ7ZDqRDGpLcbljly5/N39T2OV3kt3QsWOKeAX"
-    crossorigin="anonymous"
-    defer
-></script>
+<!-- V189: OneDrive se carga en segundo plano; nunca bloquea el arranque de la app -->
+<script id="msalLoaderV189">
+(function(){
+  function cargarMSALV189(){
+    if(window.msal){
+      try{ if(typeof iniciarOneDrive==="function") iniciarOneDrive(); }catch(e){}
+      return;
+    }
+    if(document.getElementById("msalScriptRemotoV189")) return;
+
+    const s=document.createElement("script");
+    s.id="msalScriptRemotoV189";
+    s.src="https://alcdn.msauth.net/browser/2.35.0/js/msal-browser.min.js";
+    s.async=true;
+    s.crossOrigin="anonymous";
+    s.integrity="sha384-PARf28kmic36Ve+O3DnUerRXFtOQ7ZDqRDGpLcbljly5/N39T2OV3kt3QsWOKeAX";
+    s.onload=()=>{
+      try{ if(typeof iniciarOneDrive==="function") iniciarOneDrive(); }catch(e){}
+    };
+    s.onerror=()=>console.warn("[Mi Servicio] OneDrive se cargará cuando vuelva la conexión.");
+    document.head.appendChild(s);
+  }
+
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",()=>setTimeout(cargarMSALV189,450),{once:true});
+  }else{
+    setTimeout(cargarMSALV189,450);
+  }
+})();
+</script>
 <script>
 (function () {
     const standalone =
@@ -1555,24 +1579,21 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=18801" defer></script>
-<script src="./eventos-calendario.js?v=18801" defer></script>
+<script src="./app-v27.js?v=18901" defer></script>
+<script src="./eventos-calendario.js?v=18901" defer></script>
 
-<script>
+<script id="swRegistroV189">
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    setTimeout(async () => {
-      try {
-        const registro = await navigator.serviceWorker.register(
-          "./sw.js?v=18801",
-          { scope: "./", updateViaCache: "none" }
-        );
-        registro.update().catch(() => {});
-      } catch (error) {
-        console.warn("Modo sin conexión no disponible:", error);
-      }
-    }, 300);
-  }, { once: true });
+  // V189: registrar cuanto antes. No dependemos de que termine de cargar
+  // una CDN o una petición lenta para activar el modo local.
+  navigator.serviceWorker.register(
+    "./sw.js?v=18901",
+    { scope:"./", updateViaCache:"none" }
+  ).then(registro=>{
+    registro.update().catch(()=>{});
+  }).catch(error=>{
+    console.warn("Modo sin conexión no disponible todavía:", error);
+  });
 }
 </script>
 
