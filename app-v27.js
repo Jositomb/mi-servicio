@@ -479,6 +479,9 @@ function guardarJSON(
 
 function estadoSyncV134(texto, tipo="ok") {
     almacenamiento.guardar("miServicio.estadoSyncV134",{texto,tipo,fecha:new Date().toISOString()});
+    try{
+        window.dispatchEvent(new CustomEvent("miServicio:estadoSyncV190",{detail:{texto,tipo}}));
+    }catch(e){}
     const el=document.getElementById("estadoSyncV134"); if(!el)return;
     const icono=tipo==="subiendo"?"↑":tipo==="bajando"?"↓":tipo==="pendiente"?"⚠︎":"✓";
     el.textContent=`${icono} ${texto}`;
@@ -7316,7 +7319,7 @@ function mostrarVersionPublicadaV156() {
 
     const etiqueta = document.createElement("div");
     etiqueta.id = "versionPublicadaV156";
-    etiqueta.textContent = "Versión publicada: V189";
+    etiqueta.textContent = "Versión publicada: V190";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
@@ -8071,4 +8074,50 @@ window.addEventListener("miServicio:calendarioSincronizadoV188",(e)=>{
 
     const total=Number(e?.detail?.total||0);
     destelloV188("↻",total===1?"1 evento sincronizado":`${total} eventos sincronizados`);
+});
+
+
+// =========================================================
+// V190 · ESTADO DE CONEXIÓN VISIBLE EN CABECERA
+// =========================================================
+function pintarEstadoConexionV190(texto,tipo){
+    const box=document.getElementById("estadoConexionV190");
+    const label=document.getElementById("estadoConexionTextoV190");
+    if(!box||!label)return;
+
+    let clase="estado-online-v190";
+    let corto="Al día";
+
+    if(!navigator.onLine){
+        clase="estado-offline-v190";
+        corto="Local · sin conexión";
+    }else if(tipo==="subiendo" || tipo==="bajando"){
+        clase="estado-sync-v190";
+        corto="Sincronizando…";
+    }else if(tipo==="pendiente"){
+        clase="estado-pendiente-v190";
+        corto="Pendiente";
+    }else if(/no se pudo|error|fall/i.test(String(texto||""))){
+        clase="estado-pendiente-v190";
+        corto="Solo local";
+    }
+
+    box.className=`estado-conexion-v190 ${clase}`;
+    label.textContent=corto;
+    box.title=String(texto||corto);
+}
+
+window.addEventListener("miServicio:estadoSyncV190",e=>{
+    pintarEstadoConexionV190(e?.detail?.texto,e?.detail?.tipo);
+});
+window.addEventListener("offline",()=>pintarEstadoConexionV190("Sin conexión · trabajando localmente","pendiente"));
+window.addEventListener("online",()=>{
+    pintarEstadoConexionV190("Conexión recuperada · sincronizando…","subiendo");
+});
+
+document.addEventListener("DOMContentLoaded",()=>{
+    let guardado=null;
+    try{ guardado=almacenamiento.leer("miServicio.estadoSyncV134",null); }catch(e){}
+    pintarEstadoConexionV190(guardado?.texto,guardado?.tipo||"ok");
+    document.body.classList.add("v190-shell-listo");
 });

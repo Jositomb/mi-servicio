@@ -79,9 +79,11 @@
       const eventos=eventosDeFecha(fechaISO(anio,mes,num));if(!eventos.length)return;
       btn.classList.add("con-evento-v172");
       const first=eventos[0],meta=descriptor(first);
-      const tag=document.createElement("span");tag.className="calendario-dia-evento-v172";
-      tag.textContent=`${meta.icono} ${first.titulo}${eventos.length>1?` +${eventos.length-1}`:""}`;
+      const tag=document.createElement("span");tag.className="calendario-dia-evento-v172 calendario-iconos-v190";
+      const iconos=eventos.slice(0,3).map(e=>descriptor(e).icono).join("");
+      tag.textContent=`${iconos}${eventos.length>3?` +${eventos.length-3}`:""}`;
       tag.title=eventos.map(e=>`${horaLegible(e)} · ${e.titulo}`).join("\n");
+      tag.setAttribute("aria-label",eventos.map(e=>e.titulo).join(", "));
       btn.appendChild(tag);
     });
   }

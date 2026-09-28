@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=18901"
+        href="./styles-v27.css?v=19001"
     >
 
 
@@ -120,7 +120,7 @@
 </style>
 
     <meta name="mi-servicio-version" content="V151-META-REORGANIZADA">
-<meta name="mi-servicio-build" content="V189-18901">
+<meta name="mi-servicio-build" content="V190-19001">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -136,10 +136,31 @@
                 Inicio
             </h1>
         </div>
-        <div class="avatar">
-            MS
+        <div class="cabecera-estado-v190">
+            <div id="estadoConexionV190" class="estado-conexion-v190 estado-local-v190" aria-live="polite">
+                <span class="estado-conexion-punto-v190"></span>
+                <span id="estadoConexionTextoV190">Local</span>
+            </div>
+            <div class="avatar">
+                MS
+            </div>
         </div>
     </header>
+
+<script id="arranqueVisualV190">
+(function(){
+  function pintar(){
+    const box=document.getElementById("estadoConexionV190");
+    const txt=document.getElementById("estadoConexionTextoV190");
+    if(!box||!txt)return;
+    const online=navigator.onLine;
+    box.className="estado-conexion-v190 "+(online?"estado-online-v190":"estado-offline-v190");
+    txt.textContent=online?"En línea":"Local · sin conexión";
+    document.body.classList.add("v190-shell-listo");
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",pintar,{once:true});else pintar();
+})();
+</script>
     <!-- =====================================================
          CONTENIDO
     ====================================================== -->
@@ -1579,15 +1600,15 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=18901" defer></script>
-<script src="./eventos-calendario.js?v=18901" defer></script>
+<script src="./app-v27.js?v=19001" defer></script>
+<script src="./eventos-calendario.js?v=19001" defer></script>
 
 <script id="swRegistroV189">
 if ("serviceWorker" in navigator) {
   // V189: registrar cuanto antes. No dependemos de que termine de cargar
   // una CDN o una petición lenta para activar el modo local.
   navigator.serviceWorker.register(
-    "./sw.js?v=18901",
+    "./sw.js?v=19001",
     { scope:"./", updateViaCache:"none" }
   ).then(registro=>{
     registro.update().catch(()=>{});
