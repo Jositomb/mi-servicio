@@ -10803,3 +10803,125 @@ body.modal-v191-abierto{overflow:hidden}
 @media(prefers-reduced-motion:reduce){
   .v191-resumen-mes-flecha{transition:none!important}
 }
+
+
+/* =========================================================
+   V193 · SEMANA VISUAL + TRANSICIONES ENTRE PESTAÑAS
+   ========================================================= */
+#vista-inicio .v193-semana-visual{
+  margin:10px 0 18px;
+  padding:12px 13px;
+  border:1px solid var(--v185-border,rgba(127,127,127,.11));
+  border-radius:17px;
+  background:var(--card);
+  box-shadow:0 4px 14px rgba(20,24,35,.04);
+}
+.v193-semana-cabecera{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:11px;
+}
+.v193-semana-cabecera small{
+  display:block;
+  font-size:9px;
+  letter-spacing:.07em;
+  font-weight:800;
+}
+.v193-semana-cabecera strong{
+  display:block;
+  margin-top:2px;
+  font-size:12.5px;
+}
+#semanaVisualTotalV193{
+  flex:0 0 auto;
+  padding:5px 8px;
+  border-radius:999px;
+  background:rgba(52,120,246,.09);
+  color:var(--primary);
+  font-size:11px;
+  font-weight:800;
+}
+.v193-semana-dias{
+  display:grid;
+  grid-template-columns:repeat(7,minmax(0,1fr));
+  gap:5px;
+}
+.v193-dia{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+}
+.v193-dia small{
+  font-size:9px;
+  font-weight:800;
+  color:var(--text-secondary);
+}
+.v193-dia-punto{
+  width:9px;
+  height:9px;
+  border-radius:999px;
+  background:rgba(127,127,127,.16);
+  box-shadow:0 0 0 3px rgba(127,127,127,.055);
+}
+.v193-dia.con-actividad .v193-dia-punto{
+  background:var(--primary);
+  box-shadow:0 0 0 3px rgba(52,120,246,.10);
+}
+.v193-dia.hoy .v193-dia-punto{
+  transform:scale(1.18);
+  box-shadow:0 0 0 4px rgba(52,120,246,.14);
+}
+.v193-dia strong{
+  width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  text-align:center;
+  font-size:8.5px;
+  color:var(--text-secondary);
+}
+.vista.v193-entrada{
+  animation:v193EntradaVista .28s cubic-bezier(.22,.8,.28,1);
+}
+@keyframes v193EntradaVista{
+  from{opacity:.65;transform:translateY(4px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.barra-navegacion button,
+nav.barra-navegacion button{
+  position:relative;
+}
+.barra-navegacion button.activo::after,
+.barra-navegacion button.active::after,
+nav.barra-navegacion button.activo::after,
+nav.barra-navegacion button.active::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:2px;
+  width:4px;
+  height:4px;
+  border-radius:999px;
+  background:currentColor;
+  transform:translateX(-50%);
+  opacity:.65;
+}
+@media(prefers-color-scheme:dark){
+  #vista-inicio .v193-semana-visual{
+    background:rgba(24,24,27,.92);
+    border-color:rgba(255,255,255,.07);
+    box-shadow:0 8px 20px rgba(0,0,0,.18);
+  }
+}
+@media(max-width:390px){
+  #vista-inicio .v193-semana-visual{padding:11px 10px}
+  .v193-semana-dias{gap:3px}
+  .v193-dia strong{font-size:8px}
+}
+@media(prefers-reduced-motion:reduce){
+  .vista.v193-entrada{animation:none!important}
+}

@@ -7472,7 +7472,7 @@ function mostrarVersionPublicadaV156() {
 
     const etiqueta = document.createElement("div");
     etiqueta.id = "versionPublicadaV156";
-    etiqueta.textContent = "Versión publicada: V192";
+    etiqueta.textContent = "Versión publicada: V193";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
@@ -8611,4 +8611,94 @@ document.addEventListener("DOMContentLoaded",()=>{
         instalarRegistroRapidoV191();
         actualizarResumenFinalMesV191();
     },120);
+});
+
+
+// =========================================================
+// V193 · SEMANA VISUAL
+// =========================================================
+function inicioSemanaV193(fecha=new Date()){
+    const d=new Date(fecha);
+    d.setHours(12,0,0,0);
+    const dia=(d.getDay()+6)%7;
+    d.setDate(d.getDate()-dia);
+    return d;
+}
+
+function minutosDiaV193(fechaISOTexto){
+    return (Array.isArray(estado?.registros)?estado.registros:[])
+        .filter(r=>String(r?.fecha||"").slice(0,10)===fechaISOTexto)
+        .reduce((s,r)=>s+(Number(r?.minutos)||Number(r?.minutosTotales)||0),0);
+}
+
+function actualizarSemanaVisualV193(){
+    const host=document.getElementById("semanaVisualDiasV193");
+    const totalEl=document.getElementById("semanaVisualTotalV193");
+    if(!host||!totalEl)return;
+
+    const inicio=inicioSemanaV193(new Date());
+    const hoy=fechaLocalISO(new Date());
+    const letras=["L","M","X","J","V","S","D"];
+    let total=0;
+    host.innerHTML="";
+
+    for(let i=0;i<7;i++){
+        const d=new Date(inicio);
+        d.setDate(inicio.getDate()+i);
+        const iso=fechaLocalISO(d);
+        const min=minutosDiaV193(iso);
+        total+=min;
+
+        const item=document.createElement("div");
+        item.className="v193-dia";
+        if(min>0)item.classList.add("con-actividad");
+        if(iso===hoy)item.classList.add("hoy");
+
+        const letra=document.createElement("small");
+        letra.textContent=letras[i];
+
+        const punto=document.createElement("span");
+        punto.className="v193-dia-punto";
+        punto.title=min>0?`${letras[i]} · ${formatearTiempo(min)}`:`${letras[i]} · sin actividad`;
+
+        const valor=document.createElement("strong");
+        valor.textContent=min>0?formatearTiempo(min):"—";
+
+        item.append(letra,punto,valor);
+        host.appendChild(item);
+    }
+
+    totalEl.textContent=formatearTiempo(total);
+}
+
+// =========================================================
+// V193 · TRANSICIONES SUAVES ENTRE PESTAÑAS
+// =========================================================
+function animarVistaActivaV193(){
+    const activa=document.querySelector(".vista.activa");
+    if(!activa)return;
+    activa.classList.remove("v193-entrada");
+    void activa.offsetWidth;
+    activa.classList.add("v193-entrada");
+    setTimeout(()=>activa.classList.remove("v193-entrada"),320);
+}
+
+document.addEventListener("click",e=>{
+    const nav=e.target.closest?.("[data-vista],[data-tab],.barra-navegacion button,nav.barra-navegacion button");
+    if(!nav)return;
+    setTimeout(()=>{
+        animarVistaActivaV193();
+        actualizarSemanaVisualV193();
+    },40);
+});
+
+window.addEventListener("miServicio:registroGuardadoV188",()=>{
+    setTimeout(actualizarSemanaVisualV193,80);
+});
+
+document.addEventListener("DOMContentLoaded",()=>{
+    setTimeout(()=>{
+        actualizarSemanaVisualV193();
+        animarVistaActivaV193();
+    },160);
 });

@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=19201"
+        href="./styles-v27.css?v=19301"
     >
 
 
@@ -120,7 +120,7 @@
 </style>
 
     <meta name="mi-servicio-version" content="V151-META-REORGANIZADA">
-<meta name="mi-servicio-build" content="V192-19201">
+<meta name="mi-servicio-build" content="V193-19301">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -377,6 +377,18 @@
                     <div id="agendaHoyV172" class="v172-agenda-hoy-lista" aria-live="polite"></div>
                 </div>
             </details>
+
+            <!-- V193 · SEMANA VISUAL -->
+            <section id="semanaVisualV193" class="v193-semana-visual">
+                <div class="v193-semana-cabecera">
+                    <div>
+                        <small>ESTA SEMANA</small>
+                        <strong id="semanaVisualTituloV193">Actividad de lunes a domingo</strong>
+                    </div>
+                    <span id="semanaVisualTotalV193">0 h</span>
+                </div>
+                <div id="semanaVisualDiasV193" class="v193-semana-dias" aria-label="Resumen visual de esta semana"></div>
+            </section>
 
             <!-- V191 · RESUMEN FINAL DEL MES -->
             <details id="resumenFinalMesV191" class="v191-resumen-final-mes oculto">
@@ -1659,15 +1671,15 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=19201" defer></script>
-<script src="./eventos-calendario.js?v=19201" defer></script>
+<script src="./app-v27.js?v=19301" defer></script>
+<script src="./eventos-calendario.js?v=19301" defer></script>
 
 <script id="swRegistroV189">
 if ("serviceWorker" in navigator) {
   // V189: registrar cuanto antes. No dependemos de que termine de cargar
   // una CDN o una petición lenta para activar el modo local.
   navigator.serviceWorker.register(
-    "./sw.js?v=19201",
+    "./sw.js?v=19301",
     { scope:"./", updateViaCache:"none" }
   ).then(registro=>{
     registro.update().catch(()=>{});
