@@ -10537,3 +10537,269 @@ body.v190-shell-listo .app{opacity:1}
 @media(prefers-reduced-motion:reduce){
   .estado-sync-v190 .estado-conexion-punto-v190{animation:none!important}
 }
+
+
+/* =========================================================
+   V191 · INICIO COMPACTO + REGISTRO RÁPIDO + RESUMEN DE MES
+   ========================================================= */
+
+/* El + solo aparece en Inicio */
+.v191-boton-flotante{
+  display:none;
+}
+#vista-inicio.activa .v191-boton-flotante{
+  position:fixed;
+  right:max(18px,calc((100vw - var(--max-width))/2 + 18px));
+  bottom:calc(88px + env(safe-area-inset-bottom));
+  z-index:80;
+  width:52px;
+  height:52px;
+  display:grid;
+  place-items:center;
+  border:0;
+  border-radius:18px!important;
+  background:var(--primary);
+  color:#fff;
+  box-shadow:0 10px 24px rgba(52,120,246,.28);
+  font-size:30px;
+  font-weight:400;
+  line-height:1;
+}
+
+#vista-inicio.activa .v191-boton-flotante:active{
+  transform:scale(.94);
+}
+
+/* Modal rápido */
+.v191-modal-fondo{
+  position:fixed;
+  inset:0;
+  z-index:3000;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  padding:16px;
+  padding-bottom:max(16px,env(safe-area-inset-bottom));
+  background:rgba(0,0,0,.28);
+  backdrop-filter:blur(5px);
+  -webkit-backdrop-filter:blur(5px);
+}
+.v191-modal-fondo.oculto{display:none!important}
+
+.v191-modal-rapido{
+  width:min(100%,520px);
+  padding:16px;
+  border-radius:24px;
+  background:var(--card);
+  color:var(--text-primary);
+  box-shadow:0 20px 60px rgba(0,0,0,.20);
+}
+
+.v191-modal-cabecera{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:14px;
+}
+.v191-modal-cabecera small{font-size:9px;font-weight:800;letter-spacing:.08em}
+.v191-modal-cabecera h3{margin:2px 0 0;font-size:22px;letter-spacing:-.03em}
+
+.v191-modal-cerrar{
+  width:34px;
+  height:34px;
+  padding:0;
+  border:0;
+  border-radius:999px!important;
+  background:rgba(127,127,127,.10);
+  color:var(--text-secondary);
+  font-size:24px;
+}
+
+.v191-tipos-rapidos,
+.v191-atajos-rapidos{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:7px;
+  margin:10px 0;
+}
+
+.v191-tipos-rapidos button,
+.v191-atajos-rapidos button{
+  min-width:0;
+  min-height:42px;
+  padding:8px 5px;
+  border:1px solid var(--divider);
+  border-radius:12px!important;
+  background:rgba(127,127,127,.055);
+  color:var(--text-primary);
+  font-size:11px;
+  font-weight:750;
+}
+
+.v191-tipos-rapidos button.seleccionado,
+.v191-atajos-rapidos button.seleccionado{
+  border-color:rgba(52,120,246,.30);
+  background:rgba(52,120,246,.11);
+  color:var(--primary);
+}
+
+.v191-tiempo-manual{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin-top:12px;
+}
+.v191-tiempo-manual label{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  font-size:10px;
+  font-weight:750;
+  color:var(--text-secondary);
+}
+.v191-tiempo-manual input{
+  width:100%;
+  min-height:45px;
+  padding:9px 12px;
+  border:1px solid var(--divider);
+  background:rgba(127,127,127,.045);
+  color:var(--text-primary);
+  font-size:18px;
+  font-weight:750;
+}
+
+.v191-fecha-rapida{
+  margin:10px 0 0;
+  font-size:11px;
+  color:var(--text-secondary);
+  text-transform:capitalize;
+}
+.v191-mensaje-rapido{
+  min-height:16px;
+  margin:5px 0;
+  font-size:11px;
+  color:var(--text-secondary);
+}
+.v191-guardar-rapido{
+  width:100%;
+  min-height:48px;
+  margin-top:5px;
+  border:0;
+  border-radius:14px!important;
+  background:var(--primary);
+  color:#fff;
+  font-weight:800;
+}
+
+body.modal-v191-abierto{overflow:hidden}
+
+/* Resumen final del mes */
+#vista-inicio .v191-resumen-final-mes{
+  margin:12px 0 22px;
+  border:1px solid var(--v185-border,rgba(127,127,127,.11));
+  border-radius:18px;
+  background:var(--card);
+  box-shadow:0 5px 18px rgba(20,24,35,.045);
+  overflow:hidden;
+}
+#vista-inicio .v191-resumen-final-mes.oculto{display:none!important}
+
+#vista-inicio .v191-resumen-final-mes > summary{
+  list-style:none;
+  display:grid;
+  grid-template-columns:34px minmax(0,1fr) 18px;
+  align-items:center;
+  gap:10px;
+  min-height:58px;
+  padding:11px 14px;
+  cursor:pointer;
+}
+#vista-inicio .v191-resumen-final-mes > summary::-webkit-details-marker{display:none}
+
+.v191-resumen-mes-icono{
+  width:32px;
+  height:32px;
+  display:grid;
+  place-items:center;
+  border-radius:10px;
+  background:rgba(52,120,246,.09);
+  font-size:16px;
+}
+.v191-resumen-mes-titulo small{
+  display:block;
+  font-size:9px;
+  letter-spacing:.07em;
+  font-weight:800;
+}
+.v191-resumen-mes-titulo strong{
+  display:block;
+  margin-top:2px;
+  font-size:14px;
+}
+.v191-resumen-mes-flecha{
+  font-size:22px;
+  color:var(--text-secondary);
+  transition:transform .18s ease;
+}
+.v191-resumen-final-mes[open] .v191-resumen-mes-flecha{transform:rotate(90deg)}
+
+.v191-resumen-mes-cuerpo{padding:0 12px 12px}
+.v191-resumen-mes-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+.v191-resumen-mes-grid > div{
+  padding:10px 11px;
+  border-radius:13px;
+  background:rgba(127,127,127,.055);
+}
+.v191-resumen-mes-grid small{
+  display:block;
+  margin-bottom:3px;
+  font-size:9px;
+  font-weight:750;
+}
+.v191-resumen-mes-grid strong{
+  font-size:14px;
+}
+#objetivoResumenFinalMesV191.conseguido{color:var(--success)}
+
+/* Compactación visual adicional */
+#vista-inicio .inicio-resumen-grid{margin-bottom:8px}
+#vista-inicio .v184-hoy-desplegable{margin-top:10px}
+#vista-inicio .v184-hoy-desplegable:not([open]){margin-bottom:10px}
+
+/* Oscuro */
+@media(prefers-color-scheme:dark){
+  .v191-modal-rapido,
+  #vista-inicio .v191-resumen-final-mes{
+    background:rgba(24,24,27,.97);
+    border-color:rgba(255,255,255,.08);
+  }
+  .v191-tipos-rapidos button,
+  .v191-atajos-rapidos button,
+  .v191-tiempo-manual input,
+  .v191-resumen-mes-grid > div{
+    background:rgba(255,255,255,.055);
+  }
+}
+
+/* Pantallas estrechas */
+@media(max-width:390px){
+  #vista-inicio.activa .v191-boton-flotante{
+    right:14px;
+    width:48px;
+    height:48px;
+    border-radius:16px!important;
+  }
+  .v191-tipos-rapidos{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+/* Reducir movimiento */
+@media(prefers-reduced-motion:reduce){
+  .v191-resumen-mes-flecha{transition:none!important}
+}

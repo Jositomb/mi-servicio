@@ -7319,7 +7319,7 @@ function mostrarVersionPublicadaV156() {
 
     const etiqueta = document.createElement("div");
     etiqueta.id = "versionPublicadaV156";
-    etiqueta.textContent = "Versión publicada: V190";
+    etiqueta.textContent = "Versión publicada: V191";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
@@ -8120,4 +8120,340 @@ document.addEventListener("DOMContentLoaded",()=>{
     try{ guardado=almacenamiento.leer("miServicio.estadoSyncV134",null); }catch(e){}
     pintarEstadoConexionV190(guardado?.texto,guardado?.tipo||"ok");
     document.body.classList.add("v190-shell-listo");
+});
+
+
+// =========================================================
+// V191 · INICIO COMPACTO QUE RECUERDA ESTADO
+// =========================================================
+const KEY_INICIO_COMPACTO_V191="miServicio.inicioCompactoV191";
+
+function leerInicioCompactoV191(){
+    try{
+        return JSON.parse(localStorage.getItem(KEY_INICIO_COMPACTO_V191)||"{}")||{};
+    }catch(e){ return {}; }
+}
+function guardarInicioCompactoV191(parcial){
+    const actual=leerInicioCompactoV191();
+    localStorage.setItem(KEY_INICIO_COMPACTO_V191,JSON.stringify({...actual,...parcial}));
+}
+
+function aplicarEstadoCompactoV191(){
+    const pref=leerInicioCompactoV191();
+
+    const detalleMes=document.getElementById("detalleMes");
+    const botonMes=document.getElementById("botonDesplegarMes");
+    const tarjetaMes=document.getElementById("tarjetaMesDesplegable");
+    const grid=tarjetaMes?.closest(".inicio-resumen-grid");
+    const mesAbierto=pref.mes===true;
+
+    if(detalleMes && botonMes){
+        detalleMes.hidden=!mesAbierto;
+        botonMes.setAttribute("aria-expanded",String(mesAbierto));
+        tarjetaMes?.classList.toggle("abierta",mesAbierto);
+        grid?.classList.toggle("mes-abierto",mesAbierto);
+    }
+
+    const panel=document.getElementById("panelCalendarioInicio");
+    const botonCal=document.getElementById("botonCalendarioInicio");
+    const icono=document.getElementById("iconoCalendarioInicio");
+    const calAbierto=pref.calendario===true;
+
+    if(panel && botonCal){
+        panel.classList.toggle("oculto",!calAbierto);
+        botonCal.setAttribute("aria-expanded",String(calAbierto));
+        if(icono) icono.textContent=calAbierto?"⌃":"⌄";
+        if(calAbierto && typeof actualizarCalendarioInicio==="function"){
+            setTimeout(actualizarCalendarioInicio,30);
+        }
+    }
+
+    const hoy=document.getElementById("resumenHoyV145");
+    if(hoy) hoy.open=pref.hoy===true;
+
+    const resumenMes=document.getElementById("resumenFinalMesV191");
+    if(resumenMes) resumenMes.open=pref.resumenMes===true;
+}
+
+function instalarPersistenciaCompactaV191(){
+    const botonMes=document.getElementById("botonDesplegarMes");
+    const detalleMes=document.getElementById("detalleMes");
+    botonMes?.addEventListener("click",()=>{
+        setTimeout(()=>{
+            guardarInicioCompactoV191({mes:detalleMes?.hidden===false});
+            hapticoV191(5);
+        },0);
+    });
+
+    const botonCal=document.getElementById("botonCalendarioInicio");
+    const panel=document.getElementById("panelCalendarioInicio");
+    botonCal?.addEventListener("click",()=>{
+        setTimeout(()=>{
+            guardarInicioCompactoV191({calendario:!panel?.classList.contains("oculto")});
+            hapticoV191(5);
+        },0);
+    });
+
+    const hoy=document.getElementById("resumenHoyV145");
+    hoy?.addEventListener("toggle",()=>{
+        guardarInicioCompactoV191({hoy:hoy.open});
+        hapticoV191(4);
+    });
+
+    const resumenMes=document.getElementById("resumenFinalMesV191");
+    resumenMes?.addEventListener("toggle",()=>{
+        guardarInicioCompactoV191({resumenMes:resumenMes.open});
+        hapticoV191(4);
+    });
+}
+
+// =========================================================
+// V191 · HÁPTICO PROGRESIVO
+// Safari/iPhone puede ignorar navigator.vibrate.
+// =========================================================
+function hapticoV191(ms=6){
+    try{
+        if(typeof navigator.vibrate==="function"){
+            navigator.vibrate(Math.max(1,Math.min(12,Number(ms)||6)));
+            return true;
+        }
+    }catch(e){}
+    return false;
+}
+
+window.addEventListener("miServicio:registroGuardadoV188",()=>hapticoV191(8));
+
+document.addEventListener("click",e=>{
+    if(e.target.closest?.("[data-personaje]")){
+        hapticoV191(5);
+    }
+});
+
+// =========================================================
+// V191 · REGISTRO RÁPIDO DESDE INICIO
+// =========================================================
+let tipoRapidoV191="ministerio";
+
+function abrirRegistroRapidoV191(){
+    const fondo=document.getElementById("fondoRegistroRapidoV191");
+    if(!fondo)return;
+
+    const fecha=document.getElementById("fechaRegistroRapidoV191");
+    if(fecha){
+        fecha.textContent=new Intl.DateTimeFormat("es-ES",{
+            weekday:"long",day:"numeric",month:"long"
+        }).format(new Date());
+    }
+
+    const prefs=estado?.preferencias||{};
+    const reglas={
+        ministerio:true,
+        ldc:prefs.mostrarLDC!==false,
+        asambleas:prefs.mostrarAsambleas!==false,
+        otras:prefs.mostrarOtras!==false
+    };
+
+    fondo.querySelectorAll("[data-v191-tipo]").forEach(b=>{
+        b.hidden=!reglas[b.dataset.v191Tipo];
+    });
+
+    if(!reglas[tipoRapidoV191]) tipoRapidoV191="ministerio";
+    fondo.querySelectorAll("[data-v191-tipo]").forEach(b=>{
+        b.classList.toggle("seleccionado",b.dataset.v191Tipo===tipoRapidoV191);
+    });
+
+    document.getElementById("horasRapidasV191").value="0";
+    document.getElementById("minutosRapidosV191").value="0";
+    document.getElementById("mensajeRegistroRapidoV191").textContent="";
+
+    fondo.classList.remove("oculto");
+    fondo.setAttribute("aria-hidden","false");
+    document.body.classList.add("modal-v191-abierto");
+    hapticoV191(5);
+}
+
+function cerrarRegistroRapidoV191(){
+    const fondo=document.getElementById("fondoRegistroRapidoV191");
+    fondo?.classList.add("oculto");
+    fondo?.setAttribute("aria-hidden","true");
+    document.body.classList.remove("modal-v191-abierto");
+}
+
+function guardarRegistroRapidoV191(){
+    const h=Math.max(0,Math.min(24,Number(document.getElementById("horasRapidasV191")?.value)||0));
+    const m=Math.max(0,Math.min(59,Number(document.getElementById("minutosRapidosV191")?.value)||0));
+    const total=Math.round(h*60+m);
+    const msg=document.getElementById("mensajeRegistroRapidoV191");
+
+    if(total<=0){
+        if(msg) msg.textContent="Elige un tiempo mayor que cero.";
+        hapticoV191(4);
+        return;
+    }
+
+    const ahora=new Date().toISOString();
+    const registro={
+        id:crearID(),
+        fecha:fechaLocalISO(new Date()),
+        tipo:tipoRapidoV191,
+        minutos:total,
+        notas:"",
+        companero:"",
+        cursosBiblicos:0,
+        creadoEn:ahora,
+        modificadoEn:ahora,
+        sincronizacion:{estado:"pendiente",ultimaSincronizacion:null}
+    };
+
+    estado.registros.push(registro);
+
+    if(!guardarRegistros()){
+        estado.registros.pop();
+        if(msg) msg.textContent="No se pudo guardar.";
+        return;
+    }
+
+    try{
+        window.dispatchEvent(new CustomEvent("miServicio:registroGuardadoV188"));
+    }catch(e){}
+
+    actualizarTodaLaInterfaz();
+    actualizarResumenFinalMesV191();
+
+    if(msg) msg.textContent=`Guardado · ${formatearTiempo(total)}`;
+    hapticoV191(9);
+
+    setTimeout(cerrarRegistroRapidoV191,520);
+}
+
+function instalarRegistroRapidoV191(){
+    document.getElementById("abrirRegistroRapidoV191")?.addEventListener("click",abrirRegistroRapidoV191);
+    document.getElementById("cerrarRegistroRapidoV191")?.addEventListener("click",cerrarRegistroRapidoV191);
+
+    document.getElementById("fondoRegistroRapidoV191")?.addEventListener("click",e=>{
+        if(e.target.id==="fondoRegistroRapidoV191") cerrarRegistroRapidoV191();
+    });
+
+    document.querySelectorAll("[data-v191-tipo]").forEach(b=>{
+        b.addEventListener("click",()=>{
+            tipoRapidoV191=b.dataset.v191Tipo;
+            document.querySelectorAll("[data-v191-tipo]").forEach(x=>x.classList.toggle("seleccionado",x===b));
+            hapticoV191(4);
+        });
+    });
+
+    document.querySelectorAll("[data-v191-minutos]").forEach(b=>{
+        b.addEventListener("click",()=>{
+            const total=Number(b.dataset.v191Minutos)||0;
+            document.getElementById("horasRapidasV191").value=String(Math.floor(total/60));
+            document.getElementById("minutosRapidosV191").value=String(total%60);
+            document.querySelectorAll("[data-v191-minutos]").forEach(x=>x.classList.toggle("seleccionado",x===b));
+            hapticoV191(4);
+        });
+    });
+
+    document.getElementById("guardarRegistroRapidoV191")?.addEventListener("click",guardarRegistroRapidoV191);
+}
+
+// =========================================================
+// V191 · RESUMEN FINAL DEL MES
+// Se muestra el último día del mes y los primeros 7 del siguiente.
+// =========================================================
+function datosMesResumenV191(){
+    const hoy=new Date();
+    const ultimoDia=new Date(hoy.getFullYear(),hoy.getMonth()+1,0).getDate();
+
+    let anio,mes;
+    const esUltimoDia=hoy.getDate()===ultimoDia;
+    const primerosDias=hoy.getDate()<=7;
+
+    if(esUltimoDia){
+        anio=hoy.getFullYear();
+        mes=hoy.getMonth();
+    }else if(primerosDias){
+        const prev=new Date(hoy.getFullYear(),hoy.getMonth()-1,1);
+        anio=prev.getFullYear();
+        mes=prev.getMonth();
+    }else{
+        return null;
+    }
+
+    const inicio=`${anio}-${String(mes+1).padStart(2,"0")}-01`;
+    const finDia=new Date(anio,mes+1,0).getDate();
+    const fin=`${anio}-${String(mes+1).padStart(2,"0")}-${String(finDia).padStart(2,"0")}`;
+
+    const regs=(Array.isArray(estado?.registros)?estado.registros:[])
+        .filter(r=>{
+            const f=String(r?.fecha||"").slice(0,10);
+            return f>=inicio && f<=fin;
+        });
+
+    const total=regs.reduce((s,r)=>s+(Number(r?.minutos)||Number(r?.minutosTotales)||0),0);
+    const dias=new Set(regs.filter(r=>(Number(r?.minutos)||Number(r?.minutosTotales)||0)>0).map(r=>String(r.fecha).slice(0,10))).size;
+
+    const semanas=new Map();
+    regs.forEach(r=>{
+        const f=String(r?.fecha||"").slice(0,10);
+        const [yy,mm,dd]=f.split("-").map(Number);
+        if(!yy||!mm||!dd)return;
+        const d=new Date(yy,mm-1,dd,12);
+        const lunes=new Date(d);
+        const dia=(lunes.getDay()+6)%7;
+        lunes.setDate(lunes.getDate()-dia);
+        const clave=fechaLocalISO(lunes);
+        semanas.set(clave,(semanas.get(clave)||0)+(Number(r?.minutos)||Number(r?.minutosTotales)||0));
+    });
+
+    let mejor=0;
+    semanas.forEach(v=>{if(v>mejor)mejor=v});
+
+    const objetivo=Math.max(0,Number(estado?.preferencias?.objetivoMensualMinutos)||0);
+    const conseguido=objetivo>0 ? total>=objetivo : null;
+
+    const nombre=capitalizar(new Intl.DateTimeFormat("es-ES",{month:"long"}).format(new Date(anio,mes,1)));
+
+    return {nombre,total,dias,mejor,objetivo,conseguido};
+}
+
+function actualizarResumenFinalMesV191(){
+    const card=document.getElementById("resumenFinalMesV191");
+    if(!card)return;
+
+    const d=datosMesResumenV191();
+    if(!d){
+        card.classList.add("oculto");
+        return;
+    }
+
+    card.classList.remove("oculto");
+    ponerTexto("tituloResumenFinalMesV191",`${d.nombre} en números`);
+    ponerTexto("horasResumenFinalMesV191",formatearTiempo(d.total));
+    ponerTexto("diasResumenFinalMesV191",String(d.dias));
+    ponerTexto("semanaResumenFinalMesV191",formatearTiempo(d.mejor));
+
+    const objetivo=document.getElementById("objetivoResumenFinalMesV191");
+    if(objetivo){
+        objetivo.textContent=d.conseguido===null?"Sin meta":d.conseguido?"✓ Conseguido":"Pendiente";
+        objetivo.classList.toggle("conseguido",d.conseguido===true);
+    }
+}
+
+// Haptic al llegar a objetivo, usando la celebración ya existente.
+const celebrarObjetivoV188Original=typeof celebrarObjetivoV188==="function" ? celebrarObjetivoV188 : null;
+if(celebrarObjetivoV188Original){
+    celebrarObjetivoV188=function(mensaje){
+        const tarjeta=mensaje?.closest(".tarjeta");
+        const ya=tarjeta?.dataset?.v188ObjetivoAlcanzado==="1";
+        celebrarObjetivoV188Original(mensaje);
+        if(!ya && tarjeta?.dataset?.v188ObjetivoAlcanzado==="1") hapticoV191(10);
+    };
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+    setTimeout(()=>{
+        aplicarEstadoCompactoV191();
+        instalarPersistenciaCompactaV191();
+        instalarRegistroRapidoV191();
+        actualizarResumenFinalMesV191();
+    },120);
 });

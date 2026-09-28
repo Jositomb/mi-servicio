@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=19001"
+        href="./styles-v27.css?v=19101"
     >
 
 
@@ -120,7 +120,7 @@
 </style>
 
     <meta name="mi-servicio-version" content="V151-META-REORGANIZADA">
-<meta name="mi-servicio-build" content="V190-19001">
+<meta name="mi-servicio-build" content="V191-19101">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -377,6 +377,65 @@
                     <div id="agendaHoyV172" class="v172-agenda-hoy-lista" aria-live="polite"></div>
                 </div>
             </details>
+
+            <!-- V191 · RESUMEN FINAL DEL MES -->
+            <details id="resumenFinalMesV191" class="v191-resumen-final-mes oculto">
+                <summary>
+                    <span class="v191-resumen-mes-icono">📊</span>
+                    <span class="v191-resumen-mes-titulo">
+                        <small>MES EN NÚMEROS</small>
+                        <strong id="tituloResumenFinalMesV191">Resumen del mes</strong>
+                    </span>
+                    <span class="v191-resumen-mes-flecha">›</span>
+                </summary>
+                <div class="v191-resumen-mes-cuerpo">
+                    <div class="v191-resumen-mes-grid">
+                        <div><small>Horas</small><strong id="horasResumenFinalMesV191">0 h</strong></div>
+                        <div><small>Días activos</small><strong id="diasResumenFinalMesV191">0</strong></div>
+                        <div><small>Mejor semana</small><strong id="semanaResumenFinalMesV191">0 h</strong></div>
+                        <div><small>Objetivo</small><strong id="objetivoResumenFinalMesV191">—</strong></div>
+                    </div>
+                </div>
+            </details>
+
+            <!-- V191 · REGISTRO RÁPIDO DESDE INICIO -->
+            <button id="abrirRegistroRapidoV191" class="v191-boton-flotante" type="button" aria-label="Añadir registro rápido">+</button>
+
+            <div id="fondoRegistroRapidoV191" class="v191-modal-fondo oculto" aria-hidden="true">
+                <section class="v191-modal-rapido" role="dialog" aria-modal="true" aria-labelledby="tituloRegistroRapidoV191">
+                    <div class="v191-modal-cabecera">
+                        <div>
+                            <small>REGISTRO RÁPIDO</small>
+                            <h3 id="tituloRegistroRapidoV191">Añadir tiempo</h3>
+                        </div>
+                        <button id="cerrarRegistroRapidoV191" class="v191-modal-cerrar" type="button" aria-label="Cerrar">×</button>
+                    </div>
+
+                    <div class="v191-tipos-rapidos">
+                        <button type="button" class="seleccionado" data-v191-tipo="ministerio">📖 Ministerio</button>
+                        <button type="button" data-v191-tipo="ldc">🛠️ LDC</button>
+                        <button type="button" data-v191-tipo="asambleas">🎤 Asamblea</button>
+                        <button type="button" data-v191-tipo="otras">✨ Otras</button>
+                    </div>
+
+                    <div class="v191-atajos-rapidos">
+                        <button type="button" data-v191-minutos="30">30 min</button>
+                        <button type="button" data-v191-minutos="60">1 h</button>
+                        <button type="button" data-v191-minutos="120">2 h</button>
+                        <button type="button" data-v191-minutos="180">3 h</button>
+                    </div>
+
+                    <div class="v191-tiempo-manual">
+                        <label>Horas<input id="horasRapidasV191" type="number" min="0" max="24" value="0"></label>
+                        <label>Minutos<input id="minutosRapidosV191" type="number" min="0" max="59" value="0"></label>
+                    </div>
+
+                    <p id="fechaRegistroRapidoV191" class="v191-fecha-rapida"></p>
+                    <p id="mensajeRegistroRapidoV191" class="v191-mensaje-rapido"></p>
+
+                    <button id="guardarRegistroRapidoV191" class="v191-guardar-rapido" type="button">Guardar actividad</button>
+                </section>
+            </div>
 
 </section>
         <!-- =================================================
@@ -1600,15 +1659,15 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=19001" defer></script>
-<script src="./eventos-calendario.js?v=19001" defer></script>
+<script src="./app-v27.js?v=19101" defer></script>
+<script src="./eventos-calendario.js?v=19101" defer></script>
 
 <script id="swRegistroV189">
 if ("serviceWorker" in navigator) {
   // V189: registrar cuanto antes. No dependemos de que termine de cargar
   // una CDN o una petición lenta para activar el modo local.
   navigator.serviceWorker.register(
-    "./sw.js?v=19001",
+    "./sw.js?v=19101",
     { scope:"./", updateViaCache:"none" }
   ).then(registro=>{
     registro.update().catch(()=>{});
