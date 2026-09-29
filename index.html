@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=19301"
+        href="./styles-v27.css?v=19401"
     >
 
 
@@ -120,7 +120,7 @@
 </style>
 
     <meta name="mi-servicio-version" content="V151-META-REORGANIZADA">
-<meta name="mi-servicio-build" content="V193-19301">
+<meta name="mi-servicio-build" content="V194-19401">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -312,6 +312,15 @@
                             class="barra-progreso"
                         ></div>
                     </div>
+
+                    <!-- V194 · HITOS VISUALES DEL OBJETIVO -->
+                    <div id="hitosProgresoMes" class="hitos-progreso-v194" aria-label="Hitos del objetivo mensual">
+                        <span class="hito-mes" data-hito="25">25%</span>
+                        <span class="hito-mes" data-hito="50">50%</span>
+                        <span class="hito-mes" data-hito="75">75%</span>
+                        <span class="hito-mes" data-hito="100">100%</span>
+                    </div>
+                    <div id="celebracionProgreso" class="celebracion-progreso" aria-hidden="true"></div>
                     <!-- PERSONAJE ANIMADO -->
                     <div
                         id="progresoPersonaje"
@@ -1671,15 +1680,15 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=19301" defer></script>
-<script src="./eventos-calendario.js?v=19301" defer></script>
+<script src="./app-v27.js?v=19401" defer></script>
+<script src="./eventos-calendario.js?v=19401" defer></script>
 
 <script id="swRegistroV189">
 if ("serviceWorker" in navigator) {
   // V189: registrar cuanto antes. No dependemos de que termine de cargar
   // una CDN o una petición lenta para activar el modo local.
   navigator.serviceWorker.register(
-    "./sw.js?v=19301",
+    "./sw.js?v=19401",
     { scope:"./", updateViaCache:"none" }
   ).then(registro=>{
     registro.update().catch(()=>{});

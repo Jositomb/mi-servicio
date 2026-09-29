@@ -10925,3 +10925,273 @@ nav.barra-navegacion button.active::after{
 @media(prefers-reduced-motion:reduce){
   .vista.v193-entrada{animation:none!important}
 }
+
+
+/* =========================================================
+   V194 · PULIDO VISUAL: AROS, HISTORIAL, HITOS Y "HOY"
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   AROS 3D · más profundidad sin cambiar tamaño ni cálculos
+   --------------------------------------------------------- */
+#vista-inicio #graficoInicio{
+  filter:
+    drop-shadow(0 15px 15px rgba(0,0,0,.11))
+    drop-shadow(0 2px 2px rgba(255,255,255,.16))!important;
+}
+
+#vista-inicio #graficoInicio svg circle.anillo-actividad{
+  stroke-width:11.5px!important;
+}
+
+#vista-inicio #graficoInicio svg circle.anillo-pista{
+  stroke-width:12px!important;
+  filter:
+    drop-shadow(0 2px 2px rgba(0,0,0,.10))
+    drop-shadow(0 -1px 1px rgba(255,255,255,.20))!important;
+}
+
+#vista-inicio #graficoInicio svg circle.anillo-con-progreso{
+  filter:
+    drop-shadow(0 4px 2.4px rgba(0,0,0,.22))
+    drop-shadow(0 -1.6px 1px rgba(255,255,255,.60))
+    drop-shadow(0 0 4px rgba(255,255,255,.10))!important;
+}
+
+#vista-inicio #graficoInicio::after{
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.48),
+      rgba(255,255,255,.16) 36%,
+      rgba(255,255,255,.03) 64%,
+      transparent 82%
+    )!important;
+  opacity:.74!important;
+}
+
+#vista-inicio #graficoInicio::before{
+  box-shadow:
+    0 18px 34px rgba(0,0,0,.13),
+    inset 0 3px 7px rgba(255,255,255,.62),
+    inset 0 -5px 10px rgba(0,0,0,.04)!important;
+}
+
+/* ---------------------------------------------------------
+   HITOS 25 / 50 / 75 / 100
+   --------------------------------------------------------- */
+#vista-inicio .hitos-progreso-v194{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:6px;
+  margin:8px 0 2px;
+}
+
+#vista-inicio .hitos-progreso-v194 .hito-mes{
+  min-height:24px;
+  border:1px solid transparent;
+  background:rgba(127,127,127,.065);
+  font-size:9.5px;
+  box-shadow:none;
+}
+
+#vista-inicio .hitos-progreso-v194 .hito-mes.alcanzado{
+  border-color:rgba(52,120,246,.12);
+  background:rgba(52,120,246,.09);
+  color:var(--primary);
+}
+
+#vista-inicio .hitos-progreso-v194 .hito-mes.siguiente{
+  box-shadow:0 0 0 2px rgba(52,120,246,.065);
+}
+
+#vista-inicio .hito-mes.hito-recien-v194{
+  animation:v194HitoNuevo .78s cubic-bezier(.22,.8,.28,1);
+}
+
+@keyframes v194HitoNuevo{
+  0%{transform:scale(.92)}
+  45%{transform:scale(1.08);box-shadow:0 0 0 5px rgba(52,120,246,.10)}
+  100%{transform:scale(1)}
+}
+
+#vista-inicio .tarjeta:has(#celebracionProgreso){
+  position:relative;
+  overflow:hidden;
+}
+
+/* ---------------------------------------------------------
+   HISTORIAL MÁS VISUAL
+   --------------------------------------------------------- */
+#vista-historial .registro-card{
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(127,127,127,.09);
+  box-shadow:0 4px 14px rgba(20,24,35,.035);
+  transition:transform .14s ease,box-shadow .16s ease;
+}
+
+#vista-historial .registro-card:active{
+  transform:scale(.993);
+}
+
+#vista-historial .registro-card::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:12px;
+  bottom:12px;
+  width:3px;
+  border-radius:0 999px 999px 0;
+  background:var(--other);
+  opacity:.72;
+}
+
+#vista-historial .registro-card-ministerio::before{background:var(--ministry)}
+#vista-historial .registro-card-ldc::before{background:var(--ldc)}
+#vista-historial .registro-card-asambleas::before{background:var(--assembly)}
+#vista-historial .registro-card-otras::before{background:var(--other)}
+
+#vista-historial .registro-tipo{
+  font-weight:800;
+  letter-spacing:-.01em;
+}
+
+#vista-historial .registro-tiempo{
+  padding:4px 7px;
+  border-radius:999px;
+  background:rgba(127,127,127,.07);
+  font-weight:800;
+}
+
+#vista-historial .registro-duracion-v194{
+  width:100%;
+  max-width:150px;
+  height:3px;
+  margin-top:7px;
+  overflow:hidden;
+  border-radius:999px;
+  background:rgba(127,127,127,.09);
+}
+
+#vista-historial .registro-duracion-relleno-v194{
+  display:block;
+  height:100%;
+  border-radius:inherit;
+  background:var(--other);
+}
+
+#vista-historial .registro-card-ministerio .registro-duracion-relleno-v194{background:var(--ministry)}
+#vista-historial .registro-card-ldc .registro-duracion-relleno-v194{background:var(--ldc)}
+#vista-historial .registro-card-asambleas .registro-duracion-relleno-v194{background:var(--assembly)}
+#vista-historial .registro-card-otras .registro-duracion-relleno-v194{background:var(--other)}
+
+/* ---------------------------------------------------------
+   TARJETA HOY MÁS EXPRESIVA
+   --------------------------------------------------------- */
+#vista-inicio #resumenHoyV145{
+  position:relative;
+  isolation:isolate;
+  transition:
+    background .25s ease,
+    border-color .25s ease,
+    box-shadow .25s ease;
+}
+
+#vista-inicio #resumenHoyV145::before{
+  content:"";
+  position:absolute;
+  inset:0 auto 0 0;
+  width:4px;
+  border-radius:18px 0 0 18px;
+  background:rgba(127,127,127,.24);
+  z-index:-1;
+}
+
+#vista-inicio #resumenHoyV145.hoy-vacaciones-v194{
+  background:
+    linear-gradient(100deg,rgba(52,199,89,.09),transparent 42%),
+    var(--card)!important;
+}
+#vista-inicio #resumenHoyV145.hoy-vacaciones-v194::before{background:#34c759}
+
+#vista-inicio #resumenHoyV145.hoy-viaje-v194{
+  background:
+    linear-gradient(100deg,rgba(0,122,255,.09),transparent 42%),
+    var(--card)!important;
+}
+#vista-inicio #resumenHoyV145.hoy-viaje-v194::before{background:#0a84ff}
+
+#vista-inicio #resumenHoyV145.hoy-trabajo-v194{
+  background:
+    linear-gradient(100deg,rgba(88,86,214,.08),transparent 42%),
+    var(--card)!important;
+}
+#vista-inicio #resumenHoyV145.hoy-trabajo-v194::before{background:#5856d6}
+
+#vista-inicio #resumenHoyV145.hoy-cita-v194{
+  background:
+    linear-gradient(100deg,rgba(255,149,0,.09),transparent 42%),
+    var(--card)!important;
+}
+#vista-inicio #resumenHoyV145.hoy-cita-v194::before{background:#ff9500}
+
+#vista-inicio #resumenHoyV145.hoy-personal-v194{
+  background:
+    linear-gradient(100deg,rgba(175,82,222,.07),transparent 42%),
+    var(--card)!important;
+}
+#vista-inicio #resumenHoyV145.hoy-personal-v194::before{background:#af52de}
+
+#vista-inicio #resumenHoyV145.hoy-plan-v194{
+  background:
+    linear-gradient(100deg,rgba(52,120,246,.075),transparent 42%),
+    var(--card)!important;
+}
+#vista-inicio #resumenHoyV145.hoy-plan-v194::before{background:var(--primary)}
+
+#vista-inicio #resumenHoyV145.hoy-actividad-v194::before{background:#34c759}
+
+/* Oscuro: misma geometría; solo cambia superficie y contraste */
+@media(prefers-color-scheme:dark){
+  #vista-inicio #graficoInicio::after{
+    opacity:.28!important;
+  }
+
+  #vista-inicio #graficoInicio::before{
+    box-shadow:
+      0 18px 34px rgba(0,0,0,.34),
+      inset 0 2px 5px rgba(255,255,255,.06),
+      inset 0 -5px 10px rgba(0,0,0,.20)!important;
+  }
+
+  #vista-historial .registro-card{
+    border-color:rgba(255,255,255,.065);
+    box-shadow:0 6px 16px rgba(0,0,0,.16);
+  }
+
+  #vista-inicio #resumenHoyV145.hoy-vacaciones-v194{
+    background:linear-gradient(100deg,rgba(52,199,89,.10),transparent 42%),rgba(24,24,27,.92)!important;
+  }
+  #vista-inicio #resumenHoyV145.hoy-viaje-v194{
+    background:linear-gradient(100deg,rgba(10,132,255,.11),transparent 42%),rgba(24,24,27,.92)!important;
+  }
+  #vista-inicio #resumenHoyV145.hoy-trabajo-v194{
+    background:linear-gradient(100deg,rgba(88,86,214,.10),transparent 42%),rgba(24,24,27,.92)!important;
+  }
+  #vista-inicio #resumenHoyV145.hoy-cita-v194{
+    background:linear-gradient(100deg,rgba(255,149,0,.10),transparent 42%),rgba(24,24,27,.92)!important;
+  }
+  #vista-inicio #resumenHoyV145.hoy-personal-v194{
+    background:linear-gradient(100deg,rgba(175,82,222,.09),transparent 42%),rgba(24,24,27,.92)!important;
+  }
+  #vista-inicio #resumenHoyV145.hoy-plan-v194{
+    background:linear-gradient(100deg,rgba(52,120,246,.10),transparent 42%),rgba(24,24,27,.92)!important;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  #vista-inicio .hito-mes.hito-recien-v194{
+    animation:none!important;
+  }
+}

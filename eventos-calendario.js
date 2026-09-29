@@ -209,6 +209,29 @@
     }
 
     const titulo=host.querySelector("[data-v145-titulo]"),detalle=host.querySelector("[data-v145-detalle]"),estadoEl=host.querySelector("[data-v145-estado]"),icono=host.querySelector("[data-v145-icono]");
+
+    // V194 · el color de la tarjeta ayuda a identificar el tipo de día.
+    host.classList.remove(
+      "hoy-vacaciones-v194",
+      "hoy-viaje-v194",
+      "hoy-trabajo-v194",
+      "hoy-cita-v194",
+      "hoy-personal-v194",
+      "hoy-plan-v194",
+      "hoy-actividad-v194"
+    );
+
+    const primerEvento=eventos[0]||null;
+    const tipoHoy=primerEvento?.tipo||"";
+
+    if(tipoHoy==="vacaciones") host.classList.add("hoy-vacaciones-v194");
+    else if(tipoHoy==="viaje") host.classList.add("hoy-viaje-v194");
+    else if(tipoHoy==="trabajo") host.classList.add("hoy-trabajo-v194");
+    else if(tipoHoy==="cita") host.classList.add("hoy-cita-v194");
+    else if(primerEvento) host.classList.add("hoy-personal-v194");
+    else if(plan) host.classList.add("hoy-plan-v194");
+    else if(regs.length) host.classList.add("hoy-actividad-v194");
+
     const vacaciones=eventos.find(e=>e.tipo==="vacaciones");
     if(vacaciones){icono.textContent="🏖️";titulo.textContent=vacaciones.titulo;detalle.textContent="La app reconoce este día como vacaciones.";estadoEl.textContent="Vacaciones"}
     else if(eventos.length){icono.textContent=descriptor(eventos[0]).icono;titulo.textContent="Tu agenda de hoy";detalle.textContent=`${eventos.length} ${eventos.length===1?"evento":"eventos"}${plan?" · actividad planificada":""}`;estadoEl.textContent="Hoy"}

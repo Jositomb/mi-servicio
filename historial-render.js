@@ -509,6 +509,25 @@ function crearTarjetaHistorial(
         fecha
     );
 
+    // V194 · mini indicador visual de duración
+    const duracionVisual=document.createElement("div");
+    duracionVisual.className="registro-duracion-v194";
+
+    const duracionRelleno=document.createElement("span");
+    duracionRelleno.className="registro-duracion-relleno-v194";
+
+    const minutosRegistro=Math.max(
+        0,
+        Number(registro.minutos)||Number(registro.minutosTotales)||0
+    );
+
+    // 5 h llena la barra; tiempos mayores siguen mostrándose completos en texto.
+    duracionRelleno.style.width=
+        `${Math.max(7,Math.min(100,(minutosRegistro/300)*100))}%`;
+
+    duracionVisual.appendChild(duracionRelleno);
+    contenido.appendChild(duracionVisual);
+
 
     // -----------------------------------------
     // Notas

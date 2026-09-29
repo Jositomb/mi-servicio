@@ -2649,7 +2649,21 @@ function actualizarHitosProgreso(progreso) {
     else if (valor >= 25) nivel = 25;
 
     if (nivel > 0 && celebracion.dataset.ultimoNivel !== String(nivel)) {
+        const anterior=Number(celebracion.dataset.ultimoNivel)||0;
         celebracion.dataset.ultimoNivel = String(nivel);
+
+        if(nivel>anterior){
+            const hitoNuevo=contenedor.querySelector(`[data-hito="${nivel}"]`);
+            if(hitoNuevo){
+                hitoNuevo.classList.remove("hito-recien-v194");
+                void hitoNuevo.offsetWidth;
+                hitoNuevo.classList.add("hito-recien-v194");
+                setTimeout(()=>hitoNuevo.classList.remove("hito-recien-v194"),900);
+            }
+            if(typeof hapticoV191==="function"){
+                hapticoV191(nivel>=100?10:6);
+            }
+        }
         celebracion.innerHTML =
             nivel >= 100
                 ? "<span>🎉</span><span>🏆</span><span>✨</span><span>🎊</span><span>⭐</span>"
@@ -7472,7 +7486,7 @@ function mostrarVersionPublicadaV156() {
 
     const etiqueta = document.createElement("div");
     etiqueta.id = "versionPublicadaV156";
-    etiqueta.textContent = "Versión publicada: V193";
+    etiqueta.textContent = "Versión publicada: V194";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
