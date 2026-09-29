@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=19401"
+        href="./styles-v27.css?v=19501"
     >
 
 
@@ -120,7 +120,7 @@
 </style>
 
     <meta name="mi-servicio-version" content="V151-META-REORGANIZADA">
-<meta name="mi-servicio-build" content="V194-19401">
+<meta name="mi-servicio-build" content="V195-19501">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -129,12 +129,13 @@
     ====================================================== -->
     <header class="cabecera">
         <div>
-            <p class="saludo">
+            <p id="saludoDinamicoV195" class="saludo">
                 Mi Servicio
             </p>
             <h1 id="tituloVista">
                 Inicio
             </h1>
+            <small id="ultimaActualizacionV195" class="ultima-actualizacion-v195">Actualizando…</small>
         </div>
         <div class="cabecera-estado-v190">
             <div id="estadoConexionV190" class="estado-conexion-v190 estado-local-v190" aria-live="polite">
@@ -216,6 +217,13 @@
                         <div class="calendario-semana" aria-hidden="true"><span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
                         <div id="calendarioInicio" class="calendario-mes" aria-label="Calendario de actividad del mes"></div>
                         <div id="detalleDiaCalendario" class="detalle-dia-calendario oculto" aria-live="polite"></div>
+                        <div class="leyenda-calendario-v195" aria-label="Leyenda del calendario">
+                            <span>📖 Ministerio</span>
+                            <span>🛠️ LDC</span>
+                            <span>🎤 Asamblea</span>
+                            <span>✨ Otras</span>
+                            <span>🌴 Evento</span>
+                        </div>
                     </article>
                 </div>
             </section>
@@ -1680,15 +1688,15 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=19401" defer></script>
-<script src="./eventos-calendario.js?v=19401" defer></script>
+<script src="./app-v27.js?v=19501" defer></script>
+<script src="./eventos-calendario.js?v=19501" defer></script>
 
 <script id="swRegistroV189">
 if ("serviceWorker" in navigator) {
   // V189: registrar cuanto antes. No dependemos de que termine de cargar
   // una CDN o una petición lenta para activar el modo local.
   navigator.serviceWorker.register(
-    "./sw.js?v=19401",
+    "./sw.js?v=19501",
     { scope:"./", updateViaCache:"none" }
   ).then(registro=>{
     registro.update().catch(()=>{});

@@ -11195,3 +11195,103 @@ nav.barra-navegacion button.active::after{
     animation:none!important;
   }
 }
+
+
+/* =========================================================
+   V195 · CABECERA DINÁMICA + LEYENDA + ESTADOS VACÍOS
+   ========================================================= */
+
+.ultima-actualizacion-v195{
+  display:block;
+  margin-top:5px;
+  color:var(--text-tertiary);
+  font-size:10px;
+  font-weight:650;
+  letter-spacing:-.005em;
+}
+
+#saludoDinamicoV195{
+  transition:opacity .18s ease;
+}
+
+/* Leyenda mínima del calendario */
+.leyenda-calendario-v195{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px 9px;
+  margin:8px 2px 2px;
+  padding-top:8px;
+  border-top:1px solid var(--divider);
+  color:var(--text-secondary);
+  font-size:8.5px;
+  font-weight:700;
+}
+
+.leyenda-calendario-v195 span{
+  white-space:nowrap;
+}
+
+/* Estados vacíos con algo de personalidad */
+.estado-vacio-v195{
+  margin:14px 0 22px;
+  padding:22px 16px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  text-align:center;
+  border:1px dashed rgba(127,127,127,.18);
+  border-radius:18px;
+  background:rgba(127,127,127,.035);
+  color:var(--text-secondary);
+}
+
+.estado-vacio-icono-v195{
+  width:42px;
+  height:42px;
+  display:grid;
+  place-items:center;
+  margin-bottom:2px;
+  border-radius:14px;
+  background:rgba(52,120,246,.08);
+  font-size:20px;
+}
+
+.estado-vacio-v195 strong{
+  color:var(--text-primary);
+  font-size:13px;
+}
+
+.estado-vacio-v195 small{
+  max-width:280px;
+  font-size:10.5px;
+  line-height:1.35;
+}
+
+/* Datos y acciones visualmente algo más separados */
+#vista-ajustes .boton-principal,
+#vista-ajustes .boton-secundario,
+#vista-historial .boton,
+#vista-estadisticas .boton{
+  box-shadow:none;
+}
+
+@media(max-width:390px){
+  .ultima-actualizacion-v195{font-size:9px}
+  .leyenda-calendario-v195{
+    gap:4px 7px;
+    font-size:8px;
+  }
+}
+
+@media(prefers-color-scheme:dark){
+  .estado-vacio-v195{
+    background:rgba(255,255,255,.025);
+    border-color:rgba(255,255,255,.10);
+  }
+
+  .estado-vacio-icono-v195{
+    background:rgba(90,150,255,.09);
+  }
+}

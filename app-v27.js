@@ -7486,7 +7486,7 @@ function mostrarVersionPublicadaV156() {
 
     const etiqueta = document.createElement("div");
     etiqueta.id = "versionPublicadaV156";
-    etiqueta.textContent = "Versión publicada: V194";
+    etiqueta.textContent = "Versión publicada: V195";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
@@ -8715,4 +8715,135 @@ document.addEventListener("DOMContentLoaded",()=>{
         actualizarSemanaVisualV193();
         animarVistaActivaV193();
     },160);
+});
+
+
+// =========================================================
+// V195 · CABECERA DINÁMICA + ÚLTIMA ACTUALIZACIÓN
+// =========================================================
+function saludoDinamicoV195(){
+    const el=document.getElementById("saludoDinamicoV195");
+    if(!el)return;
+
+    const hora=new Date().getHours();
+    let saludo=hora<12?"Buenos días":hora<20?"Buenas tardes":"Buenas noches";
+
+    try{
+        if(typeof resumenDisponibilidadV181==="function"){
+            const resumen=resumenDisponibilidadV181(new Date());
+            const tipo=resumen?.hoyEventos?.[0]?._ctx?.tipo||"";
+            if(tipo==="vacaciones") saludo+=" · modo descanso 🌴";
+            else if(tipo==="viaje") saludo+=" · día de viaje 🧳";
+            else if(tipo==="asamblea") saludo+=" · día especial 🎤";
+            else if(tipo==="ldc") saludo+=" · día de LDC 🛠️";
+        }
+    }catch(e){}
+
+    el.textContent=saludo;
+}
+
+function textoHaceV195(fecha){
+    const ms=Math.max(0,Date.now()-fecha.getTime());
+    if(ms<60000)return "Actualizado ahora";
+
+    const min=Math.floor(ms/60000);
+    if(min<60)return `Actualizado hace ${min} min`;
+
+    const horas=Math.floor(min/60);
+    if(horas<24)return `Actualizado hace ${horas} h`;
+
+    return `Actualizado ${fecha.toLocaleDateString("es-ES",{day:"numeric",month:"short"})}`;
+}
+
+function ultimaActualizacionV195(){
+    const el=document.getElementById("ultimaActualizacionV195");
+    if(!el)return;
+
+    let fecha=new Date();
+
+    try{
+        const sync=almacenamiento.leer(STORAGE_KEYS.ultimaSyncOneDrive,null);
+
+        if(sync){
+            const d=new Date(sync);
+            if(!Number.isNaN(d.getTime())) fecha=d;
+        }else{
+            const regs=Array.isArray(estado?.registros)?estado.registros:[];
+            const ultima=regs
+                .map(r=>new Date(r?.modificadoEn||r?.creadoEn||r?.fecha||0))
+                .filter(d=>!Number.isNaN(d.getTime()))
+                .sort((a,b)=>b-a)[0];
+
+            if(ultima) fecha=ultima;
+        }
+    }catch(e){}
+
+    el.textContent=textoHaceV195(fecha);
+}
+
+window.addEventListener("miServicio:estadoSyncV190",()=>{
+    setTimeout(ultimaActualizacionV195,120);
+});
+
+window.addEventListener("miServicio:registroGuardadoV188",()=>{
+    setTimeout(ultimaActualizacionV195,100);
+});
+
+// =========================================================
+// V195 · ESTADOS VACÍOS MÁS AMABLES
+// =========================================================
+function aplicarEstadosVaciosV195(){
+    const registros=Array.isArray(estado?.registros)?estado.registros:[];
+
+    const historial=document.getElementById("vista-historial");
+    if(historial){
+        let vacio=historial.querySelector(".estado-vacio-v195");
+
+        if(!registros.length){
+            if(!vacio){
+                vacio=document.createElement("div");
+                vacio.className="estado-vacio-v195";
+                vacio.innerHTML=
+                    `<span class="estado-vacio-icono-v195">📝</span>`+
+                    `<strong>Aún no hay actividad</strong>`+
+                    `<small>Cuando registres tiempo, aparecerá aquí.</small>`;
+                historial.appendChild(vacio);
+            }
+        }else{
+            vacio?.remove();
+        }
+    }
+
+    const stats=document.getElementById("vista-estadisticas");
+    if(stats){
+        let vacio=stats.querySelector(".estado-vacio-v195");
+
+        if(!registros.length){
+            if(!vacio){
+                vacio=document.createElement("div");
+                vacio.className="estado-vacio-v195";
+                vacio.innerHTML=
+                    `<span class="estado-vacio-icono-v195">📊</span>`+
+                    `<strong>Todavía no hay estadísticas</strong>`+
+                    `<small>Se irán formando a medida que registres actividad.</small>`;
+                stats.appendChild(vacio);
+            }
+        }else{
+            vacio?.remove();
+        }
+    }
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+    setTimeout(()=>{
+        saludoDinamicoV195();
+        ultimaActualizacionV195();
+        aplicarEstadosVaciosV195();
+    },180);
+
+    setInterval(ultimaActualizacionV195,60000);
+});
+
+window.addEventListener("miServicio:registroGuardadoV188",()=>{
+    setTimeout(aplicarEstadosVaciosV195,100);
 });
