@@ -10695,7 +10695,7 @@ body.v190-shell-listo .app{opacity:1}
 body.modal-v191-abierto{overflow:hidden}
 
 /* Resumen final del mes */
-#vista-inicio .v191-resumen-final-mes{
+#vista-estadisticas .v191-resumen-final-mes{
   margin:12px 0 22px;
   border:1px solid var(--v185-border,rgba(127,127,127,.11));
   border-radius:18px;
@@ -10703,9 +10703,9 @@ body.modal-v191-abierto{overflow:hidden}
   box-shadow:0 5px 18px rgba(20,24,35,.045);
   overflow:hidden;
 }
-#vista-inicio .v191-resumen-final-mes.oculto{display:none!important}
+#vista-estadisticas .v191-resumen-final-mes.oculto{display:none!important}
 
-#vista-inicio .v191-resumen-final-mes > summary{
+#vista-estadisticas .v191-resumen-final-mes > summary{
   list-style:none;
   display:grid;
   grid-template-columns:34px minmax(0,1fr) 18px;
@@ -10715,7 +10715,7 @@ body.modal-v191-abierto{overflow:hidden}
   padding:11px 14px;
   cursor:pointer;
 }
-#vista-inicio .v191-resumen-final-mes > summary::-webkit-details-marker{display:none}
+#vista-estadisticas .v191-resumen-final-mes > summary::-webkit-details-marker{display:none}
 
 .v191-resumen-mes-icono{
   width:32px;
@@ -10774,7 +10774,7 @@ body.modal-v191-abierto{overflow:hidden}
 /* Oscuro */
 @media(prefers-color-scheme:dark){
   .v191-modal-rapido,
-  #vista-inicio .v191-resumen-final-mes{
+  #vista-estadisticas .v191-resumen-final-mes{
     background:rgba(24,24,27,.97);
     border-color:rgba(255,255,255,.08);
   }
@@ -10808,7 +10808,7 @@ body.modal-v191-abierto{overflow:hidden}
 /* =========================================================
    V193 · SEMANA VISUAL + TRANSICIONES ENTRE PESTAÑAS
    ========================================================= */
-#vista-inicio .v193-semana-visual{
+#vista-estadisticas .v193-semana-visual{
   margin:10px 0 18px;
   padding:12px 13px;
   border:1px solid var(--v185-border,rgba(127,127,127,.11));
@@ -10911,14 +10911,14 @@ nav.barra-navegacion button.active::after{
   opacity:.65;
 }
 @media(prefers-color-scheme:dark){
-  #vista-inicio .v193-semana-visual{
+  #vista-estadisticas .v193-semana-visual{
     background:rgba(24,24,27,.92);
     border-color:rgba(255,255,255,.07);
     box-shadow:0 8px 20px rgba(0,0,0,.18);
   }
 }
 @media(max-width:390px){
-  #vista-inicio .v193-semana-visual{padding:11px 10px}
+  #vista-estadisticas .v193-semana-visual{padding:11px 10px}
   .v193-semana-dias{gap:3px}
   .v193-dia strong{font-size:8px}
 }
@@ -11294,4 +11294,16 @@ nav.barra-navegacion button.active::after{
   .estado-vacio-icono-v195{
     background:rgba(90,150,255,.09);
   }
+}
+
+/* V196 · Saludo legible en ambos modos */
+body #saludoDinamicoV195 {
+  font-size: 16px;
+  line-height: 1.35;
+  font-weight: 600;
+  color: var(--text-primary);
+  opacity: 1;
+}
+@media (prefers-color-scheme: dark) {
+  body #saludoDinamicoV195 { color: #f5f5f7; }
 }

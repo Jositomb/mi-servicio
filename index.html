@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=19501"
+        href="./styles-v27.css?v=19601"
     >
 
 
@@ -120,7 +120,7 @@
 </style>
 
     <meta name="mi-servicio-version" content="V151-META-REORGANIZADA">
-<meta name="mi-servicio-build" content="V195-19501">
+<meta name="mi-servicio-build" content="V196-19601">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -392,38 +392,6 @@
                 <div class="v184-hoy-cuerpo">
                     <span class="v184-hoy-detalle" data-v145-detalle></span>
                     <div id="agendaHoyV172" class="v172-agenda-hoy-lista" aria-live="polite"></div>
-                </div>
-            </details>
-
-            <!-- V193 · SEMANA VISUAL -->
-            <section id="semanaVisualV193" class="v193-semana-visual">
-                <div class="v193-semana-cabecera">
-                    <div>
-                        <small>ESTA SEMANA</small>
-                        <strong id="semanaVisualTituloV193">Actividad de lunes a domingo</strong>
-                    </div>
-                    <span id="semanaVisualTotalV193">0 h</span>
-                </div>
-                <div id="semanaVisualDiasV193" class="v193-semana-dias" aria-label="Resumen visual de esta semana"></div>
-            </section>
-
-            <!-- V191 · RESUMEN FINAL DEL MES -->
-            <details id="resumenFinalMesV191" class="v191-resumen-final-mes oculto">
-                <summary>
-                    <span class="v191-resumen-mes-icono">📊</span>
-                    <span class="v191-resumen-mes-titulo">
-                        <small>MES EN NÚMEROS</small>
-                        <strong id="tituloResumenFinalMesV191">Resumen del mes</strong>
-                    </span>
-                    <span class="v191-resumen-mes-flecha">›</span>
-                </summary>
-                <div class="v191-resumen-mes-cuerpo">
-                    <div class="v191-resumen-mes-grid">
-                        <div><small>Horas</small><strong id="horasResumenFinalMesV191">0 h</strong></div>
-                        <div><small>Días activos</small><strong id="diasResumenFinalMesV191">0</strong></div>
-                        <div><small>Mejor semana</small><strong id="semanaResumenFinalMesV191">0 h</strong></div>
-                        <div><small>Objetivo</small><strong id="objetivoResumenFinalMesV191">—</strong></div>
-                    </div>
                 </div>
             </details>
 
@@ -755,6 +723,38 @@
             id="vista-estadisticas"
             class="vista"
         >
+            <!-- V193 · SEMANA VISUAL -->
+            <section id="semanaVisualV193" class="v193-semana-visual">
+                <div class="v193-semana-cabecera">
+                    <div>
+                        <small>ESTA SEMANA</small>
+                        <strong id="semanaVisualTituloV193">Actividad de lunes a domingo</strong>
+                    </div>
+                    <span id="semanaVisualTotalV193">0 h</span>
+                </div>
+                <div id="semanaVisualDiasV193" class="v193-semana-dias" aria-label="Resumen visual de esta semana"></div>
+            </section>
+
+            <!-- V191 · RESUMEN FINAL DEL MES -->
+            <details id="resumenFinalMesV191" class="v191-resumen-final-mes oculto">
+                <summary>
+                    <span class="v191-resumen-mes-icono">📊</span>
+                    <span class="v191-resumen-mes-titulo">
+                        <small>MES EN NÚMEROS</small>
+                        <strong id="tituloResumenFinalMesV191">Resumen del mes</strong>
+                    </span>
+                    <span class="v191-resumen-mes-flecha">›</span>
+                </summary>
+                <div class="v191-resumen-mes-cuerpo">
+                    <div class="v191-resumen-mes-grid">
+                        <div><small>Horas</small><strong id="horasResumenFinalMesV191">0 h</strong></div>
+                        <div><small>Días activos</small><strong id="diasResumenFinalMesV191">0</strong></div>
+                        <div><small>Mejor semana</small><strong id="semanaResumenFinalMesV191">0 h</strong></div>
+                        <div><small>Objetivo</small><strong id="objetivoResumenFinalMesV191">—</strong></div>
+                    </div>
+                </div>
+            </details>
+
             <section id="historialResumenV153" class="v153-historial-resumen stats-v183-resumen-visible">
   <article id="resumenMensualV143" class="v143-resumen-mensual">
                 <div class="v143-rm-head">
@@ -1688,15 +1688,15 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=19501" defer></script>
-<script src="./eventos-calendario.js?v=19501" defer></script>
+<script src="./app-v27.js?v=19601" defer></script>
+<script src="./eventos-calendario.js?v=19601" defer></script>
 
 <script id="swRegistroV189">
 if ("serviceWorker" in navigator) {
   // V189: registrar cuanto antes. No dependemos de que termine de cargar
   // una CDN o una petición lenta para activar el modo local.
   navigator.serviceWorker.register(
-    "./sw.js?v=19501",
+    "./sw.js?v=19601",
     { scope:"./", updateViaCache:"none" }
   ).then(registro=>{
     registro.update().catch(()=>{});
