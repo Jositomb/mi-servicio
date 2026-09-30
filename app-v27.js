@@ -7761,6 +7761,7 @@ function resumenHoyV145(){
  const weather=document.getElementById("tiempoDescripcion")?.textContent?.trim();
  if(weather && !/cargando|--|—/i.test(weather)) d += ` · ${weather}`;
  host.querySelector("[data-v145-icono]").textContent=icono;titulo.textContent=t;detalle.textContent=d;estadoEl.textContent=e;
+ aplicarHoyCompactoV197(host,regs,planes,[]);
 }
 document.addEventListener("DOMContentLoaded",()=>setTimeout(resumenHoyV145,1000));
 
@@ -8847,3 +8848,38 @@ document.addEventListener("DOMContentLoaded",()=>{
 window.addEventListener("miServicio:registroGuardadoV188",()=>{
     setTimeout(aplicarEstadosVaciosV195,100);
 });
+
+// V197 · Resumen compacto y color por actividad, sin cambiar registros.
+function datosHoyCompactoV197(registros=[],planes=[],eventos=[]){
+ const activos=registros.length?registros:planes;
+ const minutosRegistro=r=>r.minutosTotales!=null?Number(r.minutosTotales)||0:Number(r.minutos)||0;
+ const minutos=registros.length?registros.reduce((s,r)=>s+minutosRegistro(r),0):planes.reduce((s,p)=>s+minutosPlanificadosV141(p),0);
+ const tipos=[...new Set(activos.map(r=>String(r.tipo||r.actividad||"ministerio").toLowerCase()))];
+ const mapa={ministerio:["Ministerio","📖"],ldc:["LDC","🛠️"],asambleas:["Asamblea","🎤"],asamblea:["Asamblea","🎤"],otras:["Otras","✨"]};
+ const tipo=tipos.length===1?tipos[0]:tipos.length>1?"mixto":"";
+ const companeros=[...new Set(activos.map(r=>String(r.companero||r.acompanante||"").trim()).filter(Boolean))];
+ const partes=[];
+ if(activos.length){
+  if(minutos>0)partes.push(formatearTiempo(minutos)+(registros.length?"":" previstas"));
+  partes.push(tipos.map(t=>mapa[t]?.[0]||t).join(" + "));
+  if(companeros.length===1)partes.push("con "+companeros[0]);
+  else if(companeros.length>1)partes.push("con "+companeros.length+" acompañantes");
+ }else if(eventos.length){partes.push(eventos[0].titulo||"Evento de hoy");}
+ else partes.push("Sin actividad planificada");
+ return {texto:"Hoy: "+partes.join(" · "),tipo,icono:mapa[tipo]?.[1]||"📅"};
+}
+function aplicarHoyCompactoV197(host,registros,planes,eventos){
+ if(!host)return;
+ const datos=datosHoyCompactoV197(registros,planes,eventos);
+ let linea=host.querySelector(".hoy-compacto-v197");
+ if(!linea){linea=document.createElement("span");linea.className="hoy-compacto-v197";host.querySelector(".v145-hoy-texto")?.appendChild(linea);}
+ linea.textContent=datos.texto;linea.title=datos.texto;
+ host.dataset.actividadHoy=datos.tipo;
+ if(datos.tipo){host.querySelector("[data-v145-icono]").textContent=datos.icono;}
+}
+function estadoVacioV197(icono,texto){
+ const box=document.createElement("div");box.className="estado-vacio-compacto-v197";
+ const imagen=document.createElement("span");imagen.setAttribute("aria-hidden","true");imagen.textContent=icono;
+ const mensaje=document.createElement("span");mensaje.textContent=texto;
+ box.append(imagen,mensaje);return box;
+}

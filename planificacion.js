@@ -604,14 +604,9 @@ function mostrarDetalleDiaCalendario(
     );
 
     if (registrosVisibles.length === 0) {
-        const vacio =
-            document.createElement("p");
-
-        vacio.className =
-            "texto-secundario";
-
-        vacio.textContent =
-            "No hubo actividad registrada este día.";
+        const vacio = estadoVacioV197("📖", agendaDiaDatos.companero || agendaDiaDatos.minutosPrevistos
+            ? "Tu salida está planificada. El tiempo aparecerá al registrarlo."
+            : "Este día está por escribir. Puedes planificar una salida o registrar tiempo.");
 
         detalle.appendChild(vacio);
         return;

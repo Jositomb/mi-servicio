@@ -155,7 +155,7 @@
     head.append(title,add);box.appendChild(head);
     const eventos=eventosDeFecha(fecha);
     if(!eventos.length){
-      const p=document.createElement("p");p.className="v172-eventos-vacio";p.textContent="Sin otros eventos para este día.";box.appendChild(p);
+      box.appendChild(estadoVacioV197("🗓️","Un día sin otros eventos. Añade uno cuando lo necesites."));
     }else{
       eventos.forEach(e=>{
         const meta=descriptor(e),fila=document.createElement("div");fila.className="v172-evento-fila";
@@ -238,7 +238,7 @@
     else if(plan){icono.textContent="📅";titulo.textContent="Actividad planificada para hoy";detalle.textContent=plan.companero?`Con ${plan.companero}`:"Ya tienes actividad en la agenda.";estadoEl.textContent="Planificado"}
 
     if(!items.length){
-      const p=document.createElement("div");p.className="v172-agenda-vacio";p.textContent="No tienes otros eventos ni actividad planificada para hoy.";lista.appendChild(p);
+      lista.appendChild(estadoVacioV197("☀️","Tu agenda está libre. Puedes planificar cuando quieras."));
     }else{
       items.forEach(x=>{
         const row=document.createElement("div");row.className="v172-agenda-item";
@@ -252,6 +252,7 @@
       });
     }
     const aviso=document.createElement("div");aviso.className="v172-agenda-aviso";aviso.textContent="Agenda combinada: actividad de Mi Servicio + eventos personales y de Apple Calendar.";lista.appendChild(aviso);
+    aplicarHoyCompactoV197(host,regs,plan?[plan]:[],eventos);
   }
 
   function refrescar(fechaSeleccionada){
