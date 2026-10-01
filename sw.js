@@ -1,14 +1,47 @@
-const CACHE = "mi-servicio-v20301";
+const BUILD = "V205-20501";
+const CACHE = "mi-servicio-v20501";
 const CACHE_PREFIX = "mi-servicio-";
-
+const CODIGO = {
+  "./app-v205.js": "82228bf9b6329223f6de166797d97757883944f25fc0a52589e9dae96d18c20f",
+  "./config-v205.js": "2ef83ae552bfdf5e1e998fffe9f39f1cc6f999826b9229396280337ed5612b5d",
+  "./legacy-bridge-v205.js": "7a9f294149fecaa1bc9941ae6d87a97d47955de70b3a53e90b2258be6618f9c0",
+  "./storage-v205.js": "c8dc9a3b4b440181b69dabf206319026d8f3057cccf63c57ae8585cd4bdfdca9",
+  "./estadisticas-render-v205.js": "da8b2313c36a26e0af176ea06ab63a7996798222e308b9a2f6075c6b88d672a7",
+  "./estadisticas-v205.js": "32989862e03bd33c2f2f0974355b569887283d1f21535995538ecd79912533bc",
+  "./eventos-calendario-v205.js": "3455f86e4d2a6efca531ae225ea4c3a4c6db5b1b15d1c949e80a222f0781b0c8",
+  "./historial-edicion-v205.js": "649933a840b374a2ddc7d1d74d671bf747e890c15b5ca1e03885084c4062c7bd",
+  "./historial-render-v205.js": "8037ccfe306808fbae805fc3f28b8edf2b5090101bf47dba749e9638d3163256",
+  "./historial-v205.js": "a84e094f4e4f27fd417008d6d2f017d0776b4235bcca088dfc294668d0f215be",
+  "./mejoras-v205.js": "cde6be90bb0422b66bb3183c0638b8a22bd9817b65a3519e328b89a36b8c3319",
+  "./planificacion-v205.js": "19b9630006fefb3e74fe7b31d8f42d05adb0d29b449896c08d5892ab7f973160",
+  "./registrar-ui-v205.js": "82d52342620300f64f85084904abee92dde8655709bf8639c1bd6daa6144c676",
+  "./registrar-v205.js": "f4fce53c827b42acf15b05a4970b4206bd7da20f16755f65b5153f46ff87b4e5",
+  "./styles-v205.css": "c6039586dcdb69b2fdfca140034bc9b0a4e0047dcea36d0b4d92ad3b883a5caf",
+  "./tiempo-v205.js": "14712104c9f7afd9bc09112ff312ce1635a90ac4e374a97d6ba47bb4fe5f3e73",
+  "./visual-v205.js": "5ad2f2082df9360054e0e5b3dafa1f2754d01ea51a3b0f2b91b8bb4bacd83711"
+};
 const APP_SHELL = [
-  "./",
   "./index.html",
-  "./styles-v27.css?v=20301",
-  "./app-v27.js?v=20301",
-  "./eventos-calendario.js?v=20301",
-  "./icon-apple.png",
+  "./",
+  "./app-v205.js",
+  "./config-v205.js",
+  "./legacy-bridge-v205.js",
+  "./storage-v205.js",
+  "./estadisticas-render-v205.js",
+  "./estadisticas-v205.js",
+  "./eventos-calendario-v205.js",
+  "./historial-edicion-v205.js",
+  "./historial-render-v205.js",
+  "./historial-v205.js",
+  "./mejoras-v205.js",
+  "./planificacion-v205.js",
+  "./registrar-ui-v205.js",
+  "./registrar-v205.js",
+  "./styles-v205.css",
+  "./tiempo-v205.js",
+  "./visual-v205.js",
   "./manifest.webmanifest",
+  "./icon-apple.png",
   "./personaje-51219b70e7f1.png",
   "./personaje-5638b822e9ec.png",
   "./personaje-56dd433b1692.png",
@@ -17,156 +50,85 @@ const APP_SHELL = [
   "./personaje-95d7b35c957c.png",
   "./personaje-e4168da17cdf.png",
   "./personaje-e524cff3980b.png",
-  "./personaje-ff4383d3590d.png",
-  "./core/config.js",
-  "./core/storage.js",
-  "./tiempo.js",
-  "./core/legacy-bridge.js",
-  "./historial.js",
-  "./historial-render.js",
-  "./historial-edicion.js",
-  "./estadisticas.js",
-  "./estadisticas-render.js",
-  "./registrar.js?v=20301",
-  "./planificacion.js",
-  "./visual-v201.js",
-  "./mejoras-v202.js",
-  "./registrar-v203.js?v=20301"
+  "./personaje-ff4383d3590d.png"
 ];
 
-// No activar una mezcla de HTML nuevo y scripts antiguos.
-const CRITICOS = APP_SHELL.filter(r=>r.endsWith(".js") || /\.js\?/.test(r) || /\.css\?/.test(r) || r==="./index.html");
-
-async function buscarEnCualquierCache(request, opciones={}) {
-  const actual = await caches.open(CACHE);
-  let respuesta = await actual.match(request, opciones);
-  if (respuesta) return respuesta;
-
-  const nombres = (await caches.keys())
-    .filter(n => n.startsWith(CACHE_PREFIX) && n !== CACHE)
-    .reverse();
-
-  for (const nombre of nombres) {
-    const c = await caches.open(nombre);
-    respuesta = await c.match(request, opciones);
-    if (respuesta) return respuesta;
-  }
+function esPaginaDeEstaVersion(html) {
+  const meta=html.match(/<meta\s+name=["']mi-servicio-build["']\s+content=["']([^"']+)["']/i);
+  return Boolean(meta && meta[1]===BUILD);
+}
+async function hashRespuesta(respuesta) {
+  const bytes=await respuesta.clone().arrayBuffer();
+  const digest=await crypto.subtle.digest("SHA-256",bytes);
+  return Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,"0")).join("");
+}
+async function nucleoCompleto(cache) {
+  const pagina=await cache.match("./index.html");
+  if(!pagina || !esPaginaDeEstaVersion(await pagina.text()))return false;
+  return (await Promise.all(Object.keys(CODIGO).map(async r=>{
+    const res=await cache.match(r);
+    return Boolean(res && await hashRespuesta(res)===CODIGO[r]);
+  }))).every(Boolean);
+}
+async function buscarExacto(request) {
+  const actual=await caches.open(CACHE);
+  const respuesta=await actual.match(request);if(respuesta)return respuesta;
+  const nombres=(await caches.keys()).filter(n=>n.startsWith(CACHE_PREFIX)&&n!==CACHE).reverse();
+  for(const nombre of nombres){const res=await (await caches.open(nombre)).match(request);if(res)return res;}
   return null;
 }
-
-self.addEventListener("install", event => {
+self.addEventListener("install",event=>{
   event.waitUntil((async()=>{
     const cache=await caches.open(CACHE);
-
-    // Precarga tolerante: una petición lenta no invalida toda la app.
-    await Promise.all(APP_SHELL.map(async recurso=>{
-      try {
-        const req=new Request(recurso,{cache:"reload"});
-        const res=await fetch(req);
-        if(res && res.ok) await cache.put(recurso,res.clone());
-      } catch(e) {
-        // Si ya existía una versión utilizable, la conservamos en su cache anterior.
-      }
-    }));
-
-    const completa=(await Promise.all(CRITICOS.map(r=>cache.match(r)))).every(Boolean);
-    if(!completa){
-      await caches.delete(CACHE);
-      throw new Error("La descarga no está completa; se conserva la versión anterior.");
-    }
-    await self.skipWaiting();
+    try{
+      await Promise.all(APP_SHELL.map(async recurso=>{
+        try{
+          const res=await fetch(new Request(recurso,{cache:"reload"}));
+          if(!res?.ok)return;
+          if(CODIGO[recurso] && await hashRespuesta(res)!==CODIGO[recurso])return;
+          if((recurso==="./index.html"||recurso==="./") && !esPaginaDeEstaVersion(await res.clone().text()))return;
+          await cache.put(recurso,res);
+        }catch(e){}
+      }));
+      if(!await nucleoCompleto(cache))throw new Error("Actualización incompleta: se mantiene la versión instalada.");
+      await self.skipWaiting();
+    }catch(e){await caches.delete(CACHE);throw e;}
   })());
 });
-
-self.addEventListener("activate", event => {
-  event.waitUntil((async()=>{
-    await self.clients.claim();
-
-    // Solo limpiamos caches antiguas si la nueva versión tiene su núcleo completo.
-    const cache=await caches.open(CACHE);
-    const comprobaciones=await Promise.all(CRITICOS.map(r=>cache.match(r)));
-    const completa=comprobaciones.every(Boolean);
-
-    if(completa){
-      const keys=await caches.keys();
-      await Promise.all(
-        keys
-          .filter(k=>k.startsWith(CACHE_PREFIX) && k!==CACHE)
-          .map(k=>caches.delete(k))
-      );
-    }
-  })());
+self.addEventListener("activate",event=>{
+  // Conservar las cachés anteriores permite terminar los formularios que ya
+  // estaban abiertos. Cada nueva versión usa rutas distintas para su código.
+  event.waitUntil((async()=>{if(await nucleoCompleto(await caches.open(CACHE)))await self.clients.claim();})());
 });
-
-self.addEventListener("fetch", event => {
-  const req=event.request;
-  if(req.method!=="GET") return;
-
-  const url=new URL(req.url);
-
-  // Las APIs/CDN externas siguen su curso normal. No condicionan el shell local.
-  if(url.origin!==self.location.origin) return;
-
+self.addEventListener("fetch",event=>{
+  const req=event.request;if(req.method!=="GET")return;
+  const url=new URL(req.url);if(url.origin!==self.location.origin)return;
   if(req.mode==="navigate"){
     event.respondWith((async()=>{
-      // LOCAL PRIMERO: con poca cobertura la pantalla aparece inmediatamente.
-      const local =
-        await buscarEnCualquierCache("./index.html") ||
-        await buscarEnCualquierCache("./", {ignoreSearch:true});
-
-      if(local){
-        // Actualización silenciosa; nunca retenemos la navegación por la red.
-        event.waitUntil((async()=>{
-          try{
-            const res=await fetch(req,{cache:"no-store"});
-            if(res && res.ok){
-              const cache=await caches.open(CACHE);
-              await cache.put("./index.html",res.clone());
-              await cache.put("./",res.clone());
-            }
-          }catch(e){}
-        })());
-        return local;
-      }
-
-      // Primera apertura absoluta: todavía necesita una respuesta de red.
+      const cache=await caches.open(CACHE);
+      const pagina=await cache.match("./index.html");
+      if(pagina)return pagina;
+      // Nunca sustituir una página por HTML de otra versión. La siguiente
+      // publicación se activa con su propio worker, solo si está completa.
       try{
-        const res=await fetch(req);
-        if(res && res.ok){
-          const cache=await caches.open(CACHE);
-          await cache.put("./index.html",res.clone());
-          await cache.put("./",res.clone());
+        const res=await fetch(req,{cache:"no-store"});
+        if(res.ok && esPaginaDeEstaVersion(await res.clone().text())){
+          await cache.put("./index.html",res.clone());return res;
         }
-        return res;
-      }catch(e){
-        return new Response(
-          "<!doctype html><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><title>Mi Servicio</title><body style='font-family:-apple-system;padding:28px'><h2>Mi Servicio</h2><p>Necesito una primera conexión completa para guardar la app en este dispositivo.</p></body>",
-          {headers:{"Content-Type":"text/html; charset=utf-8"}}
-        );
-      }
-    })());
-    return;
+      }catch(e){}
+      return new Response("<!doctype html><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><title>Mi Servicio</title><p>La actualización aún no está completa. Vuelve a abrir Mi Servicio cuando termine la publicación.</p>",{status:503,headers:{"Content-Type":"text/html; charset=utf-8"}});
+    })());return;
   }
-
-  // Archivos propios: cache primero, incluso si cambia la query de versión.
   event.respondWith((async()=>{
-    const exacta=await buscarEnCualquierCache(req);
-    if(exacta) return exacta;
-
-
+    const exacta=await buscarExacto(req);if(exacta)return exacta;
     try{
       const res=await fetch(req);
-      if(res && res.ok){
-        const cache=await caches.open(CACHE);
-        await cache.put(req,res.clone());
+      const relativa="./"+url.pathname.slice(new URL(self.registration.scope).pathname.length);
+      if(res.ok){
+        if(CODIGO[relativa] && await hashRespuesta(res)!==CODIGO[relativa])return Response.error();
+        if(CODIGO[relativa])await (await caches.open(CACHE)).put(req,res.clone());
       }
       return res;
-    }catch(e){
-      // Compatibilidad solo si la red falla: una query nueva debe descargar
-      // su archivo antes de reutilizar otra versión.
-      const compatible=await buscarEnCualquierCache(
-        new Request(url.origin+url.pathname),{ignoreSearch:true});
-      return compatible || Response.error();
-    }
+    }catch(e){return Response.error();}
   })());
 });

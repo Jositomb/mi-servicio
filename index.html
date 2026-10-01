@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=20301"
+        href="./styles-v205.css"
     >
 
 
@@ -119,10 +119,10 @@
 }
 </style>
 
-    <meta name="mi-servicio-version" content="V203">
-<meta name="mi-servicio-build" content="V203-20301">
+    <meta name="mi-servicio-version" content="V205">
+<meta name="mi-servicio-build" content="V205-20501">
 </head>
-<body data-mi-servicio-version="40.0">
+<body data-mi-servicio-version="V205">
     <div id="cargaV201" hidden role="status" aria-live="polite">
       <img src="./icon-apple.png" width="48" height="48" alt="">
       <strong>Mi Servicio</strong><span class="carga-puntos-v201" aria-hidden="true">•••</span>
@@ -1662,18 +1662,18 @@
     if (standalone) document.body.classList.add('modo-standalone');
 })();
 </script>
-<script type="module" src="./core/config.js"></script>
-<script type="module" src="./core/storage.js"></script>
-<script src="./historial-render.js" defer></script>
-<script src="./historial-edicion.js" defer></script>
-<script src="./estadisticas-render.js" defer></script>
-<script src="./registrar.js?v=20301" defer></script>
-<script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=20301" defer></script>
-<script src="./eventos-calendario.js?v=20301" defer></script>
-<script src="./visual-v201.js" defer></script>
-<script src="./mejoras-v202.js" defer></script>
-<script src="./registrar-v203.js?v=20301" defer></script>
+<script type="module" src="./config-v205.js"></script>
+<script type="module" src="./storage-v205.js"></script>
+<script src="./historial-render-v205.js" defer></script>
+<script src="./historial-edicion-v205.js" defer></script>
+<script src="./estadisticas-render-v205.js" defer></script>
+<script src="./registrar-v205.js" defer></script>
+<script src="./planificacion-v205.js" defer></script>
+<script src="./app-v205.js" defer></script>
+<script src="./eventos-calendario-v205.js" defer></script>
+<script src="./visual-v205.js" defer></script>
+<script src="./mejoras-v205.js" defer></script>
+<script src="./registrar-ui-v205.js" defer></script>
 
 <script id="swRegistroV189">
 if ("serviceWorker" in navigator) {
@@ -1684,7 +1684,7 @@ if ("serviceWorker" in navigator) {
     if(!teniaControlador || document.getElementById("avisoActualizacionV197"))return;
     const aviso=document.createElement("button");
     aviso.id="avisoActualizacionV197";aviso.type="button";
-    aviso.textContent="Actualización lista · Toca para abrirla";
+    aviso.textContent="Nueva versión lista · Toca para abrirla";
     aviso.addEventListener("click",()=>location.reload());
     document.body.appendChild(aviso);
   });
@@ -1700,10 +1700,10 @@ if ("serviceWorker" in navigator) {
 </script>
 
 
-<script type="module" src="./tiempo.js"></script>
-<script type="module" src="./core/legacy-bridge.js"></script>
-<script type="module" src="./historial.js"></script>
-<script type="module" src="./estadisticas.js"></script>
+<script type="module" src="./tiempo-v205.js"></script>
+<script type="module" src="./legacy-bridge-v205.js"></script>
+<script type="module" src="./historial-v205.js"></script>
+<script type="module" src="./estadisticas-v205.js"></script>
 
 <script id="ajustesAcordeonV179">
 document.addEventListener("DOMContentLoaded", () => {
