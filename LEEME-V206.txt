@@ -1,7 +1,0 @@
-MI SERVICIO V206
-
-Añadido +4 h a los accesos rápidos de Registrar. Los atajos suman al tiempo actual, como los anteriores. Incluye todas las mejoras de V205.
-
-Subir TODOS los archivos descomprimidos directamente a la raíz, conservando sus nombres. No hace falta crear carpetas ni eliminar archivos antiguos. Sustituir index.html, sw.js, manifest.webmanifest e imágenes cuando corresponda. Tocar el aviso de nueva versión y comprobar V206 en Ajustes.
-
-Comprobados recursos, sintaxis, huellas, funcionamiento de +4 h y actualización completa/incompleta. Pendiente revisión visual en iPhone.
