@@ -1,12 +1,12 @@
-const CACHE = "mi-servicio-v19701";
+const CACHE = "mi-servicio-v19702";
 const CACHE_PREFIX = "mi-servicio-";
 
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles-v27.css?v=19701",
-  "./app-v27.js?v=19701",
-  "./eventos-calendario.js?v=19701",
+  "./styles-v27.css?v=19702",
+  "./app-v27.js?v=19702",
+  "./eventos-calendario.js?v=19702",
   "./icon-apple.png",
   "./manifest.webmanifest",
   "./personaje-51219b70e7f1.png",
@@ -31,13 +31,8 @@ const APP_SHELL = [
   "./planificacion.js"
 ];
 
-const CRITICOS = [
-  "./index.html",
-  "./styles-v27.css?v=19701",
-  "./app-v27.js?v=19701",
-  "./core/config.js",
-  "./core/storage.js"
-];
+// No activar una mezcla de HTML nuevo y scripts antiguos.
+const CRITICOS = APP_SHELL.filter(r=>r.endsWith(".js") || /\.js\?/.test(r) || /\.css\?/.test(r) || r==="./index.html");
 
 async function buscarEnCualquierCache(request, opciones={}) {
   const actual = await caches.open(CACHE);
@@ -71,6 +66,11 @@ self.addEventListener("install", event => {
       }
     }));
 
+    const completa=(await Promise.all(CRITICOS.map(r=>cache.match(r)))).every(Boolean);
+    if(!completa){
+      await caches.delete(CACHE);
+      throw new Error("La descarga no está completa; se conserva la versión anterior.");
+    }
     await self.skipWaiting();
   })());
 });
@@ -150,20 +150,6 @@ self.addEventListener("fetch", event => {
     const exacta=await buscarEnCualquierCache(req);
     if(exacta) return exacta;
 
-    const sinQuery=new Request(url.origin+url.pathname);
-    const compatible=await buscarEnCualquierCache(sinQuery,{ignoreSearch:true});
-    if(compatible){
-      event.waitUntil((async()=>{
-        try{
-          const res=await fetch(req);
-          if(res && res.ok){
-            const cache=await caches.open(CACHE);
-            await cache.put(req,res.clone());
-          }
-        }catch(e){}
-      })());
-      return compatible;
-    }
 
     try{
       const res=await fetch(req);
@@ -173,7 +159,11 @@ self.addEventListener("fetch", event => {
       }
       return res;
     }catch(e){
-      return Response.error();
+      // Compatibilidad solo si la red falla: una query nueva debe descargar
+      // su archivo antes de reutilizar otra versión.
+      const compatible=await buscarEnCualquierCache(
+        new Request(url.origin+url.pathname),{ignoreSearch:true});
+      return compatible || Response.error();
     }
   })());
 });

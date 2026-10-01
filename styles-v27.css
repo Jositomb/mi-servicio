@@ -11329,3 +11329,10 @@ body #saludoDinamicoV195 {
  background:var(--card);color:var(--text-secondary);font-size:11px;line-height:1.4;
 }
 .estado-vacio-compacto-v197>span:first-child{font-size:21px;flex-shrink:0}
+
+#avisoActualizacionV197{
+ position:fixed;left:16px;right:16px;bottom:calc(94px + env(safe-area-inset-bottom));
+ z-index:10000;border:0;border-radius:14px;padding:14px;
+ background:var(--primary,#3478f6);color:#fff;font:600 14px -apple-system,sans-serif;
+ box-shadow:0 5px 20px rgba(0,0,0,.2);
+}

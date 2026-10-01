@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=19701"
+        href="./styles-v27.css?v=19702"
     >
 
 
@@ -119,8 +119,8 @@
 }
 </style>
 
-    <meta name="mi-servicio-version" content="V151-META-REORGANIZADA">
-<meta name="mi-servicio-build" content="V197-19701">
+    <meta name="mi-servicio-version" content="V197.2">
+<meta name="mi-servicio-build" content="V197-19702">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -1688,21 +1688,30 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=19701" defer></script>
-<script src="./eventos-calendario.js?v=19701" defer></script>
+<script src="./app-v27.js?v=19702" defer></script>
+<script src="./eventos-calendario.js?v=19702" defer></script>
 
 <script id="swRegistroV189">
 if ("serviceWorker" in navigator) {
-  // V189: registrar cuanto antes. No dependemos de que termine de cargar
-  // una CDN o una petición lenta para activar el modo local.
-  navigator.serviceWorker.register(
-    "./sw.js?v=19701",
-    { scope:"./", updateViaCache:"none" }
-  ).then(registro=>{
-    registro.update().catch(()=>{});
-  }).catch(error=>{
-    console.warn("Modo sin conexión no disponible todavía:", error);
+  let registroApp;
+  const teniaControlador=Boolean(navigator.serviceWorker.controller);
+  // Una actualización no interrumpe un formulario en curso.
+  navigator.serviceWorker.addEventListener("controllerchange",()=>{
+    if(!teniaControlador || document.getElementById("avisoActualizacionV197"))return;
+    const aviso=document.createElement("button");
+    aviso.id="avisoActualizacionV197";aviso.type="button";
+    aviso.textContent="Actualización lista · Toca para abrirla";
+    aviso.addEventListener("click",()=>location.reload());
+    document.body.appendChild(aviso);
   });
+  navigator.serviceWorker.register("./sw.js",{scope:"./",updateViaCache:"none"})
+    .then(registro=>{registroApp=registro;return registro.update();})
+    .catch(error=>console.warn("Actualización pendiente:",error));
+  function comprobarActualizacion(){
+    if(navigator.onLine && document.visibilityState==="visible")registroApp?.update().catch(()=>{});
+  }
+  document.addEventListener("visibilitychange",comprobarActualizacion);
+  window.addEventListener("online",comprobarActualizacion);
 }
 </script>
 
