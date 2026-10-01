@@ -277,6 +277,7 @@ function prepararPantallaRegistrar() {
 
         establecerFechaActual();
     }
+    if (typeof actualizarRegistrarV203 === "function") actualizarRegistrarV203();
 }
 
 function registrarActividad() {
@@ -587,13 +588,13 @@ function registrarActividad() {
 
     mostrarMensajeFormulario(
         mensaje,
-        "Actividad guardada ✓",
+        `✓ ${nombreActividad(tipo)} guardado · ${typeof etiquetaFechaV203 === "function" ? etiquetaFechaV203(fecha) : fecha} · ${formatearTiempo(totalMinutos)}`,
         false
     );
 
     try{
         window.dispatchEvent(
-            new CustomEvent("miServicio:registroGuardadoV188")
+            new CustomEvent("miServicio:registroGuardadoV188", {detail:{registro}})
         );
     }catch(e){}
 

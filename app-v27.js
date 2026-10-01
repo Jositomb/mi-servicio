@@ -889,6 +889,7 @@ function seleccionarActividad(
             }
         );
 
+    if(typeof actualizarRegistrarV203 === "function") actualizarRegistrarV203();
     const grupoCursos = document.getElementById("grupoCursosBiblicos");
     if (grupoCursos) {
         grupoCursos.classList.toggle("oculto", tipo !== "ministerio");
@@ -932,11 +933,7 @@ function configurarFormulario() {
         "minutosRegistro"
     );
 
-    configurarAtajosTiempo(
-        ".atajo-tiempo:not(.atajo-tiempo-edicion)",
-        "horasRegistro",
-        "minutosRegistro"
-    );
+    // V203: los atajos de Registrar añaden tiempo; edición conserva sus presets.
 
     configurarCursosBiblicos();
 
@@ -5192,6 +5189,7 @@ function actualizarTodaLaInterfaz() {
     actualizarMeta();
     refrescarResumenMensualV198();
     if(typeof actualizarComparacionMesesV202==="function")actualizarComparacionMesesV202();
+    if(typeof actualizarRegistrarV203==="function")actualizarRegistrarV203();
     window.dispatchEvent(new Event("miServicio:interfazListaV201"));
 }
 
@@ -7476,7 +7474,7 @@ function mostrarVersionPublicadaV156() {
 
     const etiqueta = document.createElement("div");
     etiqueta.id = "versionPublicadaV156";
-    etiqueta.textContent = "Versión instalada: V202";
+    etiqueta.textContent = "Versión instalada: V203";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);

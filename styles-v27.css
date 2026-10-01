@@ -11441,3 +11441,50 @@ body #saludoDinamicoV195 {
 #avisoV202 button{border:0;background:transparent;color:var(--primary);font:700 14px -apple-system,sans-serif;padding:8px}
 .agenda-hora-v202{display:block;margin-top:5px;font-size:12px;color:var(--text-secondary)}
 .modal-agenda-contenido{max-height:85dvh;overflow-y:auto}
+
+/* V203 · Registrar: lectura de arriba abajo y detalles opcionales. */
+#vista-registrar #formRegistro.registro-v203{display:flex!important;flex-direction:column!important;gap:12px!important;min-height:auto!important;grid-template-rows:none!important;padding-bottom:20px}
+#vista-registrar #formRegistro.registro-v203 > *{width:100%;min-width:0;flex:none}
+#vista-registrar #formRegistro.registro-v203 .grupo-formulario{padding:16px!important;margin:0!important;min-height:0!important}
+#vista-registrar #formRegistro.registro-v203 .selector-actividad{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+#vista-registrar #formRegistro.registro-v203 .actividad-boton{--actividad:var(--ministry);border:1px solid var(--divider)!important;min-height:58px!important;padding:10px!important;font-size:14px!important;color:var(--text-primary)!important;background:var(--background)!important;justify-content:flex-start}
+#vista-registrar #formRegistro.registro-v203 .actividad-boton[data-tipo="ldc"]{--actividad:var(--ldc)}
+#vista-registrar #formRegistro.registro-v203 .actividad-boton[data-tipo="asambleas"]{--actividad:var(--assembly)}
+#vista-registrar #formRegistro.registro-v203 .actividad-boton[data-tipo="otras"]{--actividad:var(--other)}
+#vista-registrar #formRegistro.registro-v203 .actividad-boton.seleccionada{border:2px solid var(--actividad)!important;background:var(--card)!important;box-shadow:inset 0 -3px var(--actividad)!important}
+#vista-registrar #formRegistro.registro-v203 .actividad-icono{font-size:23px!important;background:transparent!important;flex:none}
+#vista-registrar #formRegistro.registro-v203 .fecha-opciones-v203{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+#vista-registrar .fecha-opciones-v203 button,#vista-registrar .tiempo-total-v203 button{border:1px solid var(--divider);border-radius:13px;background:var(--background);color:var(--text-primary);min-height:46px;font-weight:700;padding:8px}
+#vista-registrar .fecha-opciones-v203 button[aria-pressed="true"]{border-color:var(--primary);background:var(--primary-soft);color:var(--primary)}
+#vista-registrar #formRegistro.registro-v203 .tiempo-total-v203{display:grid;grid-template-columns:46px minmax(0,1fr) 46px;align-items:center;gap:8px;margin:8px 0}
+#vista-registrar .tiempo-total-v203 output{text-align:center;font-size:clamp(26px,7vw,40px);font-weight:850;color:var(--text-primary);font-variant-numeric:tabular-nums;line-height:1.3}
+#vista-registrar .tiempo-total-v203 button{font-size:26px}
+#vista-registrar #formRegistro.registro-v203 .selector-tiempo{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;margin-top:12px;gap:10px}
+#vista-registrar #formRegistro.registro-v203 .campo-tiempo{padding:10px!important}
+#vista-registrar #formRegistro.registro-v203 .campo-tiempo input{font-size:24px!important;min-height:42px!important;width:100%;color:var(--text-primary)}
+#vista-registrar #formRegistro.registro-v203 .atajos-tiempo{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:6px!important;margin-top:12px}
+#vista-registrar #formRegistro.registro-v203 .atajo-tiempo{padding:8px 3px!important;min-height:44px!important;font-size:13px!important}
+#vista-registrar .ayuda-v203{font-size:12px;color:var(--text-secondary);line-height:1.45;margin:8px 0 0}
+#vista-registrar .detalles-registro-v203,#vista-registrar .plan-registro-v203{border:1px solid var(--divider);border-radius:19px;background:var(--card);padding:16px}
+#vista-registrar .plan-registro-v203>p:first-child{font-weight:700;margin:0 0 12px;line-height:1.45}
+#vista-registrar .detalles-registro-v203 summary{cursor:pointer;font-weight:750;min-height:44px}
+#vista-registrar .detalles-registro-v203 summary span{display:block;font-size:12px;font-weight:400;color:var(--text-secondary);margin-top:5px}
+#vista-registrar .detalles-contenido-v203{display:grid;gap:12px;margin-top:14px}
+#vista-registrar #formRegistro.registro-v203 #grupoCompaneroMinisterio{display:block!important;padding:12px!important}
+#vista-registrar #formRegistro.registro-v203 #grupoCompaneroMinisterio .titulo-campo{white-space:normal!important;margin-bottom:8px!important}
+#vista-registrar #formRegistro.registro-v203 .grupo-cursos.oculto{display:none!important}
+#vista-registrar #formRegistro.registro-v203 .grupo-notas textarea{min-height:80px!important;height:auto!important;resize:vertical;flex:none!important;font-size:16px!important}
+#vista-registrar #formRegistro.registro-v203 .guardar-registro-v203{position:sticky;bottom:calc(76px + env(safe-area-inset-bottom,0px));padding:8px 0;background:var(--background);z-index:5;border-radius:16px}
+#vista-registrar #formRegistro.registro-v203 .boton-guardar{width:100%;margin:0!important;min-height:52px!important;font-size:17px!important}
+#vista-registrar .confirmacion-registro-v203{display:flex;gap:10px;flex-wrap:wrap}
+#vista-registrar .confirmacion-registro-v203 button{flex:1;min-height:44px}
+#vista-registrar #formRegistro.registro-v203 [hidden]{display:none!important}
+#vista-registrar #formRegistro.registro-v203 :is(button,input,textarea,summary):focus-visible{outline:3px solid var(--primary);outline-offset:3px}
+@media(max-width:350px){#vista-registrar #formRegistro.registro-v203 .grupo-formulario{padding:12px!important}#vista-registrar #formRegistro.registro-v203 .actividad-boton{font-size:12px!important}}
+body:has(#vista-registrar.activa) .app{height:auto!important;min-height:100dvh!important;overflow:visible!important;padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))!important}
+body:has(#vista-registrar.activa) main{height:auto!important;overflow:visible!important;display:block!important;flex:none!important}
+#vista-registrar.activa{height:auto!important;overflow:visible!important;flex:none!important}
+#vista-registrar #formRegistro.registro-v203 .grupo-fecha .campo{font-size:16px!important;width:100%}
+#vista-registrar #formRegistro.registro-v203 .titulo-campo{font-size:14px!important}
+#vista-registrar #formRegistro.registro-v203 .grupo-cursos .boton-contador{min-width:44px!important;min-height:44px!important}
+#vista-registrar #formRegistro.registro-v203 .grupo-cursos .contador-cursos{grid-template-columns:44px minmax(0,1fr) 44px!important;height:auto!important;min-height:56px!important}

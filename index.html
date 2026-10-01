@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=20201"
+        href="./styles-v27.css?v=20301"
     >
 
 
@@ -119,8 +119,8 @@
 }
 </style>
 
-    <meta name="mi-servicio-version" content="V202">
-<meta name="mi-servicio-build" content="V202-20201">
+    <meta name="mi-servicio-version" content="V203">
+<meta name="mi-servicio-build" content="V203-20301">
 </head>
 <body data-mi-servicio-version="40.0">
     <div id="cargaV201" hidden role="status" aria-live="polite">
@@ -426,8 +426,9 @@
             <p class="intro-pantalla">
                 Añade el tiempo que has dedicado a una actividad.
             </p>
-            <form id="formRegistro">
-                <!-- ACTIVIDAD -->
+            <form id="formRegistro" class="registro-v203">
+                <div id="planRegistroV203" class="plan-registro-v203" hidden><p id="planTextoV203"></p><button type="button" id="usarPlanV203" class="boton-secundario">Usar salida planificada</button><p class="ayuda-v203">Añade después el tiempo que realmente has dedicado.</p></div>
+<!-- ACTIVIDAD -->
                 <div class="grupo-formulario grupo-actividad">
                     <span class="titulo-campo">
                         Actividad
@@ -439,7 +440,7 @@
                             type="button"
                         >
                             <span class="actividad-icono">
-                                ✦
+                                📖
                             </span>
                             Ministerio
                         </button>
@@ -449,7 +450,7 @@
                             type="button"
                         >
                             <span class="actividad-icono">
-                                ⌂
+                                🛠️
                             </span>
                             LDC
                         </button>
@@ -459,7 +460,7 @@
                             type="button"
                         >
                             <span class="actividad-icono">
-                                ◆
+                                🎤
                             </span>
                             Asambleas
                         </button>
@@ -469,7 +470,7 @@
                             type="button"
                         >
                             <span class="actividad-icono">
-                                ＋
+                                ✨
                             </span>
                             Otras
                         </button>
@@ -479,26 +480,8 @@
                         type="hidden"
                         value="ministerio"
                     >
-                    <div
-                        id="grupoNombreOtraActividad"
-                        class="grupo-formulario oculto"
-                    >
-                        <label
-                            class="titulo-campo"
-                            for="nombreOtraActividad"
-                        >
-                            Nombre de la actividad
-                        </label>
-                        <input
-                            id="nombreOtraActividad"
-                            class="campo"
-                            type="text"
-                            maxlength="60"
-                            placeholder="Ej. Mantenimiento"
-                        >
-                    </div>
                 </div>
-                <!-- FECHA -->
+<!-- FECHA -->
                 <div class="grupo-formulario grupo-fecha">
                     <label
                         class="titulo-campo"
@@ -506,12 +489,66 @@
                     >
                         Fecha
                     </label>
+                    <div class="fecha-opciones-v203" aria-label="Elegir día">
+                        <button type="button" data-dia-v203="hoy">Hoy</button>
+                        <button type="button" data-dia-v203="ayer">Ayer</button>
+                        <button type="button" data-dia-v203="otra">Otra fecha</button>
+                    </div>
+                    <p id="fechaTextoV203" class="ayuda-v203"></p>
+                    <div id="fechaManualV203">
                     <input
                         id="fechaRegistro"
                         class="campo"
                         type="date"
                         required
                     >
+                    </div>
+                </div>
+                <!-- TIEMPO -->
+                <div class="grupo-formulario grupo-tiempo">
+                    <span class="titulo-campo">
+                        Tiempo
+                    </span>
+                    <div class="tiempo-total-v203"><button type="button" data-ajuste-v203="-15" aria-label="Restar 15 minutos">−</button><output id="tiempoTotalV203" aria-live="polite">0 min</output><button type="button" data-ajuste-v203="15" aria-label="Añadir 15 minutos">+</button></div>
+                    <p class="ayuda-v203">Ajusta de 15 en 15 minutos o escribe el tiempo exacto.</p>
+                    <div class="selector-tiempo">
+                        <div class="campo-tiempo">
+                            <label for="horasRegistro">
+                                Horas
+                            </label>
+                            <input
+                                id="horasRegistro"
+                                type="number"
+                                min="0"
+                                max="24"
+                                value="0"
+                            >
+                        </div>
+                        <div class="campo-tiempo">
+                            <label for="minutosRegistro">
+                                Minutos
+                            </label>
+                            <input
+                                id="minutosRegistro"
+                                type="number"
+                                min="0"
+                                max="59"
+                                value="0"
+                            >
+                        </div>
+                    </div>
+                    <div class="atajos-tiempo" aria-label="Atajos de tiempo">
+                        <button type="button" class="atajo-tiempo" data-incremento-v203="30">+30 min</button>
+                        <button type="button" class="atajo-tiempo" data-incremento-v203="60">+1 h</button>
+                        <button type="button" class="atajo-tiempo" data-incremento-v203="120">+2 h</button>
+                        <button type="button" class="atajo-tiempo" data-incremento-v203="180">+3 h</button>
+                    </div>
+                </div>
+                <details id="detallesRegistroV203" class="detalles-registro-v203"><summary>Detalles opcionales <span>Acompañante, cursos o nota</span></summary><div class="detalles-contenido-v203"><!-- CON QUIÉN VOY -->
+                <div id="grupoCompaneroMinisterio" class="grupo-formulario grupo-companero">
+                    <label class="titulo-campo" for="companeroRegistro">Acompañante (opcional)</label>
+                    <input id="companeroRegistro" class="campo" type="text" maxlength="80"
+                           autocomplete="off" placeholder="Ej. Marta">
                 </div>
                 <!-- CURSOS BÍBLICOS -->
                 <div
@@ -546,52 +583,6 @@
                         </button>
                     </div>
                 </div>
-                <!-- CON QUIÉN VOY -->
-                <div id="grupoCompaneroMinisterio" class="grupo-formulario grupo-companero">
-                    <label class="titulo-campo" for="companeroRegistro">Con quién voy</label>
-                    <input id="companeroRegistro" class="campo" type="text" maxlength="80"
-                           autocomplete="off" placeholder="Ej. Marta">
-                </div>
-                <!-- TIEMPO -->
-                <div class="grupo-formulario grupo-tiempo">
-                    <span class="titulo-campo">
-                        Tiempo
-                    </span>
-                    <div class="selector-tiempo">
-                        <div class="campo-tiempo">
-                            <label for="horasRegistro">
-                                Horas
-                            </label>
-                            <input
-                                id="horasRegistro"
-                                type="number"
-                                min="0"
-                                max="24"
-                                value="0"
-                            >
-                        </div>
-                        <div class="campo-tiempo">
-                            <label for="minutosRegistro">
-                                Minutos
-                            </label>
-                            <input
-                                id="minutosRegistro"
-                                type="number"
-                                min="0"
-                                max="59"
-                                value="0"
-                            >
-                        </div>
-                    </div>
-                    <div class="atajos-tiempo" aria-label="Atajos de tiempo">
-                        <button type="button" class="atajo-tiempo" data-minutos="30">30 min</button>
-                        <button type="button" class="atajo-tiempo" data-minutos="60">1 h</button>
-                        <button type="button" class="atajo-tiempo" data-minutos="120">2 h</button>
-                        <button type="button" class="atajo-tiempo" data-minutos="180">3 h</button>
-                        <button type="button" class="atajo-tiempo" data-minutos="240">4 h</button>
-                        <button type="button" class="atajo-tiempo" data-minutos="300">5 h</button>
-                    </div>
-                </div>
                 <!-- NOTAS -->
                 <div class="grupo-formulario grupo-notas">
                     <label
@@ -603,19 +594,13 @@
                     <textarea
                         id="notasRegistro"
                         class="campo"
-                        rows="4"
+                        rows="2"
                     ></textarea>
                 </div>
-                <button
-                    class="boton-guardar"
-                    type="submit"
-                >
-                    Guardar actividad
-                </button>
-                <p
-                    id="mensajeFormulario"
-                    class="mensaje-formulario"
-                ></p>
+</div></details>
+                <div class="guardar-registro-v203"><button id="guardarRegistroV203" class="boton-guardar" type="submit">Guardar actividad</button></div>
+                <p id="mensajeFormulario" class="mensaje-formulario" role="status" aria-live="polite"></p>
+                <div id="confirmacionRegistroV203" class="confirmacion-registro-v203" hidden><button type="button" id="editarUltimoV203" class="boton-secundario">Editar registro</button><button type="button" id="otroRegistroV203" class="boton-secundario">Añadir otro</button></div>
             </form>
         </section>
         <!-- =================================================
@@ -1682,12 +1667,13 @@
 <script src="./historial-render.js" defer></script>
 <script src="./historial-edicion.js" defer></script>
 <script src="./estadisticas-render.js" defer></script>
-<script src="./registrar.js" defer></script>
+<script src="./registrar.js?v=20301" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=20201" defer></script>
-<script src="./eventos-calendario.js?v=20201" defer></script>
+<script src="./app-v27.js?v=20301" defer></script>
+<script src="./eventos-calendario.js?v=20301" defer></script>
 <script src="./visual-v201.js" defer></script>
 <script src="./mejoras-v202.js" defer></script>
+<script src="./registrar-v203.js?v=20301" defer></script>
 
 <script id="swRegistroV189">
 if ("serviceWorker" in navigator) {
