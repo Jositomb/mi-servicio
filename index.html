@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v206.css"
+        href="./styles-v207.css"
     >
 
 
@@ -119,10 +119,10 @@
 }
 </style>
 
-    <meta name="mi-servicio-version" content="V206">
-<meta name="mi-servicio-build" content="V206-20601">
+    <meta name="mi-servicio-version" content="V207">
+<meta name="mi-servicio-build" content="V207-20701">
 </head>
-<body data-mi-servicio-version="V206">
+<body data-mi-servicio-version="V207">
     <div id="cargaV201" hidden role="status" aria-live="polite">
       <img src="./icon-apple.png" width="48" height="48" alt="">
       <strong>Mi Servicio</strong><span class="carga-puntos-v201" aria-hidden="true">•••</span>
@@ -702,6 +702,7 @@
                     <span id="semanaVisualTotalV193">0 h</span>
                 </div>
                 <div id="semanaVisualDiasV193" class="v193-semana-dias" aria-label="Resumen visual de esta semana"></div>
+                <p id="comparacionSemanalV139" class="semana-comparacion-v207" aria-live="polite"></p>
             </section>
 
 
@@ -715,7 +716,7 @@
                     </div>
                     <div class="v143-rm-nav">
                         <button type="button" onclick="cambiarMesResumenV143(-1)" aria-label="Mes anterior">‹</button>
-                        <input id="mesResumenV143" type="month" aria-label="Elegir mes">
+                        <label class="mes-selector-v207"><span aria-hidden="true">▦</span><input id="mesResumenV143" type="month" aria-label="Elegir mes"></label>
                         <button type="button" onclick="cambiarMesResumenV143(1)" aria-label="Mes siguiente">›</button>
                     </div>
                 </div>
@@ -733,7 +734,7 @@
             <details class="stats-accordion-v183" id="statsPeriodoV183">
                 <summary>
                     <span class="stats-accordion-icono-v183">📊</span>
-                    <span>Estadísticas por periodo</span>
+                    <span>Más detalle</span>
                     <span class="stats-accordion-flecha-v183">›</span>
                 </summary>
                 <div class="stats-accordion-cuerpo-v183">
@@ -743,15 +744,9 @@
                     data-periodo="semana"
                     type="button"
                 >
-                    Semana
+                    Semanas
                 </button>
-                <button
-                    class="periodo-boton"
-                    data-periodo="mes"
-                    type="button"
-                >
-                    Mes
-                </button>
+
                 <button
                     class="periodo-boton"
                     data-periodo="anio"
@@ -845,19 +840,7 @@
             <!-- RESUMEN -->
             <section class="seccion">
                 <div class="resumen-estadisticas">
-                    <article
-                        class="tarjeta mini-estadistica"
-                    >
-                        <p
-                            id="estadisticasRegistros"
-                            class="mini-estadistica-valor"
-                        >
-                            0
-                        </p>
-                        <p class="mini-estadistica-etiqueta">
-                            Registros
-                        </p>
-                    </article>
+
                     <article
                         class="tarjeta mini-estadistica"
                     >
@@ -883,25 +866,8 @@
                         <p class="mini-estadistica-etiqueta">
                             Cursos bíblicos
                         </p>
+                        <small class="cursos-nota-v207">Máximo indicado en el periodo</small>
                     </article>
-                </div>
-            </section>
-                </div>
-            </details>
-
-            <details class="stats-accordion-v183" id="statsComparacionV183">
-                <summary>
-                    <span class="stats-accordion-icono-v183">📈</span>
-                    <span>Comparación semanal</span>
-                    <span class="stats-accordion-flecha-v183">›</span>
-                </summary>
-                <div class="stats-accordion-cuerpo-v183">
-<section id="comparacionSemanalV139" class="v139-week" aria-label="Comparación semanal">
-                <div class="v139-week-title">📊 <strong>Comparación semanal</strong></div>
-                <div class="v139-week-grid">
-                    <div class="v139-week-value"><small>Esta semana</small><b data-v139-actual>—</b></div>
-                    <div class="v139-week-value"><small>Semana anterior</small><b data-v139-anterior>—</b></div>
-                    <div class="v139-week-diff"><b data-v139-diferencia>—</b><small data-v139-diferencia-sub>respecto a la anterior</small></div>
                 </div>
             </section>
                 </div>
@@ -1663,18 +1629,18 @@
     if (standalone) document.body.classList.add('modo-standalone');
 })();
 </script>
-<script type="module" src="./config-v206.js"></script>
-<script type="module" src="./storage-v206.js"></script>
-<script src="./historial-render-v206.js" defer></script>
-<script src="./historial-edicion-v206.js" defer></script>
-<script src="./estadisticas-render-v206.js" defer></script>
-<script src="./registrar-v206.js" defer></script>
-<script src="./planificacion-v206.js" defer></script>
-<script src="./app-v206.js" defer></script>
-<script src="./eventos-calendario-v206.js" defer></script>
-<script src="./visual-v206.js" defer></script>
-<script src="./mejoras-v206.js" defer></script>
-<script src="./registrar-ui-v206.js" defer></script>
+<script type="module" src="./config-v207.js"></script>
+<script type="module" src="./storage-v207.js"></script>
+<script src="./historial-render-v207.js" defer></script>
+<script src="./historial-edicion-v207.js" defer></script>
+<script src="./estadisticas-render-v207.js" defer></script>
+<script src="./registrar-v207.js" defer></script>
+<script src="./planificacion-v207.js" defer></script>
+<script src="./app-v207.js" defer></script>
+<script src="./eventos-calendario-v207.js" defer></script>
+<script src="./visual-v207.js" defer></script>
+<script src="./mejoras-v207.js" defer></script>
+<script src="./registrar-ui-v207.js" defer></script>
 
 <script id="swRegistroV189">
 if ("serviceWorker" in navigator) {
@@ -1701,10 +1667,10 @@ if ("serviceWorker" in navigator) {
 </script>
 
 
-<script type="module" src="./tiempo-v206.js"></script>
-<script type="module" src="./legacy-bridge-v206.js"></script>
-<script type="module" src="./historial-v206.js"></script>
-<script type="module" src="./estadisticas-v206.js"></script>
+<script type="module" src="./tiempo-v207.js"></script>
+<script type="module" src="./legacy-bridge-v207.js"></script>
+<script type="module" src="./historial-v207.js"></script>
+<script type="module" src="./estadisticas-v207.js"></script>
 
 <script id="ajustesAcordeonV179">
 document.addEventListener("DOMContentLoaded", () => {
