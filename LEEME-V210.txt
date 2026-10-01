@@ -1,0 +1,6 @@
+Mi Servicio V210
+
+Sube todos los archivos directamente a la raíz del repositorio, reemplazando los existentes. No necesitas borrar archivos antiguos.
+
+Ajustes: OneDrive permanece visible. Calendario Apple y las opciones de importar/exportar copias están en «Sincronización y copias», cerrado inicialmente. Perfil y Apariencia mantienen sus desplegables.
+Se conservan los registros y las cuatro pestañas.
