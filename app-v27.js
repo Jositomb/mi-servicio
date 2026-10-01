@@ -1819,10 +1819,8 @@ function refrescarFraseAlVolverAInicio() {
 
     ultimoCambioFraseEntrada = ahora;
 
-    const totalTexto = document.getElementById("totalMes")?.textContent || "0";
-    const coincidencia = totalTexto.match(/(\d+(?:[.,]\d+)?)/);
-    const horas = coincidencia ? Number(coincidencia[1].replace(",", ".")) : 0;
-    actualizarFraseAnimoInicio(Math.round(horas * 60), true);
+    const total=resumenMesV143(new Date()).total;
+    actualizarFraseAnimoInicio(total, true);
 }
 
 document.addEventListener("visibilitychange", () => {
@@ -5614,8 +5612,14 @@ function ponerTexto(
     }
 
 
-    elemento.textContent =
-        texto ?? "";
+    const siguiente=String(texto ?? "");
+    const cambia=elemento.textContent!==siguiente;
+    const teniaCifra=/\d/.test(elemento.textContent);
+    elemento.textContent=siguiente;
+    if(cambia && teniaCifra && /\d/.test(siguiente) && typeof elemento.animate==="function" &&
+       !window.matchMedia("(prefers-reduced-motion: reduce)").matches){
+        elemento.animate([{opacity:.5},{opacity:1}],{duration:220,easing:"ease-out"});
+    }
 }
 
 
@@ -7487,7 +7491,7 @@ function mostrarVersionPublicadaV156() {
 
     const etiqueta = document.createElement("div");
     etiqueta.id = "versionPublicadaV156";
-    etiqueta.textContent = "Versión instalada: V198.1";
+    etiqueta.textContent = "Versión instalada: V200";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
@@ -8748,6 +8752,8 @@ function saludoDinamicoV195(){
     }catch(e){}
 
     el.textContent=saludo;
+    el.dataset.periodo=hora<12?"manana":hora<20?"tarde":"noche";
+    el.dataset.contexto=saludo.includes(" · ")?"especial":"normal";
 }
 
 function textoHaceV195(fecha){
@@ -8902,3 +8908,9 @@ document.addEventListener("click",e=>{
  if(e.target.closest?.('[data-vista="estadisticas"]'))setTimeout(refrescarResumenMensualV198,40);
 });
 window.addEventListener("miServicio:estadoSyncV190",()=>setTimeout(refrescarResumenMensualV198,100));
+
+// V200 · Mantener el saludo al día al regresar a la app.
+document.addEventListener("visibilitychange",()=>{
+ if(document.visibilityState==="visible")saludoDinamicoV195();
+});
+setInterval(saludoDinamicoV195,60000);

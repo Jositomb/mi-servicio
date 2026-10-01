@@ -11352,3 +11352,18 @@ body #saludoDinamicoV195 {
 #vista-estadisticas #resumenMensualV143 [data-tipo="asambleas"]{border-left-color:var(--assembly)}
 
 #vista-estadisticas #resumenMensualV143 [data-v143-dist][hidden]{display:none!important}
+
+/* V200 · Calendario en una sola fila */
+#vista-inicio .inicio-resumen-grid{grid-template-columns:minmax(0,1fr)!important}
+#vista-inicio #botonCalendarioInicio{
+ width:100%!important;grid-column:1/-1!important;height:auto!important;min-height:58px!important;
+ text-align:left;padding:12px 14px!important;
+}
+#vista-inicio #botonCalendarioInicio .inicio-mini-cabecera{width:100%;justify-content:space-between}
+#vista-inicio #botonCalendarioInicio .inicio-mini-titulo{font-size:15px!important}
+#saludoDinamicoV195[data-contexto="normal"]::before{
+ display:inline-block;margin-right:6px;font-size:.85em;color:var(--primary);
+}
+#saludoDinamicoV195[data-contexto="normal"][data-periodo="manana"]::before{content:"☀"}
+#saludoDinamicoV195[data-contexto="normal"][data-periodo="tarde"]::before{content:"◐"}
+#saludoDinamicoV195[data-contexto="normal"][data-periodo="noche"]::before{content:"☾"}

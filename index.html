@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=19802"
+        href="./styles-v27.css?v=20001"
     >
 
 
@@ -119,8 +119,8 @@
 }
 </style>
 
-    <meta name="mi-servicio-version" content="V198.1">
-<meta name="mi-servicio-build" content="V198.1-19802">
+    <meta name="mi-servicio-version" content="V200">
+<meta name="mi-servicio-build" content="V200-20001">
 </head>
 <body data-mi-servicio-version="40.0">
 <div class="app">
@@ -173,27 +173,9 @@
             id="vista-inicio"
             class="vista activa"
         >
-            <!-- RESUMEN SUPERIOR: ESTE MES + CALENDARIO -->
+            <!-- CALENDARIO A TODO EL ANCHO -->
             <section class="inicio-resumen-grid">
-                <article class="tarjeta tarjeta-mes-desplegable inicio-mini-card" id="tarjetaMesDesplegable">
-                    <button type="button" class="mes-resumen-boton" id="botonDesplegarMes" aria-expanded="false" aria-controls="detalleMes">
-                        <div class="inicio-mini-cabecera">
-                            <div>
-                                <p class="inicio-mini-titulo">Este mes</p>
-                                <p id="nombreMes" class="inicio-mini-subtitulo">—</p>
-                            </div>
-                            <span class="mes-chevron" aria-hidden="true">⌄</span>
-                        </div>
-                        <p id="totalMes" class="inicio-mini-total">0 h</p>
-                    </button>
-                    <div id="detalleMes" class="detalle-mes-colapsable" hidden>
-                        <div class="separador"></div>
-                        <div class="fila-dato"><span>Ministerio</span><strong id="totalMinisterio">0 h</strong></div>
-                        <div class="fila-dato"><span>LDC</span><strong id="totalLDC">0 h</strong></div>
-                        <div class="fila-dato"><span>Asambleas</span><strong id="totalAsambleas">0 h</strong></div>
-                        <div id="filaOtras" class="fila-dato oculto"><span>Otras</span><strong id="totalOtras">0 h</strong></div>
-                    </div>
-                </article>
+
 
                 <button id="botonCalendarioInicio" class="tarjeta inicio-mini-card inicio-calendario-card" type="button" aria-expanded="false" aria-controls="panelCalendarioInicio">
                     <div class="inicio-mini-cabecera">
@@ -1656,8 +1638,8 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=19802" defer></script>
-<script src="./eventos-calendario.js?v=19802" defer></script>
+<script src="./app-v27.js?v=20001" defer></script>
+<script src="./eventos-calendario.js?v=20001" defer></script>
 
 <script id="swRegistroV189">
 if ("serviceWorker" in navigator) {

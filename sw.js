@@ -1,12 +1,12 @@
-const CACHE = "mi-servicio-v19802";
+const CACHE = "mi-servicio-v20001";
 const CACHE_PREFIX = "mi-servicio-";
 
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles-v27.css?v=19802",
-  "./app-v27.js?v=19802",
-  "./eventos-calendario.js?v=19802",
+  "./styles-v27.css?v=20001",
+  "./app-v27.js?v=20001",
+  "./eventos-calendario.js?v=20001",
   "./icon-apple.png",
   "./manifest.webmanifest",
   "./personaje-51219b70e7f1.png",
