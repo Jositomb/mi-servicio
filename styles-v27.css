@@ -11418,3 +11418,26 @@ body #saludoDinamicoV195 {
 .carga-puntos-v201{color:var(--primary,#3478f6);letter-spacing:4px;animation:cargaPulsoV201 1s ease-in-out infinite}
 @keyframes cargaPulsoV201{50%{opacity:.3}}
 @media(prefers-reduced-motion:reduce){.carga-puntos-v201{animation:none}}
+
+/* V202 · Detalle estacional más visible en ambos modos */
+#vista-inicio:not([data-estacion="ninguno"]) .inicio-resumen-grid::after{opacity:.9;font-size:27px;right:46px;text-shadow:0 1px 2px rgba(0,0,0,.08)}
+#vista-ajustes #aparienciaV201 .ajustes-acordeon-icono{color:var(--primary);font-size:23px;background:color-mix(in srgb,var(--primary) 15%,transparent)}
+@media(prefers-color-scheme:dark){
+ #vista-inicio[data-estacion="primavera"] .inicio-resumen-grid::after{color:#71d99d}
+ #vista-inicio[data-estacion="verano"] .inicio-resumen-grid::after{color:#ffd36d}
+ #vista-inicio[data-estacion="otono"] .inicio-resumen-grid::after{color:#efb27e}
+ #vista-inicio[data-estacion="invierno"] .inicio-resumen-grid::after{color:#a0d9ff}
+}
+.comparar-selectores-v202{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.comparar-selectores-v202 label{display:grid;gap:6px;font-size:12px;min-width:0}
+.comparar-selectores-v202 input{width:100%;min-width:0;box-sizing:border-box;font-size:13px}
+.comparar-nota-v202,.agenda-ayuda-v202{font-size:11px;line-height:1.4;color:var(--text-secondary)}
+.comparar-tabla-wrap-v202{overflow-x:auto}
+.comparar-tabla-v202{width:100%;border-collapse:collapse;font-size:11px;font-variant-numeric:tabular-nums}
+.comparar-tabla-v202 th,.comparar-tabla-v202 td{padding:9px 4px;border-bottom:1px solid var(--divider);text-align:right}
+.comparar-tabla-v202 th:first-child,.comparar-tabla-v202 td:first-child{text-align:left}
+.comparar-tabla-v202 tbody tr:last-child{font-weight:750}
+#avisoV202{position:fixed;left:16px;right:16px;bottom:calc(90px + env(safe-area-inset-bottom));z-index:11000;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px;border-radius:15px;background:var(--card);color:var(--text-primary);border:1px solid var(--divider);box-shadow:0 7px 25px rgba(0,0,0,.18);font-size:13px}
+#avisoV202 button{border:0;background:transparent;color:var(--primary);font:700 14px -apple-system,sans-serif;padding:8px}
+.agenda-hora-v202{display:block;margin-top:5px;font-size:12px;color:var(--text-secondary)}
+.modal-agenda-contenido{max-height:85dvh;overflow-y:auto}

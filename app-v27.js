@@ -1948,32 +1948,21 @@ function guardarSalidaDesdeModal(fechaForzada = "") {
     guardar.disabled = true;
     guardar.textContent = "Guardando…";
 
-    const anterior =
-        estado.agendaSalidas[fechaISO];
-
-    estado.agendaSalidas[fechaISO] = {
-        tipo: tipoActividad,
-        companero: nombre,
-        minutosPrevistos: Number(document.getElementById("duracionAgendaSalida")?.value || 0)
-    };
-
-    if (!guardarAgendaSalidas()) {
-        if (anterior) {
-            estado.agendaSalidas[fechaISO] =
-                anterior;
-        } else {
-            delete estado.agendaSalidas[fechaISO];
-        }
-
-        guardar.disabled = false;
-        guardar.textContent = "Guardar";
-
-        if (mensaje) {
-            mensaje.textContent =
-                "No se pudo guardar la salida.";
-        }
+    const anteriores={...estado.agendaSalidas};
+    const hora=document.getElementById("horaAgendaV202")?.value||"";
+    const cantidad=Number(document.getElementById("repetirAgendaV202")?.value)||1;
+    const resultado=prepararSalidasV202(anteriores,fechaISO,{
+        tipo:tipoActividad,companero:nombre,
+        minutosPrevistos:Number(document.getElementById("duracionAgendaSalida")?.value||0),hora
+    },cantidad);
+    estado.agendaSalidas=resultado.agenda;
+    if(!guardarAgendaSalidas()){
+        estado.agendaSalidas=anteriores;
+        guardar.disabled=false;guardar.textContent="Guardar";
+        if(mensaje)mensaje.textContent="No se pudo guardar la salida. Inténtalo de nuevo.";
         return;
     }
+    if(cantidad>1)avisoV202(`${resultado.guardadas} salidas guardadas${resultado.omitidas?` · ${resultado.omitidas} fechas ocupadas conservadas`:""}`);
 
     if (mensaje) {
         mensaje.textContent = "Guardado ✓";
@@ -2000,6 +1989,7 @@ function guardarSalidaDesdeModal(fechaForzada = "") {
         fecha.getFullYear(),
         registrosDia
     );
+    actualizarTodaLaInterfaz();
 }
 
 
@@ -5201,6 +5191,7 @@ function actualizarTodaLaInterfaz() {
     actualizarEstadisticas();
     actualizarMeta();
     refrescarResumenMensualV198();
+    if(typeof actualizarComparacionMesesV202==="function")actualizarComparacionMesesV202();
     window.dispatchEvent(new Event("miServicio:interfazListaV201"));
 }
 
@@ -7485,7 +7476,7 @@ function mostrarVersionPublicadaV156() {
 
     const etiqueta = document.createElement("div");
     etiqueta.id = "versionPublicadaV156";
-    etiqueta.textContent = "Versión instalada: V201";
+    etiqueta.textContent = "Versión instalada: V202";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);

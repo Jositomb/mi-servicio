@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=20101"
+        href="./styles-v27.css?v=20201"
     >
 
 
@@ -119,8 +119,8 @@
 }
 </style>
 
-    <meta name="mi-servicio-version" content="V201">
-<meta name="mi-servicio-build" content="V201-20101">
+    <meta name="mi-servicio-version" content="V202">
+<meta name="mi-servicio-build" content="V202-20201">
 </head>
 <body data-mi-servicio-version="40.0">
     <div id="cargaV201" hidden role="status" aria-live="polite">
@@ -921,6 +921,20 @@
                 </div>
             </details>
 
+            <details class="stats-accordion-v183" id="compararMesesV202">
+              <summary><span class="stats-accordion-icono-v183">↔</span><span>Comparar dos meses</span><span class="stats-accordion-flecha-v183">›</span></summary>
+              <div class="stats-accordion-cuerpo-v183">
+                <div class="comparar-selectores-v202">
+                  <label>Primer mes<input id="compararMesAV202" type="month" class="campo"></label>
+                  <label>Segundo mes<input id="compararMesBV202" type="month" class="campo"></label>
+                </div>
+                <p class="comparar-nota-v202">Actividad registrada. La diferencia indica el segundo mes respecto al primero.</p>
+                <div class="comparar-tabla-wrap-v202"><table class="comparar-tabla-v202">
+                  <thead><tr><th scope="col">Actividad</th><th id="compararCabAV202" scope="col">Primer mes</th><th id="compararCabBV202" scope="col">Segundo mes</th><th scope="col">Diferencia</th></tr></thead>
+                  <tbody id="compararFilasV202"></tbody>
+                </table></div>
+              </div>
+            </details>
             <details class="stats-accordion-v183" id="statsEvolucionV183">
                 <summary>
                     <span class="stats-accordion-icono-v183">📉</span>
@@ -1462,6 +1476,14 @@
                     <option value="0">Sin indicar</option><option value="30">30 min</option><option value="60">1 h</option><option value="90">1 h 30 min</option><option value="120">2 h</option><option value="180">3 h</option><option value="240">4 h</option><option value="300">5 h</option>
                 </select>
             </label>
+            <label class="campo-editar"><span>Hora de salida (opcional)</span><input id="horaAgendaV202" type="time"></label>
+            <label class="campo-editar"><span>Repetir cada semana</span>
+              <select id="repetirAgendaV202">
+                <option value="1">Solo este día</option><option value="4">4 salidas en total</option>
+                <option value="8">8 salidas en total</option><option value="12">12 salidas en total</option>
+              </select>
+            </label>
+            <p class="agenda-ayuda-v202">Las fechas posteriores que ya tengan una salida se conservarán.</p>
             <p id="mensajeAgendaSalida" class="mensaje-formulario"></p>
             <div class="modal-botones">
                 <button id="cancelarAgendaSalida" class="boton-modal cancelar" type="button">Cancelar</button>
@@ -1662,9 +1684,10 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=20101" defer></script>
-<script src="./eventos-calendario.js?v=20101" defer></script>
+<script src="./app-v27.js?v=20201" defer></script>
+<script src="./eventos-calendario.js?v=20201" defer></script>
 <script src="./visual-v201.js" defer></script>
+<script src="./mejoras-v202.js" defer></script>
 
 <script id="swRegistroV189">
 if ("serviceWorker" in navigator) {

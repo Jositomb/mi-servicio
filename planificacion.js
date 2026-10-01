@@ -340,7 +340,7 @@ function actualizarCalendarioInicio() {
                 `calendario-dia-agenda ${claseActividadCalendario(tipoAgendado)}`;
 
             agendaDia.textContent =
-                `📌 ${nombreActividad(tipoAgendado)} · ${companeroAgendado}${agendaDiaDatos.minutosPrevistos ? " · "+formatoMinutosPlan(agendaDiaDatos.minutosPrevistos) : ""}`;
+                `📌 ${agendaDiaDatos.hora?agendaDiaDatos.hora+" · ":""}${nombreActividad(tipoAgendado)} · ${companeroAgendado}${agendaDiaDatos.minutosPrevistos ? " · "+formatoMinutosPlan(agendaDiaDatos.minutosPrevistos) : ""}`;
 
             agendaDia.title =
                 `${nombreActividad(tipoAgendado)} planificado con ${companeroAgendado}`;
@@ -599,9 +599,11 @@ function mostrarDetalleDiaCalendario(
         accionesAgenda
     );
 
-    detalle.appendChild(
-        bloqueAgenda
-    );
+    if(agendaDiaDatos.hora){
+        const horaTexto=document.createElement("small");horaTexto.className="agenda-hora-v202";
+        horaTexto.textContent="Salida a las "+agendaDiaDatos.hora;textoAgenda.appendChild(horaTexto);
+    }
+    detalle.appendChild(bloqueAgenda);
 
     if (registrosVisibles.length === 0) {
         const vacio = estadoVacioV197("📖", agendaDiaDatos.companero || agendaDiaDatos.minutosPrevistos
@@ -721,7 +723,8 @@ function normalizarAgendaDia(valor) {
             valor.nombre ||
             ""
         ).trim(),
-        minutosPrevistos: Math.max(0, Number(valor.minutosPrevistos || 0) || 0)
+        minutosPrevistos: Math.max(0, Number(valor.minutosPrevistos || 0) || 0),
+        hora: /^([01]\d|2[0-3]):[0-5]\d$/.test(valor.hora||"")?valor.hora:""
     };
 }
 
@@ -819,6 +822,8 @@ function abrirModalAgendaSalida(fechaISO) {
     input.value = nombreActual;
     tipo.value = actual.tipo;
     if (duracion) duracion.value = String(actual.minutosPrevistos || 0);
+    const hora=document.getElementById("horaAgendaV202");if(hora)hora.value=actual.hora||"";
+    const repetir=document.getElementById("repetirAgendaV202");if(repetir)repetir.value="1";
 
     if (fechaTexto) {
         fechaTexto.textContent =

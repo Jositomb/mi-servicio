@@ -226,7 +226,6 @@ function confirmarEliminarRegistro() {
 
 
     cerrarModalBorrado();
-
-
+    ofrecerDeshacerV202(anteriores.filter(r=>r.id===id));
     actualizarTodaLaInterfaz();
 }

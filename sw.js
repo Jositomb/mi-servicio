@@ -1,12 +1,12 @@
-const CACHE = "mi-servicio-v20101";
+const CACHE = "mi-servicio-v20201";
 const CACHE_PREFIX = "mi-servicio-";
 
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles-v27.css?v=20101",
-  "./app-v27.js?v=20101",
-  "./eventos-calendario.js?v=20101",
+  "./styles-v27.css?v=20201",
+  "./app-v27.js?v=20201",
+  "./eventos-calendario.js?v=20201",
   "./icon-apple.png",
   "./manifest.webmanifest",
   "./personaje-51219b70e7f1.png",
@@ -29,7 +29,8 @@ const APP_SHELL = [
   "./estadisticas-render.js",
   "./registrar.js",
   "./planificacion.js",
-  "./visual-v201.js"
+  "./visual-v201.js",
+  "./mejoras-v202.js"
 ];
 
 // No activar una mezcla de HTML nuevo y scripts antiguos.
