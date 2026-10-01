@@ -11350,3 +11350,5 @@ body #saludoDinamicoV195 {
 #vista-estadisticas #resumenMensualV143 [data-tipo="ministerio"]{border-left-color:var(--ministry)}
 #vista-estadisticas #resumenMensualV143 [data-tipo="ldc"]{border-left-color:var(--ldc)}
 #vista-estadisticas #resumenMensualV143 [data-tipo="asambleas"]{border-left-color:var(--assembly)}
+
+#vista-estadisticas #resumenMensualV143 [data-v143-dist][hidden]{display:none!important}

@@ -7487,7 +7487,7 @@ function mostrarVersionPublicadaV156() {
 
     const etiqueta = document.createElement("div");
     etiqueta.id = "versionPublicadaV156";
-    etiqueta.textContent = "Versión instalada: V198";
+    etiqueta.textContent = "Versión instalada: V198.1";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
@@ -7671,7 +7671,8 @@ function pintarResumenMensualV143(ref){
  const dist=host.querySelector("[data-v143-dist]");
  const actividades=[["Ministerio","📖","ministerio"],["LDC","🛠️","ldc"],["Asambleas","🎤","asambleas"],["Otras","✨","otras"]];
  dist.replaceChildren();
- actividades.forEach(([nombre,icono,tipo])=>{
+ dist.hidden=!actividades.some(([nombre])=>(actual.tipos[nombre]||0)>0);
+ actividades.filter(([nombre])=>(actual.tipos[nombre]||0)>0).forEach(([nombre,icono,tipo])=>{
   const fila=document.createElement("div");fila.className="resumen-actividad-v198";fila.dataset.tipo=tipo;
   const etiqueta=document.createElement("span");etiqueta.textContent=icono+" "+nombre;
   const valor=document.createElement("b");valor.textContent=fmt(actual.tipos[nombre]||0);
