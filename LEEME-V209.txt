@@ -1,0 +1,9 @@
+MI SERVICIO V209 — PESTAÑAS VISIBLES
+
+Corrección de V208: la barra inferior quedó anidada dentro de Ajustes y se ocultaba junto con esa vista. Se sitúa ahora fuera de todas las vistas, como hija directa del documento. También se trasladan los diálogos de planificación, eventos, edición y borrado fuera de Ajustes.
+
+Se mantienen las cuatro pestañas, Ajustes desde MS, Meta integrada, el único formulario de Registrar y las demás mejoras de V208.
+
+SUBIR TODOS LOS ARCHIVOS DIRECTAMENTE A LA RAÍZ, conservando nombres. No borrar los anteriores. Tras actualizar, Ajustes debe indicar V209.
+
+Validación: estructura con dos analizadores HTML, barra y diálogos independientes de las vistas, cuatro botones de navegación, enlaces, huellas y sintaxis. Pendiente comprobar el diseño real en iPhone.
