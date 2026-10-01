@@ -575,8 +575,8 @@ function crearTarjetaHistorial(
         "boton-borrar";
 
 
-    botonBorrar.textContent =
-        "⌫";
+    botonBorrar.innerHTML =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6h18M9 6V3h6v3M6 6l1 15h10l1-15M10 10v7M14 10v7"/></svg>';
 
 
     botonBorrar.setAttribute(
@@ -612,7 +612,7 @@ function crearTarjetaHistorial(
     botonEditar.type = "button";
     botonEditar.className =
         "boton-editar-registro";
-    botonEditar.textContent = "✎";
+    botonEditar.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4 16 12-12 4 4-12 12H4zM13 7l4 4"/></svg>';
     botonEditar.setAttribute(
         "aria-label",
         `Editar registro de ${nombreActividad(registro.tipo)}`

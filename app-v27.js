@@ -5201,6 +5201,7 @@ function actualizarTodaLaInterfaz() {
     actualizarEstadisticas();
     actualizarMeta();
     refrescarResumenMensualV198();
+    window.dispatchEvent(new Event("miServicio:interfazListaV201"));
 }
 
 
@@ -5612,14 +5613,7 @@ function ponerTexto(
     }
 
 
-    const siguiente=String(texto ?? "");
-    const cambia=elemento.textContent!==siguiente;
-    const teniaCifra=/\d/.test(elemento.textContent);
-    elemento.textContent=siguiente;
-    if(cambia && teniaCifra && /\d/.test(siguiente) && typeof elemento.animate==="function" &&
-       !window.matchMedia("(prefers-reduced-motion: reduce)").matches){
-        elemento.animate([{opacity:.5},{opacity:1}],{duration:220,easing:"ease-out"});
-    }
+    elemento.textContent=String(texto ?? "");
 }
 
 
@@ -7491,7 +7485,7 @@ function mostrarVersionPublicadaV156() {
 
     const etiqueta = document.createElement("div");
     etiqueta.id = "versionPublicadaV156";
-    etiqueta.textContent = "Versión instalada: V200";
+    etiqueta.textContent = "Versión instalada: V201";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);

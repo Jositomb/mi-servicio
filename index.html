@@ -29,7 +29,7 @@
     >
     <link
         rel="stylesheet"
-        href="./styles-v27.css?v=20001"
+        href="./styles-v27.css?v=20101"
     >
 
 
@@ -119,10 +119,25 @@
 }
 </style>
 
-    <meta name="mi-servicio-version" content="V200">
-<meta name="mi-servicio-build" content="V200-20001">
+    <meta name="mi-servicio-version" content="V201">
+<meta name="mi-servicio-build" content="V201-20101">
 </head>
 <body data-mi-servicio-version="40.0">
+    <div id="cargaV201" hidden role="status" aria-live="polite">
+      <img src="./icon-apple.png" width="48" height="48" alt="">
+      <strong>Mi Servicio</strong><span class="carga-puntos-v201" aria-hidden="true">•••</span>
+    </div>
+    <script>
+    (function(){
+      let lista=false;
+      const caja=document.getElementById("cargaV201");
+      const espera=setTimeout(()=>{if(!lista)caja.hidden=false},350);
+      function terminar(){lista=true;clearTimeout(espera);caja.hidden=true;}
+      window.addEventListener("miServicio:interfazListaV201",terminar,{once:true});
+      window.addEventListener("pageshow",terminar,{once:true});
+      setTimeout(terminar,5000);
+    })();
+    </script>
 <div class="app">
     <!-- =====================================================
          CABECERA
@@ -965,6 +980,12 @@
       <div class="meta-progreso-datos">
         <strong id="metaTotal" class="meta-total">0 h</strong><span id="metaObjetivoTexto">de 600 h</span>
         <div class="meta-barra"><span id="metaBarraRelleno"></span></div>
+        <div id="hitosMetaV201" class="meta-hitos-v201" role="group" aria-label="Hitos de la meta anual">
+          <span data-meta-hito="25" title="25%" aria-label="25% pendiente"></span>
+          <span data-meta-hito="50" title="50%" aria-label="50% pendiente"></span>
+          <span data-meta-hito="75" title="75%" aria-label="75% pendiente"></span>
+          <span data-meta-hito="100" title="100%" aria-label="100% pendiente"></span>
+        </div>
         <div class="meta-v152-computos">
           <div class="meta-computo-fila meta-computable"><span>✓ Computa</span><strong id="metaComputableClaro">0 h</strong></div>
           <div class="meta-computo-fila meta-excedente"><span>◷ Excedente</span><strong id="metaExcedente">0 min</strong></div>
@@ -1327,6 +1348,21 @@
                     ></p>
                 </article>
             </section>
+            <details class="ajustes-acordeon-v179" id="aparienciaV201">
+              <summary><span class="ajustes-acordeon-icono">◐</span><span>Apariencia</span><span class="ajustes-acordeon-flecha">›</span></summary>
+              <div class="apariencia-cuerpo-v201">
+                <label for="temaEstacionalV201" class="titulo-campo">Detalle estacional en Inicio</label>
+                <select id="temaEstacionalV201" class="campo">
+                  <option value="ninguno">Sin detalle estacional</option>
+                  <option value="automatico">Automático según el mes</option>
+                  <option value="primavera">Primavera</option>
+                  <option value="verano">Verano</option>
+                  <option value="otono">Otoño</option>
+                  <option value="invierno">Invierno</option>
+                </select>
+                <p class="texto-secundario">Un detalle suave junto al calendario. Se guarda al elegirlo en este dispositivo.</p>
+              </div>
+            </details>
         </section>
     </main>
     <!-- =====================================================
@@ -1338,9 +1374,7 @@
             data-vista="inicio"
             type="button"
         >
-            <span class="nav-icono">
-                ⌂
-            </span>
+            <span class="nav-icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 10 12 3l9 7v10h-6v-6H9v6H3z"/></svg></span>
             <span>
                 Inicio
             </span>
@@ -1350,9 +1384,7 @@
             data-vista="registrar"
             type="button"
         >
-            <span class="nav-icono">
-                ＋
-            </span>
+            <span class="nav-icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 4v16M4 12h16"/></svg></span>
             <span>
                 Registrar
             </span>
@@ -1362,9 +1394,7 @@
             data-vista="historial"
             type="button"
         >
-            <span class="nav-icono">
-                ◷
-            </span>
+            <span class="nav-icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
             <span>
                 Historial
             </span>
@@ -1374,9 +1404,7 @@
             data-vista="estadisticas"
             type="button"
         >
-            <span class="nav-icono">
-                ▥
-            </span>
+            <span class="nav-icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 20V10h4v10M10 20V4h4v16M16 20v-8h4v8"/></svg></span>
             <span>
                 Estadísticas
             </span>
@@ -1386,9 +1414,7 @@
             data-vista="meta"
             type="button"
         >
-            <span class="nav-icono">
-                ◎
-            </span>
+            <span class="nav-icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg></span>
             <span>
                 Meta
             </span>
@@ -1398,9 +1424,7 @@
             data-vista="ajustes"
             type="button"
         >
-            <span class="nav-icono">
-                ⚙
-            </span>
+            <span class="nav-icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3"/><circle cx="15" cy="17" r="3"/></svg></span>
             <span>
                 Ajustes
             </span>
@@ -1638,8 +1662,9 @@
 <script src="./estadisticas-render.js" defer></script>
 <script src="./registrar.js" defer></script>
 <script src="./planificacion.js" defer></script>
-<script src="./app-v27.js?v=20001" defer></script>
-<script src="./eventos-calendario.js?v=20001" defer></script>
+<script src="./app-v27.js?v=20101" defer></script>
+<script src="./eventos-calendario.js?v=20101" defer></script>
+<script src="./visual-v201.js" defer></script>
 
 <script id="swRegistroV189">
 if ("serviceWorker" in navigator) {

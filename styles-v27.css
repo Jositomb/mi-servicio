@@ -11367,3 +11367,54 @@ body #saludoDinamicoV195 {
 #saludoDinamicoV195[data-contexto="normal"][data-periodo="manana"]::before{content:"☀"}
 #saludoDinamicoV195[data-contexto="normal"][data-periodo="tarde"]::before{content:"◐"}
 #saludoDinamicoV195[data-contexto="normal"][data-periodo="noche"]::before{content:"☾"}
+
+/* V201 · Iconos funcionales coherentes */
+.barra-navegacion .nav-icono svg{display:block;width:23px;height:23px}
+.registro-acciones svg{width:18px;height:18px;display:block;margin:auto}
+/* Acciones separadas del contenido, también cuando se envuelven en móvil */
+#vista-historial .registro-acciones{
+ border-top:1px solid var(--divider);margin-top:12px;padding-top:10px;
+ display:flex;justify-content:flex-end;gap:10px;
+}
+#vista-inicio .detalle-dia-agenda-acciones,
+#vista-inicio .v172-evento-acciones{
+ display:flex;gap:8px;padding-top:8px;margin-top:8px;border-top:1px solid var(--divider);
+}
+#vista-ajustes :is(.boton-guardar,.boton-secundario){margin-top:12px}
+#vista-ajustes .onedrive-ayuda{padding-bottom:10px;border-bottom:1px solid var(--divider)}
+.apariencia-cuerpo-v201{padding:0 16px 16px}
+.apariencia-cuerpo-v201 .campo{margin-top:7px;width:100%}
+.apariencia-cuerpo-v201 p{font-size:12px;line-height:1.4}
+/* Detalle estacional discreto: colores principales y legibilidad se conservan */
+#vista-inicio .inicio-resumen-grid{position:relative}
+#vista-inicio:not([data-estacion="ninguno"]) .inicio-resumen-grid::after{
+ position:absolute;right:42px;top:50%;transform:translateY(-50%);
+ pointer-events:none;opacity:.38;font-size:20px;
+}
+#vista-inicio[data-estacion="primavera"] .inicio-resumen-grid::after{content:"❀";color:#30a86a}
+#vista-inicio[data-estacion="verano"] .inicio-resumen-grid::after{content:"☀";color:#c48d19}
+#vista-inicio[data-estacion="otono"] .inicio-resumen-grid::after{content:"❧";color:#c27d41}
+#vista-inicio[data-estacion="invierno"] .inicio-resumen-grid::after{content:"❄";color:#699dbf}
+/* Hitos anuales mínimos, sin otra fila de texto */
+.meta-hitos-v201{height:9px;position:relative;margin:2px 0 9px}
+.meta-hitos-v201 span{
+ position:absolute;top:0;width:7px;height:7px;border:1px solid var(--text-tertiary);
+ border-radius:50%;background:var(--card);transform:translateX(-50%);
+}
+.meta-hitos-v201 [data-meta-hito="25"]{left:25%}
+.meta-hitos-v201 [data-meta-hito="50"]{left:50%}
+.meta-hitos-v201 [data-meta-hito="75"]{left:75%}
+.meta-hitos-v201 [data-meta-hito="100"]{left:calc(100% - 4px)}
+.meta-hitos-v201 .alcanzado{background:var(--primary);border-color:var(--primary)}
+#cargaV201{
+ position:fixed;z-index:12000;left:50%;top:42%;transform:translate(-50%,-50%);
+ display:flex;flex-direction:column;align-items:center;gap:9px;pointer-events:none;
+ padding:20px 30px;border-radius:22px;background:var(--card,#f2f2f7);
+ color:var(--text-primary,#111);box-shadow:0 8px 35px rgba(0,0,0,.12);
+ font:600 15px -apple-system,sans-serif;
+}
+#cargaV201[hidden]{display:none!important}
+#cargaV201 img{border-radius:12px}
+.carga-puntos-v201{color:var(--primary,#3478f6);letter-spacing:4px;animation:cargaPulsoV201 1s ease-in-out infinite}
+@keyframes cargaPulsoV201{50%{opacity:.3}}
+@media(prefers-reduced-motion:reduce){.carga-puntos-v201{animation:none}}
