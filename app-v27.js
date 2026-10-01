@@ -5202,6 +5202,7 @@ function actualizarTodaLaInterfaz() {
 
     actualizarEstadisticas();
     actualizarMeta();
+    refrescarResumenMensualV198();
 }
 
 
@@ -7486,7 +7487,7 @@ function mostrarVersionPublicadaV156() {
 
     const etiqueta = document.createElement("div");
     etiqueta.id = "versionPublicadaV156";
-    etiqueta.textContent = "Versión instalada: V197.2";
+    etiqueta.textContent = "Versión instalada: V198";
     etiqueta.style.cssText =
         "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
     destino.insertAdjacentElement("afterend", etiqueta);
@@ -7644,11 +7645,13 @@ function resumenMesV143(ref){
  regs.forEach(r=>{
   const mins=minutosRegistroV143(r); total+=mins;
   const fecha=String(r.fecha||"").slice(0,10); if(fecha)dias.add(fecha);
-  const tipo=String(r.tipo||r.actividad||"Ministerio"); tipos[tipo]=(tipos[tipo]||0)+mins;
+  const raw=String(r.tipo||r.actividad||"ministerio").toLowerCase();
+  const tipo=({ministerio:"Ministerio",ldc:"LDC",asamblea:"Asambleas",asambleas:"Asambleas",otras:"Otras"})[raw]||"Otras";
+  tipos[tipo]=(tipos[tipo]||0)+mins;
   const f=new Date(`${fecha}T12:00:00`);
   if(!Number.isNaN(f.getTime())){
    const lun=new Date(f); lun.setDate(lun.getDate()-((lun.getDay()+6)%7));
-   const k=fechaLocalISOv141(lun); semanas[k]=(semanas[k]||0)+mins;
+   const k=fechaLocalISO(lun); semanas[k]=(semanas[k]||0)+mins;
   }
  });
  const mejor=Math.max(0,...Object.values(semanas));
@@ -7666,11 +7669,14 @@ function pintarResumenMensualV143(ref){
  host.querySelector("[data-v143-semana]").textContent=fmt(actual.mejor);
  host.querySelector("[data-v143-compara]").textContent=anterior.total?`${difTxt} frente al mes anterior`:"Sin comparación anterior";
  const dist=host.querySelector("[data-v143-dist]");
- const orden=["Ministerio","LDC","Asambleas","Asamblea","Otras"];
- const entradas=Object.entries(actual.tipos).sort((a,b)=>{
-  const ia=orden.indexOf(a[0]),ib=orden.indexOf(b[0]);return (ia<0?99:ia)-(ib<0?99:ib);
+ const actividades=[["Ministerio","📖","ministerio"],["LDC","🛠️","ldc"],["Asambleas","🎤","asambleas"],["Otras","✨","otras"]];
+ dist.replaceChildren();
+ actividades.forEach(([nombre,icono,tipo])=>{
+  const fila=document.createElement("div");fila.className="resumen-actividad-v198";fila.dataset.tipo=tipo;
+  const etiqueta=document.createElement("span");etiqueta.textContent=icono+" "+nombre;
+  const valor=document.createElement("b");valor.textContent=fmt(actual.tipos[nombre]||0);
+  fila.append(etiqueta,valor);dist.appendChild(fila);
  });
- dist.innerHTML=entradas.length?entradas.map(([t,m])=>`<div><span>${t}</span><b>${fmt(m)}</b></div>`).join(""):'<div class="v143-vacio">Todavía no hay actividad registrada.</div>';
  const msg=host.querySelector("[data-v143-mensaje]");
  msg.textContent=actual.total===0?"Un nuevo mes es una nueva oportunidad para avanzar paso a paso.":
    dif>0?"Este mes has avanzado más que el anterior. ¡Sigue así!":
@@ -7725,7 +7731,7 @@ document.addEventListener("DOMContentLoaded",()=>setTimeout(actualizarTendenciaV
 // V145 · Resumen inteligente de hoy. Solo lectura: agenda + registros + tiempo ya existente.
 function resumenHoyV145(){
  const host=document.getElementById("resumenHoyV145");if(!host)return;
- const hoy=new Date(), fecha=fechaLocalISOv141(hoy);
+ const hoy=new Date(), fecha=fechaLocalISO(hoy);
  const agenda=estado.agendaSalidas&&typeof estado.agendaSalidas==="object"?estado.agendaSalidas:{};
  const raw=agenda[fecha], planes=(Array.isArray(raw)?raw:[raw]).filter(Boolean);
  const regs=(Array.isArray(estado.registros)?estado.registros:[]).filter(r=>String(r.fecha||"").slice(0,10)===fecha);
@@ -8883,3 +8889,15 @@ function estadoVacioV197(icono,texto){
  const mensaje=document.createElement("span");mensaje.textContent=texto;
  box.append(imagen,mensaje);return box;
 }
+
+function refrescarResumenMensualV198(){
+ const input=document.getElementById("mesResumenV143");
+ if(!input)return;
+ if(!/^\d{4}-\d{2}$/.test(input.value))input.value=claveMesV143(new Date());
+ const [y,m]=input.value.split("-").map(Number);
+ pintarResumenMensualV143(new Date(y,m-1,1));
+}
+document.addEventListener("click",e=>{
+ if(e.target.closest?.('[data-vista="estadisticas"]'))setTimeout(refrescarResumenMensualV198,40);
+});
+window.addEventListener("miServicio:estadoSyncV190",()=>setTimeout(refrescarResumenMensualV198,100));

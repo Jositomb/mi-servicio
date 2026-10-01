@@ -11336,3 +11336,17 @@ body #saludoDinamicoV195 {
  background:var(--primary,#3478f6);color:#fff;font:600 14px -apple-system,sans-serif;
  box-shadow:0 5px 20px rgba(0,0,0,.2);
 }
+
+/* V198 · Un solo resumen mensual con las cuatro actividades */
+#vista-estadisticas #historialResumenV153{display:block!important}
+#vista-estadisticas #historialResumenV153>#resumenMensualV143{width:100%;padding:0!important}
+#vista-estadisticas #resumenMensualV143 .v143-rm-head{flex-wrap:wrap;gap:10px}
+#vista-estadisticas #resumenMensualV143 .v143-rm-nav{max-width:100%}
+#vista-estadisticas #resumenMensualV143 .v143-rm-dist{margin-top:12px;gap:7px}
+#vista-estadisticas #resumenMensualV143 .resumen-actividad-v198{
+ padding:8px 10px;border-radius:10px;background:rgba(127,127,127,.06);
+ border-left:3px solid var(--other);font-size:12px;
+}
+#vista-estadisticas #resumenMensualV143 [data-tipo="ministerio"]{border-left-color:var(--ministry)}
+#vista-estadisticas #resumenMensualV143 [data-tipo="ldc"]{border-left-color:var(--ldc)}
+#vista-estadisticas #resumenMensualV143 [data-tipo="asambleas"]{border-left-color:var(--assembly)}
