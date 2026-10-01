@@ -1,0 +1,13 @@
+MI SERVICIO V208 — MÁS SENCILLA
+
+Cuatro pestañas: Inicio, Registrar, Historial y Estadísticas.
+Ajustes desde el avatar MS con engranaje, y botón Volver.
+Meta anual integrada como desplegable dentro de Estadísticas, conservando cómputo, excedente, agenda, ritmo, hitos y personaje.
+El + de Inicio abre el mismo formulario de Registrar; se elimina el segundo formulario rápido.
+Inicio conserva progreso, círculos, calendario, personaje y frase. Tiempo y ropa pasan a un desplegable pequeño. En descanso, la explicación se muestra solo en la tarjeta de contexto; se ocultan los textos repetidos del personaje.
+El calendario indica la salida planificada de hoy cuando la hay; al abrirlo se mantienen planificación y edición.
+Ajustes avanzados conservan sus desplegables de OneDrive, copias y personalización.
+
+Incluye todas las mejoras de V207, incluido +4 h. Subir TODOS los archivos directamente a la raíz. No crear carpetas ni borrar archivos antiguos. Conservar nombres. Confirmar V208 en Ajustes tras tocar el aviso de nueva versión.
+
+Validación de estructura, recursos, sintaxis, navegación y huellas. Pendiente revisión visual y publicación real en iPhone.

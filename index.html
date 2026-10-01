@@ -5,32 +5,17 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="color-scheme" content="light dark">
     <meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
     <title>Mi Servicio</title>
     <link rel="manifest" href="./manifest.webmanifest">
     <link rel="apple-touch-icon" href="./icon-apple.png">
-    <meta
-        name="apple-mobile-web-app-capable"
-        content="yes"
-    >
-    <meta
-        name="apple-mobile-web-app-status-bar-style"
-        content="default"
-    >
-    <meta
-        name="apple-mobile-web-app-title"
-        content="Mi Servicio"
-    >
-    <link
-        rel="stylesheet"
-        href="./styles-v207.css"
-    >
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Mi Servicio">
+    <link rel="stylesheet" href="./styles-v208.css">
 
 
 <style id="v91-layout-final">
@@ -119,10 +104,10 @@
 }
 </style>
 
-    <meta name="mi-servicio-version" content="V207">
-<meta name="mi-servicio-build" content="V207-20701">
+    <meta name="mi-servicio-version" content="V208">
+<meta name="mi-servicio-build" content="V208-20801">
 </head>
-<body data-mi-servicio-version="V207">
+<body data-mi-servicio-version="V208">
     <div id="cargaV201" hidden role="status" aria-live="polite">
       <img src="./icon-apple.png" width="48" height="48" alt="">
       <strong>Mi Servicio</strong><span class="carga-puntos-v201" aria-hidden="true">•••</span>
@@ -157,9 +142,9 @@
                 <span class="estado-conexion-punto-v190"></span>
                 <span id="estadoConexionTextoV190">Local</span>
             </div>
-            <div class="avatar">
+            <button class="avatar" type="button" id="abrirAjustesV208" aria-label="Abrir ajustes" title="Ajustes" aria-controls="vista-ajustes">
                 MS
-            </div>
+            </button>
         </div>
     </header>
 
@@ -184,10 +169,7 @@
         <!-- =================================================
              INICIO
         ================================================== -->
-        <section
-            id="vista-inicio"
-            class="vista activa"
-        >
+        <section id="vista-inicio" class="vista activa">
             <!-- CALENDARIO A TODO EL ANCHO -->
             <section class="inicio-resumen-grid">
 
@@ -225,11 +207,7 @@
                 </div>
             </section>
             <!-- RECORDATORIO DE COPIA DE SEGURIDAD -->
-            <section
-                id="recordatorioCopiaInicio"
-                class="seccion seccion-recordatorio-copia oculto"
-                aria-live="polite"
-            >
+            <section id="recordatorioCopiaInicio" class="seccion seccion-recordatorio-copia oculto" aria-live="polite">
                 <article class="tarjeta recordatorio-copia">
                     <div class="recordatorio-copia-texto">
                         <strong>📦 Es hora de hacer una copia de seguridad</strong>
@@ -237,51 +215,24 @@
                             Te lo recordaremos una vez al mes.
                         </p>
                     </div>
-                    <button
-                        id="hacerCopiaDesdeInicio"
-                        class="boton-recordatorio-copia"
-                        type="button"
-                    >
+                    <button id="hacerCopiaDesdeInicio" class="boton-recordatorio-copia" type="button">
                         Hacer copia ahora
                     </button>
                 </article>
             </section>
 
             <!-- PROGRESO DEL MES -->
-            <section
-                class="seccion"
-                id="seccionGraficoInicio"
-            >
+            <section class="seccion" id="seccionGraficoInicio">
                 <div class="titulo-seccion">
                     <h2>
                         Progreso del mes
                     </h2>
                 </div>
-                <article
-                    class="tarjeta tarjeta-grafico-inicio"
-                >
-                    <div
-                        id="fechaProgresoMes"
-                        class="fecha-progreso-mes"
-                        aria-label="Fecha de hoy"
-                    ></div>
+                <article class="tarjeta tarjeta-grafico-inicio">
+                    <div id="fechaProgresoMes" class="fecha-progreso-mes" aria-label="Fecha de hoy"></div>
                     <div id="infoAnilloActivo" class="info-anillo-activo" aria-live="polite"></div>
-                    <div id="tiempoEsquinas" class="tiempo-esquinas" aria-label="Tiempo para salir">
-<div class="tiempo-esquina tiempo-esquina-tl"><span id="tiempoIcono">🌤️</span><small id="tiempoDescripcion">Consultando…</small></div>
-<div class="tiempo-esquina tiempo-esquina-tr"><span class="tiempo-ropa-icono">🧥</span><small id="tiempoConsejo">Preparando…</small></div>
-<div class="tiempo-esquina tiempo-esquina-bl"><strong id="tiempoTemperatura">--°</strong><small id="tiempoLugar">Arteixo</small></div>
-<div class="tiempo-esquina tiempo-esquina-br"><span id="tiempoLluvia">💧 --%</span><small>Lluvia</small></div>
-<span id="tiempoViento" hidden></span>
-<button id="actualizarTiempoInicio" class="tiempo-recargar" type="button" aria-label="Actualizar tiempo">↻</button>
-</div>
-<div
-                        id="graficoInicio"
-                        class="grafico-inicio"
-                    ></div>
-                    <div
-                        id="leyendaGraficoInicio"
-                        class="leyenda-grafico-inicio"
-                    ></div>
+                    <div id="graficoInicio" class="grafico-inicio"></div>
+                    <div id="leyendaGraficoInicio" class="leyenda-grafico-inicio"></div>
                 </article>
             </section>
             <!-- OBJETIVO -->
@@ -297,25 +248,16 @@
                             <p class="etiqueta">
                                 Progreso mensual
                             </p>
-                            <p
-                                id="valorObjetivo"
-                                class="valor-secundario"
-                            >
+                            <p id="valorObjetivo" class="valor-secundario">
                                 0 h
                             </p>
                         </div>
-                        <strong
-                            id="porcentajeObjetivo"
-                            class="porcentaje"
-                        >
+                        <strong id="porcentajeObjetivo" class="porcentaje">
                             0%
                         </strong>
                     </div>
                     <div class="barra">
-                        <div
-                            id="barraProgreso"
-                            class="barra-progreso"
-                        ></div>
+                        <div id="barraProgreso" class="barra-progreso"></div>
                     </div>
 
                     <!-- V194 · HITOS VISUALES DEL OBJETIVO -->
@@ -327,47 +269,34 @@
                     </div>
                     <div id="celebracionProgreso" class="celebracion-progreso" aria-hidden="true"></div>
                     <!-- PERSONAJE ANIMADO -->
-                    <div
-                        id="progresoPersonaje"
-                        class="progreso-personaje"
-                    >
-                        <div
-                            class="progreso-pista"
-                        ></div>
-                        <div
-                            id="animalProgreso"
-                            class="progreso-animal"
-                        >
+                    <div id="progresoPersonaje" class="progreso-personaje">
+                        <div class="progreso-pista"></div>
+                        <div id="animalProgreso" class="progreso-animal">
                             🚶‍♂️
                         </div>
                         <div class="progreso-meta">
                             🏁
                         </div>
                     </div>
-                    <div
-                        id="contextoCalendarioProgresoV181"
-                        class="contexto-calendario-progreso-v181 oculto"
-                        aria-live="polite"
-                    ></div>
-                    <p
-                        id="estadoAnimal"
-                        class="progreso-estado"
-                    >
+                    <div id="contextoCalendarioProgresoV181" class="contexto-calendario-progreso-v181 oculto" aria-live="polite"></div>
+                    <p id="estadoAnimal" class="progreso-estado">
                         Poco a poco, seguimos avanzando
                     </p>
-                    <p
-    id="desgloseObjetivo"
-    class="texto-secundario"
-></p>
-                    <p
-                        id="mensajeObjetivo"
-                        class="texto-secundario"
-                    ></p>
+                    <p id="desgloseObjetivo" class="texto-secundario"></p>
+                    <p id="mensajeObjetivo" class="texto-secundario"></p>
                 </article>
             </section>
 
             <!-- FRASE DE ÁNIMO DINÁMICA -->
-            <section class="seccion seccion-frase-animo">
+            <details id="climaDetalleV208" class="clima-detalle-v208"><summary><span aria-hidden="true">☀</span> El tiempo para salir <span class="clima-flecha-v208" aria-hidden="true">⌄</span></summary><div id="tiempoEsquinas" class="tiempo-detalle-v208" aria-label="Tiempo para salir">
+<div class="tiempo-esquina tiempo-esquina-tl"><span id="tiempoIcono">🌤️</span><small id="tiempoDescripcion">Consultando…</small></div>
+<div class="tiempo-esquina tiempo-esquina-tr"><span class="tiempo-ropa-icono">🧥</span><small id="tiempoConsejo">Preparando…</small></div>
+<div class="tiempo-esquina tiempo-esquina-bl"><strong id="tiempoTemperatura">--°</strong><small id="tiempoLugar">Arteixo</small></div>
+<div class="tiempo-esquina tiempo-esquina-br"><span id="tiempoLluvia">💧 --%</span><small>Lluvia</small></div>
+<span id="tiempoViento" hidden></span>
+<button id="actualizarTiempoInicio" class="tiempo-recargar" type="button" aria-label="Actualizar tiempo">↻</button>
+</div>
+</details><section class="seccion seccion-frase-animo">
                 <article class="tarjeta frase-animo-card">
                     <span class="frase-animo-icono">✨</span>
                     <p id="fraseAnimoInicio">Cada paso cuenta. Sigue avanzando.</p>
@@ -379,45 +308,9 @@
 
 
             <!-- V191 · REGISTRO RÁPIDO DESDE INICIO -->
-            <button id="abrirRegistroRapidoV191" class="v191-boton-flotante" type="button" aria-label="Añadir registro rápido">+</button>
+            <button id="abrirRegistroRapidoV191" class="v191-boton-flotante" type="button" aria-label="Registrar actividad">+</button>
 
-            <div id="fondoRegistroRapidoV191" class="v191-modal-fondo oculto" aria-hidden="true">
-                <section class="v191-modal-rapido" role="dialog" aria-modal="true" aria-labelledby="tituloRegistroRapidoV191">
-                    <div class="v191-modal-cabecera">
-                        <div>
-                            <small>REGISTRO RÁPIDO</small>
-                            <h3 id="tituloRegistroRapidoV191">Añadir tiempo</h3>
-                        </div>
-                        <button id="cerrarRegistroRapidoV191" class="v191-modal-cerrar" type="button" aria-label="Cerrar">×</button>
-                    </div>
-
-                    <div class="v191-tipos-rapidos">
-                        <button type="button" class="seleccionado" data-v191-tipo="ministerio">📖 Ministerio</button>
-                        <button type="button" data-v191-tipo="ldc">🛠️ LDC</button>
-                        <button type="button" data-v191-tipo="asambleas">🎤 Asamblea</button>
-                        <button type="button" data-v191-tipo="otras">✨ Otras</button>
-                    </div>
-
-                    <div class="v191-atajos-rapidos">
-                        <button type="button" data-v191-minutos="30">30 min</button>
-                        <button type="button" data-v191-minutos="60">1 h</button>
-                        <button type="button" data-v191-minutos="120">2 h</button>
-                        <button type="button" data-v191-minutos="180">3 h</button>
-                    </div>
-
-                    <div class="v191-tiempo-manual">
-                        <label>Horas<input id="horasRapidasV191" type="number" min="0" max="24" value="0"></label>
-                        <label>Minutos<input id="minutosRapidosV191" type="number" min="0" max="59" value="0"></label>
-                    </div>
-
-                    <p id="fechaRegistroRapidoV191" class="v191-fecha-rapida"></p>
-                    <p id="mensajeRegistroRapidoV191" class="v191-mensaje-rapido"></p>
-
-                    <button id="guardarRegistroRapidoV191" class="v191-guardar-rapido" type="button">Guardar actividad</button>
-                </section>
-            </div>
-
-</section>
+            </section>
         <!-- =================================================
              REGISTRAR
         ================================================== -->
@@ -434,59 +327,36 @@
                         Actividad
                     </span>
                     <div class="selector-actividad">
-                        <button
-                            class="actividad-boton seleccionada"
-                            data-tipo="ministerio"
-                            type="button"
-                        >
+                        <button class="actividad-boton seleccionada" data-tipo="ministerio" type="button">
                             <span class="actividad-icono">
                                 📖
                             </span>
                             Ministerio
                         </button>
-                        <button
-                            class="actividad-boton"
-                            data-tipo="ldc"
-                            type="button"
-                        >
+                        <button class="actividad-boton" data-tipo="ldc" type="button">
                             <span class="actividad-icono">
                                 🛠️
                             </span>
                             LDC
                         </button>
-                        <button
-                            class="actividad-boton"
-                            data-tipo="asambleas"
-                            type="button"
-                        >
+                        <button class="actividad-boton" data-tipo="asambleas" type="button">
                             <span class="actividad-icono">
                                 🎤
                             </span>
                             Asambleas
                         </button>
-                        <button
-                            class="actividad-boton"
-                            data-tipo="otras"
-                            type="button"
-                        >
+                        <button class="actividad-boton" data-tipo="otras" type="button">
                             <span class="actividad-icono">
                                 ✨
                             </span>
                             Otras
                         </button>
                     </div>
-                    <input
-                        id="tipoRegistro"
-                        type="hidden"
-                        value="ministerio"
-                    >
+                    <input id="tipoRegistro" type="hidden" value="ministerio">
                 </div>
 <!-- FECHA -->
                 <div class="grupo-formulario grupo-fecha">
-                    <label
-                        class="titulo-campo"
-                        for="fechaRegistro"
-                    >
+                    <label class="titulo-campo" for="fechaRegistro">
                         Fecha
                     </label>
                     <div class="fecha-opciones-v203" aria-label="Elegir día">
@@ -496,12 +366,7 @@
                     </div>
                     <p id="fechaTextoV203" class="ayuda-v203"></p>
                     <div id="fechaManualV203">
-                    <input
-                        id="fechaRegistro"
-                        class="campo"
-                        type="date"
-                        required
-                    >
+                    <input id="fechaRegistro" class="campo" type="date" required>
                     </div>
                 </div>
                 <!-- TIEMPO -->
@@ -516,25 +381,13 @@
                             <label for="horasRegistro">
                                 Horas
                             </label>
-                            <input
-                                id="horasRegistro"
-                                type="number"
-                                min="0"
-                                max="24"
-                                value="0"
-                            >
+                            <input id="horasRegistro" type="number" min="0" max="24" value="0">
                         </div>
                         <div class="campo-tiempo">
                             <label for="minutosRegistro">
                                 Minutos
                             </label>
-                            <input
-                                id="minutosRegistro"
-                                type="number"
-                                min="0"
-                                max="59"
-                                value="0"
-                            >
+                            <input id="minutosRegistro" type="number" min="0" max="59" value="0">
                         </div>
                     </div>
                     <div class="atajos-tiempo" aria-label="Atajos de tiempo">
@@ -548,23 +401,15 @@
                 <details id="detallesRegistroV203" class="detalles-registro-v203"><summary>Detalles opcionales <span>Acompañante, cursos o nota</span></summary><div class="detalles-contenido-v203"><!-- CON QUIÉN VOY -->
                 <div id="grupoCompaneroMinisterio" class="grupo-formulario grupo-companero">
                     <label class="titulo-campo" for="companeroRegistro">Acompañante (opcional)</label>
-                    <input id="companeroRegistro" class="campo" type="text" maxlength="80"
-                           autocomplete="off" placeholder="Ej. Marta">
+                    <input id="companeroRegistro" class="campo" type="text" maxlength="80" autocomplete="off" placeholder="Ej. Marta">
                 </div>
                 <!-- CURSOS BÍBLICOS -->
-                <div
-                    id="grupoCursosBiblicos"
-                    class="grupo-formulario grupo-cursos"
-                >
+                <div id="grupoCursosBiblicos" class="grupo-formulario grupo-cursos">
                     <span class="titulo-campo">
                         Cursos bíblicos
                     </span>
                     <div class="contador-cursos">
-                        <button
-                            id="restarCurso"
-                            class="boton-contador"
-                            type="button"
-                        >
+                        <button id="restarCurso" class="boton-contador" type="button">
                             −
                         </button>
                         <div class="contador-cursos-centro">
@@ -575,28 +420,17 @@
                                 que diriges
                             </span>
                         </div>
-                        <button
-                            id="sumarCurso"
-                            class="boton-contador"
-                            type="button"
-                        >
+                        <button id="sumarCurso" class="boton-contador" type="button">
                             +
                         </button>
                     </div>
                 </div>
                 <!-- NOTAS -->
                 <div class="grupo-formulario grupo-notas">
-                    <label
-                        class="titulo-campo"
-                        for="notasRegistro"
-                    >
+                    <label class="titulo-campo" for="notasRegistro">
                         Notas
                     </label>
-                    <textarea
-                        id="notasRegistro"
-                        class="campo"
-                        rows="2"
-                    ></textarea>
+                    <textarea id="notasRegistro" class="campo" rows="2"></textarea>
                 </div>
 </div></details>
                 <div class="guardar-registro-v203"><button id="guardarRegistroV203" class="boton-guardar" type="submit">Guardar actividad</button></div>
@@ -607,10 +441,7 @@
         <!-- =================================================
              HISTORIAL
         ================================================== -->
-        <section
-            id="vista-historial"
-            class="vista"
-        >
+        <section id="vista-historial" class="vista">
             <section class="seccion">
                 
             
@@ -624,46 +455,23 @@
                     </span>
                 </div>
                 <div class="filtros-historial">
-                    <button
-                        class="filtro-historial activo"
-                        data-filtro="todos"
-                        type="button"
-                    >
+                    <button class="filtro-historial activo" data-filtro="todos" type="button">
                         Todos
                     </button>
-                    <button
-                        class="filtro-historial"
-                        data-filtro="ministerio"
-                        type="button"
-                    >
+                    <button class="filtro-historial" data-filtro="ministerio" type="button">
                         Ministerio
                     </button>
-                    <button
-                        class="filtro-historial"
-                        data-filtro="ldc"
-                        type="button"
-                    >
+                    <button class="filtro-historial" data-filtro="ldc" type="button">
                         LDC
                     </button>
-                    <button
-                        class="filtro-historial"
-                        data-filtro="asambleas"
-                        type="button"
-                    >
+                    <button class="filtro-historial" data-filtro="asambleas" type="button">
                         Asambleas
                     </button>
-                    <button
-                        class="filtro-historial"
-                        data-filtro="otras"
-                        type="button"
-                    >
+                    <button class="filtro-historial" data-filtro="otras" type="button">
                         Otras
                     </button>
                 </div>
-                <article
-                    id="historialVacio"
-                    class="tarjeta estado-vacio"
-                >
+                <article id="historialVacio" class="tarjeta estado-vacio">
                     <h3>
                         Todavía no hay registros
                     </h3>
@@ -671,27 +479,17 @@
                         Cuando registres actividad,
                         aparecerá aquí.
                     </p>
-                    <button
-                        id="botonRegistrarDesdeHistorial"
-                        class="boton-secundario"
-                        type="button"
-                    >
+                    <button id="botonRegistrarDesdeHistorial" class="boton-secundario" type="button">
                         Registrar actividad
                     </button>
                 </article>
-                <div
-                    id="listaHistorial"
-                    class="lista-historial"
-                ></div>
+                <div id="listaHistorial" class="lista-historial"></div>
             </section>
         </section>
         <!-- =================================================
              ESTADÍSTICAS
         ================================================== -->
-        <section
-            id="vista-estadisticas"
-            class="vista"
-        >
+        <section id="vista-estadisticas" class="vista">
             <!-- V193 · SEMANA VISUAL -->
             <section id="semanaVisualV193" class="v193-semana-visual">
                 <div class="v193-semana-cabecera">
@@ -702,7 +500,7 @@
                     <span id="semanaVisualTotalV193">0 h</span>
                 </div>
                 <div id="semanaVisualDiasV193" class="v193-semana-dias" aria-label="Resumen visual de esta semana"></div>
-                <p id="comparacionSemanalV139" class="semana-comparacion-v207" aria-live="polite"></p>
+                <p id="comparacionSemanalV139" class="semana-comparacion-v208" aria-live="polite"></p>
             </section>
 
 
@@ -716,7 +514,7 @@
                     </div>
                     <div class="v143-rm-nav">
                         <button type="button" onclick="cambiarMesResumenV143(-1)" aria-label="Mes anterior">‹</button>
-                        <label class="mes-selector-v207"><span aria-hidden="true">▦</span><input id="mesResumenV143" type="month" aria-label="Elegir mes"></label>
+                        <label class="mes-selector-v208"><span aria-hidden="true">▦</span><input id="mesResumenV143" type="month" aria-label="Elegir mes"></label>
                         <button type="button" onclick="cambiarMesResumenV143(1)" aria-label="Mes siguiente">›</button>
                     </div>
                 </div>
@@ -731,210 +529,7 @@
             </article>
             </section>
 
-            <details class="stats-accordion-v183" id="statsPeriodoV183">
-                <summary>
-                    <span class="stats-accordion-icono-v183">📊</span>
-                    <span>Más detalle</span>
-                    <span class="stats-accordion-flecha-v183">›</span>
-                </summary>
-                <div class="stats-accordion-cuerpo-v183">
-            <div class="selector-periodo">
-                <button
-                    class="periodo-boton activo"
-                    data-periodo="semana"
-                    type="button"
-                >
-                    Semanas
-                </button>
-
-                <button
-                    class="periodo-boton"
-                    data-periodo="anio"
-                    type="button"
-                >
-                    Año
-                </button>
-            </div>
-            <section class="navegador-periodo">
-                <button
-                    id="periodoAnterior"
-                    class="boton-periodo"
-                    type="button"
-                >
-                    ‹
-                </button>
-                <div class="periodo-centro">
-                    <p
-                        id="tituloPeriodoEstadisticas"
-                        class="titulo-periodo-estadisticas"
-                    ></p>
-                    <p
-                        id="rangoPeriodoEstadisticas"
-                        class="rango-periodo-estadisticas"
-                    ></p>
-                </div>
-                <button
-                    id="periodoSiguiente"
-                    class="boton-periodo"
-                    type="button"
-                >
-                    ›
-                </button>
-            </section>
-            <!-- TOTALES -->
-            <section class="seccion">
-                <article class="tarjeta">
-                    <p class="etiqueta">
-                        Total registrado
-                    </p>
-                    <p
-                        id="estadisticasTotal"
-                        class="valor-principal"
-                    >
-                        0 h
-                    </p>
-                    <div class="separador"></div>
-                    <div class="barras-actividad-estadisticas" id="barrasActividadEstadisticas">
-                        <div class="barra-actividad-item ministerio" data-estadistica-tipo="ministerio">
-                            <div class="barra-actividad-cabecera"><span>Ministerio</span><span><strong id="estadisticasMinisterio">0 h</strong><small id="porcentajeMinisterio">0 %</small></span></div>
-                            <div class="barra-actividad-pista"><div id="barraMinisterio" class="barra-actividad-relleno"></div></div>
-                        </div>
-                        <div class="barra-actividad-item ldc" data-estadistica-tipo="ldc">
-                            <div class="barra-actividad-cabecera"><span>LDC</span><span><strong id="estadisticasLDC">0 h</strong><small id="porcentajeLDC">0 %</small></span></div>
-                            <div class="barra-actividad-pista"><div id="barraLDC" class="barra-actividad-relleno"></div></div>
-                        </div>
-                        <div class="barra-actividad-item asambleas" data-estadistica-tipo="asambleas">
-                            <div class="barra-actividad-cabecera"><span>Asambleas</span><span><strong id="estadisticasAsambleas">0 h</strong><small id="porcentajeAsambleas">0 %</small></span></div>
-                            <div class="barra-actividad-pista"><div id="barraAsambleas" class="barra-actividad-relleno"></div></div>
-                        </div>
-                        <div class="barra-actividad-item otras" data-estadistica-tipo="otras">
-                            <div class="barra-actividad-cabecera"><span>Otras</span><span><strong id="estadisticasOtras">0 h</strong><small id="porcentajeOtras">0 %</small></span></div>
-                            <div class="barra-actividad-pista"><div id="barraOtras" class="barra-actividad-relleno"></div></div>
-                        </div>
-                    </div>
-                </article>
-            </section>
-            <!-- GRÁFICO -->
-            <section class="seccion">
-                <div class="titulo-seccion">
-                    <h2>
-                        Actividad
-                    </h2>
-                    <span id="graficoPeriodoTexto">
-                        Semana
-                    </span>
-                </div>
-                <article class="tarjeta">
-                    <div
-                        id="graficoActividad"
-                        class="grafico-actividad"
-                    ></div>
-                    <div
-                        id="graficoVacio"
-                        class="grafico-vacio oculto"
-                    >
-                        No hay actividad para mostrar.
-                    </div>
-                </article>
-            </section>
-            <!-- RESUMEN -->
-            <section class="seccion">
-                <div class="resumen-estadisticas">
-
-                    <article
-                        class="tarjeta mini-estadistica"
-                    >
-                        <p
-                            id="estadisticasDiasActivos"
-                            class="mini-estadistica-valor"
-                        >
-                            0
-                        </p>
-                        <p class="mini-estadistica-etiqueta">
-                            Días activos
-                        </p>
-                    </article>
-                    <article
-                        class="tarjeta mini-estadistica"
-                    >
-                        <p
-                            id="estadisticasCursosBiblicos"
-                            class="mini-estadistica-valor"
-                        >
-                            0
-                        </p>
-                        <p class="mini-estadistica-etiqueta">
-                            Cursos bíblicos
-                        </p>
-                        <small class="cursos-nota-v207">Máximo indicado en el periodo</small>
-                    </article>
-                </div>
-            </section>
-                </div>
-            </details>
-
-            <details class="stats-accordion-v183" id="compararMesesV202">
-              <summary><span class="stats-accordion-icono-v183">↔</span><span>Comparar dos meses</span><span class="stats-accordion-flecha-v183">›</span></summary>
-              <div class="stats-accordion-cuerpo-v183">
-                <div class="comparar-selectores-v202">
-                  <label>Primer mes<input id="compararMesAV202" type="month" class="campo"></label>
-                  <label>Segundo mes<input id="compararMesBV202" type="month" class="campo"></label>
-                </div>
-                <p class="comparar-nota-v202">Actividad registrada. La diferencia indica el segundo mes respecto al primero.</p>
-                <div class="comparar-tabla-wrap-v202"><table class="comparar-tabla-v202">
-                  <thead><tr><th scope="col">Actividad</th><th id="compararCabAV202" scope="col">Primer mes</th><th id="compararCabBV202" scope="col">Segundo mes</th><th scope="col">Diferencia</th></tr></thead>
-                  <tbody id="compararFilasV202"></tbody>
-                </table></div>
-              </div>
-            </details>
-            <details class="stats-accordion-v183" id="statsEvolucionV183">
-                <summary>
-                    <span class="stats-accordion-icono-v183">📉</span>
-                    <span>Evolución · últimos 6 meses</span>
-                    <span class="stats-accordion-flecha-v183">›</span>
-                </summary>
-                <div class="stats-accordion-cuerpo-v183">
-  <article id="tendenciaV144" class="v144-tendencia">
-                <div class="v144-head">
-                    <div><small>EVOLUCIÓN</small><h2>Últimos 6 meses</h2></div>
-                    <span aria-hidden="true">📈</span>
-                </div>
-                <div class="v144-barras" data-v144-barras></div>
-                <p data-v144-mensaje></p>
-            </article>
-
-                </div>
-            </details>
-
-            <details class="stats-accordion-v183 stats-trimestres-v183" id="statsTrimestresV183">
-                <summary>
-                    <span class="stats-accordion-icono-v183">🗓️</span>
-                    <span>Trimestres</span>
-                    <span class="stats-accordion-flecha-v183">›</span>
-                </summary>
-                <div class="stats-accordion-cuerpo-v183">
-            <section
-                id="seccionTrimestres"
-                class="seccion oculto"
-            >
-                <div class="titulo-seccion">
-                    <h2>
-                        Trimestres
-                    </h2>
-                    <span id="anioTrimestres"></span>
-                </div>
-                <div
-                    id="listaTrimestres"
-                    class="lista-trimestres"
-                ></div>
-            </section>
-                </div>
-            </details>
-        </section>
-        <!-- =================================================
-             META DEL AÑO DE SERVICIO
-        ================================================== -->
-        <section id="vista-meta" class="vista">
+            <details id="metaDetalleV208" class="stats-accordion-v183"><summary><span class="stats-accordion-icono-v183">◎</span><span>Meta anual</span><span class="stats-accordion-flecha-v183">›</span></summary><div class="stats-accordion-cuerpo-v183"><div id="vista-meta" class="meta-integrada-v208">
             <section class="seccion meta-web meta-v152">
   <article class="tarjeta meta-principal meta-v152-anio">
     <div class="meta-v152-top">
@@ -1014,15 +609,168 @@
 <div class="plan-inteligente-grid"><div><small>Te faltan</small><strong id="planHorasRestantes">—</strong></div><div><small>Ritmo sugerido</small><strong id="planRitmoSugerido">—</strong></div></div>
 <p id="planMensajeMes">Calculando tu ritmo…</p>
 </article>
+        </div>
+        </div></details><details class="stats-accordion-v183" id="statsPeriodoV183">
+                <summary>
+                    <span class="stats-accordion-icono-v183">📊</span>
+                    <span>Más detalle</span>
+                    <span class="stats-accordion-flecha-v183">›</span>
+                </summary>
+                <div class="stats-accordion-cuerpo-v183">
+            <div class="selector-periodo">
+                <button class="periodo-boton activo" data-periodo="semana" type="button">
+                    Semanas
+                </button>
+
+                <button class="periodo-boton" data-periodo="anio" type="button">
+                    Año
+                </button>
+            </div>
+            <section class="navegador-periodo">
+                <button id="periodoAnterior" class="boton-periodo" type="button">
+                    ‹
+                </button>
+                <div class="periodo-centro">
+                    <p id="tituloPeriodoEstadisticas" class="titulo-periodo-estadisticas"></p>
+                    <p id="rangoPeriodoEstadisticas" class="rango-periodo-estadisticas"></p>
+                </div>
+                <button id="periodoSiguiente" class="boton-periodo" type="button">
+                    ›
+                </button>
+            </section>
+            <!-- TOTALES -->
+            <section class="seccion">
+                <article class="tarjeta">
+                    <p class="etiqueta">
+                        Total registrado
+                    </p>
+                    <p id="estadisticasTotal" class="valor-principal">
+                        0 h
+                    </p>
+                    <div class="separador"></div>
+                    <div class="barras-actividad-estadisticas" id="barrasActividadEstadisticas">
+                        <div class="barra-actividad-item ministerio" data-estadistica-tipo="ministerio">
+                            <div class="barra-actividad-cabecera"><span>Ministerio</span><span><strong id="estadisticasMinisterio">0 h</strong><small id="porcentajeMinisterio">0 %</small></span></div>
+                            <div class="barra-actividad-pista"><div id="barraMinisterio" class="barra-actividad-relleno"></div></div>
+                        </div>
+                        <div class="barra-actividad-item ldc" data-estadistica-tipo="ldc">
+                            <div class="barra-actividad-cabecera"><span>LDC</span><span><strong id="estadisticasLDC">0 h</strong><small id="porcentajeLDC">0 %</small></span></div>
+                            <div class="barra-actividad-pista"><div id="barraLDC" class="barra-actividad-relleno"></div></div>
+                        </div>
+                        <div class="barra-actividad-item asambleas" data-estadistica-tipo="asambleas">
+                            <div class="barra-actividad-cabecera"><span>Asambleas</span><span><strong id="estadisticasAsambleas">0 h</strong><small id="porcentajeAsambleas">0 %</small></span></div>
+                            <div class="barra-actividad-pista"><div id="barraAsambleas" class="barra-actividad-relleno"></div></div>
+                        </div>
+                        <div class="barra-actividad-item otras" data-estadistica-tipo="otras">
+                            <div class="barra-actividad-cabecera"><span>Otras</span><span><strong id="estadisticasOtras">0 h</strong><small id="porcentajeOtras">0 %</small></span></div>
+                            <div class="barra-actividad-pista"><div id="barraOtras" class="barra-actividad-relleno"></div></div>
+                        </div>
+                    </div>
+                </article>
+            </section>
+            <!-- GRÁFICO -->
+            <section class="seccion">
+                <div class="titulo-seccion">
+                    <h2>
+                        Actividad
+                    </h2>
+                    <span id="graficoPeriodoTexto">
+                        Semana
+                    </span>
+                </div>
+                <article class="tarjeta">
+                    <div id="graficoActividad" class="grafico-actividad"></div>
+                    <div id="graficoVacio" class="grafico-vacio oculto">
+                        No hay actividad para mostrar.
+                    </div>
+                </article>
+            </section>
+            <!-- RESUMEN -->
+            <section class="seccion">
+                <div class="resumen-estadisticas">
+
+                    <article class="tarjeta mini-estadistica">
+                        <p id="estadisticasDiasActivos" class="mini-estadistica-valor">
+                            0
+                        </p>
+                        <p class="mini-estadistica-etiqueta">
+                            Días activos
+                        </p>
+                    </article>
+                    <article class="tarjeta mini-estadistica">
+                        <p id="estadisticasCursosBiblicos" class="mini-estadistica-valor">
+                            0
+                        </p>
+                        <p class="mini-estadistica-etiqueta">
+                            Cursos bíblicos
+                        </p>
+                        <small class="cursos-nota-v208">Máximo indicado en el periodo</small>
+                    </article>
+                </div>
+            </section>
+                </div>
+            </details>
+
+            <details class="stats-accordion-v183" id="compararMesesV202">
+              <summary><span class="stats-accordion-icono-v183">↔</span><span>Comparar dos meses</span><span class="stats-accordion-flecha-v183">›</span></summary>
+              <div class="stats-accordion-cuerpo-v183">
+                <div class="comparar-selectores-v202">
+                  <label>Primer mes<input id="compararMesAV202" type="month" class="campo"></label>
+                  <label>Segundo mes<input id="compararMesBV202" type="month" class="campo"></label>
+                </div>
+                <p class="comparar-nota-v202">Actividad registrada. La diferencia indica el segundo mes respecto al primero.</p>
+                <div class="comparar-tabla-wrap-v202"><table class="comparar-tabla-v202">
+                  <thead><tr><th scope="col">Actividad</th><th id="compararCabAV202" scope="col">Primer mes</th><th id="compararCabBV202" scope="col">Segundo mes</th><th scope="col">Diferencia</th></tr></thead>
+                  <tbody id="compararFilasV202"></tbody>
+                </table></div>
+              </div>
+            </details>
+            <details class="stats-accordion-v183" id="statsEvolucionV183">
+                <summary>
+                    <span class="stats-accordion-icono-v183">📉</span>
+                    <span>Evolución · últimos 6 meses</span>
+                    <span class="stats-accordion-flecha-v183">›</span>
+                </summary>
+                <div class="stats-accordion-cuerpo-v183">
+  <article id="tendenciaV144" class="v144-tendencia">
+                <div class="v144-head">
+                    <div><small>EVOLUCIÓN</small><h2>Últimos 6 meses</h2></div>
+                    <span aria-hidden="true">📈</span>
+                </div>
+                <div class="v144-barras" data-v144-barras></div>
+                <p data-v144-mensaje></p>
+            </article>
+
+                </div>
+            </details>
+
+            <details class="stats-accordion-v183 stats-trimestres-v183" id="statsTrimestresV183">
+                <summary>
+                    <span class="stats-accordion-icono-v183">🗓️</span>
+                    <span>Trimestres</span>
+                    <span class="stats-accordion-flecha-v183">›</span>
+                </summary>
+                <div class="stats-accordion-cuerpo-v183">
+            <section id="seccionTrimestres" class="seccion oculto">
+                <div class="titulo-seccion">
+                    <h2>
+                        Trimestres
+                    </h2>
+                    <span id="anioTrimestres"></span>
+                </div>
+                <div id="listaTrimestres" class="lista-trimestres"></div>
+            </section>
+                </div>
+            </details>
         </section>
+        <!-- =================================================
+             META DEL AÑO DE SERVICIO
+        ================================================== -->
         <!-- =================================================
              AJUSTES
         ================================================== -->
-        <section
-            id="vista-ajustes"
-            class="vista"
-        >
-            <section class="seccion">
+        <section id="vista-ajustes" class="vista">
+            <button id="volverAjustesV208" type="button" class="boton-secundario volver-ajustes-v208">‹ Volver</button><section class="seccion">
                 <div class="titulo-seccion">
                     <h2>
                         Ajustes
@@ -1030,16 +778,10 @@
                 </div>
                 <article class="tarjeta">
                     <div class="grupo-formulario">
-                        <label
-                            class="titulo-campo"
-                            for="tipoPublicador"
-                        >
+                        <label class="titulo-campo" for="tipoPublicador">
                             Tipo
                         </label>
-                        <select
-                            id="tipoPublicador"
-                            class="campo"
-                        >
+                        <select id="tipoPublicador" class="campo">
                             <option value="publicador">
                                 Publicador
                             </option>
@@ -1052,16 +794,10 @@
                         </select>
                     </div>
                     <div class="grupo-formulario">
-                        <label
-                            class="titulo-campo"
-                            for="personajeProgreso"
-                        >
+                        <label class="titulo-campo" for="personajeProgreso">
                             Personaje del progreso
                         </label>
-                        <select
-                            id="personajeProgreso"
-                            class="campo"
-                        >
+                        <select id="personajeProgreso" class="campo">
                             <option value="hombre">
                                 Hombre
                             </option>
@@ -1138,62 +874,34 @@
                                 <span>
                                     LDC
                                 </span>
-                                <input
-                                    id="mostrarLDC"
-                                    type="checkbox"
-                                    checked
-                                >
+                                <input id="mostrarLDC" type="checkbox" checked>
                             </label>
                             <label class="ajuste-actividad">
                                 <span>
                                     Asambleas
                                 </span>
-                                <input
-                                    id="mostrarAsambleas"
-                                    type="checkbox"
-                                    checked
-                                >
+                                <input id="mostrarAsambleas" type="checkbox" checked>
                             </label>
                             <label class="ajuste-actividad">
                                 <span>
                                     Otras
                                 </span>
-                                <input
-                                    id="mostrarOtras"
-                                    type="checkbox"
-                                    checked
-                                >
+                                <input id="mostrarOtras" type="checkbox" checked>
                             </label>
                         </div>
                     </div>
                     <div class="grupo-formulario">
-                        <label
-                            class="titulo-campo"
-                            for="objetivoMensual"
-                        >
+                        <label class="titulo-campo" for="objetivoMensual">
                             Objetivo mensual en horas
                         </label>
-                        <input
-                            id="objetivoMensual"
-                            class="campo"
-                            type="number"
-                            min="0"
-                            max="200"
-                        >
+                        <input id="objetivoMensual" class="campo" type="number" min="0" max="200">
                     </div>
-                    <button
-                        id="guardarAjustes"
-                        class="boton-guardar"
-                        type="button"
-                    >
+                    <button id="guardarAjustes" class="boton-guardar" type="button">
                         Guardar ajustes
                     </button>
-                    <p
-                        id="mensajeAjustes"
-                        class="mensaje-formulario"
-                    ></p>
-                </article>
-            </section>
+                    <p id="mensajeAjustes" class="mensaje-formulario"></p>
+                
+            
 
             <!-- CALENDARIO APPLE · V173 -->
             <section class="seccion" id="seccionCalendarioAppleV173">
@@ -1212,8 +920,7 @@
                     <div class="v176-sync-auto">
                         <strong>Sincronización automática</strong>
                         <p>Conecta Mi Servicio con tu calendario público de iCloud mediante un pequeño puente privado.</p>
-                        <input id="proxyCalendarioV176" class="campo-texto" type="url"
-                               placeholder="https://tu-puente.workers.dev/">
+                        <input id="proxyCalendarioV176" class="campo-texto" type="url" placeholder="https://tu-puente.workers.dev/">
                         <button id="guardarProxyCalendarioV176" class="boton-guardar" type="button">
                             Guardar y sincronizar
                         </button>
@@ -1268,50 +975,23 @@
                         <button id="desconectarOneDrive" class="boton-secundario" type="button" hidden>Desconectar OneDrive</button>
                         <p id="ultimaSyncOneDrive" class="onedrive-ultima-sync" hidden></p>
                     </div>
-                    <p
-                        id="ultimaCopiaAjustes"
-                        class="estado-ultima-copia"
-                    >
+                    <p id="ultimaCopiaAjustes" class="estado-ultima-copia">
                         Todavía no hay una copia registrada
                     </p>
-                    <button
-                        id="exportarDatos"
-                        class="boton-guardar"
-                        type="button"
-                    >
+                    <button id="exportarDatos" class="boton-guardar" type="button">
                         Exportar copia de seguridad
                     </button>
-                    <button
-                        id="prepararAccesoInicio"
-                        class="boton-secundario"
-                        type="button"
-                    >
+                    <button id="prepararAccesoInicio" class="boton-secundario" type="button">
                         📲 Preparar acceso a pantalla de inicio
                     </button>
-                    <button
-                        id="exportarIPhone"
-                        class="boton-secundario"
-                        type="button"
-                    >
+                    <button id="exportarIPhone" class="boton-secundario" type="button">
                         Exportar para iPhone
                     </button>
-                    <button
-                        id="importarDatos"
-                        class="boton-secundario"
-                        type="button"
-                    >
+                    <button id="importarDatos" class="boton-secundario" type="button">
                         Importar copia de seguridad
                     </button>
-                    <input
-                        id="archivoImportacion"
-                        type="file"
-                        accept=".json"
-                        hidden
-                    >
-                    <p
-                        id="mensajeDatos"
-                        class="mensaje-formulario"
-                    ></p>
+                    <input id="archivoImportacion" type="file" accept=".json" hidden>
+                    <p id="mensajeDatos" class="mensaje-formulario"></p>
                 </article>
             </section>
             <details class="ajustes-acordeon-v179" id="aparienciaV201">
@@ -1329,73 +1009,37 @@
                 <p class="texto-secundario">Un detalle suave junto al calendario. Se guarda al elegirlo en este dispositivo.</p>
               </div>
             </details>
-        </section>
-    </main>
+        
+    
     <!-- =====================================================
          BARRA DE NAVEGACIÓN
     ====================================================== -->
     <nav class="barra-navegacion">
-        <button
-            class="nav-item activo"
-            data-vista="inicio"
-            type="button"
-        >
-            <span class="nav-icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 10 12 3l9 7v10h-6v-6H9v6H3z"/></svg></span>
+        <button class="nav-item activo" data-vista="inicio" type="button">
+            <span class="nav-icono"><svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 10 12 3l9 7v10h-6v-6H9v6H3z"></path></svg></span>
             <span>
                 Inicio
             </span>
         </button>
-        <button
-            class="nav-item"
-            data-vista="registrar"
-            type="button"
-        >
-            <span class="nav-icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 4v16M4 12h16"/></svg></span>
+        <button class="nav-item" data-vista="registrar" type="button">
+            <span class="nav-icono"><svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 4v16M4 12h16"></path></svg></span>
             <span>
                 Registrar
             </span>
         </button>
-        <button
-            class="nav-item"
-            data-vista="historial"
-            type="button"
-        >
-            <span class="nav-icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+        <button class="nav-item" data-vista="historial" type="button">
+            <span class="nav-icono"><svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg></span>
             <span>
                 Historial
             </span>
         </button>
-        <button
-            class="nav-item"
-            data-vista="estadisticas"
-            type="button"
-        >
-            <span class="nav-icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 20V10h4v10M10 20V4h4v16M16 20v-8h4v8"/></svg></span>
+        <button class="nav-item" data-vista="estadisticas" type="button">
+            <span class="nav-icono"><svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 20V10h4v10M10 20V4h4v16M16 20v-8h4v8"></path></svg></span>
             <span>
                 Estadísticas
             </span>
         </button>
-        <button
-            class="nav-item"
-            data-vista="meta"
-            type="button"
-        >
-            <span class="nav-icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg></span>
-            <span>
-                Meta
-            </span>
-        </button>
-        <button
-            class="nav-item"
-            data-vista="ajustes"
-            type="button"
-        >
-            <span class="nav-icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3"/><circle cx="15" cy="17" r="3"/></svg></span>
-            <span>
-                Ajustes
-            </span>
-        </button>
-    </nav>
+        </nav>
 </div>
 <!-- =========================================================
      MODAL BORRAR
@@ -1488,10 +1132,7 @@
     </div>
 </div>
 
-<div
-    id="modalBorrar"
-    class="modal oculto"
->
+<div id="modalBorrar" class="modal oculto">
     <div class="modal-fondo"></div>
     <div class="modal-contenido">
         <h2>
@@ -1501,18 +1142,10 @@
             Esta acción no se puede deshacer.
         </p>
         <div class="modal-botones">
-            <button
-                id="cancelarBorrado"
-                class="boton-modal"
-                type="button"
-            >
+            <button id="cancelarBorrado" class="boton-modal" type="button">
                 Cancelar
             </button>
-            <button
-                id="confirmarBorrado"
-                class="boton-modal eliminar"
-                type="button"
-            >
+            <button id="confirmarBorrado" class="boton-modal eliminar" type="button">
                 Eliminar
             </button>
         </div>
@@ -1522,11 +1155,7 @@
 <!-- =========================================================
      MODAL EDITAR REGISTRO
 ========================================================== -->
-<div
-    id="modalEditar"
-    class="modal oculto"
-    aria-hidden="true"
->
+<div id="modalEditar" class="modal oculto" aria-hidden="true">
     <div class="modal-fondo"></div>
     <div class="modal-contenido modal-editar-contenido">
         <h2>Editar actividad</h2>
@@ -1629,20 +1258,20 @@
     if (standalone) document.body.classList.add('modo-standalone');
 })();
 </script>
-<script type="module" src="./config-v207.js"></script>
-<script type="module" src="./storage-v207.js"></script>
-<script src="./historial-render-v207.js" defer></script>
-<script src="./historial-edicion-v207.js" defer></script>
-<script src="./estadisticas-render-v207.js" defer></script>
-<script src="./registrar-v207.js" defer></script>
-<script src="./planificacion-v207.js" defer></script>
-<script src="./app-v207.js" defer></script>
-<script src="./eventos-calendario-v207.js" defer></script>
-<script src="./visual-v207.js" defer></script>
-<script src="./mejoras-v207.js" defer></script>
-<script src="./registrar-ui-v207.js" defer></script>
+<script type="module" src="./config-v208.js"></script>
+<script type="module" src="./storage-v208.js"></script>
+<script src="./historial-render-v208.js" defer></script>
+<script src="./historial-edicion-v208.js" defer></script>
+<script src="./estadisticas-render-v208.js" defer></script>
+<script src="./registrar-v208.js" defer></script>
+<script src="./planificacion-v208.js" defer></script>
+<script src="./app-v208.js" defer></script>
+<script src="./eventos-calendario-v208.js" defer></script>
+<script src="./visual-v208.js" defer></script>
+<script src="./mejoras-v208.js" defer></script>
+<script src="./registrar-ui-v208.js" defer></script>
 
-<script id="swRegistroV189">
+<html><head><script src="./simple-v208.js" defer></script></head></html><script id="swRegistroV189">
 if ("serviceWorker" in navigator) {
   let registroApp;
   const teniaControlador=Boolean(navigator.serviceWorker.controller);
@@ -1667,10 +1296,10 @@ if ("serviceWorker" in navigator) {
 </script>
 
 
-<script type="module" src="./tiempo-v207.js"></script>
-<script type="module" src="./legacy-bridge-v207.js"></script>
-<script type="module" src="./historial-v207.js"></script>
-<script type="module" src="./estadisticas-v207.js"></script>
+<script type="module" src="./tiempo-v208.js"></script>
+<script type="module" src="./legacy-bridge-v208.js"></script>
+<script type="module" src="./historial-v208.js"></script>
+<script type="module" src="./estadisticas-v208.js"></script>
 
 <script id="ajustesAcordeonV179">
 document.addEventListener("DOMContentLoaded", () => {
@@ -1746,5 +1375,5 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
-</body>
+</article></section></section></main></div></body>
 </html>
