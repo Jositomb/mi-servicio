@@ -1,0 +1,9 @@
+Mi Servicio V215
+
+Sube todos los archivos a la raíz, reemplazando los existentes. No hace falta borrar los antiguos.
+
+- Saludo personal: nombre opcional en Ajustes > Perfil. Guardar ajustes lo guarda para este dispositivo. Se mantienen hora y contexto.
+- Calendario: día seleccionado con borde suave y días de meses contiguos atenuados, sin alterar colores de actividad.
+- Guardar: una única animación breve junto al botón. Conserva detalles del registro, Editar y Añadir otro. Respeta Reducir movimiento.
+
+Se mantienen los datos y las mejoras anteriores.
