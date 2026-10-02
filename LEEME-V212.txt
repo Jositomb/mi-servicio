@@ -1,0 +1,11 @@
+Mi Servicio V212
+
+Sube todos los archivos directamente a la raíz y reemplaza los existentes. No necesitas borrar los antiguos.
+
+- Aviso ante posible registro duplicado (misma fecha, actividad y duración). Permite conservar ambos.
+- Búsqueda de acompañante, notas y actividad en Historial.
+- Borrador local recuperado al volver, con opción Descartar. Se elimina al guardar correctamente.
+- Hora real de comprobación de OneDrive y estados pendientes/locales.
+- Botones, foco y mensajes coherentes.
+
+Se mantienen las mejoras anteriores y los datos. El borrador es propio de este dispositivo y no se sincroniza.

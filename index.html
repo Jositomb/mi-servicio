@@ -15,7 +15,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Mi Servicio">
-    <link rel="stylesheet" href="./styles-v211.css">
+    <link rel="stylesheet" href="./styles-v212.css">
 
 
 <style id="v91-layout-final">
@@ -104,10 +104,10 @@
 }
 </style>
 
-    <meta name="mi-servicio-version" content="V211">
-<meta name="mi-servicio-build" content="V211-21101">
+    <meta name="mi-servicio-version" content="V212">
+<meta name="mi-servicio-build" content="V212-21201">
 </head>
-<body data-mi-servicio-version="V211">
+<body data-mi-servicio-version="V212">
     <div id="cargaV201" hidden role="status" aria-live="polite">
       <img src="./icon-apple.png" width="48" height="48" alt="">
       <strong>Mi Servicio</strong><span class="carga-puntos-v201" aria-hidden="true">•••</span>
@@ -142,7 +142,7 @@
                 <span class="estado-conexion-punto-v190"></span>
                 <span id="estadoConexionTextoV190">Local</span>
             </div>
-            <button class="avatar" type="button" id="abrirAjustesV211" aria-label="Abrir ajustes" title="Ajustes" aria-controls="vista-ajustes">
+            <button class="avatar" type="button" id="abrirAjustesV212" aria-label="Abrir ajustes" title="Ajustes" aria-controls="vista-ajustes">
                 MS
             </button>
         </div>
@@ -288,7 +288,7 @@
             </section>
 
             <!-- FRASE DE ÁNIMO DINÁMICA -->
-            <details id="climaDetalleV211" class="clima-detalle-v211"><summary><span aria-hidden="true">☀</span> El tiempo para salir <span class="clima-flecha-v211" aria-hidden="true">⌄</span></summary><div id="tiempoEsquinas" class="tiempo-detalle-v211" aria-label="Tiempo para salir">
+            <details id="climaDetalleV212" class="clima-detalle-v212"><summary><span aria-hidden="true">☀</span> El tiempo para salir <span class="clima-flecha-v212" aria-hidden="true">⌄</span></summary><div id="tiempoEsquinas" class="tiempo-detalle-v212" aria-label="Tiempo para salir">
 <div class="tiempo-esquina tiempo-esquina-tl"><span id="tiempoIcono">🌤️</span><small id="tiempoDescripcion">Consultando…</small></div>
 <div class="tiempo-esquina tiempo-esquina-tr"><span class="tiempo-ropa-icono">🧥</span><small id="tiempoConsejo">Preparando…</small></div>
 <div class="tiempo-esquina tiempo-esquina-bl"><strong id="tiempoTemperatura">--°</strong><small id="tiempoLugar">Arteixo</small></div>
@@ -319,7 +319,7 @@
             <p class="intro-pantalla">
                 Añade el tiempo que has dedicado a una actividad.
             </p>
-            <form id="formRegistro" class="registro-v203">
+            <div id="avisoBorradorV212" class="borrador-v212" hidden><span role="status" id="textoBorradorV212"></span><button id="descartarBorradorV212" type="button">Descartar</button></div><form id="formRegistro" class="registro-v203">
                 <div id="planRegistroV203" class="plan-registro-v203" hidden><p id="planTextoV203"></p><button type="button" id="usarPlanV203" class="boton-secundario">Usar salida planificada</button><p class="ayuda-v203">Añade después el tiempo que realmente has dedicado.</p></div>
 <!-- ACTIVIDAD -->
                 <div class="grupo-formulario grupo-actividad">
@@ -454,7 +454,7 @@
                         0 registros
                     </span>
                 </div>
-                <div class="filtros-historial">
+                <div class="buscar-historial-v212"><label for="buscarHistorialV212" class="titulo-campo">Buscar en Historial</label><input id="buscarHistorialV212" class="campo" type="search" placeholder="Acompañante, nota o actividad" autocomplete="off"></div><div class="filtros-historial">
                     <button class="filtro-historial activo" data-filtro="todos" type="button">
                         Todos
                     </button>
@@ -500,7 +500,7 @@
                     <span id="semanaVisualTotalV193">0 h</span>
                 </div>
                 <div id="semanaVisualDiasV193" class="v193-semana-dias" aria-label="Resumen visual de esta semana"></div>
-                <p id="comparacionSemanalV139" class="semana-comparacion-v211" aria-live="polite"></p>
+                <p id="comparacionSemanalV139" class="semana-comparacion-v212" aria-live="polite"></p>
             </section>
 
 
@@ -514,7 +514,7 @@
                     </div>
                     <div class="v143-rm-nav">
                         <button type="button" onclick="cambiarMesResumenV143(-1)" aria-label="Mes anterior">‹</button>
-                        <label class="mes-selector-v211"><span aria-hidden="true">▦</span><input id="mesResumenV143" type="month" aria-label="Elegir mes"></label>
+                        <label class="mes-selector-v212"><span aria-hidden="true">▦</span><input id="mesResumenV143" type="month" aria-label="Elegir mes"></label>
                         <button type="button" onclick="cambiarMesResumenV143(1)" aria-label="Mes siguiente">›</button>
                     </div>
                 </div>
@@ -529,7 +529,7 @@
             </article>
             </section>
 
-            <details id="metaDetalleV211" class="stats-accordion-v183"><summary><span class="stats-accordion-icono-v183">◎</span><span>Meta anual</span><span class="stats-accordion-flecha-v183">›</span></summary><div class="stats-accordion-cuerpo-v183"><div id="vista-meta" class="meta-integrada-v211">
+            <details id="metaDetalleV212" class="stats-accordion-v183"><summary><span class="stats-accordion-icono-v183">◎</span><span>Meta anual</span><span class="stats-accordion-flecha-v183">›</span></summary><div class="stats-accordion-cuerpo-v183"><div id="vista-meta" class="meta-integrada-v212">
             <section class="seccion meta-web meta-v152">
   <article class="tarjeta meta-principal meta-v152-anio">
     <div class="meta-v152-top">
@@ -704,7 +704,7 @@
                         <p class="mini-estadistica-etiqueta">
                             Cursos bíblicos
                         </p>
-                        <small class="cursos-nota-v211">Máximo indicado en el periodo</small>
+                        <small class="cursos-nota-v212">Máximo indicado en el periodo</small>
                     </article>
                 </div>
             </section>
@@ -770,7 +770,7 @@
              AJUSTES
         ================================================== -->
         <section id="vista-ajustes" class="vista">
-            <button id="volverAjustesV211" type="button" class="boton-secundario volver-ajustes-v211">‹ Volver</button><section class="seccion">
+            <button id="volverAjustesV212" type="button" class="boton-secundario volver-ajustes-v212">‹ Volver</button><section class="seccion">
                 <div class="titulo-seccion">
                     <h2>
                         Ajustes
@@ -959,20 +959,20 @@
     if (standalone) document.body.classList.add('modo-standalone');
 })();
 </script>
-<script type="module" src="./config-v211.js"></script>
-<script type="module" src="./storage-v211.js"></script>
-<script src="./historial-render-v211.js" defer></script>
-<script src="./historial-edicion-v211.js" defer></script>
-<script src="./estadisticas-render-v211.js" defer></script>
-<script src="./registrar-v211.js" defer></script>
-<script src="./planificacion-v211.js" defer></script>
-<script src="./app-v211.js" defer></script>
-<script src="./eventos-calendario-v211.js" defer></script>
-<script src="./visual-v211.js" defer></script>
-<script src="./mejoras-v211.js" defer></script>
-<script src="./registrar-ui-v211.js" defer></script>
+<script type="module" src="./config-v212.js"></script>
+<script type="module" src="./storage-v212.js"></script>
+<script src="./historial-render-v212.js" defer></script>
+<script src="./historial-edicion-v212.js" defer></script>
+<script src="./estadisticas-render-v212.js" defer></script>
+<script src="./registrar-v212.js" defer></script>
+<script src="./planificacion-v212.js" defer></script>
+<script src="./app-v212.js" defer></script>
+<script src="./eventos-calendario-v212.js" defer></script>
+<script src="./visual-v212.js" defer></script>
+<script src="./mejoras-v212.js" defer></script>
+<script src="./registrar-ui-v212.js" defer></script>
 
-<script src="./simple-v211.js" defer></script><script id="swRegistroV189">
+<script src="./simple-v212.js" defer></script><script id="swRegistroV189">
 if ("serviceWorker" in navigator) {
   let registroApp;
   const teniaControlador=Boolean(navigator.serviceWorker.controller);
@@ -997,10 +997,10 @@ if ("serviceWorker" in navigator) {
 </script>
 
 
-<script type="module" src="./tiempo-v211.js"></script>
-<script type="module" src="./legacy-bridge-v211.js"></script>
-<script type="module" src="./historial-v211.js"></script>
-<script type="module" src="./estadisticas-v211.js"></script>
+<script type="module" src="./tiempo-v212.js"></script>
+<script type="module" src="./legacy-bridge-v212.js"></script>
+<script type="module" src="./historial-v212.js"></script>
+<script type="module" src="./estadisticas-v212.js"></script>
 
 <script id="ajustesAcordeonV179">
 document.addEventListener("DOMContentLoaded", () => {
@@ -1076,7 +1076,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
-</article></section><section class="seccion" data-sin-acordeon="1" id="oneDriveSeccionV211"><div class="onedrive-panel" id="onedrivePanel">
+</article></section><section class="seccion" data-sin-acordeon="1" id="oneDriveSeccionV212"><div class="onedrive-panel" id="onedrivePanel">
                         <div class="onedrive-cabecera">
                             <div>
                                 <strong>☁️ OneDrive</strong>
@@ -1090,7 +1090,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <button id="desconectarOneDrive" class="boton-secundario" type="button" hidden>Desconectar OneDrive</button>
                         <p id="ultimaSyncOneDrive" class="onedrive-ultima-sync" hidden></p>
                     </div>
-                    </section><details class="ajustes-acordeon-v179" id="sincronizacionDetalleV211"><summary><span class="ajustes-acordeon-icono">↻</span><span class="ajustes-acordeon-titulo">Sincronización y copias</span><span class="ajustes-acordeon-flecha">›</span></summary><div class="ajustes-acordeon-cuerpo"><section class="seccion" id="seccionCalendarioAppleV173">
+                    </section><details class="ajustes-acordeon-v179" id="sincronizacionDetalleV212"><summary><span class="ajustes-acordeon-icono">↻</span><span class="ajustes-acordeon-titulo">Sincronización y copias</span><span class="ajustes-acordeon-flecha">›</span></summary><div class="ajustes-acordeon-cuerpo"><section class="seccion" id="seccionCalendarioAppleV173">
                 <div class="titulo-seccion">
                     <h2>Calendario Apple</h2>
                 </div>
