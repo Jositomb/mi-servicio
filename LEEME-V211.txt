@@ -1,0 +1,11 @@
+Mi Servicio V211
+
+Sube todos los archivos a la raíz, reemplazando los existentes. No borres los antiguos.
+
+Novedades:
+- Hasta cuatro acompañantes recientes dentro de Detalles opcionales.
+- Repetir desde Historial: prepara la actividad para hoy; guardar sigue siendo manual. Si hay un borrador, pide confirmación antes de sustituirlo.
+- Recuerda la última actividad elegida en este dispositivo. Si se oculta en Ajustes, usa Ministerio.
+- Botones de duración y acciones de Historial adaptados a pantallas pequeñas.
+
+Se mantienen los datos, OneDrive, los desplegables y las cuatro pestañas.
