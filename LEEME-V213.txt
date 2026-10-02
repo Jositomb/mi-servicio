@@ -1,0 +1,10 @@
+Mi Servicio V213
+
+Sube todos los archivos a la raíz, reemplazando los existentes. No hace falta borrar los antiguos.
+
+- Compartir el mes seleccionado: total, actividades con horas, días activos y cursos bíblicos (máximo indicado en ese mes, sin sumar repetidos). Sin nombres de acompañantes ni notas.
+- Compartir abre el menú del dispositivo. Si no está disponible, copia el texto; si no puede, ofrece selección manual.
+- Calendario: Planificar/Cambiar plan y Registrar este día al elegir una fecha.
+- Registrar: distingue salidas previstas aún sin registro de la misma actividad. Usar plan conserva el tiempo real introducido.
+
+Se mantienen datos, borradores, OneDrive y todas las mejoras anteriores.
