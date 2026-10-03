@@ -1,0 +1,8 @@
+Mi Servicio V217
+
+Sube todos los archivos a la raíz, reemplazando los existentes. No necesitas borrar los antiguos.
+
+- Toca el nombre del mes en el calendario de Inicio para elegir mes y año directamente. Conserva las flechas y Mes actual.
+- Historial separado por meses con total de horas. Los totales corresponden a los registros mostrados, respetando búsqueda y filtros.
+
+Mantiene datos y todas las mejoras anteriores.
