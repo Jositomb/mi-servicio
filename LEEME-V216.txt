@@ -1,0 +1,11 @@
+Mi Servicio V216
+
+Sube todos los archivos a la raíz, reemplazando los existentes. No necesitas borrar los antiguos.
+
+Calendario de Inicio:
+- Flechas para ver meses anteriores y futuros, también entre años.
+- Mes actual para volver al presente.
+- Cada mes muestra sus registros y planificación; toca un día para consultar el detalle o planificar.
+- El mes elegido se conserva mientras usas la aplicación, también tras refrescar datos. Al abrirla de nuevo parte del mes actual.
+
+Conserva todas las mejoras anteriores y los datos.
