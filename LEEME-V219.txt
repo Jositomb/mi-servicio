@@ -1,0 +1,12 @@
+Mi Servicio V219
+
+Sube todos los archivos a la raíz, reemplazando los existentes. No necesitas borrar los antiguos.
+
+Pulido visual:
+- Cifras de ancho regular y mayor protagonismo, con tamaños conservados.
+- Etiquetas más legibles en claro y oscuro.
+- Bordes y sombras suaves en tarjetas principales.
+- Respuesta de botones y desplegables al tocar.
+- Alineación de cabeceras y cifras.
+
+Conserva distribución, datos y todas las funciones anteriores. Respeta Reducir movimiento.
