@@ -1,0 +1,7 @@
+Mi Servicio V220 — Calendario visual
+
+Sube todos los archivos a la raíz de GitHub, reemplazando los existentes. No hace falta borrar los antiguos.
+
+Mes compacto, puntos de color por actividad, fecha seleccionada y eventos completos debajo. Vista Agenda para consultar eventos, planes y registros del mes. Navegación y selector de mes conservados. Corregidas las marcas de eventos Apple al navegar a otros meses.
+
+No cambia registros, cálculos ni configuración de sincronización.
