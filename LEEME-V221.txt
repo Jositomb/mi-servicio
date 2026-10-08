@@ -1,0 +1,7 @@
+Mi Servicio V221 — Mes con etiquetas
+
+Sube todos los archivos a la raíz, reemplazando los existentes. No hace falta borrar los antiguos.
+
+Vista Mes inspirada en Apple: etiquetas con nombres de eventos, tiempos por actividad y salidas previstas. Separación entre semanas, hoy en rojo y fecha seleccionada en azul. Hasta tres etiquetas y un contador de las restantes; al tocar un día se ven todas. Se conserva la vista Agenda.
+
+No modifica tus datos ni la configuración del calendario Apple.
