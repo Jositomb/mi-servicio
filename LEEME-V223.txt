@@ -1,0 +1,11 @@
+Mi Servicio V223 · Camino con profundidad
+
+CAMBIOS
+- Línea de progreso con superficie suave, luz y sombra para dar relieve.
+- Sin estrellas de eventos genéricos en el recorrido. Sus detalles siguen en el calendario.
+- Conserva personaje, pendientes, bandera y marcadores de eventos específicos.
+
+INSTALACIÓN
+Descomprime el ZIP y sube todos los archivos directamente a la raíz del repositorio, sustituyendo los existentes. No necesitas crear carpetas ni borrar archivos antiguos. Espera a que GitHub Pages termine de publicar y abre la aplicación.
+
+Tus registros, preferencias, objetivos y configuración de sincronización se conservan.
