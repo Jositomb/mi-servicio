@@ -1,0 +1,5 @@
+Mi Servicio V224 · Detalle del día emergente
+
+Toca un día en Mes o una fecha en Agenda para ver horas, registros, notas, acompañantes, planificación y eventos en una tarjeta emergente. Cierra con ×, tocando fuera o con Escape. El calendario conserva su mes y posición. Los botones mantienen sus funciones de registrar, planificar y editar.
+
+Sube todos los archivos a la raíz, reemplazando los existentes. No hace falta crear carpetas ni borrar los archivos antiguos. No cambia tus datos ni la sincronización.
