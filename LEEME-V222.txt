@@ -1,7 +1,0 @@
-Mi Servicio V222 — Horas junto al día
-
-Sube todos los archivos a la raíz, reemplazando los existentes. No hace falta borrar los antiguos.
-
-El calendario muestra el total de tiempo registrado junto al número del día. Horas y minutos en una etiqueta azul; los días sin tiempo registrado permanecen limpios. Solo suma actividades visibles, sin añadir tiempo previsto ni eventos personales. Se conservan las etiquetas de eventos, el detalle completo y la vista Agenda.
-
-No cambia registros ni configuración de sincronización.
