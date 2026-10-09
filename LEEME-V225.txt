@@ -1,5 +1,0 @@
-Mi Servicio V225 · Historial más compacto
-
-En móvil, tarjetas con menos espacio interior, fechas breves y tres acciones con iconos: repetir, editar y borrar. Todos los botones conservan un área de 44 px. Las notas y acompañantes siguen visibles y disponen de más ancho. Mantiene los meses desplegables, los colores y el calendario emergente de V224.
-
-Sube todos los archivos a la raíz, reemplazando los existentes. No hace falta borrar los antiguos ni crear carpetas. Los datos y la sincronización no cambian.
