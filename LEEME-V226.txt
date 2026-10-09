@@ -1,0 +1,5 @@
+Mi Servicio V226 · Acompañantes con acciones al lado
+
+Los registros con acompañante conservan los botones de repetir, editar y borrar en el lateral, igual que los demás. Los nombres largos se ajustan en varias líneas sin ocultarse. Las notas conservan el espacio de lectura de V225.
+
+Sube todos los archivos a la raíz, reemplazando los existentes. No hace falta borrar los antiguos ni crear carpetas. Conserva el calendario emergente y todas las mejoras anteriores. No modifica datos ni sincronización.
