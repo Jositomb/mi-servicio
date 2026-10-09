@@ -1,0 +1,5 @@
+Mi Servicio V227 · Historial uniforme en ambos iPhone
+
+Corrige una regla antigua para pantallas de hasta 420 px que apilaba los botones y hacía las tarjetas demasiado altas. En móvil, repetir, editar y borrar permanecen en horizontal y conservan 44 px de área táctil. La información se adapta al ancho disponible y los nombres largos pueden ocupar varias líneas.
+
+Sube todos los archivos a la raíz, reemplazando los existentes. No hace falta borrar los antiguos. Conserva tus datos, sincronización y mejoras anteriores.
