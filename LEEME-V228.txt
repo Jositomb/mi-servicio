@@ -1,0 +1,5 @@
+Mi Servicio V228 · Elige tu gráfico de Inicio
+
+Ajustes > Apariencia > Gráfico de Inicio: Burbujas 3D (estilo inicial), Anillos, Donut o Barras. Vista previa y guardado inmediato en este dispositivo. Todas las vistas muestran las mismas horas, colores y porcentajes del total visible; solo aparecen actividades con tiempo. No son porcentajes de objetivos. Si no hay actividad, se muestra un estado vacío.
+
+Sube todos los archivos a la raíz, sustituyendo los existentes. No hace falta borrar los antiguos. No cambia registros, objetivos ni sincronización.
