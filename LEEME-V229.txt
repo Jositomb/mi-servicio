@@ -1,0 +1,5 @@
+Mi Servicio V229 · Corazones para Martita
+
+Nuevo estilo Corazones en Ajustes > Apariencia > Gráfico de Inicio. Globos con forma de corazón, relieve y colores de cada actividad. Cada corazón muestra nombre, horas y porcentaje del total; solo aparecen actividades con tiempo. Conserva Burbujas 3D, Anillos, Donut y Barras. La elección se guarda en este dispositivo.
+
+Sube todos los archivos a la raíz, reemplazando los existentes. No hace falta borrar los antiguos. No cambia registros, objetivos ni sincronización.
