@@ -1,0 +1,5 @@
+Mi Servicio V230 · Corazones vivos
+
+Los globos de corazón se balancean suavemente, cada uno a un ritmo distinto. Las actividades con más horas tienen corazones más grandes, con un tamaño mínimo para leer las cifras. Con horas iguales, el tamaño es igual. Respeta Reducir movimiento del dispositivo.
+
+Sube todos los archivos a la raíz, reemplazando los existentes. No hace falta borrar los antiguos. Conserva datos y mejoras anteriores.
