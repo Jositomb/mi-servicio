@@ -1,0 +1,5 @@
+Mi Servicio V231 · Corazones en círculo
+
+Los corazones forman una órbita alrededor del total mensual. Conservan tamaños según horas y balanceo suave. El reparto se adapta a una, dos, tres o cuatro actividades. Mantiene el selector de estilos en Apariencia y respeta Reducir movimiento.
+
+Sube todos los archivos a la raíz, reemplazando los existentes. No hace falta borrar los antiguos. Conserva tus datos y todas las mejoras anteriores.
