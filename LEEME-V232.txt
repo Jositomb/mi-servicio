@@ -1,0 +1,5 @@
+Mi Servicio V232 · Elige tu camino
+
+Ajustes > Apariencia > Camino de progreso: Sendero suave, Camino de luz, Pasarela 3D o Sendero natural. Vista previa y guardado inmediato en este dispositivo. El recorrido permanece horizontal en todos los estados; el tramo azul marca el avance mensual y el personaje mantiene su posición según el porcentaje. Los eventos se sitúan debajo.
+
+Sube todos los archivos a la raíz, reemplazando los existentes. No hace falta borrar archivos antiguos. No modifica datos, objetivos ni sincronización.
