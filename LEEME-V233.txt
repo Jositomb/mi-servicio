@@ -1,0 +1,8 @@
+Mi Servicio V233 · Más práctica y cuidada
+
+- Inicio: globos más protagonistas, sin el encogimiento anterior, con menos márgenes; corazones en una órbita más compacta. No añade información.
+- Historial: editar y volver al mismo registro y posición, con un resaltado breve al guardar. Cancelar también conserva la posición.
+- Formularios: mensajes junto al campo incorrecto; se retiran al corregir. Refuerza el guardado del borrador al salir o pasar la app a segundo plano.
+- Respuesta visual al tocar, acción Guardar más clara y estado ocupado accesible al sincronizar el calendario.
+
+Sube todos los archivos a la raíz, reemplazando los existentes. No hace falta borrar los antiguos. Conserva datos, sincronización y mejoras anteriores.
