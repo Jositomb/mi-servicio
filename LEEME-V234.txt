@@ -1,5 +1,0 @@
-Mi Servicio V234 · El tiempo detrás de tus globos
-
-Fondo meteorológico en Inicio con sol y rayos, nubes suaves o gotas de lluvia. También distingue noche despejada, niebla y nieve. Utiliza la localidad y los datos meteorológicos que ya consulta la app, sin añadir otra consulta. Si no hay datos válidos, no muestra una escena inventada. Se puede desactivar en Ajustes > Apariencia > Fondo según el tiempo. Respeta Reducir movimiento.
-
-Sube todos los archivos a la raíz, reemplazando los existentes. No hace falta borrar los antiguos. No cambia registros, objetivos ni sincronización.
