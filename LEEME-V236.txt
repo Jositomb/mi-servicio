@@ -1,7 +1,0 @@
-Mi Servicio V236 · Tu actividad cobra vida
-
-- Al tocar un globo o corazón, su color acompaña la entrada al Historial con un brillo breve.
-- Después de guardar una actividad del mes, al volver a Inicio crece suavemente el globo o corazón correspondiente y el personaje avanza desde la posición anterior. Mantiene siempre las cifras reales. Otros estilos reciben un fundido breve. Respeta Reducir movimiento.
-- Durante 10 segundos después de editar aparece Deshacer. Solo restaura ese registro si no se ha vuelto a modificar o borrar. Si falla el guardado, conserva la edición. La restauración queda pendiente de sincronizar.
-
-Sube todos los archivos a la raíz, reemplazando los existentes. No hace falta borrar los antiguos. Incluye todas las mejoras anteriores.
