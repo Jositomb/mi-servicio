@@ -1,8 +1,0 @@
-Mi Servicio V235 · Menos pulsaciones
-
-- Toca un globo o corazón para consultar los registros de esa actividad del mes actual. El Historial identifica el filtro y permite Ver todos. Funciona también con teclado.
-- Registrar sugiere el acompañante planificado para esa fecha y actividad cuando el campo está vacío. Se aplica al tocar, sin sustituir texto escrito ni añadir horas.
-- Busca personas, actividades y eventos en el calendario de todos los meses disponibles. Toca un resultado para abrir ese día.
-- Hoy en Historial limpia los filtros y vuelve a los registros de hoy, o al más reciente si hoy no hay registros.
-
-Sube todos los archivos a la raíz, reemplazando los existentes. No hace falta borrar los antiguos. Conserva datos y mejoras anteriores.
