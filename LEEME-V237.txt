@@ -1,0 +1,5 @@
+Mi Servicio V237 · El tiempo con más color
+
+El fondo meteorológico tiene más presencia en modo claro y oscuro: nubes blancas azuladas con volumen, sol dorado y rayos más visibles, lluvia azul, luna luminosa y nieve clara. Conserva las animaciones suaves y las cifras delante del fondo. Mantiene el interruptor de Apariencia y Reducir movimiento.
+
+Sube todos los archivos a la raíz, reemplazando los existentes. No hace falta borrar los antiguos. No cambia datos, objetivos ni sincronización.
