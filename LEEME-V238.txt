@@ -1,8 +1,0 @@
-Mi Servicio V238 · Inicio con más profundidad
-
-- Progreso mensual muestra el porcentaje sin repetir el total de horas. Conserva barra, hitos y camino. El total sigue en el gráfico.
-- Cielo con degradados suaves según el tiempo y nubes en distintos planos.
-- Globos con reflejos, sombra y flotación discreta independiente; total con efecto cristal y texto de alto contraste.
-- Entrada breve sin retrasar los controles. Respeta Reducir movimiento y pausa las animaciones fuera de Inicio. Conserva los colores por actividad.
-
-Sube todos los archivos a la raíz, reemplazando los existentes. No hace falta borrar los antiguos. No cambia registros, objetivos ni sincronización.
