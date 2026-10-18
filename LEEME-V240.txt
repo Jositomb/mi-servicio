@@ -1,0 +1,5 @@
+Mi Servicio V240 · Quesitos 3D
+
+Nuevo estilo en Ajustes > Apariencia > Gráfico de Inicio > Quesitos 3D. Inspirado en tu imagen, con piezas escalonadas y relieve: actividad y horas en cada pieza, sin porcentajes, y un quesito claro delante con el total mensual. Los tamaños se ajustan a las horas con un mínimo legible. El total es un resumen, no una actividad adicional. Solo aparecen actividades con tiempo. Toca una pieza de actividad para ver sus registros del mes.
+
+Sube todos los archivos a la raíz, reemplazando los existentes. No hace falta borrar los antiguos. No cambia registros, objetivos ni sincronización y conserva todas las mejoras anteriores.
