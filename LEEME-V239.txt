@@ -1,0 +1,5 @@
+Mi Servicio V239 · Arcos 3D
+
+Nuevo estilo en Ajustes > Apariencia > Gráfico de Inicio > Arcos 3D. Inspirado en tu referencia: total a la izquierda, arcos concéntricos con relieve y llamadas laterales con actividad, horas y porcentaje. La longitud de cada arco representa su parte del tiempo total sobre una escala de 260 grados, sin modificar datos ni objetivos. Solo muestra actividades con tiempo. Las llamadas se pueden pulsar para consultar los registros del mes. Incluye vista previa y estado vacío.
+
+Sube todos los archivos a la raíz, reemplazando los existentes. No hace falta borrar los antiguos. Mantiene todos los estilos y mejoras anteriores.
