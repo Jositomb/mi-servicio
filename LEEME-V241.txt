@@ -1,0 +1,5 @@
+Mi Servicio V241 · Tres ambientes completos
+
+Ajustes > Apariencia > Ambiente de la aplicación: Esencial, Cristal o Cielo vivo. Cada uno coordina fondos, tarjetas, sombras y movimiento. Incluye vistas previas y guardado inmediato en este dispositivo. Cristal es el ambiente inicial. Esencial reduce el movimiento decorativo; Cielo vivo refuerza el fondo meteorológico cuando está activado. Respeta Reducir movimiento y conserva el gráfico, el camino y los colores de actividad elegidos.
+
+Sube todos los archivos a la raíz, reemplazando los existentes. No hace falta borrar los antiguos. No modifica registros, objetivos ni sincronización y conserva todas las mejoras anteriores.
