@@ -1,0 +1,5 @@
+Mi Servicio V242 · Firma de color
+
+Ajustes > Apariencia > Firma de color: Azul océano, Verde salvia, Lavanda, Rosa suave o Ámbar. Cambia controles, botones principales, pestaña activa y reflejos suaves, sin alterar los colores de Ministerio, LDC, Asambleas y Otras en los gráficos. Incluye muestras y guardado inmediato en cada dispositivo. Se combina con cualquier ambiente, gráfico y camino. Los controles ajustan su contraste al modo claro u oscuro.
+
+Sube todos los archivos a la raíz, reemplazando los existentes. No hace falta borrar los antiguos. No cambia registros, objetivos ni sincronización.
