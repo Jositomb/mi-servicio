@@ -1,0 +1,13 @@
+MI SERVICIO · V243
+
+NUEVO: ACABADO DEL GRÁFICO
+En Ajustes → Apariencia → Acabado del gráfico elige Clásico o Cristal.
+Clásico conserva el acabado habitual.
+Cristal incorpora reflejos suaves en globos y corazones, relieve satinado en anillos y quesitos, barras con volumen y el total con acabado perlado.
+Se combina con cualquier gráfico, ambiente y firma de color. La elección queda guardada en este dispositivo.
+La entrada de Inicio es breve y respeta Reducir movimiento y el ambiente Esencial.
+
+INSTALACIÓN
+Descomprime el ZIP y sube todos sus archivos a la raíz de tu repositorio, reemplazando los existentes. No hace falta crear carpetas ni borrar archivos antiguos.
+Espera a que GitHub Pages termine de publicar. Cuando la aplicación avise de la actualización, pulsa para abrir la nueva versión.
+Se conservan registros, preferencias y calendario.
