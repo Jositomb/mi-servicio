@@ -1,0 +1,17 @@
+MI SERVICIO · V246
+
+NUEVO: MÁS VOLUMEN EN CRISTAL
+Actívalo en Ajustes → Apariencia → Acabado del gráfico → Cristal.
+Globos: superficie esférica con luz concentrada, sombreado gradual y reflejo en el borde inferior.
+Corazones: superficie curva con luz radial y sombra propia, respetando su color y tamaño.
+Anillos y donut: sección tubular con brillo y sombra en el grosor, y canto inferior más profundo.
+Arcos: superficie tubular y sombra de apoyo.
+Quesitos: paredes laterales geométricas de 20 px y total delantero de 22 px, con caras iluminadas y bordes biselados.
+Barras: superficie redondeada con luz superior y sombra inferior.
+Se combina con todos los ambientes, incluida Escena de autor. Se mantienen Clásico, los datos, las proporciones y los accesos al Historial.
+Los materiales son SVG y CSS locales, sin imágenes descargadas ni peticiones de red adicionales. No añaden animaciones continuas y se conserva Reducir movimiento.
+
+INSTALACIÓN
+Descomprime el ZIP y sube todos sus archivos a la raíz del repositorio, reemplazando los existentes. No hace falta crear carpetas ni borrar archivos antiguos.
+Espera a que GitHub Pages termine de publicar y acepta el aviso de actualización.
+Se conservan registros, calendario, objetivos y preferencias.
