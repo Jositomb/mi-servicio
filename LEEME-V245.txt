@@ -1,0 +1,15 @@
+MI SERVICIO · V245
+
+NUEVO: ESCENA DE AUTOR
+Actívala en Ajustes → Apariencia → Ambientes visuales → Escena de autor.
+Incluye iluminación desde la zona del sol o la luna, sombras coordinadas y una base de cristal con reflejos de las actividades que tengan horas.
+Los globos y corazones se distribuyen alrededor del total según el espacio disponible y mantienen tamaños proporcionales dentro de una escala legible.
+El cielo conserva sus planos de profundidad, siempre detrás de las cifras.
+Al pulsar una actividad se eleva e ilumina brevemente y se abren los mismos registros, sin esperas añadidas. Reducir movimiento desactiva este efecto.
+Se mantienen Escena 3D y todos los ambientes, gráficos, acabados y firmas anteriores. Puedes combinarlos y cambiar cuando quieras; se guarda en este dispositivo.
+Se usan los datos del tiempo existentes. Sin datos meteorológicos se muestra el ambiente neutro y se respeta el interruptor del fondo meteorológico.
+
+INSTALACIÓN
+Descomprime el ZIP y sube todos sus archivos a la raíz del repositorio, reemplazando los existentes. No hace falta crear carpetas ni borrar archivos antiguos.
+Espera a que GitHub Pages termine de publicar y acepta el aviso de actualización.
+Se conservan registros, calendario, objetivos y preferencias.
