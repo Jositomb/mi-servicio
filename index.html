@@ -15,7 +15,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Mi Servicio">
-    <link rel="stylesheet" href="./styles-v246.css">
+    <link rel="stylesheet" href="./styles-v247.css">
 
 
 <style id="v91-layout-final">
@@ -104,13 +104,14 @@
 }
 </style>
 
-    <meta name="mi-servicio-version" content="V246">
-<meta name="mi-servicio-build" content="V246-24601">
+    <meta name="mi-servicio-version" content="V247">
+<meta name="mi-servicio-build" content="V247-24701">
 </head>
-<body data-acabado="clasico" data-mi-servicio-version="V246" data-ambiente="cristal" data-firma="oceano">
+<body data-acabado="clasico" data-mi-servicio-version="V247" data-ambiente="cristal" data-firma="oceano">
+<script>(function(){try{if(localStorage.getItem("miServicio.inicioMetalAplicado")!=="si"){localStorage.setItem("miServicio.ambienteVisual","metal");localStorage.setItem("miServicio.acabadoGrafico","cristal");localStorage.setItem("miServicio.inicioMetalAplicado","si");}}catch(e){document.body.dataset.ambiente="metal";document.body.dataset.acabado="cristal";}})();</script>
 <script>(function(){try{document.body.dataset.acabado=localStorage.getItem("miServicio.acabadoGrafico")==="cristal"?"cristal":"clasico";}catch(e){}})();</script>
 <script>(function(){try{const firmas={"oceano":{"nombre":"Azul océano","base":"#2864d7","luz":"#80b3ff","rgb":"40,100,215"},"salvia":{"nombre":"Verde salvia","base":"#357451","luz":"#8dccaa","rgb":"53,116,81"},"lavanda":{"nombre":"Lavanda","base":"#7752b9","luz":"#c2a8f3","rgb":"119,82,185"},"rosa":{"nombre":"Rosa suave","base":"#b64c79","luz":"#efa7c7","rgb":"182,76,121"},"ambar":{"nombre":"Ámbar","base":"#9a651b","luz":"#f1c47d","rgb":"154,101,27"}};const id=localStorage.getItem("miServicio.firmaColor");const clave=Object.hasOwn(firmas,id)?id:"oceano";const f=firmas[clave];document.body.dataset.firma=clave;document.body.style.setProperty("--firma-base",f.base);document.body.style.setProperty("--firma-luz",f.luz);document.body.style.setProperty("--firma-rgb",f.rgb);}catch(e){}})();</script>
-<script>(function(){try{const a=localStorage.getItem("miServicio.ambienteVisual");if(["esencial","cristal","cielo","escena","autor"].includes(a))document.body.dataset.ambiente=a;}catch(e){}})();</script>
+<script>(function(){try{const a=localStorage.getItem("miServicio.ambienteVisual");if(["esencial","cristal","cielo","escena","autor","metal"].includes(a))document.body.dataset.ambiente=a;}catch(e){}})();</script>
     <div id="cargaV201" hidden role="status" aria-live="polite">
       <img src="./icon-apple.png" width="48" height="48" alt="">
       <strong>Mi Servicio</strong><span class="carga-puntos-v201" aria-hidden="true">•••</span>
@@ -145,7 +146,7 @@
                 <span class="estado-conexion-punto-v190"></span>
                 <span id="estadoConexionTextoV190">Local</span>
             </div>
-            <button class="avatar" type="button" id="abrirAjustesV246" aria-label="Abrir ajustes" title="Ajustes" aria-controls="vista-ajustes">
+            <button class="avatar" type="button" id="abrirAjustesV247" aria-label="Abrir ajustes" title="Ajustes" aria-controls="vista-ajustes">
                 MS
             </button>
         </div>
@@ -193,21 +194,21 @@
                 <div id="panelCalendarioInicio" class="panel-calendario-inicio oculto">
                     <article class="tarjeta tarjeta-calendario-inicio">
                         <div class="calendario-cabecera">
-                            <div><p class="etiqueta">Actividad del mes</p><div class="calendario-mes-selector-v246"><h3 id="tituloCalendarioInicio" aria-live="polite">Mes actual</h3><input id="elegirMesCalendarioV246" type="month" aria-label="Elegir mes y año del calendario"></div></div>
+                            <div><p class="etiqueta">Actividad del mes</p><div class="calendario-mes-selector-v247"><h3 id="tituloCalendarioInicio" aria-live="polite">Mes actual</h3><input id="elegirMesCalendarioV247" type="month" aria-label="Elegir mes y año del calendario"></div></div>
                             <span id="resumenCalendarioInicio" class="calendario-resumen"></span>
                         </div>
-                        <div class="calendario-nav-v246" role="group" aria-label="Navegar entre meses"><button id="mesAnteriorCalendarioV246" type="button" aria-label="Mes anterior">‹</button><button id="mesActualCalendarioV246" type="button">Mes actual</button><button id="mesSiguienteCalendarioV246" type="button" aria-label="Mes siguiente">›</button></div><div class="calendario-vistas-v246" role="group" aria-label="Vista del calendario"><button id="vistaMesCalendarioV246" type="button" aria-pressed="true">Mes</button><button id="vistaAgendaCalendarioV246" type="button" aria-pressed="false">Agenda</button></div><div class="calendario-semana" aria-hidden="true"><span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
-                        <div class="buscar-calendario-v246"><label for="buscarCalendarioV246" class="titulo-campo">Buscar en el calendario</label><input id="buscarCalendarioV246" class="campo" type="search" placeholder="Persona, actividad o evento" autocomplete="off"><div id="resultadosCalendarioV246" hidden></div></div>
+                        <div class="calendario-nav-v247" role="group" aria-label="Navegar entre meses"><button id="mesAnteriorCalendarioV247" type="button" aria-label="Mes anterior">‹</button><button id="mesActualCalendarioV247" type="button">Mes actual</button><button id="mesSiguienteCalendarioV247" type="button" aria-label="Mes siguiente">›</button></div><div class="calendario-vistas-v247" role="group" aria-label="Vista del calendario"><button id="vistaMesCalendarioV247" type="button" aria-pressed="true">Mes</button><button id="vistaAgendaCalendarioV247" type="button" aria-pressed="false">Agenda</button></div><div class="calendario-semana" aria-hidden="true"><span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
+                        <div class="buscar-calendario-v247"><label for="buscarCalendarioV247" class="titulo-campo">Buscar en el calendario</label><input id="buscarCalendarioV247" class="campo" type="search" placeholder="Persona, actividad o evento" autocomplete="off"><div id="resultadosCalendarioV247" hidden></div></div>
                         <div id="calendarioInicio" class="calendario-mes" aria-label="Calendario de actividad del mes"></div>
-                        <div id="agendaMesCalendarioV246" hidden></div><div id="detalleDiaCalendario" class="detalle-dia-calendario oculto" aria-live="polite"></div>
+                        <div id="agendaMesCalendarioV247" hidden></div><div id="detalleDiaCalendario" class="detalle-dia-calendario oculto" aria-live="polite"></div>
                         <div class="leyenda-calendario-v195" aria-label="Leyenda del calendario">
-                            <span><i class="marca-cal-v246 marca-ministerio"></i> Ministerio</span>
-                            <span><i class="marca-cal-v246 marca-ldc"></i> LDC</span>
-                            <span><i class="marca-cal-v246 marca-asambleas"></i> Asamblea</span>
-                            <span><i class="marca-cal-v246 marca-otras"></i> Otras</span>
-                            <span><i class="marca-cal-v246 marca-evento"></i> Evento</span>
+                            <span><i class="marca-cal-v247 marca-ministerio"></i> Ministerio</span>
+                            <span><i class="marca-cal-v247 marca-ldc"></i> LDC</span>
+                            <span><i class="marca-cal-v247 marca-asambleas"></i> Asamblea</span>
+                            <span><i class="marca-cal-v247 marca-otras"></i> Otras</span>
+                            <span><i class="marca-cal-v247 marca-evento"></i> Evento</span>
                         </div>
-                    <p class="leyenda-estados-v246">○ Prevista · Tiempo registrado por actividad</p></article>
+                    <p class="leyenda-estados-v247">○ Prevista · Tiempo registrado por actividad</p></article>
                 </div>
             </section>
             <!-- RECORDATORIO DE COPIA DE SEGURIDAD -->
@@ -292,7 +293,7 @@
             </section>
 
             <!-- FRASE DE ÁNIMO DINÁMICA -->
-            <details id="climaDetalleV246" class="clima-detalle-v246"><summary><span aria-hidden="true">☀</span> El tiempo para salir <span class="clima-flecha-v246" aria-hidden="true">⌄</span></summary><div id="tiempoEsquinas" class="tiempo-detalle-v246" aria-label="Tiempo para salir">
+            <details id="climaDetalleV247" class="clima-detalle-v247"><summary><span aria-hidden="true">☀</span> El tiempo para salir <span class="clima-flecha-v247" aria-hidden="true">⌄</span></summary><div id="tiempoEsquinas" class="tiempo-detalle-v247" aria-label="Tiempo para salir">
 <div class="tiempo-esquina tiempo-esquina-tl"><span id="tiempoIcono">🌤️</span><small id="tiempoDescripcion">Consultando…</small></div>
 <div class="tiempo-esquina tiempo-esquina-tr"><span class="tiempo-ropa-icono">🧥</span><small id="tiempoConsejo">Preparando…</small></div>
 <div class="tiempo-esquina tiempo-esquina-bl"><strong id="tiempoTemperatura">--°</strong><small id="tiempoLugar">Arteixo</small></div>
@@ -323,7 +324,7 @@
             <p class="intro-pantalla">
                 Añade el tiempo que has dedicado a una actividad.
             </p>
-            <div id="avisoBorradorV246" class="borrador-v246" hidden><span role="status" id="textoBorradorV246"></span><button id="descartarBorradorV246" type="button">Descartar</button></div><form id="formRegistro" class="registro-v203">
+            <div id="avisoBorradorV247" class="borrador-v247" hidden><span role="status" id="textoBorradorV247"></span><button id="descartarBorradorV247" type="button">Descartar</button></div><form id="formRegistro" class="registro-v203">
                 <div id="planRegistroV203" class="plan-registro-v203" hidden><p id="planTextoV203"></p><button type="button" id="usarPlanV203" class="boton-secundario">Usar salida planificada</button><p class="ayuda-v203">Añade después el tiempo que realmente has dedicado.</p></div>
 <!-- ACTIVIDAD -->
                 <div class="grupo-formulario grupo-actividad">
@@ -437,7 +438,7 @@
                     <textarea id="notasRegistro" class="campo" rows="2"></textarea>
                 </div>
 </div></details>
-                <div class="guardar-registro-v203"><button id="guardarRegistroV203" class="boton-guardar" type="submit">Guardar actividad</button><span id="guardadoDiscretoV246" class="guardado-discreto-v246" aria-hidden="true" hidden>✓ Guardado</span></div>
+                <div class="guardar-registro-v203"><button id="guardarRegistroV203" class="boton-guardar" type="submit">Guardar actividad</button><span id="guardadoDiscretoV247" class="guardado-discreto-v247" aria-hidden="true" hidden>✓ Guardado</span></div>
                 <p id="mensajeFormulario" class="mensaje-formulario" role="status" aria-live="polite"></p>
                 <div id="confirmacionRegistroV203" class="confirmacion-registro-v203" hidden><button type="button" id="editarUltimoV203" class="boton-secundario">Editar registro</button><button type="button" id="otroRegistroV203" class="boton-secundario">Añadir otro</button></div>
             </form>
@@ -458,8 +459,8 @@
                         0 registros
                     </span>
                 </div>
-                <div class="accesos-historial-v246"><button type="button" id="historialHoyV246" class="boton-secundario">Hoy</button><div id="contextoHistorialV246" hidden><span id="textoContextoHistorialV246"></span><button type="button" id="quitarContextoHistorialV246">Ver todos</button></div></div>
-                <div class="buscar-historial-v246"><label for="buscarHistorialV246" class="titulo-campo">Buscar en Historial</label><input id="buscarHistorialV246" class="campo" type="search" placeholder="Acompañante, nota o actividad" autocomplete="off"></div><div class="filtros-historial">
+                <div class="accesos-historial-v247"><button type="button" id="historialHoyV247" class="boton-secundario">Hoy</button><div id="contextoHistorialV247" hidden><span id="textoContextoHistorialV247"></span><button type="button" id="quitarContextoHistorialV247">Ver todos</button></div></div>
+                <div class="buscar-historial-v247"><label for="buscarHistorialV247" class="titulo-campo">Buscar en Historial</label><input id="buscarHistorialV247" class="campo" type="search" placeholder="Acompañante, nota o actividad" autocomplete="off"></div><div class="filtros-historial">
                     <button class="filtro-historial activo" data-filtro="todos" type="button">
                         Todos
                     </button>
@@ -505,7 +506,7 @@
                     <span id="semanaVisualTotalV193">0 h</span>
                 </div>
                 <div id="semanaVisualDiasV193" class="v193-semana-dias" aria-label="Resumen visual de esta semana"></div>
-                <p id="comparacionSemanalV139" class="semana-comparacion-v246" aria-live="polite"></p>
+                <p id="comparacionSemanalV139" class="semana-comparacion-v247" aria-live="polite"></p>
             </section>
 
 
@@ -519,7 +520,7 @@
                     </div>
                     <div class="v143-rm-nav">
                         <button type="button" onclick="cambiarMesResumenV143(-1)" aria-label="Mes anterior">‹</button>
-                        <label class="mes-selector-v246"><span aria-hidden="true">▦</span><input id="mesResumenV143" type="month" aria-label="Elegir mes"></label>
+                        <label class="mes-selector-v247"><span aria-hidden="true">▦</span><input id="mesResumenV143" type="month" aria-label="Elegir mes"></label>
                         <button type="button" onclick="cambiarMesResumenV143(1)" aria-label="Mes siguiente">›</button>
                     </div>
                 </div>
@@ -531,10 +532,10 @@
                 <div class="v143-rm-compara" data-v143-compara>—</div>
                 <div class="v143-rm-dist" data-v143-dist></div>
                 <p class="v143-rm-mensaje" data-v143-mensaje></p>
-            <div class="compartir-mes-v246"><button id="compartirMesV246" class="boton-secundario" type="button">↗ Compartir resumen</button><p id="estadoCompartirV246" role="status"></p><textarea id="textoCompartirV246" readonly hidden aria-label="Resumen mensual para copiar" rows="7"></textarea></div></article>
+            <div class="compartir-mes-v247"><button id="compartirMesV247" class="boton-secundario" type="button">↗ Compartir resumen</button><p id="estadoCompartirV247" role="status"></p><textarea id="textoCompartirV247" readonly hidden aria-label="Resumen mensual para copiar" rows="7"></textarea></div></article>
             </section>
 
-            <details id="metaDetalleV246" class="stats-accordion-v183"><summary><span class="stats-accordion-icono-v183">◎</span><span>Meta anual</span><span class="stats-accordion-flecha-v183">›</span></summary><div class="stats-accordion-cuerpo-v183"><div id="vista-meta" class="meta-integrada-v246">
+            <details id="metaDetalleV247" class="stats-accordion-v183"><summary><span class="stats-accordion-icono-v183">◎</span><span>Meta anual</span><span class="stats-accordion-flecha-v183">›</span></summary><div class="stats-accordion-cuerpo-v183"><div id="vista-meta" class="meta-integrada-v247">
             <section class="seccion meta-web meta-v152">
   <article class="tarjeta meta-principal meta-v152-anio">
     <div class="meta-v152-top">
@@ -709,7 +710,7 @@
                         <p class="mini-estadistica-etiqueta">
                             Cursos bíblicos
                         </p>
-                        <small class="cursos-nota-v246">Máximo indicado en el periodo</small>
+                        <small class="cursos-nota-v247">Máximo indicado en el periodo</small>
                     </article>
                 </div>
             </section>
@@ -775,14 +776,14 @@
              AJUSTES
         ================================================== -->
         <section id="vista-ajustes" class="vista">
-            <button id="volverAjustesV246" type="button" class="boton-secundario volver-ajustes-v246">‹ Volver</button><section class="seccion">
+            <button id="volverAjustesV247" type="button" class="boton-secundario volver-ajustes-v247">‹ Volver</button><section class="seccion">
                 <div class="titulo-seccion">
                     <h2>
                         Ajustes
                     </h2>
                 </div>
                 <article class="tarjeta">
-                    <div class="grupo-formulario"><label class="titulo-campo" for="nombreSaludoV246">Nombre para el saludo (opcional)</label><input id="nombreSaludoV246" type="text" class="campo" maxlength="24" autocomplete="given-name" placeholder="Tu nombre"><small class="ayuda-campo">Se guarda con Guardar ajustes, en este dispositivo.</small></div><div class="grupo-formulario">
+                    <div class="grupo-formulario"><label class="titulo-campo" for="nombreSaludoV247">Nombre para el saludo (opcional)</label><input id="nombreSaludoV247" type="text" class="campo" maxlength="24" autocomplete="given-name" placeholder="Tu nombre"><small class="ayuda-campo">Se guarda con Guardar ajustes, en este dispositivo.</small></div><div class="grupo-formulario">
                         <label class="titulo-campo" for="tipoPublicador">
                             Tipo
                         </label>
@@ -964,20 +965,20 @@
     if (standalone) document.body.classList.add('modo-standalone');
 })();
 </script>
-<script type="module" src="./config-v246.js"></script>
-<script type="module" src="./storage-v246.js"></script>
-<script src="./historial-render-v246.js" defer></script>
-<script src="./historial-edicion-v246.js" defer></script>
-<script src="./estadisticas-render-v246.js" defer></script>
-<script src="./registrar-v246.js" defer></script>
-<script src="./planificacion-v246.js" defer></script>
-<script src="./app-v246.js" defer></script>
-<script src="./eventos-calendario-v246.js" defer></script>
-<script src="./visual-v246.js" defer></script>
-<script src="./mejoras-v246.js" defer></script>
-<script src="./registrar-ui-v246.js" defer></script>
+<script type="module" src="./config-v247.js"></script>
+<script type="module" src="./storage-v247.js"></script>
+<script src="./historial-render-v247.js" defer></script>
+<script src="./historial-edicion-v247.js" defer></script>
+<script src="./estadisticas-render-v247.js" defer></script>
+<script src="./registrar-v247.js" defer></script>
+<script src="./planificacion-v247.js" defer></script>
+<script src="./app-v247.js" defer></script>
+<script src="./eventos-calendario-v247.js" defer></script>
+<script src="./visual-v247.js" defer></script>
+<script src="./mejoras-v247.js" defer></script>
+<script src="./registrar-ui-v247.js" defer></script>
 
-<script src="./simple-v246.js" defer></script><script id="swRegistroV189">
+<script src="./simple-v247.js" defer></script><script id="swRegistroV189">
 if ("serviceWorker" in navigator) {
   let registroApp;
   const teniaControlador=Boolean(navigator.serviceWorker.controller);
@@ -1002,10 +1003,10 @@ if ("serviceWorker" in navigator) {
 </script>
 
 
-<script type="module" src="./tiempo-v246.js"></script>
-<script type="module" src="./legacy-bridge-v246.js"></script>
-<script type="module" src="./historial-v246.js"></script>
-<script type="module" src="./estadisticas-v246.js"></script>
+<script type="module" src="./tiempo-v247.js"></script>
+<script type="module" src="./legacy-bridge-v247.js"></script>
+<script type="module" src="./historial-v247.js"></script>
+<script type="module" src="./estadisticas-v247.js"></script>
 
 <script id="ajustesAcordeonV179">
 document.addEventListener("DOMContentLoaded", () => {
@@ -1081,7 +1082,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
-</article></section><section class="seccion" data-sin-acordeon="1" id="oneDriveSeccionV246"><div class="onedrive-panel" id="onedrivePanel">
+</article></section><section class="seccion" data-sin-acordeon="1" id="oneDriveSeccionV247"><div class="onedrive-panel" id="onedrivePanel">
                         <div class="onedrive-cabecera">
                             <div>
                                 <strong>☁️ OneDrive</strong>
@@ -1095,7 +1096,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <button id="desconectarOneDrive" class="boton-secundario" type="button" hidden>Desconectar OneDrive</button>
                         <p id="ultimaSyncOneDrive" class="onedrive-ultima-sync" hidden></p>
                     </div>
-                    </section><details class="ajustes-acordeon-v179" id="sincronizacionDetalleV246"><summary><span class="ajustes-acordeon-icono">↻</span><span class="ajustes-acordeon-titulo">Sincronización y copias</span><span class="ajustes-acordeon-flecha">›</span></summary><div class="ajustes-acordeon-cuerpo"><section class="seccion" id="seccionCalendarioAppleV173">
+                    </section><details class="ajustes-acordeon-v179" id="sincronizacionDetalleV247"><summary><span class="ajustes-acordeon-icono">↻</span><span class="ajustes-acordeon-titulo">Sincronización y copias</span><span class="ajustes-acordeon-flecha">›</span></summary><div class="ajustes-acordeon-cuerpo"><section class="seccion" id="seccionCalendarioAppleV173">
                 <div class="titulo-seccion">
                     <h2>Calendario Apple</h2>
                 </div>
@@ -1173,12 +1174,12 @@ document.addEventListener("DOMContentLoaded", () => {
             </div></details><details class="ajustes-acordeon-v179" id="aparienciaV201">
               <summary><span class="ajustes-acordeon-icono">◐</span><span>Apariencia</span><span class="ajustes-acordeon-flecha">›</span></summary>
               <div class="apariencia-cuerpo-v201">
-                <fieldset class="selector-grafico-v246 selector-ambiente-v246"><legend class="titulo-campo">Ambiente de la aplicación</legend><div id="ambientesVisualesV246" class="ambientes-visuales-v246" role="group" aria-label="Elegir ambiente visual"></div><p id="estadoAmbienteVisualV246" role="status">Cristal combina profundidad y sencillez. Se guarda en este dispositivo.</p></fieldset>
-                <fieldset class="selector-grafico-v246"><legend class="titulo-campo">Acabado del gráfico</legend><div id="acabadosGraficoV246" class="acabados-grafico-v246" role="group" aria-label="Elegir acabado del gráfico"></div><p id="estadoAcabadoV246" role="status">Clásico conserva el aspecto habitual. Cristal añade luz y relieve.</p></fieldset>
-                <fieldset class="selector-grafico-v246"><legend class="titulo-campo">Firma de color</legend><div id="firmasColorV246" class="firmas-color-v246" role="group" aria-label="Elegir firma de color"></div><p id="estadoFirmaColorV246" role="status">Personaliza los controles. Los colores de las actividades se conservan.</p></fieldset>
-                <fieldset class="selector-grafico-v246"><legend class="titulo-campo">Gráfico de Inicio</legend><div id="estilosGraficoInicioV246" class="estilos-grafico-v246" role="group" aria-label="Elegir estilo del gráfico de Inicio"></div><p id="estadoEstiloGraficoV246" role="status">Se guarda al elegirlo en este dispositivo.</p></fieldset>
-                <fieldset class="selector-grafico-v246"><legend class="titulo-campo">Camino de progreso</legend><div id="estilosCaminoInicioV246" class="estilos-grafico-v246 estilos-camino-v246" role="group" aria-label="Elegir estilo del camino"></div><p id="estadoEstiloCaminoV246" role="status">Siempre horizontal. Se guarda al elegirlo en este dispositivo.</p></fieldset>
-                <label class="fondo-clima-opcion-v246"><input id="fondoClimaInicioV246" type="checkbox" checked><span>Fondo según el tiempo</span></label><p class="ayuda-fondo-clima-v246">Sol, nubes o lluvia detrás del gráfico, según tu localidad.</p>
+                <fieldset class="selector-grafico-v247 selector-ambiente-v247"><legend class="titulo-campo">Ambiente de la aplicación</legend><div id="ambientesVisualesV247" class="ambientes-visuales-v247" role="group" aria-label="Elegir ambiente visual"></div><p id="estadoAmbienteVisualV247" role="status">Cristal combina profundidad y sencillez. Se guarda en este dispositivo.</p></fieldset>
+                <fieldset class="selector-grafico-v247"><legend class="titulo-campo">Acabado del gráfico</legend><div id="acabadosGraficoV247" class="acabados-grafico-v247" role="group" aria-label="Elegir acabado del gráfico"></div><p id="estadoAcabadoV247" role="status">Clásico conserva el aspecto habitual. Cristal añade luz y relieve.</p></fieldset>
+                <fieldset class="selector-grafico-v247"><legend class="titulo-campo">Firma de color</legend><div id="firmasColorV247" class="firmas-color-v247" role="group" aria-label="Elegir firma de color"></div><p id="estadoFirmaColorV247" role="status">Personaliza los controles. Los colores de las actividades se conservan.</p></fieldset>
+                <fieldset class="selector-grafico-v247"><legend class="titulo-campo">Gráfico de Inicio</legend><div id="estilosGraficoInicioV247" class="estilos-grafico-v247" role="group" aria-label="Elegir estilo del gráfico de Inicio"></div><p id="estadoEstiloGraficoV247" role="status">Se guarda al elegirlo en este dispositivo.</p></fieldset>
+                <fieldset class="selector-grafico-v247"><legend class="titulo-campo">Camino de progreso</legend><div id="estilosCaminoInicioV247" class="estilos-grafico-v247 estilos-camino-v247" role="group" aria-label="Elegir estilo del camino"></div><p id="estadoEstiloCaminoV247" role="status">Siempre horizontal. Se guarda al elegirlo en este dispositivo.</p></fieldset>
+                <label class="fondo-clima-opcion-v247"><input id="fondoClimaInicioV247" type="checkbox" checked><span>Fondo según el tiempo</span></label><p class="ayuda-fondo-clima-v247">Sol, nubes o lluvia detrás del gráfico, según tu localidad.</p>
                 <label for="temaEstacionalV201" class="titulo-campo">Detalle estacional en Inicio</label>
                 <select id="temaEstacionalV201" class="campo">
                   <option value="ninguno">Sin detalle estacional</option>
@@ -1189,7 +1190,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   <option value="invierno">Invierno</option>
                 </select>
                 <p class="texto-secundario">Un detalle suave junto al calendario. Se guarda al elegirlo en este dispositivo.</p>
-              <div class="frase-personal-v246"><label for="frasePersonalV246" class="titulo-campo">Tu frase para Inicio (opcional)</label><textarea id="frasePersonalV246" class="campo" rows="2" maxlength="140" placeholder="Una frase que te anime"></textarea><button id="guardarFrasePersonalV246" type="button" class="boton-secundario">Guardar frase</button><p id="estadoFrasePersonalV246" role="status"></p><small>Alterna con las frases actuales. Déjala vacía para quitarla.</small></div></div>
+              <div class="frase-personal-v247"><label for="frasePersonalV247" class="titulo-campo">Tu frase para Inicio (opcional)</label><textarea id="frasePersonalV247" class="campo" rows="2" maxlength="140" placeholder="Una frase que te anime"></textarea><button id="guardarFrasePersonalV247" type="button" class="boton-secundario">Guardar frase</button><p id="estadoFrasePersonalV247" role="status"></p><small>Alterna con las frases actuales. Déjala vacía para quitarla.</small></div></div>
             </details>
         
     
@@ -1235,7 +1236,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </select>
             </label>
 
-            <div class="habitual-v246"><button id="usarHabitualV246" class="boton-secundario" type="button" hidden>Usar mi salida habitual</button><details><summary>Mi salida habitual</summary><p id="descripcionHabitualV246"></p><button id="guardarHabitualV246" class="boton-secundario" type="button">Guardar estos datos como habituales</button><button id="quitarHabitualV246" class="boton-secundario" type="button" hidden>Quitar salida habitual</button><small>Se guarda en este dispositivo. La fecha se elige en el calendario.</small></details></div><label class="campo-editar">
+            <div class="habitual-v247"><button id="usarHabitualV247" class="boton-secundario" type="button" hidden>Usar mi salida habitual</button><details><summary>Mi salida habitual</summary><p id="descripcionHabitualV247"></p><button id="guardarHabitualV247" class="boton-secundario" type="button">Guardar estos datos como habituales</button><button id="quitarHabitualV247" class="boton-secundario" type="button" hidden>Quitar salida habitual</button><small>Se guarda en este dispositivo. La fecha se elige en el calendario.</small></details></div><label class="campo-editar">
                 <span>Con quién iré</span>
                 <input id="nombreAgendaSalida" type="text" maxlength="80" autocomplete="off" placeholder="Ej. Marta">
             </label>
