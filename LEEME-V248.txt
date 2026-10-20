@@ -1,0 +1,15 @@
+MI SERVICIO · V248
+
+NUEVO: INICIO AJUSTADO A LA PANTALLA
+En vertical, con calendario y tiempo plegados, Inicio reparte la altura visible entre la cabecera, el calendario, el gráfico, el objetivo y una fila inferior con el tiempo y el mensaje de ánimo.
+Se mide la altura disponible del navegador, incluida la variación de las barras de Safari. El diseño se recalcula al girar, regresar a Inicio o cambiar el espacio visible.
+Los globos y corazones se recolocan según sus horas y el espacio. Se mantienen las cifras, los porcentajes, el total y el aspecto Metal y cristal.
+El objetivo conserva barra, hitos, personaje, eventos, contexto y mensajes. La navegación y el botón Añadir siguen accesibles.
+Al desplegar el calendario o el tiempo se vuelve al desplazamiento normal para consultar todos los detalles. Al cerrarlos se recupera el encaje.
+Si el texto ampliado, una pantalla baja o un aviso necesita más altura, se permite desplazar; no se corta información ni se bloquea el desplazamiento.
+Se mantienen todos los ambientes y gráficos anteriores.
+
+INSTALACIÓN
+Descomprime el ZIP y sube todos sus archivos a la raíz del repositorio, reemplazando los existentes. No hace falta crear carpetas ni borrar archivos antiguos.
+Espera a que GitHub Pages termine de publicar y acepta el aviso de actualización.
+Se conservan registros, calendario, objetivos y preferencias.
