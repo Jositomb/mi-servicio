@@ -1,0 +1,22 @@
+MI SERVICIO · V249
+
+METAL Y CRISTAL EN TODA LA APLICACIÓN
+El ambiente Metal y cristal de Inicio se extiende a Registrar, Historial, Estadísticas y Ajustes.
+Cabecera, navegación, tarjetas y desplegables comparten metal cepillado y biseles.
+Registrar tiene campos hundidos de lectura clara, controles con relieve y Guardar con acabado de vidrio.
+Historial mantiene sus registros compactos, los colores por actividad y Borrar en rojo.
+Estadísticas comparte los marcos, superficies de lectura y desplegables metálicos; las cifras y gráficos son los mismos.
+Ajustes y sus ventanas emergentes usan los mismos materiales, incluidos los controles de Apariencia, datos y calendario.
+Se respetan los estados seleccionados, el foco de teclado, los errores de formulario y los botones desactivados.
+Se adapta a modo claro y oscuro, con la firma de color que hayas elegido.
+
+ACTIVACIÓN
+Si ya usas Metal y cristal, se aplica al actualizar.
+También puedes elegirlo en Ajustes → Apariencia → Ambientes visuales → Metal y cristal.
+Los demás ambientes siguen disponibles.
+El encaje a pantalla de Inicio y el funcionamiento de formularios, historial, estadísticas, sincronización y calendario se conservan.
+
+INSTALACIÓN
+Descomprime el ZIP y sube todos sus archivos a la raíz del repositorio, reemplazando los existentes. No hace falta crear carpetas ni borrar archivos antiguos.
+Espera a que GitHub Pages termine de publicar y acepta el aviso de actualización.
+Se conservan registros, calendario, objetivos y preferencias.
