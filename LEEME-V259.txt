@@ -1,0 +1,12 @@
+MI SERVICIO V259 — COMPUTABLES Y EXCEDENTE COHERENTES
+
+Inicio, Resumen mensual y Meta anual usan el mismo cálculo mensual existente: si hay actividad adicional, se computan hasta 55 h del total; si solo hay Ministerio, computa todo el Ministerio.
+
+Las horas registradas no cambian. Los globos conservan la actividad real por categoría. El objetivo mensual, el personaje y los mensajes de progreso usan las horas computables. Cuando hay excedente, Inicio y Resumen mensual muestran una fila con Computan y Excedente. El resumen compartido también lo incluye.
+
+Ejemplo de tus capturas: 56 h registradas, 55 h computables y 1 h de excedente. Con objetivo de 50 h, el progreso es 110 % y lo superas por 5 h.
+
+Computa y Excedente tienen fondos verde y ámbar y texto de mayor contraste, tanto en la meta anual como en las nuevas filas, en claro y oscuro y con los tres metales.
+
+INSTALACIÓN
+Descomprime y sube TODOS los archivos a la raíz del mismo repositorio, reemplazando los existentes e incluyendo las imágenes. Conserva el mismo sitio y navegador para seguir usando tus datos locales. No hace falta importar los registros de nuevo.
