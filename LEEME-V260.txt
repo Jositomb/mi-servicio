@@ -1,4 +1,0 @@
-Mi Servicio V260
-Sube todos los archivos a la raíz, reemplazando los existentes.
-Globos más grandes sin solaparse, cantidades centradas y total en una sola línea. Objetivo y camino más compactos para liberar altura. Cómputo y excedente conservados.
-Validación automatizada local; no prueba en un iPhone físico.
