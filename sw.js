@@ -1,8 +1,8 @@
-const BUILD = "V264-26401";
-const CACHE = "mi-servicio-v26401";
+const BUILD = "V265-26501";
+const CACHE = "mi-servicio-v26501";
 const CACHE_PREFIX = "mi-servicio-";
 const CODIGO = {
-  "./app-v264.js": "ffebe18ae389730a0cd70ac0228acc53a6e6f57c63eae9ae28b2f3e2a2b4aa27",
+  "./app-v265.js": "827f605f7132dc2026f93dca1d4736c51f818102174ecfc3d330341f57c91991",
   "./config-v260.js": "2ef83ae552bfdf5e1e998fffe9f39f1cc6f999826b9229396280337ed5612b5d",
   "./estadisticas-render-v260.js": "d4b50491234def73bc1f3636c97c18c7c21fb8fd5e596cd5cbb82b5caa3d62e9",
   "./estadisticas-v260.js": "32989862e03bd33c2f2f0974355b569887283d1f21535995538ecd79912533bc",
@@ -17,7 +17,7 @@ const CODIGO = {
   "./registrar-v260.js": "d3b7fcc9c7fb5b62681ef154302ac084a8088ed7ccfe144f5eb78ab8d52aa667",
   "./simple-v260.js": "d4de97a738d75a20f26487f59f0011fcb51ed63980b00b53618be4a6629e6820",
   "./storage-v260.js": "c8dc9a3b4b440181b69dabf206319026d8f3057cccf63c57ae8585cd4bdfdca9",
-  "./styles-v264.css": "59f23d1be6477bec9b6a88d6a8a8ec48f34cf6665327ce89cef8cb01daf69ea1",
+  "./styles-v265.css": "4dd1ca269244dabd89671a626734aca383e2ebda7d7aebf9562e163b722130c4",
   "./tiempo-v262.js": "5e75178e6ba21dc2e3b136144dcaf1b1642193c1236f0ea7730b99581e39ff54",
   "./v264.js": "0802fb7cc8a65c921b3861a7d83abf4c6ab219995212dda9510714fb4284c13f",
   "./visual-v260.js": "5ad2f2082df9360054e0e5b3dafa1f2754d01ea51a3b0f2b91b8bb4bacd83711"
@@ -27,7 +27,7 @@ const APP_SHELL = [
   "./escena-registrar-v260.png",
   "./index.html",
   "./",
-  "./app-v264.js",
+  "./app-v265.js",
   "./config-v260.js",
   "./estadisticas-render-v260.js",
   "./estadisticas-v260.js",
@@ -43,7 +43,7 @@ const APP_SHELL = [
   "./simple-v260.js",
   "./v264.js",
   "./storage-v260.js",
-  "./styles-v264.css",
+  "./styles-v265.css",
   "./tiempo-v262.js",
   "./visual-v260.js",
   "./manifest.webmanifest",

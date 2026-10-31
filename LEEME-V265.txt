@@ -1,0 +1,6 @@
+MI SERVICIO WEB - V265
+- Registrar: todo cabe en una sola pantalla en iPhone (sin desplazar). En pantallas muy bajas o con el teclado abierto vuelve al desplazamiento normal.
+- Guardar vuelve a ser un circulo.
+- Botones con relieve y profundidad tipo tecla fisica (estilo "Cristal con teclas"; "Metal clasico" sigue disponible en Ajustes).
+- Datos, claves de almacenamiento y copias JSON sin cambios.
+Publicacion: borrar los archivos antiguos del repositorio y subir todo el contenido del ZIP.
