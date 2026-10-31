@@ -15,7 +15,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Mi Servicio">
-    <link rel="stylesheet" href="./styles-v263.css">
+    <link rel="stylesheet" href="./styles-v264.css">
 
 
 <style id="v91-layout-final">
@@ -104,11 +104,12 @@
 }
 </style>
 
-    <meta name="mi-servicio-version" content="V263">
-<meta name="mi-servicio-build" content="V263-26301">
+    <meta name="mi-servicio-version" content="V264">
+<meta name="mi-servicio-build" content="V264-26401">
 </head>
-<body data-luz="suave" data-metal="plata" data-acabado="clasico" data-mi-servicio-version="V263" data-ambiente="cristal" data-firma="oceano">
+<body data-luz="suave" data-metal="plata" data-acabado="clasico" data-mi-servicio-version="V264" data-ambiente="cristal" data-firma="oceano">
 <script>(function(){try{const v=localStorage.getItem("miServicio.intensidadLuz");document.body.dataset.luz=v==="realzada"?v:"suave";}catch(e){}})();</script>
+<script>(function(){try{const b=document.body.classList;if(localStorage.getItem("miServicio.estiloSuperficiesV264")!=="metal")b.add("estilo-cristal-v264");if(localStorage.getItem("miServicio.fondoOledV264")==="si")b.add("oled-v264")}catch(e){}})();</script>
 <script>(function(){try{const m=localStorage.getItem("miServicio.acabadoMetal");document.body.dataset.metal=["plata","titanio","champan"].includes(m)?m:"plata";}catch(e){}})();</script>
 <script>(function(){try{if(localStorage.getItem("miServicio.inicioMetalAplicado")!=="si"){localStorage.setItem("miServicio.ambienteVisual","metal");localStorage.setItem("miServicio.acabadoGrafico","cristal");localStorage.setItem("miServicio.inicioMetalAplicado","si");}}catch(e){document.body.dataset.ambiente="metal";document.body.dataset.acabado="cristal";}})();</script>
 <script>(function(){try{document.body.dataset.acabado=localStorage.getItem("miServicio.acabadoGrafico")==="cristal"?"cristal":"clasico";}catch(e){}})();</script>
@@ -331,6 +332,11 @@
             <p class="intro-pantalla">
                 Añade el tiempo que has dedicado a una actividad.
             </p>
+            <section id="cronometroV264" class="cronometro-v264" aria-label="Cronómetro de actividad">
+                <div class="cron-info-v264"><strong id="cronTituloV264">Cronómetro</strong><span id="cronSubV264">Cuenta el tiempo mientras sales y rellena el registro al terminar.</span></div>
+                <output id="cronTiempoV264" class="cron-tiempo-v264" aria-live="off">0:00:00</output>
+                <div class="cron-acciones-v264"><button id="cronIniciarV264" type="button" class="cron-boton-v264 cron-iniciar-v264">▶ Iniciar</button><button id="cronTerminarV264" type="button" class="cron-boton-v264 cron-terminar-v264" hidden>■ Terminar</button><button id="cronDescartarV264" type="button" class="cron-boton-v264 cron-descartar-v264" hidden>Descartar</button></div>
+            </section>
             <div id="avisoBorradorV260" class="borrador-v260" hidden><span role="status" id="textoBorradorV260"></span><button id="descartarBorradorV260" type="button">Descartar</button></div><form id="formRegistro" class="registro-v203">
                 <div id="planRegistroV203" class="plan-registro-v203" hidden><p id="planTextoV203"></p><button type="button" id="usarPlanV203" class="boton-secundario">Usar salida planificada</button><p class="ayuda-v203">Añade después el tiempo que realmente has dedicado.</p></div>
 <!-- ACTIVIDAD -->
@@ -376,7 +382,7 @@
                         <button type="button" data-dia-v203="ayer">Ayer</button>
                         <button type="button" data-dia-v203="otra">Otra fecha</button>
                     </div>
-                    <p id="fechaTextoV203" class="ayuda-v203"></p>
+                    <p id="fechaTextoV203" class="ayuda-v203"></p><p id="resumenDiaV264" class="resumen-dia-v264" hidden></p>
                     <div id="fechaManualV203">
                     <input id="fechaRegistro" class="campo" type="date" required>
                     </div>
@@ -446,7 +452,7 @@
                 </div>
 </div></details>
                 <div id="escenaRegistrarV260" class="escena-registrar-v260" aria-hidden="true" hidden><img src="escena-registrar-v260.png" alt="" width="1536" height="1024" decoding="async" draggable="false"></div>
-                <div class="guardar-registro-v203"><button id="guardarRegistroV203" class="boton-guardar" type="submit" aria-label="Guardar actividad" title="Guardar actividad"><span aria-hidden="true">✓</span></button><span class="guardar-etiqueta-v260" aria-hidden="true">Guardar</span><span id="guardadoDiscretoV260" class="guardado-discreto-v260" aria-hidden="true" hidden>✓ Guardado</span></div>
+                <div class="guardar-registro-v203"><button id="guardarRegistroV203" class="boton-guardar" type="submit" aria-label="Guardar actividad" title="Guardar actividad"><span aria-hidden="true">✓</span><span class="guardar-texto-v264" aria-hidden="true">Guardar</span></button><span class="guardar-etiqueta-v260" aria-hidden="true">Guardar</span><span id="guardadoDiscretoV260" class="guardado-discreto-v260" aria-hidden="true" hidden>✓ Guardado</span></div>
                 <p id="mensajeFormulario" class="mensaje-formulario" role="status" aria-live="polite"></p>
                 <div id="confirmacionRegistroV203" class="confirmacion-registro-v203" hidden><button type="button" id="editarUltimoV203" class="boton-secundario">Editar registro</button><button type="button" id="otroRegistroV203" class="boton-secundario">Añadir otro</button></div>
             </form>
@@ -505,6 +511,7 @@
         ================================================== -->
         <section id="vista-estadisticas" class="vista">
             <!-- V193 · SEMANA VISUAL -->
+            <div id="segmentoStatsV264" class="segmento-v264" role="group" aria-label="Qué quieres ver"><button type="button" data-seg-v264="resumen" aria-pressed="true">Resumen</button><button type="button" data-seg-v264="anio" aria-pressed="false">Año</button><button type="button" data-seg-v264="mas" aria-pressed="false">Más</button></div>
             <section id="semanaVisualV193" class="v193-semana-visual">
                 <div class="v193-semana-cabecera">
                     <div>
@@ -541,7 +548,7 @@
                 <div class="v143-rm-compara" data-v143-compara>—</div>
                 <div class="v143-rm-dist" data-v143-dist></div>
                 <p class="v143-rm-mensaje" data-v143-mensaje></p>
-            <div class="compartir-mes-v260"><button id="compartirMesV260" class="boton-secundario" type="button">↗ Compartir resumen</button><p id="estadoCompartirV260" role="status"></p><textarea id="textoCompartirV260" readonly hidden aria-label="Resumen mensual para copiar" rows="7"></textarea></div></article>
+            <div class="compartir-mes-v260"><button id="compartirMesV260" class="boton-secundario" type="button">↗ Compartir resumen</button><button id="csvMesV264" class="boton-secundario" type="button">⇩ Exportar mes (CSV)</button><p id="estadoCompartirV260" role="status"></p><textarea id="textoCompartirV260" readonly hidden aria-label="Resumen mensual para copiar" rows="7"></textarea></div></article>
             </section>
 
             <details id="metaDetalleV260" class="stats-accordion-v183"><summary><span class="stats-accordion-icono-v183">◎</span><span>Meta anual</span><span class="stats-accordion-flecha-v183">›</span></summary><div class="stats-accordion-cuerpo-v183"><div id="vista-meta" class="meta-integrada-v260">
@@ -784,9 +791,9 @@
         <!-- =================================================
              AJUSTES
         ================================================== -->
-        <section id="vista-ajustes" class="vista"><article id="seguridadDatosV260" class="tarjeta seguridad-datos-v260" aria-labelledby="tituloSeguridadV260"><h2 id="tituloSeguridadV260">Tus datos</h2><p id="seguridadLocalV260"></p><p id="seguridadNubeV260"></p><p id="seguridadCopiaV260"></p><button id="copiaRapidaV260" type="button" class="boton-secundario">Crear copia de seguridad</button></article>
+        <section id="vista-ajustes" class="vista"><article id="seguridadDatosV260" class="tarjeta seguridad-datos-v260" aria-labelledby="tituloSeguridadV260"><h2 id="tituloSeguridadV260">Tus datos</h2><p id="seguridadLocalV260"></p><p id="seguridadNubeV260"></p><p id="seguridadCopiaV260"></p><p id="avisoInstalacionV264" class="aviso-instalacion-v264" hidden>Para que iOS no borre tus datos con el tiempo, añade la app a la pantalla de inicio (Compartir → Añadir a pantalla de inicio).</p><p id="estadoPersistenciaV264" class="ayuda-v203" hidden></p><button id="copiaRapidaV260" type="button" class="boton-secundario">Crear copia de seguridad</button><button id="csvTodoV264" type="button" class="boton-secundario">Exportar todo (CSV)</button></article>
             <button id="volverAjustesV260" type="button" class="boton-secundario volver-ajustes-v260">‹ Volver</button><section class="seccion">
-                <div class="titulo-seccion">
+                <div class="titulo-seccion titulo-duplicado-v264">
                     <h2>
                         Ajustes
                     </h2>
@@ -982,13 +989,13 @@
 <script src="./estadisticas-render-v260.js" defer></script>
 <script src="./registrar-v260.js" defer></script>
 <script src="./planificacion-v260.js" defer></script>
-<script src="./app-v263.js" defer></script>
+<script src="./app-v264.js" defer></script>
 <script src="./eventos-calendario-v263.js" defer></script>
 <script src="./visual-v260.js" defer></script>
 <script src="./mejoras-v260.js" defer></script>
 <script src="./registrar-ui-v260.js" defer></script>
 
-<script src="./simple-v260.js" defer></script><script id="swRegistroV189">
+<script src="./simple-v260.js" defer></script><script src="./v264.js" defer></script><script id="swRegistroV189">
 if ("serviceWorker" in navigator) {
   let registroApp;
   const teniaControlador=Boolean(navigator.serviceWorker.controller);
@@ -1184,6 +1191,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </div></details><details class="ajustes-acordeon-v179" id="aparienciaV201">
               <summary><span class="ajustes-acordeon-icono">◐</span><span>Personalizar</span><span class="ajustes-acordeon-flecha">›</span></summary>
               <div class="apariencia-cuerpo-v201">
+<fieldset class="selector-grafico-v260 estilo-superficies-v264"><legend class="titulo-campo">Estilo de superficies</legend><div class="segmento-v264" role="group" aria-label="Estilo de superficies"><button type="button" data-estilo-v264="cristal" aria-pressed="true">Cristal limpio</button><button type="button" data-estilo-v264="metal" aria-pressed="false">Metal clásico</button></div><label class="fondo-clima-opcion-v260"><input id="fondoOledV264" type="checkbox"><span>Negro puro en modo oscuro (pantallas OLED)</span></label><p class="ayuda-fondo-clima-v260">Cristal limpio reserva el volumen para lo importante. Metal clásico es el aspecto de siempre.</p></fieldset>
 <fieldset class="selector-grafico-v260 selector-ambiente-v260"><legend class="titulo-campo">Ambiente de la aplicación</legend><div id="ambientesVisualesV260" class="ambientes-visuales-v260" role="group" aria-label="Elegir ambiente visual"></div><p id="estadoAmbienteVisualV260" role="status">Cristal combina profundidad y sencillez. Se guarda en este dispositivo.</p></fieldset><fieldset class="selector-grafico-v260"><legend class="titulo-campo">Firma de color</legend><div id="firmasColorV260" class="firmas-color-v260" role="group" aria-label="Elegir firma de color"></div><p id="estadoFirmaColorV260" role="status">Personaliza los controles. Los colores de las actividades se conservan.</p></fieldset><details class="personalizar-grupo-v260"><summary>Gráficos y acabados</summary><div><fieldset class="selector-grafico-v260"><legend class="titulo-campo">Luz y profundidad</legend><div id="intensidadLuzV260" class="intensidad-luz-v260" role="group" aria-label="Intensidad de luz y profundidad"></div><p id="estadoLuzV260" role="status">Reflejos y sombras, conservando tus colores.</p></fieldset><fieldset class="selector-grafico-v260"><legend class="titulo-campo">Acabado del metal</legend><div id="acabadosMetalV260" class="acabados-metal-v260" role="group" aria-label="Elegir acabado del metal"></div><p id="estadoMetalV260" role="status">Se aplica al ambiente Metal y cristal y conserva tu firma de color.</p></fieldset><fieldset class="selector-grafico-v260"><legend class="titulo-campo">Acabado del gráfico</legend><div id="acabadosGraficoV260" class="acabados-grafico-v260" role="group" aria-label="Elegir acabado del gráfico"></div><p id="estadoAcabadoV260" role="status">Clásico conserva el aspecto habitual. Cristal añade luz y relieve.</p></fieldset><fieldset class="selector-grafico-v260"><legend class="titulo-campo">Gráfico de Inicio</legend><div id="estilosGraficoInicioV260" class="estilos-grafico-v260" role="group" aria-label="Elegir estilo del gráfico de Inicio"></div><p id="estadoEstiloGraficoV260" role="status">Se guarda al elegirlo en este dispositivo.</p></fieldset><fieldset class="selector-grafico-v260"><legend class="titulo-campo">Camino de progreso</legend><div id="estilosCaminoInicioV260" class="estilos-grafico-v260 estilos-camino-v260" role="group" aria-label="Elegir estilo del camino"></div><p id="estadoEstiloCaminoV260" role="status">Siempre horizontal. Se guarda al elegirlo en este dispositivo.</p></fieldset></div></details><details class="personalizar-grupo-v260"><summary>Detalles y frase personal</summary><div>
                 
                 
