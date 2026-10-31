@@ -1,0 +1,5 @@
+Mi Servicio V262
+Sube todos los archivos a la raiz, reemplazando los existentes.
+Elimina del repositorio: app-v261.js, tiempo-v260.js, historial-v260.js, historial-render-v260.js, styles-v260.css.
+Cambios: Historial mucho mas rapido, una sola consulta del tiempo, textos secundarios mas legibles, imagenes mas ligeras. Sin cambios en datos ni copias.
+Probado en Chromium (escritorio) con datos simulados; no en iPhone fisico.

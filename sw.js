@@ -1,15 +1,15 @@
-const BUILD = "V261-26101";
-const CACHE = "mi-servicio-v26101";
+const BUILD = "V262-26201";
+const CACHE = "mi-servicio-v26201";
 const CACHE_PREFIX = "mi-servicio-";
 const CODIGO = {
-  "./app-v261.js": "fc63d6ec950d4599f2e35f6e13de1b54941a491834cd8c3e3054100293718261",
+  "./app-v262.js": "7a3aa2943c6182266b6056adf7585a31dd8f69512d06f803cc7fb616e4c657b5",
   "./config-v260.js": "2ef83ae552bfdf5e1e998fffe9f39f1cc6f999826b9229396280337ed5612b5d",
   "./estadisticas-render-v260.js": "d4b50491234def73bc1f3636c97c18c7c21fb8fd5e596cd5cbb82b5caa3d62e9",
   "./estadisticas-v260.js": "32989862e03bd33c2f2f0974355b569887283d1f21535995538ecd79912533bc",
   "./eventos-calendario-v260.js": "e27f6ba6807ff6d0ecb22667c6ced9770cecb305d19a6adc034abcb9b6990939",
   "./historial-edicion-v260.js": "c49ee5d23ac98a86d0b7796bfcb6f8aba223c477c5c6515cd9b31ec0b3baea7e",
-  "./historial-render-v260.js": "ae2fae6387681c0117083608c18196ca85502075b636af8ae9705fceefa7ca2f",
-  "./historial-v260.js": "a84e094f4e4f27fd417008d6d2f017d0776b4235bcca088dfc294668d0f215be",
+  "./historial-render-v262.js": "c2d8dccec7d5565bc969b5fcfb50b4411c18ab729be918838bc88369887d0fb3",
+  "./historial-v262.js": "74149a065f9546991970eb9f87e2ac44235405e2d82a8ebe46dbc799c2b0c7f0",
   "./legacy-bridge-v260.js": "7a9f294149fecaa1bc9941ae6d87a97d47955de70b3a53e90b2258be6618f9c0",
   "./mejoras-v260.js": "cde6be90bb0422b66bb3183c0638b8a22bd9817b65a3519e328b89a36b8c3319",
   "./planificacion-v260.js": "3a88dd2e2036597e63529ff065e757c7a66f161daba0b897fcb6435c4088d7d0",
@@ -17,8 +17,8 @@ const CODIGO = {
   "./registrar-v260.js": "d3b7fcc9c7fb5b62681ef154302ac084a8088ed7ccfe144f5eb78ab8d52aa667",
   "./simple-v260.js": "d4de97a738d75a20f26487f59f0011fcb51ed63980b00b53618be4a6629e6820",
   "./storage-v260.js": "c8dc9a3b4b440181b69dabf206319026d8f3057cccf63c57ae8585cd4bdfdca9",
-  "./styles-v260.css": "41098611c3a06fe3f1a74a8e2a1b43b964b70f3ba5068fad1b6605b2597370a9",
-  "./tiempo-v260.js": "45ba936ff6fee290734348ee7a9387f3ddeea0daecdfe6c44359ba9367592dce",
+  "./styles-v262.css": "4ec5a6ae33a4348a5f5560e8c3705e109eaf4791235ccf89806ec7843cca7f15",
+  "./tiempo-v262.js": "5e75178e6ba21dc2e3b136144dcaf1b1642193c1236f0ea7730b99581e39ff54",
   "./visual-v260.js": "5ad2f2082df9360054e0e5b3dafa1f2754d01ea51a3b0f2b91b8bb4bacd83711"
 };
 const APP_SHELL = [
@@ -26,14 +26,14 @@ const APP_SHELL = [
   "./escena-registrar-v260.png",
   "./index.html",
   "./",
-  "./app-v261.js",
+  "./app-v262.js",
   "./config-v260.js",
   "./estadisticas-render-v260.js",
   "./estadisticas-v260.js",
   "./eventos-calendario-v260.js",
   "./historial-edicion-v260.js",
-  "./historial-render-v260.js",
-  "./historial-v260.js",
+  "./historial-render-v262.js",
+  "./historial-v262.js",
   "./legacy-bridge-v260.js",
   "./mejoras-v260.js",
   "./planificacion-v260.js",
@@ -41,8 +41,8 @@ const APP_SHELL = [
   "./registrar-v260.js",
   "./simple-v260.js",
   "./storage-v260.js",
-  "./styles-v260.css",
-  "./tiempo-v260.js",
+  "./styles-v262.css",
+  "./tiempo-v262.js",
   "./visual-v260.js",
   "./manifest.webmanifest",
   "./icon-apple.png",
