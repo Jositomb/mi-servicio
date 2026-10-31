@@ -1,12 +1,12 @@
-const BUILD = "V262-26201";
-const CACHE = "mi-servicio-v26201";
+const BUILD = "V263-26301";
+const CACHE = "mi-servicio-v26301";
 const CACHE_PREFIX = "mi-servicio-";
 const CODIGO = {
-  "./app-v262.js": "7a3aa2943c6182266b6056adf7585a31dd8f69512d06f803cc7fb616e4c657b5",
+  "./app-v263.js": "4099e8d50829c940ea77445150b617f428e939af3e48b18dca5e020d7fcd082a",
   "./config-v260.js": "2ef83ae552bfdf5e1e998fffe9f39f1cc6f999826b9229396280337ed5612b5d",
   "./estadisticas-render-v260.js": "d4b50491234def73bc1f3636c97c18c7c21fb8fd5e596cd5cbb82b5caa3d62e9",
   "./estadisticas-v260.js": "32989862e03bd33c2f2f0974355b569887283d1f21535995538ecd79912533bc",
-  "./eventos-calendario-v260.js": "e27f6ba6807ff6d0ecb22667c6ced9770cecb305d19a6adc034abcb9b6990939",
+  "./eventos-calendario-v263.js": "99dae0a51f52636111f9cfb3b59fcfe319df58006d5d1173e5c3b6ea4b1a22b0",
   "./historial-edicion-v260.js": "c49ee5d23ac98a86d0b7796bfcb6f8aba223c477c5c6515cd9b31ec0b3baea7e",
   "./historial-render-v262.js": "c2d8dccec7d5565bc969b5fcfb50b4411c18ab729be918838bc88369887d0fb3",
   "./historial-v262.js": "74149a065f9546991970eb9f87e2ac44235405e2d82a8ebe46dbc799c2b0c7f0",
@@ -17,7 +17,7 @@ const CODIGO = {
   "./registrar-v260.js": "d3b7fcc9c7fb5b62681ef154302ac084a8088ed7ccfe144f5eb78ab8d52aa667",
   "./simple-v260.js": "d4de97a738d75a20f26487f59f0011fcb51ed63980b00b53618be4a6629e6820",
   "./storage-v260.js": "c8dc9a3b4b440181b69dabf206319026d8f3057cccf63c57ae8585cd4bdfdca9",
-  "./styles-v262.css": "4ec5a6ae33a4348a5f5560e8c3705e109eaf4791235ccf89806ec7843cca7f15",
+  "./styles-v263.css": "b466b4e9d0d1c49422629504833655ee5144ec57af99751aec9dbb7cab5510e0",
   "./tiempo-v262.js": "5e75178e6ba21dc2e3b136144dcaf1b1642193c1236f0ea7730b99581e39ff54",
   "./visual-v260.js": "5ad2f2082df9360054e0e5b3dafa1f2754d01ea51a3b0f2b91b8bb4bacd83711"
 };
@@ -26,11 +26,11 @@ const APP_SHELL = [
   "./escena-registrar-v260.png",
   "./index.html",
   "./",
-  "./app-v262.js",
+  "./app-v263.js",
   "./config-v260.js",
   "./estadisticas-render-v260.js",
   "./estadisticas-v260.js",
-  "./eventos-calendario-v260.js",
+  "./eventos-calendario-v263.js",
   "./historial-edicion-v260.js",
   "./historial-render-v262.js",
   "./historial-v262.js",
@@ -41,7 +41,7 @@ const APP_SHELL = [
   "./registrar-v260.js",
   "./simple-v260.js",
   "./storage-v260.js",
-  "./styles-v262.css",
+  "./styles-v263.css",
   "./tiempo-v262.js",
   "./visual-v260.js",
   "./manifest.webmanifest",
