@@ -1,8 +1,8 @@
-const BUILD = "V260-26001";
-const CACHE = "mi-servicio-v26001";
+const BUILD = "V261-26101";
+const CACHE = "mi-servicio-v26101";
 const CACHE_PREFIX = "mi-servicio-";
 const CODIGO = {
-  "./app-v260.js": "a55786143ba3f8a1fac305451aa6a7b51b38c9a81989d8faa76afed36eb654f8",
+  "./app-v261.js": "fc63d6ec950d4599f2e35f6e13de1b54941a491834cd8c3e3054100293718261",
   "./config-v260.js": "2ef83ae552bfdf5e1e998fffe9f39f1cc6f999826b9229396280337ed5612b5d",
   "./estadisticas-render-v260.js": "d4b50491234def73bc1f3636c97c18c7c21fb8fd5e596cd5cbb82b5caa3d62e9",
   "./estadisticas-v260.js": "32989862e03bd33c2f2f0974355b569887283d1f21535995538ecd79912533bc",
@@ -26,7 +26,7 @@ const APP_SHELL = [
   "./escena-registrar-v260.png",
   "./index.html",
   "./",
-  "./app-v260.js",
+  "./app-v261.js",
   "./config-v260.js",
   "./estadisticas-render-v260.js",
   "./estadisticas-v260.js",

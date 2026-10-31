@@ -1,0 +1,4 @@
+Mi Servicio V261
+Sube todos los archivos a la raiz, reemplazando los existentes (elimina app-v260.js).
+Corrige un error al cambiar el Tipo en Ajustes (el objetivo sugerido no se rellenaba). Sin cambios en datos ni copias.
+Validacion estatica y simulada; no probado en iPhone fisico.
