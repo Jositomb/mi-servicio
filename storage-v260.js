@@ -1,1 +1,47 @@
-export const storage=Object.freeze({leer(r,e=null){try{const t=localStorage.getItem(r);return t===null?e:JSON.parse(t)}catch(t){return console.error(`[Mi Servicio] No se pudo leer "${r}"`,t),e}},guardar(r,e){try{return localStorage.setItem(r,JSON.stringify(e)),!0}catch(t){return console.error(`[Mi Servicio] No se pudo guardar "${r}"`,t),!1}},eliminar(r){try{return localStorage.removeItem(r),!0}catch(e){return console.error(`[Mi Servicio] No se pudo eliminar "${r}"`,e),!1}},existe(r){try{return localStorage.getItem(r)!==null}catch{return!1}}});window.MiServicioStorage=storage;
+/* Mi Servicio · core/storage.js · V95
+   Capa común y segura sobre localStorage.
+   No cambia claves, formatos ni datos existentes.
+*/
+
+export const storage = Object.freeze({
+  leer(clave, valorPorDefecto = null) {
+    try {
+      const contenido = localStorage.getItem(clave);
+      if (contenido === null) return valorPorDefecto;
+      return JSON.parse(contenido);
+    } catch (error) {
+      console.error(`[Mi Servicio] No se pudo leer "${clave}"`, error);
+      return valorPorDefecto;
+    }
+  },
+
+  guardar(clave, valor) {
+    try {
+      localStorage.setItem(clave, JSON.stringify(valor));
+      return true;
+    } catch (error) {
+      console.error(`[Mi Servicio] No se pudo guardar "${clave}"`, error);
+      return false;
+    }
+  },
+
+  eliminar(clave) {
+    try {
+      localStorage.removeItem(clave);
+      return true;
+    } catch (error) {
+      console.error(`[Mi Servicio] No se pudo eliminar "${clave}"`, error);
+      return false;
+    }
+  },
+
+  existe(clave) {
+    try {
+      return localStorage.getItem(clave) !== null;
+    } catch {
+      return false;
+    }
+  }
+});
+
+window.MiServicioStorage = storage;

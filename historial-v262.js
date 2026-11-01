@@ -1,1 +1,141 @@
-function s(t,n){var i,c;const a=new Date((i=t==null?void 0:t.fecha)!=null?i:0).getTime();return new Date((c=n==null?void 0:n.fecha)!=null?c:0).getTime()-a}function v(t=[]){return t.reduce((n,a)=>{var i;const e=String((i=a==null?void 0:a.fecha)!=null?i:"").slice(0,10);return n[e]||(n[e]=[]),n[e].push(a),n},{})}function h(t){const n=Number(t)||0;return`${n} ${n===1?"registro":"registros"}`}function l(t=""){return String(t).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim()}function d(t,n=""){const a=l(n);return a?l([t==null?void 0:t.tipo,t==null?void 0:t.actividad,t==null?void 0:t.notas,t==null?void 0:t.nota,t==null?void 0:t.acompanante,t==null?void 0:t.compa\u00F1ero,t==null?void 0:t.fecha].filter(Boolean).join(" ")).includes(a):!0}function f(t,n="todos"){var c,u;const a=l(n);if(!a||a==="todos")return!0;const e=l((u=(c=t==null?void 0:t.tipo)!=null?c:t==null?void 0:t.actividad)!=null?u:"");return({ministerio:["ministerio"],ldc:["ldc"],asambleas:["asambleas","asamblea"],otras:["otras","otra"]}[a]||[a]).includes(e)}function b(t=[],n={}){var i,c,u;const a=(c=(i=n.filtro)!=null?i:n.actividad)!=null?c:"todos",e=(u=n.busqueda)!=null?u:"";return t.filter(m=>f(m,a)&&d(m,e))}let r=null;function q(t){r=typeof t=="function"?t:null}function A(t){return r?r(t):null}const o={iniciar(){const t=document.getElementById("vista-historial")||document.querySelector('[data-vista="historial"]');t&&(t.querySelectorAll("button:not([aria-label])").forEach(n=>{const a=(n.textContent||"").trim(),e=n.getAttribute("title");!a&&e&&n.setAttribute("aria-label",e)}),t.querySelectorAll('.modal, [class*="modal"]').forEach(n=>{n.hasAttribute("role")||n.setAttribute("role","dialog"),n.hasAttribute("aria-modal")||n.setAttribute("aria-modal","true")}),t.dataset.moduloHistorial="101")},refrescar(){this.iniciar()},compararPorFecha:s,agruparPorFecha:v,cantidadTexto:h,filtrar:b,coincideBusqueda:d,coincideActividad:f,registrarRenderizador:q,renderizar:A};function p(){o.iniciar();const t=document.getElementById("vista-historial");if(!t||typeof MutationObserver=="undefined")return;let n=!1;new MutationObserver(()=>{n||(n=!0,requestAnimationFrame(()=>{n=!1,o.iniciar()}))}).observe(t,{childList:!0,subtree:!0})}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",p,{once:!0}):p(),window.MiServicioHistorial=o;export{o as Historial,s as compararPorFecha,v as agruparPorFecha,h as cantidadTexto,b as filtrar,d as coincideBusqueda,f as coincideActividad,q as registrarRenderizador,A as renderizar};
+/* Mi Servicio · historial.js · V101
+   Primer módulo funcional de Historial.
+   Coordina accesibilidad y ciclo de vida sin modificar los datos existentes.
+*/
+
+/* V102 · Utilidades puras de Historial */
+function compararPorFecha(a,b){
+  const fa=new Date(a?.fecha ?? 0).getTime();
+  const fb=new Date(b?.fecha ?? 0).getTime();
+  return fb-fa;
+}
+function agruparPorFecha(registros=[]){
+  return registros.reduce((grupos,registro)=>{
+    const clave=String(registro?.fecha ?? "").slice(0,10);
+    if(!grupos[clave]) grupos[clave]=[];
+    grupos[clave].push(registro);
+    return grupos;
+  },{});
+}
+function cantidadTexto(cantidad){
+  const n=Number(cantidad)||0;
+  return `${n} ${n===1 ? "registro" : "registros"}`;
+}
+
+
+/* V103 · Filtros de Historial */
+function normalizarTexto(valor=""){
+  return String(valor)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .toLowerCase()
+    .trim();
+}
+
+function coincideBusqueda(registro,busqueda=""){
+  const q=normalizarTexto(busqueda);
+  if(!q) return true;
+  const texto=normalizarTexto([
+    registro?.tipo,
+    registro?.actividad,
+    registro?.notas,
+    registro?.nota,
+    registro?.acompanante,
+    registro?.compañero,
+    registro?.fecha
+  ].filter(Boolean).join(" "));
+  return texto.includes(q);
+}
+
+function coincideActividad(registro,filtro="todos"){
+  const f=normalizarTexto(filtro);
+  if(!f || f==="todos") return true;
+  const tipo=normalizarTexto(registro?.tipo ?? registro?.actividad ?? "");
+  const equivalencias={
+    ministerio:["ministerio"],
+    ldc:["ldc"],
+    asambleas:["asambleas","asamblea"],
+    otras:["otras","otra"]
+  };
+  return (equivalencias[f]||[f]).includes(tipo);
+}
+
+function filtrar(registros=[],opciones={}){
+  const filtro=opciones.filtro ?? opciones.actividad ?? "todos";
+  const busqueda=opciones.busqueda ?? "";
+  return registros.filter(r =>
+    coincideActividad(r,filtro) && coincideBusqueda(r,busqueda)
+  );
+}
+
+
+/* V104 · Puente de renderizado de Historial */
+let renderizadorHistorial=null;
+
+function registrarRenderizador(fn){
+  renderizadorHistorial=typeof fn==="function" ? fn : null;
+}
+
+function renderizar(contexto){
+  if(renderizadorHistorial) return renderizadorHistorial(contexto);
+  return null;
+}
+
+const Historial = {
+  iniciar() {
+    const vista =
+      document.getElementById("vista-historial") ||
+      document.querySelector('[data-vista="historial"]');
+    if (!vista) return;
+
+    // Etiquetas accesibles para controles que no tengan texto descriptivo.
+    vista.querySelectorAll('button:not([aria-label])').forEach(b => {
+      const texto=(b.textContent||"").trim();
+      const titulo=b.getAttribute("title");
+      if (!texto && titulo) b.setAttribute("aria-label",titulo);
+    });
+
+    // Los diálogos existentes de Historial quedan correctamente identificados.
+    vista.querySelectorAll('.modal, [class*="modal"]').forEach(modal => {
+      if (!modal.hasAttribute("role")) modal.setAttribute("role","dialog");
+      if (!modal.hasAttribute("aria-modal")) modal.setAttribute("aria-modal","true");
+    });
+
+    vista.dataset.moduloHistorial="101";
+  },
+
+  refrescar() {
+    this.iniciar();
+  },
+
+  compararPorFecha,
+  agruparPorFecha,
+  cantidadTexto,
+  filtrar,
+  coincideBusqueda,
+  coincideActividad,
+  registrarRenderizador,
+  renderizar
+};
+
+function arrancarHistorial(){
+  Historial.iniciar();
+  /* V262 · Observa solo la vista Historial y agrupa los cambios en un fotograma. */
+  const vista=document.getElementById("vista-historial");
+  if(!vista||typeof MutationObserver==="undefined")return;
+  let pendiente=false;
+  new MutationObserver(()=>{
+    if(pendiente)return;pendiente=true;
+    requestAnimationFrame(()=>{pendiente=false;Historial.iniciar();});
+  }).observe(vista,{childList:true,subtree:true});
+}
+if(document.readyState==="loading"){
+  document.addEventListener("DOMContentLoaded",arrancarHistorial,{once:true});
+}else arrancarHistorial();
+
+window.MiServicioHistorial=Historial;
+export {
+  Historial, compararPorFecha, agruparPorFecha, cantidadTexto,
+  filtrar, coincideBusqueda, coincideActividad,
+  registrarRenderizador, renderizar
+};

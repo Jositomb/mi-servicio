@@ -1,1 +1,78 @@
-const z="miServicio.localidadTiempo",x=Object.freeze({0:["\u2600\uFE0F","Despejado"],1:["\u{1F324}\uFE0F","Mayormente despejado"],2:["\u26C5","Parcialmente nublado"],3:["\u2601\uFE0F","Nublado"],45:["\u{1F32B}\uFE0F","Niebla"],48:["\u{1F32B}\uFE0F","Niebla"],51:["\u{1F326}\uFE0F","Llovizna"],53:["\u{1F326}\uFE0F","Llovizna"],55:["\u{1F327}\uFE0F","Llovizna"],61:["\u{1F327}\uFE0F","Lluvia"],63:["\u{1F327}\uFE0F","Lluvia"],65:["\u{1F327}\uFE0F","Lluvia intensa"],71:["\u{1F328}\uFE0F","Nieve"],73:["\u{1F328}\uFE0F","Nieve"],75:["\u2744\uFE0F","Nieve intensa"],80:["\u{1F326}\uFE0F","Chubascos"],81:["\u{1F327}\uFE0F","Chubascos"],82:["\u26C8\uFE0F","Chubascos fuertes"],95:["\u26C8\uFE0F","Tormenta"],96:["\u26C8\uFE0F","Tormenta"],99:["\u26C8\uFE0F","Tormenta fuerte"]});function c(e){return x[Number(e)]||["\u{1F324}\uFE0F","Tiempo variable"]}function s(e,t=0){return e=Number(e),t=Number(t)||0,t>=45?["\u2602\uFE0F","Lleva paraguas"]:e<=8?["\u{1F9E5}","Abr\xEDgate bien"]:e<=16?["\u{1F9E5}","Chaqueta ligera"]:e<=23?["\u{1F455}","Ropa c\xF3moda"]:["\u{1F455}","Ropa fresca"]}function r(e,t){const o=document.getElementById(e);o&&(o.textContent=t)}function D(){try{return localStorage.getItem(z)||"Arteixo"}catch{return"Arteixo"}}async function M(e){var a;const t=new URL("https://geocoding-api.open-meteo.com/v1/search");t.searchParams.set("name",e),t.searchParams.set("count","1"),t.searchParams.set("language","es"),t.searchParams.set("format","json");const o=await fetch(t);if(!o.ok)throw new Error("geocodificaci\xF3n");const i=await o.json();if(!((a=i.results)!=null&&a.length))throw new Error("localidad");return i.results[0]}async function T(){var p,f,h,b,g,w,y,v,L;const e=D();r("tiempoDescripcion","Consultando\u2026");const t=await M(e),o=new URL("https://api.open-meteo.com/v1/forecast");o.searchParams.set("latitude",t.latitude),o.searchParams.set("longitude",t.longitude),o.searchParams.set("current","temperature_2m,weather_code,is_day"),o.searchParams.set("hourly","precipitation_probability"),o.searchParams.set("forecast_days","1"),o.searchParams.set("timezone","auto");const i=await fetch(o);if(!i.ok)throw new Error("tiempo");const a=await i.json(),u=Math.round((f=(p=a.current)==null?void 0:p.temperature_2m)!=null?f:0),m=(h=a.current)==null?void 0:h.weather_code;(g=window.aplicarAmbienteClima)==null||g.call(window,m,(b=a.current)==null?void 0:b.is_day);const[A,E]=c(m),d=(w=a.current)==null?void 0:w.time;let n=0;if(d&&((y=a.hourly)!=null&&y.time)){const C=a.hourly.time.indexOf(d.slice(0,13)+":00");C>=0&&(n=(L=(v=a.hourly.precipitation_probability)==null?void 0:v[C])!=null?L:0)}const[N,I]=s(u,n);r("tiempoIcono",A),r("tiempoDescripcion",E),r("tiempoTemperatura",`${u}\xB0`),r("tiempoLugar",t.name||e),r("tiempoLluvia",`\u{1F4A7} ${Math.round(n)}%`),r("tiempoConsejo",I);const l=document.querySelector(".tiempo-ropa-icono");return l&&(l.textContent=N),a}function P(){const e=document.getElementById("actualizarTiempoInicio");!e||e.dataset.moduloTiempo==="99"||(e.dataset.moduloTiempo="99",e.setAttribute("aria-label","Actualizar el tiempo"))}const _={iniciar:P,consultar:T,describirCodigo:c,consejoRopa:s,disponible:()=>!!document.getElementById("tiempoEsquinas")};function j(){P()}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",j,{once:!0}):j(),window.MiServicioTiempo=_;export{_ as Tiempo,T as consultar,c as describirCodigoTiempo,s as consejoRopa};
+/* Mi Servicio · tiempo.js · V99
+   Módulo Tiempo autónomo.
+*/
+const STORAGE_LOCALIDAD="miServicio.localidadTiempo";
+const WMO=Object.freeze({
+  0:["☀️","Despejado"],1:["🌤️","Mayormente despejado"],2:["⛅","Parcialmente nublado"],
+  3:["☁️","Nublado"],45:["🌫️","Niebla"],48:["🌫️","Niebla"],
+  51:["🌦️","Llovizna"],53:["🌦️","Llovizna"],55:["🌧️","Llovizna"],
+  61:["🌧️","Lluvia"],63:["🌧️","Lluvia"],65:["🌧️","Lluvia intensa"],
+  71:["🌨️","Nieve"],73:["🌨️","Nieve"],75:["❄️","Nieve intensa"],
+  80:["🌦️","Chubascos"],81:["🌧️","Chubascos"],82:["⛈️","Chubascos fuertes"],
+  95:["⛈️","Tormenta"],96:["⛈️","Tormenta"],99:["⛈️","Tormenta fuerte"]
+});
+function describirCodigoTiempo(c){return WMO[Number(c)]||["🌤️","Tiempo variable"];}
+function consejoRopa(t,lluvia=0){
+  t=Number(t); lluvia=Number(lluvia)||0;
+  if(lluvia>=45)return["☂️","Lleva paraguas"];
+  if(t<=8)return["🧥","Abrígate bien"];
+  if(t<=16)return["🧥","Chaqueta ligera"];
+  if(t<=23)return["👕","Ropa cómoda"];
+  return["👕","Ropa fresca"];
+}
+function poner(id,valor){const e=document.getElementById(id);if(e)e.textContent=valor;}
+function localidad(){
+  try{return localStorage.getItem(STORAGE_LOCALIDAD)||"Arteixo";}catch{return"Arteixo";}
+}
+async function geocodificar(nombre){
+  const u=new URL("https://geocoding-api.open-meteo.com/v1/search");
+  u.searchParams.set("name",nombre);u.searchParams.set("count","1");
+  u.searchParams.set("language","es");u.searchParams.set("format","json");
+  const r=await fetch(u);if(!r.ok)throw new Error("geocodificación");
+  const d=await r.json();if(!d.results?.length)throw new Error("localidad");
+  return d.results[0];
+}
+async function consultar(){
+  const nombre=localidad();
+  poner("tiempoDescripcion","Consultando…");
+  const g=await geocodificar(nombre);
+  const u=new URL("https://api.open-meteo.com/v1/forecast");
+  u.searchParams.set("latitude",g.latitude);u.searchParams.set("longitude",g.longitude);
+  u.searchParams.set("current","temperature_2m,weather_code,is_day");
+  u.searchParams.set("hourly","precipitation_probability");
+  u.searchParams.set("forecast_days","1");u.searchParams.set("timezone","auto");
+  const r=await fetch(u);if(!r.ok)throw new Error("tiempo");
+  const d=await r.json();
+  const temp=Math.round(d.current?.temperature_2m ?? 0);
+  const code=d.current?.weather_code;
+  window.aplicarAmbienteClima?.(code,d.current?.is_day);
+  const [icono,desc]=describirCodigoTiempo(code);
+  const hora=d.current?.time;
+  let lluvia=0;
+  if(hora && d.hourly?.time){
+    const i=d.hourly.time.indexOf(hora.slice(0,13)+":00");
+    if(i>=0)lluvia=d.hourly.precipitation_probability?.[i]??0;
+  }
+  const [ropaIcono,consejo]=consejoRopa(temp,lluvia);
+  poner("tiempoIcono",icono);poner("tiempoDescripcion",desc);
+  poner("tiempoTemperatura",`${temp}°`);poner("tiempoLugar",g.name||nombre);
+  poner("tiempoLluvia",`💧 ${Math.round(lluvia)}%`);
+  poner("tiempoConsejo",consejo);
+  const ri=document.querySelector(".tiempo-ropa-icono");if(ri)ri.textContent=ropaIcono;
+  return d;
+}
+function iniciar(){
+  const b=document.getElementById("actualizarTiempoInicio");
+  if(!b||b.dataset.moduloTiempo==="99")return;
+  b.dataset.moduloTiempo="99";b.setAttribute("aria-label","Actualizar el tiempo");
+  /* V262 · El clic lo gestiona app (actualizarTiempoInicio); aquí solo se etiqueta. consultar() sigue disponible vía API. */
+}
+const Tiempo={iniciar,consultar,describirCodigo:describirCodigoTiempo,consejoRopa,
+ disponible:()=>Boolean(document.getElementById("tiempoEsquinas"))};
+function arrancar(){
+  iniciar();
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",arrancar,{once:true});
+else arrancar();
+window.MiServicioTiempo=Tiempo;
+export {Tiempo,consultar,describirCodigoTiempo,consejoRopa};

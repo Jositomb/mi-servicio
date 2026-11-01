@@ -1,82 +1,9273 @@
-function msStorageLeer(e,t=null){if(window.MiServicioStorage)return window.MiServicioStorage.leer(e,t);try{const a=localStorage.getItem(e);return a===null?t:JSON.parse(a)}catch(a){return console.error(`[Mi Servicio] No se pudo leer "${e}"`,a),t}}function msStorageGuardar(e,t){if(window.MiServicioStorage)return window.MiServicioStorage.guardar(e,t);try{return localStorage.setItem(e,JSON.stringify(t)),!0}catch(a){return console.error(`[Mi Servicio] No se pudo guardar "${e}"`,a),!1}}const STORAGE_KEYS={registros:"miServicio.registros",preferencias:"miServicio.preferencias",ultimaCopiaSeguridad:"miServicio.ultimaCopiaSeguridad",onedriveConectado:"miServicio.onedriveConectado",ultimaSyncOneDrive:"miServicio.ultimaSyncOneDrive",ultimaModificacionLocal:"miServicio.ultimaModificacionLocal",agendaSalidas:"miServicio.agendaSalidas"},almacenamiento={leer(e,t){try{const a=localStorage.getItem(e);return a?JSON.parse(a):t}catch(a){return console.error(`No se pudo leer ${e}:`,a),t}},guardar(e,t){try{return msStorageGuardar(e,t)}catch(a){return console.error(`No se pudo guardar ${e}:`,a),!1}},eliminar(e){try{return localStorage.removeItem(e),!0}catch(t){return console.error(`No se pudo eliminar ${e}:`,t),!1}}},estado={vistaActual:"inicio",filtroHistorial:"todos",registros:[],agendaSalidas:{},preferencias:{tipoPublicador:"publicador",personajeProgreso:"hombre",objetivoMensualMinutos:0,mostrarLDC:!0,mostrarAsambleas:!0,mostrarOtras:!0},registroPendienteBorrar:null,registroPendienteEditar:null,estadisticas:{periodo:"semana",fechaReferencia:new Date}};document.addEventListener("DOMContentLoaded",()=>{importarTransferenciaDesdeURL(),cargarDatos(),configurarNavegacion(),configurarSelectorActividad(),configurarFormulario(),configurarHistorial(),configurarEdicionRegistros(),configurarFiltrosHistorial(),configurarEstadisticas(),configurarAjustes(),configurarCalendarioInicio(),configurarRecordatorioCopiaSeguridad(),configurarSincronizacionIPhone(),configurarTransferenciaPantallaInicio(),configurarOneDrive(),establecerFechaActual(),establecerFechaActual(),seleccionarActividad(ultimaActividadV260()),cargarFormularioAjustes(),actualizarTodaLaInterfaz(),actualizarRecordatorioCopiaSeguridad(),seleccionarVista("inicio"),console.log("Mi Servicio Web iniciado correctamente")});function cargarDatos(){estado.registros=leerJSON(STORAGE_KEYS.registros,[]),estado.agendaSalidas=leerJSON(STORAGE_KEYS.agendaSalidas,{}),(!estado.agendaSalidas||typeof estado.agendaSalidas!="object"||Array.isArray(estado.agendaSalidas))&&(estado.agendaSalidas={}),estado.agendaSalidas=Object.fromEntries(Object.entries(estado.agendaSalidas).map(([e,t])=>[e,normalizarAgendaDia(t)]).filter(([,e])=>!!e.companero)),estado.preferencias=leerJSON(STORAGE_KEYS.preferencias,{tipoPublicador:"publicador",personajeProgreso:"hombre",objetivoMensualMinutos:0,mostrarLDC:!0,mostrarAsambleas:!0,mostrarOtras:!0}),Array.isArray(estado.registros)||(estado.registros=[]),(!estado.preferencias||typeof estado.preferencias!="object")&&(estado.preferencias={tipoPublicador:"publicador",personajeProgreso:"hombre",objetivoMensualMinutos:0,mostrarLDC:!0,mostrarAsambleas:!0,mostrarOtras:!0}),estado.preferencias.tipoPublicador||(estado.preferencias.tipoPublicador="publicador"),["hombre","mujer","koala","mariposa","pantera","tortuga","liebre","corazon","pajarito","gatito"].includes(estado.preferencias.personajeProgreso)||(estado.preferencias.personajeProgreso="hombre"),Number.isFinite(Number(estado.preferencias.objetivoMensualMinutos))||(estado.preferencias.objetivoMensualMinutos=0),["mostrarLDC","mostrarAsambleas","mostrarOtras"].forEach(e=>{typeof estado.preferencias[e]!="boolean"&&(estado.preferencias[e]=!0)}),estado.preferencias.nombreOtras=normalizarNombreOtrasV260(estado.preferencias.nombreOtras),normalizarRegistros()}function leerJSON(e,t){return almacenamiento.leer(e,t)}function guardarJSON(e,t){return almacenamiento.guardar(e,t)}function estadoSyncV134(e,t="ok"){almacenamiento.guardar("miServicio.estadoSyncV134",{texto:e,tipo:t,fecha:new Date().toISOString()});try{window.dispatchEvent(new CustomEvent("miServicio:estadoSyncV190",{detail:{texto:e,tipo:t}}))}catch{}const a=document.getElementById("estadoSyncV134");if(!a)return;const o=t==="subiendo"?"\u2191":t==="bajando"?"\u2193":t==="pendiente"?"\u26A0\uFE0E":"\u2713";a.textContent=`${o} ${e}`}function guardarSnapshotLocalV134(){const e={formato:"mi-servicio-snapshot-local",version:2,guardadoEn:new Date().toISOString(),registros:estado.registros,preferencias:estado.preferencias,agendaSalidas:estado.agendaSalidas};almacenamiento.guardar("miServicio.snapshotAnteriorV134",e);const t=almacenamiento.leer("miServicio.historialCopiasV136",[]),a=Array.isArray(t)?t:[];return a.unshift(e),almacenamiento.guardar("miServicio.historialCopiasV136",a.slice(0,5)),!0}function resumenCopiaV140(e){const t=Array.isArray(e==null?void 0:e.registros)?e.registros:[],a=t.reduce((i,r)=>i+(Number(r.minutosTotales)||(Number(r.horas)||0)*60+(Number(r.minutos)||0)),0),o=new Date(e==null?void 0:e.guardadoEn),n=Number.isNaN(o.getTime())?"Fecha desconocida":o.toLocaleString("es-ES",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});return{registros:t.length,minutos:a,fechaTexto:n}}function restaurarCopiaV136(e){const t=almacenamiento.leer("miServicio.historialCopiasV136",[]),a=Array.isArray(t)?t[e]:null;if(!a)return;const o=resumenCopiaV140(a),n=`Copia del ${o.fechaTexto}
-${o.registros} registros \xB7 ${formatearTiempo(o.minutos)} acumuladas
+/* =========================================================
+   MI SERVICIO · ÍNDICE DE MANTENIMIENTO · V93
+   =========================================================
+   Este archivo sigue siendo único para no arriesgar datos ni comportamiento.
+   A partir de aquí las mejoras se localizarán por bloques funcionales:
 
-\xBFQuieres restaurarla?
-Antes se guardar\xE1 el estado actual.`;if(confirm(n)){guardarSnapshotLocalV134(),aplicandoDatosOneDrive=!0;try{estado.registros=normalizarRegistrosImportados(a.registros||[]),estado.preferencias=normalizarPreferenciasImportadas(a.preferencias||{}),estado.agendaSalidas=a.agendaSalidas&&typeof a.agendaSalidas=="object"&&!Array.isArray(a.agendaSalidas)?a.agendaSalidas:{},guardarJSON(STORAGE_KEYS.registros,estado.registros),guardarJSON(STORAGE_KEYS.preferencias,estado.preferencias),guardarJSON(STORAGE_KEYS.agendaSalidas,estado.agendaSalidas)}finally{aplicandoDatosOneDrive=!1}marcarCambioLocalV133(),cargarFormularioAjustes(),actualizarTodaLaInterfaz(),renderHistorialCopiasV136(),programarSincronizacionOneDrive()}}function renderHistorialCopiasV136(){const e=document.getElementById("historialCopiasV136");if(!e)return;const t=almacenamiento.leer("miServicio.historialCopiasV136",[]);if(!Array.isArray(t)||!t.length){e.innerHTML='<div class="v136-empty">Todav\xEDa no hay copias anteriores.</div>';return}e.innerHTML=t.map((a,o)=>{const n=resumenCopiaV140(a);return`<div class="v140-backup-row">
+   01 · Configuración, constantes y almacenamiento
+   02 · Navegación y vistas
+   03 · Inicio y progreso mensual
+   04 · Registro de actividad
+   05 · Calendario y planificación
+   06 · Historial
+   07 · Estadísticas
+   08 · Meta / año de servicio
+   09 · Ajustes y preferencias
+   10 · Copias de seguridad / importación / exportación
+   11 · OneDrive
+   12 · Tiempo
+   13 · Personajes y animaciones
+   14 · Inicialización y eventos
+
+   IMPORTANTE:
+   V93 NO cambia lógica, datos ni nombres públicos.
+   Es una primera fase de organización segura antes de modularizar.
+   ========================================================= */
+
+/* V103 · Historial fase 3
+   historial.js ya ofrece filtrado por actividad y búsqueda como funciones puras.
+   El renderizado, edición y borrado permanecen en este archivo hasta validar filtros.
+*/
+
+/* V102 · Historial: utilidades puras disponibles en window.MiServicioHistorial.
+   Las implementaciones heredadas permanecen como fallback durante la validación. */
+
+/* V96 · Integración progresiva de storage
+   Estos adaptadores usan el módulo core/storage.js cuando está disponible.
+   Mantienen exactamente el mismo formato JSON y las mismas claves.
+*/
+function msStorageLeer(clave, valorPorDefecto = null) {
+    if (window.MiServicioStorage) {
+        return window.MiServicioStorage.leer(clave, valorPorDefecto);
+    }
+    try {
+        const contenido = localStorage.getItem(clave);
+        return contenido === null ? valorPorDefecto : JSON.parse(contenido);
+    } catch (error) {
+        console.error(`[Mi Servicio] No se pudo leer "${clave}"`, error);
+        return valorPorDefecto;
+    }
+}
+
+function msStorageGuardar(clave, valor) {
+    if (window.MiServicioStorage) {
+        return window.MiServicioStorage.guardar(clave, valor);
+    }
+    try {
+        localStorage.setItem(clave, JSON.stringify(valor));
+        return true;
+    } catch (error) {
+        console.error(`[Mi Servicio] No se pudo guardar "${clave}"`, error);
+        return false;
+    }
+}
+
+
+/* V94 · Primer módulo real
+   core/config.js se carga como ES6 antes de este archivo.
+   Durante esta fase app-v27.js conserva sus constantes originales para garantizar
+   compatibilidad exacta; las iremos sustituyendo por MiServicioConfig una a una.
+*/
+
+/* V95 · Capa de almacenamiento modular
+   core/storage.js expone window.MiServicioStorage.
+   En esta fase no se cambian todavía las llamadas antiguas a localStorage:
+   primero validamos que el módulo carga correctamente y después migraremos
+   cada bloque funcional sin modificar las claves ni el formato de los datos.
+*/
+
+
+
+// =========================================================
+// MI SERVICIO WEB
+// app.js
+// =========================================================
+
+"use strict";
+
+
+// =========================================================
+// CLAVES DE ALMACENAMIENTO
+// =========================================================
+
+const STORAGE_KEYS = {
+    registros: "miServicio.registros",
+    preferencias: "miServicio.preferencias",
+    ultimaCopiaSeguridad: "miServicio.ultimaCopiaSeguridad",
+    onedriveConectado: "miServicio.onedriveConectado",
+    ultimaSyncOneDrive: "miServicio.ultimaSyncOneDrive",
+    ultimaModificacionLocal: "miServicio.ultimaModificacionLocal",
+    agendaSalidas: "miServicio.agendaSalidas"
+};
+
+
+// =========================================================
+// CAPA DE ALMACENAMIENTO
+// =========================================================
+
+const almacenamiento = {
+
+    leer(clave, valorPorDefecto) {
+
+        try {
+
+            const contenido =
+                localStorage.getItem(clave);
+
+            if (!contenido) {
+                return valorPorDefecto;
+            }
+
+            return JSON.parse(contenido);
+
+        } catch (error) {
+
+            console.error(
+                `No se pudo leer ${clave}:`,
+                error
+            );
+
+            return valorPorDefecto;
+        }
+    },
+
+
+    guardar(clave, valor) {
+
+        try {
+
+            return msStorageGuardar(clave, valor);
+
+        } catch (error) {
+
+            console.error(
+                `No se pudo guardar ${clave}:`,
+                error
+            );
+
+            return false;
+        }
+    },
+
+
+    eliminar(clave) {
+
+        try {
+
+            localStorage.removeItem(clave);
+
+            return true;
+
+        } catch (error) {
+
+            console.error(
+                `No se pudo eliminar ${clave}:`,
+                error
+            );
+
+            return false;
+        }
+    }
+};
+
+
+// =========================================================
+// ESTADO GENERAL
+// =========================================================
+
+const estado = {
+
+    vistaActual: "inicio",
+
+    filtroHistorial: "todos",
+
+    registros: [],
+
+    // Planificación del ministerio por fecha:
+    // { "2026-09-18": "Marta", ... }
+    agendaSalidas: {},
+
+    preferencias: {
+        tipoPublicador: "publicador",
+        personajeProgreso: "hombre",
+        objetivoMensualMinutos: 0,
+        mostrarLDC: true,
+        mostrarAsambleas: true,
+        mostrarOtras: true
+    },
+
+    registroPendienteBorrar: null,
+
+    registroPendienteEditar: null,
+
+    estadisticas: {
+        periodo: "semana",
+        fechaReferencia: new Date()
+    }
+};
+
+
+// =========================================================
+// INICIO DE LA APLICACIÓN
+// =========================================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        importarTransferenciaDesdeURL();
+
+        cargarDatos();
+
+        configurarNavegacion();
+
+        configurarSelectorActividad();
+
+        configurarFormulario();
+
+        configurarHistorial();
+
+        configurarEdicionRegistros();
+
+        configurarFiltrosHistorial();
+
+        configurarEstadisticas();
+
+        configurarAjustes();
+
+        configurarCalendarioInicio();
+
+        configurarRecordatorioCopiaSeguridad();
+
+        configurarSincronizacionIPhone();
+
+        configurarTransferenciaPantallaInicio();
+
+        configurarOneDrive();
+
+        establecerFechaActual();
+        
+        establecerFechaActual();
+        
+        seleccionarActividad(ultimaActividadV260());
+
+        cargarFormularioAjustes();
+
+        actualizarTodaLaInterfaz();
+
+        actualizarRecordatorioCopiaSeguridad();
+
+        seleccionarVista(
+            "inicio"
+        );
+
+        console.log(
+            "Mi Servicio Web iniciado correctamente"
+        );
+    }
+);
+
+
+// =========================================================
+// CARGAR DATOS
+// =========================================================
+
+function cargarDatos() {
+
+    estado.registros =
+        leerJSON(
+            STORAGE_KEYS.registros,
+            []
+        );
+
+    estado.agendaSalidas =
+        leerJSON(
+            STORAGE_KEYS.agendaSalidas,
+            {}
+        );
+
+    if (
+        !estado.agendaSalidas ||
+        typeof estado.agendaSalidas !== "object" ||
+        Array.isArray(estado.agendaSalidas)
+    ) {
+        estado.agendaSalidas = {};
+    }
+
+    estado.agendaSalidas =
+        Object.fromEntries(
+            Object.entries(estado.agendaSalidas)
+                .map(([fecha, valor]) => [
+                    fecha,
+                    normalizarAgendaDia(valor)
+                ])
+                .filter(([, valor]) => Boolean(valor.companero))
+        );
+
+    estado.preferencias =
+        leerJSON(
+            STORAGE_KEYS.preferencias,
+            {
+                tipoPublicador:
+                    "publicador",
+
+                personajeProgreso:
+                    "hombre",
+
+                objetivoMensualMinutos:
+                    0,
+                mostrarLDC: true,
+                mostrarAsambleas: true,
+                mostrarOtras: true
+            }
+        );
+
+
+    // -----------------------------------------
+    // Comprobar registros
+    // -----------------------------------------
+
+    if (
+        !Array.isArray(
+            estado.registros
+        )
+    ) {
+
+        estado.registros = [];
+    }
+
+
+    // -----------------------------------------
+    // Comprobar preferencias
+    // -----------------------------------------
+
+    if (
+        !estado.preferencias ||
+        typeof estado.preferencias !==
+            "object"
+    ) {
+
+        estado.preferencias = {
+
+            tipoPublicador:
+                "publicador",
+
+            personajeProgreso:
+                "hombre",
+
+            objetivoMensualMinutos:
+                0,
+            mostrarLDC: true,
+            mostrarAsambleas: true,
+            mostrarOtras: true
+        };
+    }
+
+
+    // -----------------------------------------
+    // Completar preferencias antiguas
+    // -----------------------------------------
+
+    if (
+        !estado.preferencias
+            .tipoPublicador
+    ) {
+
+        estado.preferencias
+            .tipoPublicador =
+                "publicador";
+    }
+
+
+    if (
+        !["hombre","mujer","koala","mariposa","pantera","tortuga","liebre","corazon","pajarito","gatito"].includes(
+            estado.preferencias
+                .personajeProgreso
+        )
+    ) {
+
+        estado.preferencias
+            .personajeProgreso =
+                "hombre";
+    }
+
+
+    if (
+        !Number.isFinite(
+            Number(
+                estado.preferencias
+                    .objetivoMensualMinutos
+            )
+        )
+    ) {
+
+        estado.preferencias
+            .objetivoMensualMinutos =
+                0;
+    }
+
+    [
+        "mostrarLDC",
+        "mostrarAsambleas",
+        "mostrarOtras"
+    ].forEach(clave => {
+        if (typeof estado.preferencias[clave] !== "boolean") {
+            estado.preferencias[clave] = true;
+        }
+    });
+
+
+    estado.preferencias.nombreOtras=normalizarNombreOtrasV260(estado.preferencias.nombreOtras);
+    normalizarRegistros();
+}
+
+
+// =========================================================
+// NORMALIZAR REGISTROS
+// =========================================================
+
+/* V109: normalizarRegistros → registrar.js */
+
+
+
+// =========================================================
+// LEER JSON
+// =========================================================
+
+function leerJSON(
+    clave,
+    valorPorDefecto
+) {
+
+    return almacenamiento.leer(
+        clave,
+        valorPorDefecto
+    );
+}
+
+
+// =========================================================
+// GUARDAR JSON
+// =========================================================
+
+function guardarJSON(
+    clave,
+    valor
+) {
+
+    return almacenamiento.guardar(
+        clave,
+        valor
+    );
+}
+
+
+// =========================================================
+// GUARDAR REGISTROS
+// =========================================================
+
+/* V109: guardarRegistros → registrar.js */
+
+
+
+// =========================================================
+// GUARDAR PREFERENCIAS
+// =========================================================
+
+
+
+function estadoSyncV134(texto, tipo="ok") {
+    almacenamiento.guardar("miServicio.estadoSyncV134",{texto,tipo,fecha:new Date().toISOString()});
+    try{
+        window.dispatchEvent(new CustomEvent("miServicio:estadoSyncV190",{detail:{texto,tipo}}));
+    }catch(e){}
+    const el=document.getElementById("estadoSyncV134"); if(!el)return;
+    const icono=tipo==="subiendo"?"↑":tipo==="bajando"?"↓":tipo==="pendiente"?"⚠︎":"✓";
+    el.textContent=`${icono} ${texto}`;
+}
+function guardarSnapshotLocalV134(){
+ const snap={formato:"mi-servicio-snapshot-local",version:2,guardadoEn:new Date().toISOString(),
+ registros:estado.registros,preferencias:estado.preferencias,agendaSalidas:estado.agendaSalidas};
+ almacenamiento.guardar("miServicio.snapshotAnteriorV134",snap);
+ const h=almacenamiento.leer("miServicio.historialCopiasV136",[]);
+ const l=Array.isArray(h)?h:[]; l.unshift(snap);
+ almacenamiento.guardar("miServicio.historialCopiasV136",l.slice(0,5)); return true;
+}
+function resumenCopiaV140(copia){
+ const registros=Array.isArray(copia?.registros)?copia.registros:[];
+ const minutos=registros.reduce((sum,r)=>sum+(Number(r.minutosTotales)||((Number(r.horas)||0)*60+(Number(r.minutos)||0))),0);
+ const fecha=new Date(copia?.guardadoEn);
+ const fechaTexto=Number.isNaN(fecha.getTime())?"Fecha desconocida":fecha.toLocaleString("es-ES",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
+ return {registros:registros.length,minutos,fechaTexto};
+}
+function restaurarCopiaV136(i){
+ const l=almacenamiento.leer("miServicio.historialCopiasV136",[]),c=Array.isArray(l)?l[i]:null;if(!c)return;
+ const r=resumenCopiaV140(c);
+ const detalle=`Copia del ${r.fechaTexto}\n${r.registros} registros · ${formatearTiempo(r.minutos)} acumuladas\n\n¿Quieres restaurarla?\nAntes se guardará el estado actual.`;
+ if(!confirm(detalle))return;
+ guardarSnapshotLocalV134(); aplicandoDatosOneDrive=true;
+ try{
+  estado.registros=normalizarRegistrosImportados(c.registros||[]);
+  estado.preferencias=normalizarPreferenciasImportadas(c.preferencias||{});
+  estado.agendaSalidas=c.agendaSalidas&&typeof c.agendaSalidas==="object"&&!Array.isArray(c.agendaSalidas)?c.agendaSalidas:{};
+  guardarJSON(STORAGE_KEYS.registros,estado.registros);guardarJSON(STORAGE_KEYS.preferencias,estado.preferencias);guardarJSON(STORAGE_KEYS.agendaSalidas,estado.agendaSalidas);
+ }finally{aplicandoDatosOneDrive=false;}
+ marcarCambioLocalV133();cargarFormularioAjustes();actualizarTodaLaInterfaz();renderHistorialCopiasV136();programarSincronizacionOneDrive();
+}
+function renderHistorialCopiasV136(){
+ const host=document.getElementById("historialCopiasV136");if(!host)return;
+ const l=almacenamiento.leer("miServicio.historialCopiasV136",[]);
+ if(!Array.isArray(l)||!l.length){host.innerHTML='<div class="v136-empty">Todavía no hay copias anteriores.</div>';return;}
+ host.innerHTML=l.map((c,i)=>{
+   const r=resumenCopiaV140(c);
+   return `<div class="v140-backup-row">
       <div class="v140-backup-info">
-        <strong>\u{1F558} ${n.fechaTexto}</strong>
-        <small>${n.registros} registros \xB7 ${formatearTiempo(n.minutos)} acumuladas</small>
+        <strong>🕘 ${r.fechaTexto}</strong>
+        <small>${r.registros} registros · ${formatearTiempo(r.minutos)} acumuladas</small>
       </div>
-      <button type="button" onclick="restaurarCopiaV136(${o})">Restaurar</button>
-   </div>`}).join("")}function configurarEstadoSyncV134(){const e=document.getElementById("versionPublicadaV156");if(!e||document.getElementById("estadoSyncV134"))return;const t=document.createElement("div");t.id="estadoSyncV134",t.style.cssText="font-size:12px;text-align:center;margin-top:6px;font-weight:600;",e.insertAdjacentElement("beforebegin",t);const a=almacenamiento.leer("miServicio.estadoSyncV134",null);navigator.onLine?a!=null&&a.texto?estadoSyncV134(a.texto,a.tipo||"ok"):estadoSyncV134("Preparado para sincronizar","ok"):estadoSyncV134("Sin conexi\xF3n \xB7 cambios pendientes","pendiente")}window.addEventListener("offline",()=>estadoSyncV134("Sin conexi\xF3n \xB7 cambios pendientes","pendiente")),window.addEventListener("online",()=>{estadoSyncV134("Conexi\xF3n recuperada \xB7 sincronizando\u2026","subiendo"),setTimeout(()=>sincronizarConOneDrive(!1),300)});function obtenerRevisionLocalV133(){const e=Number(almacenamiento.leer("miServicio.syncRevision",0));return Number.isFinite(e)&&e>=0?Math.floor(e):0}function establecerRevisionLocalV133(e){const t=Number(e);almacenamiento.guardar("miServicio.syncRevision",Number.isFinite(t)&&t>=0?Math.floor(t):0)}function marcarCambioLocalV133(){establecerRevisionLocalV133(obtenerRevisionLocalV133()+1),almacenamiento.guardar("miServicio.onedriveCambioLocalPendiente",!0),almacenamiento.guardar(STORAGE_KEYS.ultimaModificacionLocal,new Date().toISOString()),estadoSyncV134(navigator.onLine?"Cambio pendiente de sincronizar":"Sin conexi\xF3n \xB7 cambio pendiente","pendiente")}function guardarPreferencias(){const e=guardarJSON(STORAGE_KEYS.preferencias,estado.preferencias);return e&&!aplicandoDatosOneDrive&&(marcarCambioLocalV133(),programarSincronizacionOneDrive()),e}function configurarNavegacion(){document.querySelectorAll(".nav-item").forEach(t=>{t.addEventListener("click",()=>{const a=t.dataset.vista;a&&seleccionarVista(a)})})}function seleccionarVista(e){if(e==="meta"){e="estadisticas";const n=document.getElementById("metaDetalleV260");n&&(n.open=!0)}e!=="ajustes"&&(estado.ultimaVistaPrincipalV260=e);const t=document.getElementById("abrirAjustesV260");t&&t.setAttribute("aria-pressed",String(e==="ajustes"));const a=document.getElementById(`vista-${e}`);if(!a){console.warn(`No existe la vista: vista-${e}`);return}switch(estado.vistaActual=e,document.querySelectorAll(".vista").forEach(n=>{n.classList.remove("activa"),n.hidden=!0,n.style.setProperty("display","none","important")}),a.hidden=!1,a.style.removeProperty("display"),a.classList.add("activa"),document.querySelectorAll(".nav-item").forEach(n=>{n.classList.toggle("activo",n.dataset.vista===e)}),ponerTexto("tituloVista",{inicio:"Inicio",registrar:"Registrar",historial:"Historial",estadisticas:"Estad\xEDsticas",meta:"Meta",ajustes:"Ajustes"}[e]||"Mi Servicio"),e){case"inicio":actualizarInicio(),setTimeout(refrescarFraseAlVolverAInicio,30);break;case"registrar":prepararPantallaRegistrar();break;case"historial":renderizarHistorial();break;case"estadisticas":actualizarEstadisticas(),actualizarMeta(),sincronizarMetaVisualV152();break;case"meta":actualizarMeta();break;case"ajustes":cargarFormularioAjustes();break}window.scrollTo({top:0,behavior:"smooth"}),e==="inicio"&&requestAnimationFrame(animarActividadGuardadaV260)}function configurarSelectorActividad(){document.querySelectorAll(".actividad-boton").forEach(t=>{t.addEventListener("click",()=>{const a=t.dataset.tipo;a&&seleccionarActividad(a)})})}function seleccionarActividad(e){["ministerio","ldc","asambleas","otras"].includes(e)||(e="ministerio"),recordarActividadV260(e);const a=document.getElementById("tipoRegistro");a&&(a.value=e),document.querySelectorAll(".actividad-boton").forEach(i=>{i.classList.toggle("seleccionada",i.dataset.tipo===e)}),typeof actualizarRegistrarV203=="function"&&actualizarRegistrarV203();const o=document.getElementById("grupoCursosBiblicos");o&&(o.classList.toggle("oculto",e!=="ministerio"),e!=="ministerio"&&reiniciarCursosBiblicos());const n=document.getElementById("grupoCompaneroMinisterio");n&&n.classList.remove("oculto")}function configurarFormulario(){const e=document.getElementById("formRegistro");e&&(configurarCamposTiempoFaciles("horasRegistro","minutosRegistro"),configurarCursosBiblicos(),e.addEventListener("submit",t=>{t.preventDefault(),registrarActividad()}))}function configurarCamposTiempoFaciles(e,t){[e,t].forEach(a=>{const o=document.getElementById(a);if(!o||o.dataset.seleccionFacil==="1")return;o.dataset.seleccionFacil="1";const n=()=>{setTimeout(()=>{try{o.select()}catch{}},0)};o.addEventListener("focus",n),o.addEventListener("click",n),o.addEventListener("blur",()=>{o.value===""&&(o.value="0")})})}function configurarAtajosTiempo(e,t,a){const o=document.getElementById(t),n=document.getElementById(a);!o||!n||document.querySelectorAll(e).forEach(i=>{i.dataset.atajoConfigurado!=="1"&&(i.dataset.atajoConfigurado="1",i.addEventListener("click",()=>{const r=Math.max(0,Number(i.dataset.minutos)||0);o.value=String(Math.floor(r/60)),n.value=String(r%60);const c=i.closest(".atajos-tiempo");c&&c.querySelectorAll(".atajo-tiempo").forEach(l=>{l.classList.toggle("seleccionado",l===i)}),typeof vibrar=="function"&&vibrar(10)}))})}function establecerFechaActual(){const e=document.getElementById("fechaRegistro");e&&(e.value=fechaLocalISO(new Date))}function mostrarMensajeFormulario(e,t,a){e&&(e.textContent=t,e.classList.remove("error","exito","visible"),e.classList.add("visible"),e.classList.add(a?"error":"exito"))}function limpiarMensajeFormulario(e){e&&(e.textContent="",e.classList.remove("error","exito","visible"))}function configurarHistorial(){const e=document.getElementById("botonRegistrarDesdeHistorial");e&&e.addEventListener("click",()=>{seleccionarVista("registrar")});const t=document.getElementById("cancelarBorrado"),a=document.getElementById("confirmarBorrado"),o=document.querySelector("#modalBorrar .modal-fondo");t&&t.addEventListener("click",cerrarModalBorrado),a&&a.addEventListener("click",confirmarEliminarRegistro),o&&o.addEventListener("click",cerrarModalBorrado),document.addEventListener("keydown",n=>{n.key==="Escape"&&cerrarModalBorrado()})}function configurarFiltrosHistorial(){document.querySelectorAll(".filtro-historial").forEach(e=>{e.addEventListener("click",()=>{seleccionarFiltroHistorial(e.dataset.filtro)})})}function seleccionarFiltroHistorial(e){["todos","ministerio","ldc","asambleas","otras"].includes(e)&&(estado.filtroHistorial=e,document.querySelectorAll(".filtro-historial").forEach(a=>{a.classList.toggle("activo",a.dataset.filtro===e)}),renderizarHistorial())}function abrirModalEdicion(e){const t=estado.registros.find(m=>m.id===e);if(!t)return;capturarRetornoEdicionV260(e),estado.registroPendienteEditar=e;const a=document.getElementById("modalEditar"),o=document.getElementById("editarFecha"),n=document.getElementById("editarTipo"),i=document.getElementById("editarHoras"),r=document.getElementById("editarMinutos"),c=document.getElementById("editarNotas"),l=document.getElementById("editarCompanero"),s=document.getElementById("grupoEditarCompanero"),d=document.getElementById("mensajeEditarRegistro");if(!a||!o||!n||!i||!r||!c)return;o.value=t.fecha,n.value=t.tipo;const u=Math.max(Number(t.minutos)||0,0);i.value=String(Math.floor(u/60)),r.value=String(u%60),c.value=t.notas||"",l&&(l.value=t.companero||""),s&&s.classList.remove("oculto"),n.onchange=()=>{s&&s.classList.remove("oculto")},document.querySelectorAll(".atajo-tiempo-edicion").forEach(m=>m.classList.remove("seleccionado")),Array.from(n.options).forEach(m=>{m.hidden=m.value!==t.tipo&&!actividadVisible(m.value)}),d&&(d.textContent="",d.classList.remove("error")),a.classList.remove("oculto"),a.setAttribute("aria-hidden","false"),setTimeout(()=>o.focus(),0)}function cerrarModalEdicion(){estado.registroPendienteEditar=null;const e=document.getElementById("modalEditar");e&&(e.classList.add("oculto"),e.setAttribute("aria-hidden","true"),requestAnimationFrame(restaurarRetornoEdicionV260))}function abrirModalBorrado(e){estado.registroPendienteBorrar=e;const t=document.getElementById("modalBorrar");t&&(t.classList.remove("oculto"),t.setAttribute("aria-hidden","false"))}function cerrarModalBorrado(){estado.registroPendienteBorrar=null;const e=document.getElementById("modalBorrar");e&&(e.classList.add("oculto"),e.setAttribute("aria-hidden","true"))}function actualizarInicio(){actualizarNombreMes(),actualizarCalendarioInicio();const e=obtenerRegistrosMesActual(),t=sumarMinutos(e),a=sumarMinutos(e.filter(s=>s.tipo==="ministerio")),o=sumarMinutos(e.filter(s=>s.tipo==="ldc")),n=sumarMinutos(e.filter(s=>s.tipo==="asambleas")),i=sumarMinutos(e.filter(s=>s.tipo==="otras")),r=a+(actividadVisible("ldc")?o:0)+(actividadVisible("asambleas")?n:0)+(actividadVisible("otras")?i:0);ponerTexto("totalMes",formatearTiempo(r)),ponerTexto("totalMinisterio",formatearTiempo(a)),ponerTexto("totalLDC",formatearTiempo(o)),ponerTexto("totalAsambleas",formatearTiempo(n)),ponerTexto("totalOtras",formatearTiempo(i));const c=document.getElementById("filaOtras");c&&c.classList.toggle("oculto",!actividadVisible("otras")||i===0),actualizarGraficoInicio({total:t,ministerio:a,ldc:o,asambleas:n,otras:i});const l=calcularComputoMesMeta(e);pintarComputoMesV260(document.getElementById("computoObjetivoMesV260"),l),actualizarObjetivo(l.computable),actualizarFraseAnimoInicio(l.computable)}function actualizarFraseAnimoInicio(e,t=!1){var f;const a=document.getElementById("fraseAnimoInicio");if(!a)return;const o=Number(((f=estado.preferencias)==null?void 0:f.objetivoMensualMinutos)||0),n=o>0?Math.max(0,e/o*100):0,i=new Date,r=new Date(i.getFullYear(),i.getMonth()+1,0).getDate(),c=i.getDate()/r*100,l=n-c;let s;if(o>0&&n>=100?s=["\xA1Objetivo conseguido! Disfruta de todo lo que has logrado. \u{1F389}","\xA1Meta alcanzada! Un mes lleno de buenos esfuerzos. \u{1F3C1}","\xA1Lo conseguiste! Cada peque\xF1o paso ha contado. \u2728"]:o>0&&l>=5?s=["\xA1Muy buen ritmo! Vas por delante y cada esfuerzo suma. \u{1F407}","Vas con margen. Sigue disfrutando de cada paso. \u2728","\xA1Qu\xE9 buen avance! Mant\xE9n ese ritmo sin perder la calma. \u{1F331}"]:o>0&&l<=-5?s=["Poco a poco. Un buen d\xEDa puede cambiar el ritmo del mes. \u{1F422}","No hace falta correr: lo importante es seguir avanzando. \u{1F331}","Cada rato cuenta. Hoy puede ser un buen d\xEDa para sumar. \u2728"]:s=["Vas al ritmo del mes. Sigue as\xED, paso a paso. \u{1F6B6}","Cada paso cuenta. Sigue avanzando. \u2728","Buen ritmo: constancia, calma y a seguir. \u{1F33F}"],!t&&a.dataset.ultimaFrase)return;const d="miServicio.ultimaFraseAnimoInicio";let u="";try{u=localStorage.getItem(d)||""}catch{u=a.dataset.ultimaFrase||""}const m=frasePersonalV260();m&&u!==m&&(s=[m]);const g=s.filter(h=>h!==u),p=g.length?g:s,v=Math.floor(Math.random()*p.length),b=p[v];a.textContent=b,a.dataset.ultimaFrase=b;try{localStorage.setItem(d,b)}catch{}}let ultimoCambioFraseEntrada=0;function refrescarFraseAlVolverAInicio(){const e=Date.now();if(e-ultimoCambioFraseEntrada<900)return;const t=document.getElementById("vista-inicio");if(!t||!t.classList.contains("activa"))return;ultimoCambioFraseEntrada=e;const a=resumenMesV143(new Date).total;actualizarFraseAnimoInicio(a,!0)}document.addEventListener("visibilitychange",()=>{document.visibilityState==="visible"&&setTimeout(refrescarFraseAlVolverAInicio,80)}),window.addEventListener("pageshow",()=>{setTimeout(refrescarFraseAlVolverAInicio,80)}),window.addEventListener("focus",()=>{setTimeout(refrescarFraseAlVolverAInicio,80)});function formatoMinutosPlan(e){const t=Math.max(0,Number(e)||0),a=Math.floor(t/60),o=t%60;return o?`${a?a+" h ":""}${o} min`:a?`${a} h`:""}function guardarSalidaDesdeModal(e=""){var v,b,f;const t=document.getElementById("modalAgendaSalida"),a=document.getElementById("nombreAgendaSalida"),o=document.getElementById("tipoAgendaSalida"),n=document.getElementById("mensajeAgendaSalida"),i=document.getElementById("guardarAgendaSalida");if(!t||!a||!o||!i)return;const r=e||t.dataset.fecha||"",c=a.value.trim(),l=["ministerio","ldc","asambleas","otras"].includes(o.value)?o.value:"ministerio";if(!r){n&&(n.textContent="No se pudo identificar el d\xEDa. Cierra y vuelve a abrirlo.");return}if(!c){n&&(n.textContent="Escribe con qui\xE9n saldr\xE1s."),a.focus();return}(!estado.agendaSalidas||typeof estado.agendaSalidas!="object")&&(estado.agendaSalidas={}),i.disabled=!0,i.textContent="Guardando\u2026";const s={...estado.agendaSalidas},d=((v=document.getElementById("horaAgendaV202"))==null?void 0:v.value)||"",u=Number((b=document.getElementById("repetirAgendaV202"))==null?void 0:b.value)||1,m=prepararSalidasV202(s,r,{tipo:l,companero:c,minutosPrevistos:Number(((f=document.getElementById("duracionAgendaSalida"))==null?void 0:f.value)||0),hora:d},u);if(estado.agendaSalidas=m.agenda,!guardarAgendaSalidas()){estado.agendaSalidas=s,i.disabled=!1,i.textContent="Guardar",n&&(n.textContent="No se pudo guardar la salida. Int\xE9ntalo de nuevo.");return}u>1&&avisoV202(`${m.guardadas} salidas guardadas${m.omitidas?` \xB7 ${m.omitidas} fechas ocupadas conservadas`:""}`),n&&(n.textContent="Guardado \u2713",n.classList.add("exito")),cerrarModalAgendaSalida(),actualizarCalendarioInicio();const g=fechaDesdeISO(r),p=estado.registros.filter(h=>h.fecha===r);mostrarDetalleDiaCalendario(g.getDate(),g.getMonth(),g.getFullYear(),p),actualizarTodaLaInterfaz()}function resolverColisionesOrbitasV120(){if(document.body.classList.contains("inicio-encajado-v260")){componerInicioEncajadoV260();return}if(document.body.dataset.ambiente==="autor"){componerAutorV260();return}const e=document.querySelector("#vista-inicio .orbita-grafico");if(!e)return;const t=[...e.querySelectorAll(".orbita-actividad")],a=e.querySelector(".orbita-centro");if(t.length<2||!a)return;const o=e.getBoundingClientRect();if(!o.width||!o.height)return;const n=d=>{const u=d.getBoundingClientRect();return{nodo:d,x:u.left-o.left+u.width/2,y:u.top-o.top+u.height/2,radio:Math.max(u.width,u.height)/2}},i=t.map(n),r=n(a),c=10,l=5;function s(d,u,m,g){let p=u.x-d.x,v=u.y-d.y,b=Math.hypot(p,v);b<.1&&(p=1,v=.35,b=Math.hypot(p,v));const f=d.radio+u.radio+c;if(b>=f)return;const h=f-b,E=p/b,I=v/b;d.x-=E*h*m,d.y-=I*h*m,u.x+=E*h*g,u.y+=I*h*g}for(let d=0;d<30;d++){for(let u=0;u<i.length;u++){for(let m=u+1;m<i.length;m++)s(i[u],i[m],.5,.5);s(i[u],r,.78,.22)}for(const u of i)u.x=Math.max(u.radio+l,Math.min(o.width-u.radio-l,u.x)),u.y=Math.max(u.radio+l,Math.min(o.height-u.radio-l,u.y));r.x=Math.max(r.radio+l,Math.min(o.width-r.radio-l,r.x)),r.y=Math.max(r.radio+l,Math.min(o.height-r.radio-l,r.y))}for(const d of i)d.nodo.style.setProperty("left",`${d.x/o.width*100}%`,"important"),d.nodo.style.setProperty("top",`${d.y/o.height*100}%`,"important");a.style.setProperty("left",`${r.x/o.width*100}%`,"important"),a.style.setProperty("top",`${r.y/o.height*100}%`,"important")}function actualizarGraficoInicio({total:e,ministerio:t,ldc:a,asambleas:o,otras:n}){const i=document.getElementById("graficoInicio"),r=document.getElementById("leyendaGraficoInicio"),c=document.getElementById("fechaProgresoMes");if(c){const f=new Date;c.textContent=`${String(f.getDate()).padStart(2,"0")}/${String(f.getMonth()+1).padStart(2,"0")}/${f.getFullYear()}`}if(!i||!r)return;requestAnimationFrame(()=>{actualizarReflejosAutorV260(),componerAutorV260()});const l=[{tipo:"ministerio",nombre:"Ministerio",minutos:t,icono:'<span class="sector-icono sector-libro"><span class="libro-sol">\u2600</span><small>DISFRUTE</small></span>'},{tipo:"ldc",nombre:"LDC",minutos:a,icono:'<span class="sector-icono sector-emoji">\u{1F6E0}\uFE0F</span>'},{tipo:"asambleas",nombre:"Asambleas",minutos:o,icono:'<span class="sector-icono sector-auditorio"><i></i><i></i><i></i><i></i><i></i><i></i></span>'},{tipo:"otras",nombre:nombreActividad("otras"),minutos:n,icono:'<span class="sector-icono sector-emoji">\u2728</span>'}];datosGraficoPersonalV260={total:e,ministerio:t,ldc:a,asambleas:o,otras:n};const s=l.filter(f=>Number.isFinite(Number(f.minutos))&&Number(f.minutos)>0).map(f=>({...f,minutos:Number(f.minutos)})),d=s.reduce((f,h)=>f+h.minutos,0),u=leerEstiloGraficoV260();if(i.dataset.estilo=u,u!=="burbujas"){i.innerHTML=crearGraficoPersonalV260(u,s),r.innerHTML="",r.hidden=!0;return}if(!s.length||d<=0){i.innerHTML=`
+      <button type="button" onclick="restaurarCopiaV136(${i})">Restaurar</button>
+   </div>`;
+ }).join("");
+}
+function configurarEstadoSyncV134(){
+    const a=document.getElementById("versionPublicadaV156");
+    if(!a||document.getElementById("estadoSyncV134"))return;
+    const el=document.createElement("div"); el.id="estadoSyncV134";
+    el.style.cssText="font-size:12px;text-align:center;margin-top:6px;font-weight:600;";
+    a.insertAdjacentElement("beforebegin",el);
+    const g=almacenamiento.leer("miServicio.estadoSyncV134",null);
+    if(!navigator.onLine) estadoSyncV134("Sin conexión · cambios pendientes","pendiente");
+    else if(g?.texto) estadoSyncV134(g.texto,g.tipo||"ok");
+    else estadoSyncV134("Preparado para sincronizar","ok");
+}
+window.addEventListener("offline",()=>estadoSyncV134("Sin conexión · cambios pendientes","pendiente"));
+window.addEventListener("online",()=>{estadoSyncV134("Conexión recuperada · sincronizando…","subiendo");setTimeout(()=>sincronizarConOneDrive(false),300);});
+function obtenerRevisionLocalV133() {
+    const n = Number(almacenamiento.leer("miServicio.syncRevision", 0));
+    return Number.isFinite(n) && n >= 0 ? Math.floor(n) : 0;
+}
+function establecerRevisionLocalV133(v) {
+    const n = Number(v);
+    almacenamiento.guardar("miServicio.syncRevision",
+        Number.isFinite(n) && n >= 0 ? Math.floor(n) : 0);
+}
+function marcarCambioLocalV133() {
+    establecerRevisionLocalV133(obtenerRevisionLocalV133() + 1);
+    almacenamiento.guardar("miServicio.onedriveCambioLocalPendiente", true);
+    almacenamiento.guardar(STORAGE_KEYS.ultimaModificacionLocal, new Date().toISOString());
+    estadoSyncV134(navigator.onLine ? "Cambio pendiente de sincronizar" : "Sin conexión · cambio pendiente","pendiente");
+}
+function guardarPreferencias() {
+    const guardado = guardarJSON(STORAGE_KEYS.preferencias, estado.preferencias);
+    if (guardado && !aplicandoDatosOneDrive) {
+        marcarCambioLocalV133();
+        programarSincronizacionOneDrive();
+    }
+    return guardado;
+}
+
+
+// =========================================================
+// NAVEGACIÓN
+// =========================================================
+
+function configurarNavegacion() {
+
+    const botones =
+        document.querySelectorAll(
+            ".nav-item"
+        );
+
+
+    botones.forEach(
+        boton => {
+
+            boton.addEventListener(
+                "click",
+                () => {
+
+                    const vista =
+                        boton.dataset.vista;
+
+
+                    if (!vista) {
+                        return;
+                    }
+
+
+                    seleccionarVista(
+                        vista
+                    );
+                }
+            );
+        }
+    );
+}
+
+
+// =========================================================
+// SELECCIONAR VISTA
+// =========================================================
+
+function seleccionarVista(
+    vista
+) {
+    if(vista === "meta"){
+        vista="estadisticas";
+        const detalle=document.getElementById("metaDetalleV260");
+        if(detalle)detalle.open=true;
+    }
+    if(vista !== "ajustes")estado.ultimaVistaPrincipalV260=vista;
+    const avatar=document.getElementById("abrirAjustesV260");
+    if(avatar)avatar.setAttribute("aria-pressed",String(vista === "ajustes"));
+
+
+    const vistaElemento =
+        document.getElementById(
+            `vista-${vista}`
+        );
+
+
+    if (!vistaElemento) {
+
+        console.warn(
+            `No existe la vista: vista-${vista}`
+        );
+
+        return;
+    }
+
+
+    // -----------------------------------------
+    // Guardamos la vista activa
+    // -----------------------------------------
+
+    estado.vistaActual =
+        vista;
+
+
+    // -----------------------------------------
+    // Ocultar todas las vistas
+    // -----------------------------------------
+
+    document
+        .querySelectorAll(
+            ".vista"
+        )
+        .forEach(
+            elemento => {
+
+                elemento.classList.remove(
+                    "activa"
+                );
+
+                // Ocultamos de forma explícita cada pantalla.
+                // Así ningún ajuste visual de Inicio puede dejarla
+                // visible debajo de Registrar, Historial, etc.
+                elemento.hidden = true;
+                elemento.style.setProperty(
+                    "display",
+                    "none",
+                    "important"
+                );
+            }
+        );
+
+
+    // -----------------------------------------
+    // Mostrar la seleccionada
+    // -----------------------------------------
+
+    vistaElemento.hidden = false;
+    vistaElemento.style.removeProperty(
+        "display"
+    );
+
+    vistaElemento
+        .classList
+        .add(
+            "activa"
+        );
+
+
+    // -----------------------------------------
+    // Actualizar barra inferior
+    // -----------------------------------------
+
+    document
+        .querySelectorAll(
+            ".nav-item"
+        )
+        .forEach(
+            boton => {
+
+                boton.classList.toggle(
+                    "activo",
+                    boton.dataset.vista ===
+                        vista
+                );
+            }
+        );
+
+
+    // -----------------------------------------
+    // Título
+    // -----------------------------------------
+
+    const titulos = {
+
+        inicio:
+            "Inicio",
+
+        registrar:
+            "Registrar",
+
+        historial:
+            "Historial",
+
+        estadisticas:
+            "Estadísticas",
+
+        meta:
+            "Meta",
+
+        ajustes:
+            "Ajustes"
+    };
+
+
+    ponerTexto(
+        "tituloVista",
+        titulos[vista] ||
+            "Mi Servicio"
+    );
+
+
+    // -----------------------------------------
+    // Actualizar contenido de la vista
+    // -----------------------------------------
+
+    switch (vista) {
+
+        case "inicio":
+
+            actualizarInicio();
+            setTimeout(refrescarFraseAlVolverAInicio, 30);
+
+            break;
+
+
+        case "registrar":
+
+            prepararPantallaRegistrar();
+
+            break;
+
+
+        case "historial":
+
+            renderizarHistorial();
+
+            break;
+
+
+        case "estadisticas":
+
+            actualizarEstadisticas();
+            actualizarMeta();
+            sincronizarMetaVisualV152();
+
+            break;
+
+
+        case "meta":
+
+            actualizarMeta();
+
+            break;
+
+
+        case "ajustes":
+
+            cargarFormularioAjustes();
+
+            break;
+    }
+
+
+    // -----------------------------------------
+    // Volver arriba
+    // -----------------------------------------
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+    if(vista==="inicio")requestAnimationFrame(animarActividadGuardadaV260);
+}
+
+
+// =========================================================
+// SELECTOR DE ACTIVIDAD
+// =========================================================
+
+function configurarSelectorActividad() {
+
+    const botones =
+        document.querySelectorAll(
+            ".actividad-boton"
+        );
+
+
+    botones.forEach(
+        boton => {
+
+            boton.addEventListener(
+                "click",
+                () => {
+
+                    const tipo =
+                        boton.dataset.tipo;
+
+
+                    if (!tipo) {
+                        return;
+                    }
+
+
+                    seleccionarActividad(
+                        tipo
+                    );
+                }
+            );
+        }
+    );
+}
+
+
+// =========================================================
+// SELECCIONAR ACTIVIDAD
+// =========================================================
+
+function seleccionarActividad(
+    tipo
+) {
+
+    const tiposValidos = [
+        "ministerio",
+        "ldc",
+        "asambleas",
+        "otras"
+    ];
+
+
+    if (
+        !tiposValidos.includes(
+            tipo
+        )
+    ) {
+
+        tipo =
+            "ministerio";
+    }
+
+
+    recordarActividadV260(tipo);
+
+    const campoTipo =
+        document.getElementById(
+            "tipoRegistro"
+        );
+
+
+    if (campoTipo) {
+
+        campoTipo.value =
+            tipo;
+    }
+
+
+    document
+        .querySelectorAll(
+            ".actividad-boton"
+        )
+        .forEach(
+            boton => {
+
+                boton.classList.toggle(
+                    "seleccionada",
+                    boton.dataset.tipo ===
+                        tipo
+                );
+            }
+        );
+
+    if(typeof actualizarRegistrarV203 === "function") actualizarRegistrarV203();
+    const grupoCursos = document.getElementById("grupoCursosBiblicos");
+    if (grupoCursos) {
+        grupoCursos.classList.toggle("oculto", tipo !== "ministerio");
+        if (tipo !== "ministerio") reiniciarCursosBiblicos();
+    }
+
+    const grupoCompanero = document.getElementById("grupoCompaneroMinisterio");
+    if (grupoCompanero) {
+        grupoCompanero.classList.remove("oculto");
+    }
+}
+
+
+// =========================================================
+// FIN BLOQUE 1
+// =========================================================
+
+// =========================================================
+// BLOQUE 2
+// FORMULARIO + REGISTRO + HISTORIAL + BORRADO
+// =========================================================
+
+
+// =========================================================
+// CONFIGURAR FORMULARIO
+// =========================================================
+
+function configurarFormulario() {
+
+    const formulario =
+        document.getElementById(
+            "formRegistro"
+        );
+
+    if (!formulario) {
+        return;
+    }
+
+    configurarCamposTiempoFaciles(
+        "horasRegistro",
+        "minutosRegistro"
+    );
+
+    // V203: los atajos de Registrar añaden tiempo; edición conserva sus presets.
+
+    configurarCursosBiblicos();
+
+    formulario.addEventListener(
+        "submit",
+        evento => {
+
+            evento.preventDefault();
+
+            registrarActividad();
+        }
+    );
+}
+
+
+// =========================================================
+// CURSOS BÍBLICOS
+// =========================================================
+/* V109: configurarCursosBiblicos → registrar.js */
+
+
+/* V109: obtenerCursosBiblicosFormulario → registrar.js */
+
+
+/* V109: reiniciarCursosBiblicos → registrar.js */
+
+
+// =========================================================
+// CAMPOS Y ATAJOS DE TIEMPO
+// =========================================================
+
+function configurarCamposTiempoFaciles(idHoras, idMinutos) {
+
+    [idHoras, idMinutos].forEach(id => {
+        const campo = document.getElementById(id);
+
+        if (!campo || campo.dataset.seleccionFacil === "1") {
+            return;
+        }
+
+        campo.dataset.seleccionFacil = "1";
+
+        const seleccionarTodo = () => {
+            setTimeout(() => {
+                try {
+                    campo.select();
+                } catch (error) {
+                    // Algunos navegadores móviles no exponen select()
+                    // de forma completa en inputs numéricos.
+                }
+            }, 0);
+        };
+
+        campo.addEventListener("focus", seleccionarTodo);
+        campo.addEventListener("click", seleccionarTodo);
+
+        campo.addEventListener("blur", () => {
+            if (campo.value === "") {
+                campo.value = "0";
+            }
+        });
+    });
+}
+
+
+function configurarAtajosTiempo(selector, idHoras, idMinutos) {
+
+    const horas = document.getElementById(idHoras);
+    const minutos = document.getElementById(idMinutos);
+
+    if (!horas || !minutos) {
+        return;
+    }
+
+    document.querySelectorAll(selector).forEach(boton => {
+
+        if (boton.dataset.atajoConfigurado === "1") {
+            return;
+        }
+
+        boton.dataset.atajoConfigurado = "1";
+
+        boton.addEventListener("click", () => {
+            const total = Math.max(
+                0,
+                Number(boton.dataset.minutos) || 0
+            );
+
+            horas.value = String(Math.floor(total / 60));
+            minutos.value = String(total % 60);
+
+            const grupo = boton.closest(".atajos-tiempo");
+            if (grupo) {
+                grupo.querySelectorAll(".atajo-tiempo").forEach(elemento => {
+                    elemento.classList.toggle(
+                        "seleccionado",
+                        elemento === boton
+                    );
+                });
+            }
+
+            if (typeof vibrar === "function") {
+                vibrar(10);
+            }
+        });
+    });
+}
+
+
+// =========================================================
+// PREPARAR PANTALLA REGISTRAR
+// =========================================================
+
+/* V109: prepararPantallaRegistrar → registrar.js */
+
+
+
+// =========================================================
+// ESTABLECER FECHA ACTUAL
+// =========================================================
+
+function establecerFechaActual() {
+
+    const campoFecha =
+        document.getElementById(
+            "fechaRegistro"
+        );
+
+    if (!campoFecha) {
+        return;
+    }
+
+    campoFecha.value =
+        fechaLocalISO(
+            new Date()
+        );
+}
+
+
+// =========================================================
+// REGISTRAR ACTIVIDAD
+// =========================================================
+
+/* V109: registrarActividad → registrar.js */
+
+
+
+// =========================================================
+// MENSAJES DEL FORMULARIO
+// =========================================================
+
+function mostrarMensajeFormulario(
+    elemento,
+    texto,
+    esError
+) {
+
+    if (!elemento) {
+        return;
+    }
+
+    elemento.textContent =
+        texto;
+
+    elemento.classList.remove(
+        "error",
+        "exito",
+        "visible"
+    );
+
+    elemento.classList.add(
+        "visible"
+    );
+
+    elemento.classList.add(
+        esError
+            ? "error"
+            : "exito"
+    );
+}
+
+
+function limpiarMensajeFormulario(
+    elemento
+) {
+
+    if (!elemento) {
+        return;
+    }
+
+    elemento.textContent =
+        "";
+
+    elemento.classList.remove(
+        "error",
+        "exito",
+        "visible"
+    );
+}
+
+
+// =========================================================
+// CONFIGURAR HISTORIAL
+// =========================================================
+
+function configurarHistorial() {
+
+    const botonRegistrar =
+        document.getElementById(
+            "botonRegistrarDesdeHistorial"
+        );
+
+
+    if (botonRegistrar) {
+
+        botonRegistrar.addEventListener(
+            "click",
+            () => {
+
+                seleccionarVista(
+                    "registrar"
+                );
+            }
+        );
+    }
+
+
+    // -----------------------------------------
+    // Modal de borrado
+    // -----------------------------------------
+
+    const cancelar =
+        document.getElementById(
+            "cancelarBorrado"
+        );
+
+    const confirmar =
+        document.getElementById(
+            "confirmarBorrado"
+        );
+
+    const fondo =
+        document.querySelector(
+            "#modalBorrar .modal-fondo"
+        );
+
+
+    if (cancelar) {
+
+        cancelar.addEventListener(
+            "click",
+            cerrarModalBorrado
+        );
+    }
+
+
+    if (confirmar) {
+
+        confirmar.addEventListener(
+            "click",
+            confirmarEliminarRegistro
+        );
+    }
+
+
+    if (fondo) {
+
+        fondo.addEventListener(
+            "click",
+            cerrarModalBorrado
+        );
+    }
+
+
+    // -----------------------------------------
+    // Escape cierra el modal
+    // -----------------------------------------
+
+    document.addEventListener(
+        "keydown",
+        evento => {
+
+            if (
+                evento.key ===
+                "Escape"
+            ) {
+
+                cerrarModalBorrado();
+            }
+        }
+    );
+}
+
+
+// =========================================================
+// CONFIGURAR FILTROS DEL HISTORIAL
+// =========================================================
+
+function configurarFiltrosHistorial() {
+
+    document
+        .querySelectorAll(
+            ".filtro-historial"
+        )
+        .forEach(
+            boton => {
+
+                boton.addEventListener(
+                    "click",
+                    () => {
+
+                        seleccionarFiltroHistorial(
+                            boton.dataset.filtro
+                        );
+                    }
+                );
+            }
+        );
+}
+
+
+// =========================================================
+// SELECCIONAR FILTRO
+// =========================================================
+
+function seleccionarFiltroHistorial(
+    filtro
+) {
+
+    const filtrosValidos = [
+        "todos",
+        "ministerio",
+        "ldc",
+        "asambleas",
+        "otras"
+    ];
+
+
+    if (
+        !filtrosValidos.includes(
+            filtro
+        )
+    ) {
+
+        return;
+    }
+
+
+    estado.filtroHistorial =
+        filtro;
+
+
+    document
+        .querySelectorAll(
+            ".filtro-historial"
+        )
+        .forEach(
+            boton => {
+
+                boton.classList.toggle(
+                    "activo",
+                    boton.dataset.filtro ===
+                        filtro
+                );
+            }
+        );
+
+
+    renderizarHistorial();
+}
+
+
+// =========================================================
+// OBTENER REGISTROS FILTRADOS
+// =========================================================
+
+/* V109: obtenerRegistrosFiltrados → registrar.js */
+
+
+
+// =========================================================
+// RENDERIZAR HISTORIAL
+// =========================================================
+
+/* V105: renderizarHistorial trasladada a historial-render.js */
+
+
+
+// =========================================================
+// AGRUPAR REGISTROS POR FECHA
+// =========================================================
+
+/* V105: agruparRegistrosPorFecha trasladada a historial-render.js */
+
+
+
+// =========================================================
+// TÍTULO DE FECHA DEL HISTORIAL
+// =========================================================
+
+/* V105: tituloFechaHistorial trasladada a historial-render.js */
+
+
+
+// =========================================================
+// ESTADO VACÍO DEL HISTORIAL
+// =========================================================
+
+/* V105: actualizarEstadoVacioHistorial trasladada a historial-render.js */
+
+
+
+// =========================================================
+// CREAR TARJETA DEL HISTORIAL
+// =========================================================
+
+/* V105: crearTarjetaHistorial trasladada a historial-render.js */
+
+
+
+// =========================================================
+// EDICIÓN DE REGISTROS
+// =========================================================
+
+/* V106: configurarEdicionRegistros trasladada a historial-edicion.js */
+
+
+
+function abrirModalEdicion(id) {
+
+    const registro =
+        estado.registros.find(
+            elemento => elemento.id === id
+        );
+
+    if (!registro) {
+        return;
+    }
+
+    capturarRetornoEdicionV260(id);
+    estado.registroPendienteEditar = id;
+
+    const modal = document.getElementById("modalEditar");
+    const fecha = document.getElementById("editarFecha");
+    const tipo = document.getElementById("editarTipo");
+    const horas = document.getElementById("editarHoras");
+    const minutos = document.getElementById("editarMinutos");
+    const notas = document.getElementById("editarNotas");
+    const companero = document.getElementById("editarCompanero");
+    const grupoCompanero = document.getElementById("grupoEditarCompanero");
+    const mensaje = document.getElementById("mensajeEditarRegistro");
+
+    if (!modal || !fecha || !tipo || !horas || !minutos || !notas) {
+        return;
+    }
+
+    fecha.value = registro.fecha;
+    tipo.value = registro.tipo;
+
+    const total = Math.max(Number(registro.minutos) || 0, 0);
+    horas.value = String(Math.floor(total / 60));
+    minutos.value = String(total % 60);
+    notas.value = registro.notas || "";
+    if (companero) companero.value = registro.companero || "";
+    if (grupoCompanero) {
+        grupoCompanero.classList.remove("oculto");
+    }
+    tipo.onchange = () => {
+        if (grupoCompanero) grupoCompanero.classList.remove("oculto");
+    };
+
+    document
+        .querySelectorAll(".atajo-tiempo-edicion")
+        .forEach(boton => boton.classList.remove("seleccionado"));
+
+    // Solo ofrecemos actividades que estén visibles en Ajustes,
+    // manteniendo siempre disponible el tipo actual del registro.
+    Array.from(tipo.options).forEach(
+        opcion => {
+            opcion.hidden =
+                opcion.value !== registro.tipo
+                && !actividadVisible(opcion.value);
+        }
+    );
+
+    if (mensaje) {
+        mensaje.textContent = "";
+        mensaje.classList.remove("error");
+    }
+
+    modal.classList.remove("oculto");
+    modal.setAttribute("aria-hidden", "false");
+
+    setTimeout(() => fecha.focus(), 0);
+}
+
+
+function cerrarModalEdicion() {
+
+    estado.registroPendienteEditar = null;
+
+    const modal = document.getElementById("modalEditar");
+
+    if (!modal) {
+        return;
+    }
+
+    modal.classList.add("oculto");
+    modal.setAttribute("aria-hidden", "true");
+    requestAnimationFrame(restaurarRetornoEdicionV260);
+}
+
+
+/* V106: guardarEdicionRegistro trasladada a historial-edicion.js */
+
+
+
+// =========================================================
+// ABRIR MODAL DE BORRADO
+// =========================================================
+
+function abrirModalBorrado(
+    id
+) {
+
+    estado.registroPendienteBorrar =
+        id;
+
+
+    const modal =
+        document.getElementById(
+            "modalBorrar"
+        );
+
+
+    if (!modal) {
+        return;
+    }
+
+
+    modal.classList.remove(
+        "oculto"
+    );
+
+
+    modal.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+}
+
+
+// =========================================================
+// CERRAR MODAL DE BORRADO
+// =========================================================
+
+function cerrarModalBorrado() {
+
+    estado.registroPendienteBorrar =
+        null;
+
+
+    const modal =
+        document.getElementById(
+            "modalBorrar"
+        );
+
+
+    if (!modal) {
+        return;
+    }
+
+
+    modal.classList.add(
+        "oculto"
+    );
+
+
+    modal.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+}
+
+
+// =========================================================
+// CONFIRMAR BORRADO
+// =========================================================
+
+/* V106: confirmarEliminarRegistro trasladada a historial-edicion.js */
+
+
+
+// =========================================================
+// ORDENAR REGISTROS
+// =========================================================
+
+/* V109: compararRegistrosPorFecha → registrar.js */
+
+
+
+// =========================================================
+// FIN BLOQUE 2
+// =========================================================
+
+// =========================================================
+// BLOQUE 3
+// INICIO + RESUMEN MENSUAL + OBJETIVO
+// =========================================================
+
+
+// =========================================================
+// ACTUALIZAR INICIO
+// =========================================================
+
+function actualizarInicio() {
+
+    actualizarNombreMes();
+
+    actualizarCalendarioInicio();
+
+    const registrosMes =
+        obtenerRegistrosMesActual();
+
+
+    // -----------------------------------------
+    // Total del mes
+    // -----------------------------------------
+
+    const total =
+        sumarMinutos(
+            registrosMes
+        );
+
+
+    // -----------------------------------------
+    // Ministerio
+    // -----------------------------------------
+
+    const ministerio =
+        sumarMinutos(
+            registrosMes.filter(
+                registro => {
+
+                    return (
+                        registro.tipo ===
+                        "ministerio"
+                    );
+                }
+            )
+        );
+
+
+    // -----------------------------------------
+    // LDC
+    // -----------------------------------------
+
+    const ldc =
+        sumarMinutos(
+            registrosMes.filter(
+                registro => {
+
+                    return (
+                        registro.tipo ===
+                        "ldc"
+                    );
+                }
+            )
+        );
+
+
+    // -----------------------------------------
+    // Asambleas
+    // -----------------------------------------
+
+    const asambleas =
+        sumarMinutos(
+            registrosMes.filter(
+                registro => {
+
+                    return (
+                        registro.tipo ===
+                        "asambleas"
+                    );
+                }
+            )
+        );
+
+
+    // -----------------------------------------
+    // Otras
+    // -----------------------------------------
+
+    const otras =
+        sumarMinutos(
+            registrosMes.filter(
+                registro => {
+
+                    return (
+                        registro.tipo ===
+                        "otras"
+                    );
+                }
+            )
+        );
+
+
+    const totalVisible =
+        ministerio +
+        (actividadVisible("ldc") ? ldc : 0) +
+        (actividadVisible("asambleas") ? asambleas : 0) +
+        (actividadVisible("otras") ? otras : 0);
+
+    // -----------------------------------------
+    // Mostrar resultados
+    // -----------------------------------------
+
+    ponerTexto(
+        "totalMes",
+        formatearTiempo(
+            totalVisible
+        )
+    );
+
+
+    ponerTexto(
+        "totalMinisterio",
+        formatearTiempo(
+            ministerio
+        )
+    );
+
+
+    ponerTexto(
+        "totalLDC",
+        formatearTiempo(
+            ldc
+        )
+    );
+
+
+    ponerTexto(
+        "totalAsambleas",
+        formatearTiempo(
+            asambleas
+        )
+    );
+
+
+    ponerTexto(
+        "totalOtras",
+        formatearTiempo(
+            otras
+        )
+    );
+
+
+    // -----------------------------------------
+    // Mostrar "Otras" solamente si hay datos
+    // -----------------------------------------
+
+    const filaOtras =
+        document.getElementById(
+            "filaOtras"
+        );
+
+
+    if (filaOtras) {
+
+        filaOtras.classList.toggle(
+            "oculto",
+            !actividadVisible("otras") || otras === 0
+        );
+    }
+
+
+    // -----------------------------------------
+    // Gráfico circular del mes
+    // -----------------------------------------
+
+    actualizarGraficoInicio({
+        total,
+        ministerio,
+        ldc,
+        asambleas,
+        otras
+    });
+
+
+    // -----------------------------------------
+    // Objetivo mensual
+    // -----------------------------------------
+
+    const computoMes=calcularComputoMesMeta(registrosMes);
+    pintarComputoMesV260(document.getElementById("computoObjetivoMesV260"),computoMes);
+    actualizarObjetivo(computoMes.computable);
+    actualizarFraseAnimoInicio(computoMes.computable);
+}
+
+
+// =========================================================
+// FRASE DE ÁNIMO DINÁMICA EN INICIO
+// =========================================================
+function actualizarFraseAnimoInicio(totalMinutos, forzarNueva = false) {
+    const elemento = document.getElementById("fraseAnimoInicio");
+    if (!elemento) return;
+
+    const objetivo = Number(estado.preferencias?.objetivoMensualMinutos || 0);
+    const porcentaje = objetivo > 0 ? Math.max(0, (totalMinutos / objetivo) * 100) : 0;
+    const ahora = new Date();
+    const diasMes = new Date(ahora.getFullYear(), ahora.getMonth() + 1, 0).getDate();
+    const ritmoEsperado = (ahora.getDate() / diasMes) * 100;
+    const diferencia = porcentaje - ritmoEsperado;
+
+    let frases;
+    if (objetivo > 0 && porcentaje >= 100) {
+        frases = [
+            "¡Objetivo conseguido! Disfruta de todo lo que has logrado. 🎉",
+            "¡Meta alcanzada! Un mes lleno de buenos esfuerzos. 🏁",
+            "¡Lo conseguiste! Cada pequeño paso ha contado. ✨"
+        ];
+    } else if (objetivo > 0 && diferencia >= 5) {
+        frases = [
+            "¡Muy buen ritmo! Vas por delante y cada esfuerzo suma. 🐇",
+            "Vas con margen. Sigue disfrutando de cada paso. ✨",
+            "¡Qué buen avance! Mantén ese ritmo sin perder la calma. 🌱"
+        ];
+    } else if (objetivo > 0 && diferencia <= -5) {
+        frases = [
+            "Poco a poco. Un buen día puede cambiar el ritmo del mes. 🐢",
+            "No hace falta correr: lo importante es seguir avanzando. 🌱",
+            "Cada rato cuenta. Hoy puede ser un buen día para sumar. ✨"
+        ];
+    } else {
+        frases = [
+            "Vas al ritmo del mes. Sigue así, paso a paso. 🚶",
+            "Cada paso cuenta. Sigue avanzando. ✨",
+            "Buen ritmo: constancia, calma y a seguir. 🌿"
+        ];
+    }
+
+    // Si solo estamos refrescando datos de Inicio, mantenemos la frase actual.
+    // Se fuerza una frase nueva únicamente al entrar o volver a la app.
+    if (!forzarNueva && elemento.dataset.ultimaFrase) return;
+
+    const claveUltimaFrase = "miServicio.ultimaFraseAnimoInicio";
+    let ultimaFrase = "";
+
+    try {
+        ultimaFrase = localStorage.getItem(claveUltimaFrase) || "";
+    } catch (error) {
+        ultimaFrase = elemento.dataset.ultimaFrase || "";
+    }
+
+    const personal=frasePersonalV260();
+    if(personal && ultimaFrase!==personal)frases=[personal];
+
+    const candidatas = frases.filter(frase => frase !== ultimaFrase);
+    const disponibles = candidatas.length ? candidatas : frases;
+    const indice = Math.floor(Math.random() * disponibles.length);
+    const fraseElegida = disponibles[indice];
+
+    elemento.textContent = fraseElegida;
+    elemento.dataset.ultimaFrase = fraseElegida;
+
+    try {
+        localStorage.setItem(claveUltimaFrase, fraseElegida);
+    } catch (error) {
+        // Si el navegador bloquea localStorage, seguimos usando dataset.
+    }
+}
+
+// =========================================================
+// CAMBIAR FRASE AL VOLVER A ENTRAR EN LA APP
+// =========================================================
+let ultimoCambioFraseEntrada = 0;
+
+function refrescarFraseAlVolverAInicio() {
+    const ahora = Date.now();
+    if (ahora - ultimoCambioFraseEntrada < 900) return;
+
+    const vistaInicio = document.getElementById("vista-inicio");
+    if (!vistaInicio || !vistaInicio.classList.contains("activa")) return;
+
+    ultimoCambioFraseEntrada = ahora;
+
+    const total=resumenMesV143(new Date()).total;
+    actualizarFraseAnimoInicio(total, true);
+}
+
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+        setTimeout(refrescarFraseAlVolverAInicio, 80);
+    }
+});
+
+window.addEventListener("pageshow", () => {
+    setTimeout(refrescarFraseAlVolverAInicio, 80);
+});
+
+window.addEventListener("focus", () => {
+    setTimeout(refrescarFraseAlVolverAInicio, 80);
+});
+
+// =========================================================
+// CALENDARIO DEL MES EN INICIO
+// =========================================================
+
+/* V110: configurarCalendarioInicio → planificacion.js */
+
+
+
+/* V110: actualizarCalendarioInicio → planificacion.js */
+
+
+
+/* V110: formatearTiempoCortoCalendario → planificacion.js */
+
+
+
+/* V110: mostrarDetalleDiaCalendario → planificacion.js */
+
+
+
+
+
+/* V110: normalizarAgendaDia → planificacion.js */
+
+
+
+function formatoMinutosPlan(minutos) {
+    const n=Math.max(0,Number(minutos)||0), h=Math.floor(n/60), m=n%60;
+    return m ? `${h ? h+" h " : ""}${m} min` : (h ? `${h} h` : "");
+}
+/* V110: minutosPlanificadosMesActual → planificacion.js */
+
+/* V110: claseActividadCalendario → planificacion.js */
+
+
+
+// =========================================================
+// AGENDA DE SALIDAS DEL MINISTERIO
+// =========================================================
+
+/* V110: agendarSalidaCalendario → planificacion.js */
+
+
+
+/* V110: asegurarModalAgendaSalida → planificacion.js */
+
+
+
+/* V110: abrirModalAgendaSalida → planificacion.js */
+
+
+
+/* V110: cerrarModalAgendaSalida → planificacion.js */
+
+
+
+function guardarSalidaDesdeModal(fechaForzada = "") {
+    const modal = document.getElementById("modalAgendaSalida");
+    const input = document.getElementById("nombreAgendaSalida");
+    const tipo = document.getElementById("tipoAgendaSalida");
+    const mensaje = document.getElementById("mensajeAgendaSalida");
+    const guardar = document.getElementById("guardarAgendaSalida");
+
+    if (!modal || !input || !tipo || !guardar) return;
+
+    const fechaISO =
+        fechaForzada ||
+        modal.dataset.fecha ||
+        "";
+
+    const nombre =
+        input.value.trim();
+
+    const tipoActividad =
+        [
+            "ministerio",
+            "ldc",
+            "asambleas",
+            "otras"
+        ].includes(tipo.value)
+            ? tipo.value
+            : "ministerio";
+
+    if (!fechaISO) {
+        if (mensaje) {
+            mensaje.textContent =
+                "No se pudo identificar el día. Cierra y vuelve a abrirlo.";
+        }
+        return;
+    }
+
+    if (!nombre) {
+        if (mensaje) {
+            mensaje.textContent =
+                "Escribe con quién saldrás.";
+        }
+        input.focus();
+        return;
+    }
+
+    if (
+        !estado.agendaSalidas ||
+        typeof estado.agendaSalidas !== "object"
+    ) {
+        estado.agendaSalidas = {};
+    }
+
+    // Guardado optimista: el botón responde inmediatamente.
+    guardar.disabled = true;
+    guardar.textContent = "Guardando…";
+
+    const anteriores={...estado.agendaSalidas};
+    const hora=document.getElementById("horaAgendaV202")?.value||"";
+    const cantidad=Number(document.getElementById("repetirAgendaV202")?.value)||1;
+    const resultado=prepararSalidasV202(anteriores,fechaISO,{
+        tipo:tipoActividad,companero:nombre,
+        minutosPrevistos:Number(document.getElementById("duracionAgendaSalida")?.value||0),hora
+    },cantidad);
+    estado.agendaSalidas=resultado.agenda;
+    if(!guardarAgendaSalidas()){
+        estado.agendaSalidas=anteriores;
+        guardar.disabled=false;guardar.textContent="Guardar";
+        if(mensaje)mensaje.textContent="No se pudo guardar la salida. Inténtalo de nuevo.";
+        return;
+    }
+    if(cantidad>1)avisoV202(`${resultado.guardadas} salidas guardadas${resultado.omitidas?` · ${resultado.omitidas} fechas ocupadas conservadas`:""}`);
+
+    if (mensaje) {
+        mensaje.textContent = "Guardado ✓";
+        mensaje.classList.add("exito");
+    }
+
+    // Primero cerramos el modal para que la respuesta visual sea inmediata.
+    cerrarModalAgendaSalida();
+
+    actualizarCalendarioInicio();
+
+    const fecha =
+        fechaDesdeISO(fechaISO);
+
+    const registrosDia =
+        estado.registros.filter(
+            registro =>
+                registro.fecha === fechaISO
+        );
+
+    mostrarDetalleDiaCalendario(
+        fecha.getDate(),
+        fecha.getMonth(),
+        fecha.getFullYear(),
+        registrosDia
+    );
+    actualizarTodaLaInterfaz();
+}
+
+
+/* V110: quitarSalidaAgendada → planificacion.js */
+
+
+
+// =========================================================
+// GRÁFICO CIRCULAR DEL MES
+// =========================================================
+
+
+// =========================================================
+// ÓRBITAS DINÁMICAS · V120
+// Separa automáticamente los círculos según su tamaño real.
+// =========================================================
+function resolverColisionesOrbitasV120() {
+    if(document.body.classList.contains("inicio-encajado-v260")){componerInicioEncajadoV260();return;}
+    if(document.body.dataset.ambiente==="autor"){componerAutorV260();return;}
+    const contenedor = document.querySelector("#vista-inicio .orbita-grafico");
+    if (!contenedor) return;
+
+    const nodos = [...contenedor.querySelectorAll(".orbita-actividad")];
+    const centroNodo = contenedor.querySelector(".orbita-centro");
+    if (nodos.length < 2 || !centroNodo) return;
+
+    const caja = contenedor.getBoundingClientRect();
+    if (!caja.width || !caja.height) return;
+
+    const leer = nodo => {
+        const r = nodo.getBoundingClientRect();
+        return {
+            nodo,
+            x: r.left - caja.left + r.width / 2,
+            y: r.top - caja.top + r.height / 2,
+            radio: Math.max(r.width, r.height) / 2
+        };
+    };
+
+    const items = nodos.map(leer);
+    const centro = leer(centroNodo);
+    const separacion = 10;
+    const borde = 5;
+
+    function separar(a, b, pesoA, pesoB) {
+        let dx = b.x - a.x;
+        let dy = b.y - a.y;
+        let distancia = Math.hypot(dx, dy);
+        if (distancia < 0.1) {
+            dx = 1; dy = 0.35;
+            distancia = Math.hypot(dx, dy);
+        }
+        const minima = a.radio + b.radio + separacion;
+        if (distancia >= minima) return;
+
+        const falta = minima - distancia;
+        const ux = dx / distancia;
+        const uy = dy / distancia;
+        a.x -= ux * falta * pesoA;
+        a.y -= uy * falta * pesoA;
+        b.x += ux * falta * pesoB;
+        b.y += uy * falta * pesoB;
+    }
+
+    for (let vuelta = 0; vuelta < 30; vuelta++) {
+        for (let i = 0; i < items.length; i++) {
+            for (let j = i + 1; j < items.length; j++) {
+                separar(items[i], items[j], 0.5, 0.5);
+            }
+            separar(items[i], centro, 0.78, 0.22);
+        }
+
+        for (const a of items) {
+            a.x = Math.max(a.radio + borde, Math.min(caja.width - a.radio - borde, a.x));
+            a.y = Math.max(a.radio + borde, Math.min(caja.height - a.radio - borde, a.y));
+        }
+        centro.x = Math.max(centro.radio + borde, Math.min(caja.width - centro.radio - borde, centro.x));
+        centro.y = Math.max(centro.radio + borde, Math.min(caja.height - centro.radio - borde, centro.y));
+    }
+
+    for (const a of items) {
+        a.nodo.style.setProperty("left", `${(a.x / caja.width) * 100}%`, "important");
+        a.nodo.style.setProperty("top", `${(a.y / caja.height) * 100}%`, "important");
+    }
+    centroNodo.style.setProperty("left", `${(centro.x / caja.width) * 100}%`, "important");
+    centroNodo.style.setProperty("top", `${(centro.y / caja.height) * 100}%`, "important");
+}
+
+function actualizarGraficoInicio({
+    total,
+    ministerio,
+    ldc,
+    asambleas,
+    otras
+}) {
+    const grafico = document.getElementById("graficoInicio");
+    const leyenda = document.getElementById("leyendaGraficoInicio");
+    const fechaProgreso = document.getElementById("fechaProgresoMes");
+
+    if (fechaProgreso) {
+        const hoy = new Date();
+        fechaProgreso.textContent =
+            `${String(hoy.getDate()).padStart(2, "0")}/` +
+            `${String(hoy.getMonth() + 1).padStart(2, "0")}/` +
+            `${hoy.getFullYear()}`;
+    }
+    if (!grafico || !leyenda) return;
+    requestAnimationFrame(()=>{actualizarReflejosAutorV260();componerAutorV260();});
+
+    const actividades = [
+        {
+            tipo:"ministerio", nombre:"Ministerio", minutos:ministerio,
+            icono:`<span class="sector-icono sector-libro"><span class="libro-sol">☀</span><small>DISFRUTE</small></span>`
+        },
+        {
+            tipo:"ldc", nombre:"LDC", minutos:ldc,
+            icono:`<span class="sector-icono sector-emoji">🛠️</span>`
+        },
+        {
+            tipo:"asambleas", nombre:"Asambleas", minutos:asambleas,
+            icono:`<span class="sector-icono sector-auditorio"><i></i><i></i><i></i><i></i><i></i><i></i></span>`
+        },
+        {
+            tipo:"otras", nombre:nombreActividad("otras"), minutos:otras,
+            icono:`<span class="sector-icono sector-emoji">✨</span>`
+        }
+    ];
+
+    datosGraficoPersonalV260={total,ministerio,ldc,asambleas,otras};
+    const activas=actividades.filter(a=>Number.isFinite(Number(a.minutos))&&Number(a.minutos)>0).map(a=>({...a,minutos:Number(a.minutos)}));
+    const totalVisible=activas.reduce((s,a)=>s+a.minutos,0);
+    const estilo=leerEstiloGraficoV260();
+    grafico.dataset.estilo=estilo;
+    if(estilo!=="burbujas"){
+        grafico.innerHTML=crearGraficoPersonalV260(estilo,activas);
+        leyenda.innerHTML="";leyenda.hidden=true;return;
+    }
+
+    if(!activas.length || totalVisible<=0){
+        grafico.innerHTML=`
           <div class="orbita-centro orbita-centro-solo">
             <strong>0 min</strong><span>este mes</span>
-          </div>`,r.innerHTML="",r.hidden=!0;return}const m={1:[{x:50,y:23}],2:[{x:27,y:50},{x:73,y:50}],3:[{x:50,y:20},{x:24,y:66},{x:76,y:66}],4:[{x:50,y:18},{x:82,y:50},{x:50,y:82},{x:18,y:50}]},g=m[s.length]||m[4],p=Math.min(...s.map(f=>f.minutos/d*100)),v=Math.max(...s.map(f=>f.minutos/d*100)),b=s.map((f,h)=>{const E=f.minutos/d*100,I=Math.round(E),M=v===p?.5:(E-p)/(v-p),x=Math.round(88+M*44),C=g[h];return`
-        <div class="orbita-actividad orbita-${f.tipo}" role="button" tabindex="0" data-actividad-inicio="${f.tipo}" title="Ver registros del mes"
-             style="--orb-x:${C.x}%;--orb-y:${C.y}%;--orb-size:${x}px"
-             aria-label="${textoArcosV260(f.nombre)}: ${formatearTiempo(f.minutos)}, ${I}%">
-          ${f.icono}
-          <strong>${textoArcosV260(f.nombre)}</strong>
-          <span>${formatearTiempo(f.minutos)}</span>
-          <b>${I}%</b>
-        </div>`}).join("");i.innerHTML=`
-      <div class="orbita-grafico orbita-cantidad-${s.length}">
+          </div>`;
+        leyenda.innerHTML=""; leyenda.hidden=true; return;
+    }
+
+    const posicionesPorCantidad={
+      1:[{x:50,y:23}],
+      2:[{x:27,y:50},{x:73,y:50}],
+      3:[{x:50,y:20},{x:24,y:66},{x:76,y:66}],
+      4:[{x:50,y:18},{x:82,y:50},{x:50,y:82},{x:18,y:50}]
+    };
+    const posiciones=posicionesPorCantidad[activas.length] || posicionesPorCantidad[4];
+
+    const minPct=Math.min(...activas.map(a=>a.minutos/totalVisible*100));
+    const maxPct=Math.max(...activas.map(a=>a.minutos/totalVisible*100));
+
+    const circulos=activas.map((a,i)=>{
+      const pctExact=a.minutos/totalVisible*100;
+      const pct=Math.round(pctExact);
+      // Escala visual clara pero controlada: 88–132 px según participación.
+      const normalizado=maxPct===minPct ? .5 : (pctExact-minPct)/(maxPct-minPct);
+      const tam=Math.round(88 + normalizado*44);
+      const pos=posiciones[i];
+      return `
+        <div class="orbita-actividad orbita-${a.tipo}" role="button" tabindex="0" data-actividad-inicio="${a.tipo}" title="Ver registros del mes"
+             style="--orb-x:${pos.x}%;--orb-y:${pos.y}%;--orb-size:${tam}px"
+             aria-label="${textoArcosV260(a.nombre)}: ${formatearTiempo(a.minutos)}, ${pct}%">
+          ${a.icono}
+          <strong>${textoArcosV260(a.nombre)}</strong>
+          <span>${formatearTiempo(a.minutos)}</span>
+          <b>${pct}%</b>
+        </div>`;
+    }).join("");
+
+    grafico.innerHTML=`
+      <div class="orbita-grafico orbita-cantidad-${activas.length}">
         <div class="orbita-lineas" aria-hidden="true">
           <span class="orbita-trazo orbita-trazo-a"></span>
           <span class="orbita-trazo orbita-trazo-b"></span>
           <i class="orbita-punto orbita-punto-a"></i>
           <i class="orbita-punto orbita-punto-b"></i>
         </div>
-        ${b}
+        ${circulos}
         <div class="orbita-centro">
-          <strong>${formatearTiempo(d)}</strong>
+          <strong>${formatearTiempo(totalVisible)}</strong>
           <span>este mes</span>
         </div>
-      </div>`,r.innerHTML="",r.hidden=!0,requestAnimationFrame(resolverColisionesOrbitasV120)}function actualizarNombreMes(){const e=new Date,t=new Intl.DateTimeFormat("es-ES",{month:"long",year:"numeric"}).format(e);ponerTexto("nombreMes",capitalizar(t))}function actualizarObjetivo(e){const t=Math.max(Number(estado.preferencias.objetivoMensualMinutos)||0,0),a=t>0?Math.round(e/t*100):0;ponerTexto("valorObjetivo",formatearTiempo(e)),ponerTexto("porcentajeObjetivo",`${a}%`);const o=document.getElementById("barraProgreso");if(o){const r=Math.min(Math.max(a,0),100);o.style.width=`${r}%`,actualizarPersonajeProgreso(r)}else actualizarPersonajeProgreso(Math.min(Math.max(a,0),100));const n=document.getElementById("mensajeObjetivo");if(!n)return;if(t<=0){n.textContent=e>0?"Configura un objetivo mensual en Ajustes.":"Empieza registrando tu primera actividad de ministerio.";return}if(e>=t){celebrarObjetivoV188(n);const r=e-t;r>0?n.textContent=`Objetivo alcanzado. Lo superas por ${formatearTiempo(r)}.`:n.textContent="Has alcanzado tu objetivo mensual.";return}reiniciarObjetivoV188(n);const i=t-e;n.textContent=`Te faltan ${formatearTiempo(i)} para alcanzar tu objetivo.`}function actualizarPersonajeProgreso(e){var x;const t=document.getElementById("progresoPersonaje"),a=document.getElementById("animalProgreso"),o=document.getElementById("estadoAnimal");if(!t||!a)return;const n=Math.min(Math.max(Number(e)||0,0),100),i=((x=estado.preferencias)==null?void 0:x.personajeProgreso)||"hombre",r={hombre:{normal:"\u{1F6B6}\u200D\u2642\uFE0F",rapido:"\u{1F3C3}\u200D\u2642\uFE0F",meta:"\u{1F57A}"},mujer:{normal:"\u{1F6B6}\u200D\u2640\uFE0F",rapido:"\u{1F3C3}\u200D\u2640\uFE0F",meta:"\u{1F483}"},koala:{normal:"\u{1F428}",rapido:"\u{1F428}",meta:"\u{1F428}\u2728"},mariposa:{normal:"\u{1F98B}",rapido:"\u{1F98B}",meta:"\u{1F98B}\u2728"},pantera:{normal:"\u{1F408}",rapido:"\u{1F408}",meta:"\u{1F408}\u2728"},tortuga:{normal:"\u{1F422}",rapido:"\u{1F422}",meta:"\u{1F422}\u2728"},liebre:{normal:"\u{1F407}",rapido:"\u{1F407}",meta:"\u{1F407}\u2728"},corazon:{normal:"\u2764\uFE0F",rapido:"\u2764\uFE0F",meta:"\u2764\uFE0F\u2728"},pajarito:{normal:"\u{1F425}",rapido:"\u{1F425}",meta:"\u{1F425}\u2728"},gatito:{normal:"\u{1F431}",rapido:"\u{1F431}",meta:"\u{1F431}\u2728"}},c=r[i]||r.hombre,l=new Date,s=new Date(l.getFullYear(),l.getMonth()+1,0).getDate(),d=l.getDate()/s*100,u=n-d,m=5;let g="en-ritmo",p=c.normal,v="Vas al ritmo del mes";n>=100?(g="completado",p=c.meta,v="Objetivo conseguido"):u>=m?(g="adelantado",p=c.rapido,v="Vas por delante del ritmo del mes"):u<=-m&&(g="atrasado",p=c.normal,v="Vas por detr\xE1s del ritmo del mes");const b={hombre:"personaje-95d7b35c957c.png",mujer:"personaje-635d3bce67f2.png",koala:"personaje-56dd433b1692.png",mariposa:"personaje-ff4383d3590d.png",pantera:"personaje-698db747b8fb.png",tortuga:"personaje-5638b822e9ec.png",liebre:"personaje-e4168da17cdf.png",corazon:"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxODAiIGhlaWdodD0iMjMwIiB2aWV3Qm94PSIwIDAgMTgwIDIzMCI+CjxnIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgPHBhdGggZD0iTTkwIDE2OUM2OSAxNDYgMjUgMTE2IDI1IDcyQzI1IDQ0IDQzIDI3IDY2IDI3Qzc5IDI3IDg4IDM0IDkwIDQ1Qzk0IDM0IDEwMyAyNyAxMTYgMjdDMTM5IDI3IDE1NyA0NCAxNTcgNzJDMTU3IDExNiAxMTIgMTQ2IDkwIDE2OVoiIGZpbGw9IiNmZjRmN2QiLz4KICA8ZWxsaXBzZSBjeD0iNjkiIGN5PSI3NSIgcng9IjgiIHJ5PSIxMCIgZmlsbD0iI2ZmZiIvPjxlbGxpcHNlIGN4PSIxMTIiIGN5PSI3NSIgcng9IjgiIHJ5PSIxMCIgZmlsbD0iI2ZmZiIvPgogIDxjaXJjbGUgY3g9IjcyIiBjeT0iNzciIHI9IjQiIGZpbGw9IiMyNDI0MmEiLz48Y2lyY2xlIGN4PSIxMTUiIGN5PSI3NyIgcj0iNCIgZmlsbD0iIzI0MjQyYSIvPgogIDxwYXRoIGQ9Ik03NCAxMDFROTEgMTE2IDEwOCAxMDEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzdiMTczNiIgc3Ryb2tlLXdpZHRoPSI2Ii8+CiAgPHBhdGggZD0iTTM5IDEwNFExNiAxMTYgMTggMTM5IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZjRmN2QiIHN0cm9rZS13aWR0aD0iMTIiLz4KICA8cGF0aCBkPSJNMTQzIDEwNFExNjUgOTQgMTcxIDc2IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZjRmN2QiIHN0cm9rZS13aWR0aD0iMTIiLz4KICA8cGF0aCBkPSJNNzIgMTU3UTY1IDE4NCA1MyAyMDciIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmNGY3ZCIgc3Ryb2tlLXdpZHRoPSIxNCIvPgogIDxwYXRoIGQ9Ik0xMDggMTU3UTExNiAxODEgMTM1IDIwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmY0ZjdkIiBzdHJva2Utd2lkdGg9IjE0Ii8+CiAgPHBhdGggZD0iTTQwIDIxMFE1MyAyMDQgNjUgMjExIiBmaWxsPSJub25lIiBzdHJva2U9IiMzMDMyM2EiIHN0cm9rZS13aWR0aD0iMTMiLz4KICA8cGF0aCBkPSJNMTI2IDIwNFExMzkgMTk2IDE1MSAyMDIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzMwMzIzYSIgc3Ryb2tlLXdpZHRoPSIxMyIvPgogIDxjaXJjbGUgY3g9IjE2OSIgY3k9IjcyIiByPSI3IiBmaWxsPSIjZmY0ZjdkIi8+CjwvZz48L3N2Zz4=",pajarito:"personaje-e524cff3980b.png",gatito:"personaje-51219b70e7f1.png"},f=obtenerContextoVisualPersonajeV186(),h=f!=null&&f.accesorio?`<span class="personaje-accesorio-v186" aria-hidden="true">${f.accesorio}</span>`:"";a.innerHTML=`<span class="personaje-sombra-suelo-v186" aria-hidden="true"></span><img class="personaje-cuerpo-img" src="${b[i]||b.hombre}" alt="">${h}`,a.dataset.personaje=i,a.dataset.contexto=(f==null?void 0:f.tipo)||"normal",a.setAttribute("aria-label",f!=null&&f.descripcion?`${v} \xB7 ${f.descripcion}`:v),a.classList.remove("estado-atrasado","estado-en-ritmo","estado-adelantado","estado-completado","moviendo","contexto-vacaciones-v186","contexto-viaje-v186","contexto-normal-v186"),a.classList.add(`estado-${g}`),a.classList.add(`contexto-${(f==null?void 0:f.tipo)||"normal"}-v186`),a.classList.remove("animacion-vacaciones-v187","animacion-viaje-v187","animacion-normal-v187"),a.classList.add((f==null?void 0:f.tipo)==="vacaciones"?"animacion-vacaciones-v187":(f==null?void 0:f.tipo)==="viaje"?"animacion-viaje-v187":"animacion-normal-v187"),t.classList.remove("ritmo-atrasado","ritmo-en-ritmo","ritmo-adelantado","ritmo-completado"),t.classList.add(`ritmo-${g}`),t.style.setProperty("--camino-avance",`${n}%`);const E=Math.max(a.offsetWidth||0,window.matchMedia("(max-width: 430px)").matches?54:62),I=n/100*E;a.style.left=`calc(${n}% - ${I}px)`,a.style.setProperty("--desplazamiento-ritmo","0px"),a.style.marginLeft="0",a.style.transform="",a.offsetWidth,n>0&&a.classList.add("moviendo"),t.classList.toggle("completado",n>=100),o&&(g==="completado"?o.textContent="\xA1Meta conseguida! \u{1F389}":g==="adelantado"?o.textContent="\xA1Vas lanzado! \u{1F407}\u{1F4A8} Vas por delante del ritmo \u{1F604}":g==="atrasado"?o.textContent="Paso a paso \u{1F422}. A\xFAn puedes recuperar el ritmo.":o.textContent="\xA1Buen ritmo! Sigue as\xED \u2728"),actualizarHitosProgreso(n),aplicarContextoCalendarioProgresoV181(n,o,t)}function actualizarHitosProgreso(e){const t=document.getElementById("hitosProgresoMes"),a=document.getElementById("celebracionProgreso");if(!t)return;const o=Math.max(0,Math.min(100,Number(e)||0)),n=Array.from(t.querySelectorAll(".hito-mes"));if(n.forEach(r=>{const c=Number(r.dataset.hito)||0;r.classList.toggle("alcanzado",o>=c);const l=n.map(d=>Number(d.dataset.hito)||0).filter(d=>d>o),s=l.length?Math.min(...l):-1;r.classList.toggle("siguiente",c===s)}),!a)return;let i=0;if(o>=100?i=100:o>=75?i=75:o>=50?i=50:o>=25&&(i=25),i>0&&a.dataset.ultimoNivel!==String(i)){const r=Number(a.dataset.ultimoNivel)||0;if(a.dataset.ultimoNivel=String(i),i>r){const c=t.querySelector(`[data-hito="${i}"]`);c&&(c.classList.remove("hito-recien-v194"),c.offsetWidth,c.classList.add("hito-recien-v194"),setTimeout(()=>c.classList.remove("hito-recien-v194"),900)),typeof hapticoV191=="function"&&hapticoV191(i>=100?10:6)}a.innerHTML=i>=100?"<span>\u{1F389}</span><span>\u{1F3C6}</span><span>\u2728</span><span>\u{1F38A}</span><span>\u2B50</span>":"<span>\u2728</span><span>\u2B50</span><span>\u2728</span>",a.classList.remove("activo"),a.offsetWidth,a.classList.add("activo"),setTimeout(()=>a.classList.remove("activo"),i>=100?2200:1200)}}function rangoSemana(e){const t=copiarFecha(e),a=t.getDay(),o=a===0?-6:1-a;t.setDate(t.getDate()+o),t.setHours(0,0,0,0);const n=copiarFecha(t);return n.setDate(n.getDate()+6),n.setHours(23,59,59,999),{inicio:t,fin:n}}function rangoMes(e){const t=e.getFullYear(),a=e.getMonth();return{inicio:new Date(t,a,1,0,0,0,0),fin:new Date(t,a+1,0,23,59,59,999)}}function rangoAnio(e){const t=e.getFullYear(),o=e.getMonth()>=8?t:t-1;return{inicio:new Date(o,8,1,0,0,0,0),fin:new Date(o+1,7,31,23,59,59,999)}}function contarDiasActivos(e){return new Set(e.map(t=>t.fecha)).size}function formatearRangoSemana(e,t){if(e.getMonth()===t.getMonth()&&e.getFullYear()===t.getFullYear()){const n=new Intl.DateTimeFormat("es-ES",{month:"long"}).format(e);return`${e.getDate()}\u2013${t.getDate()} de ${n} de ${t.getFullYear()}`}const o=new Intl.DateTimeFormat("es-ES",{day:"numeric",month:"short"});return`${o.format(e)} \u2013 ${o.format(t)} de ${t.getFullYear()}`}function esSemanaActual(e,t){const a=new Date;return a>=e&&a<=t}function esMesActual(e){const t=new Date;return t.getFullYear()===e.getFullYear()&&t.getMonth()===e.getMonth()}function esAnioActual(e){const t=rangoAnio(new Date);return t.inicio.getFullYear()===e.getFullYear()&&t.inicio.getMonth()===e.getMonth()}function obtenerDatosGraficoSemana(e){const t=["L","M","X","J","V","S","D"],a=fechaLocalISO(new Date),o=[];for(let n=0;n<7;n++){const i=copiarFecha(e);i.setDate(i.getDate()+n);const r=fechaLocalISO(i),c=estado.registros.filter(l=>l.fecha===r);o.push({nombre:t[n],minutos:sumarMinutos(c),destacado:r===a})}return o}function obtenerDatosGraficoMes(e,t){const a=[],o=t.getDate(),n=new Date;let i=1;for(let r=1;r<=o;r+=7){const c=Math.min(r+6,o),l=new Date(e.getFullYear(),e.getMonth(),r,0,0,0,0),s=new Date(e.getFullYear(),e.getMonth(),c,23,59,59,999),d=obtenerRegistrosEntreFechas(l,s),u=n.getFullYear()===e.getFullYear()&&n.getMonth()===e.getMonth()&&n.getDate()>=r&&n.getDate()<=c;a.push({nombre:`S${i}`,minutos:sumarMinutos(d),destacado:u}),i++}return a}function obtenerDatosGraficoAnio(e){const t=["S","O","N","D","E","F","M","A","M","J","J","A"],a=new Date,o=[];for(let n=0;n<12;n++){const i=new Date(e.getFullYear(),e.getMonth()+n,1,0,0,0,0),r=new Date(i.getFullYear(),i.getMonth()+1,0,23,59,59,999),c=obtenerRegistrosEntreFechas(i,r);o.push({nombre:t[n],minutos:sumarMinutos(c),destacado:a.getFullYear()===i.getFullYear()&&a.getMonth()===i.getMonth()})}return o}function renderizarColumnasGrafico(e,t){e.innerHTML="";const a=Math.max(...t.map(o=>o.minutos),1);t.forEach(o=>{const n=document.createElement("div");n.className="grafico-dia",o.destacado&&n.classList.add("hoy"),o.minutos===0&&n.classList.add("sin-actividad");const i=document.createElement("div");i.className="grafico-tiempo",i.textContent=o.minutos>0?formatearTiempoGrafico(o.minutos):"";const r=document.createElement("div");r.className="grafico-barra-contenedor";const c=document.createElement("div");c.className="grafico-barra";const l=o.minutos>0?o.minutos/a*100:0;c.style.height=`${l}%`,r.appendChild(c);const s=document.createElement("div");s.className="grafico-dia-nombre",s.textContent=o.nombre,n.append(i,r,s),e.appendChild(n)})}function formatearTiempoGrafico(e){const t=Math.max(Math.round(Number(e)||0),0),a=Math.floor(t/60),o=t%60;return a===0?`${o}m`:o===0?`${a}h`:`${a}h${o}`}function actualizarTrimestres(e){const t=document.getElementById("seccionTrimestres"),a=document.getElementById("listaTrimestres");if(!t||!a)return;const o=estado.estadisticas.periodo==="anio";if(t.classList.toggle("oculto",!o),!o)return;const n=e.fin.getFullYear();ponerTexto("anioTrimestres",`A\xF1o de servicio ${n}`),a.innerHTML="";for(let i=1;i<=4;i++)a.appendChild(crearTarjetaTrimestre(i,e.inicio))}function crearTarjetaTrimestre(e,t){const a=new Date(t.getFullYear(),t.getMonth()+(e-1)*3,1,0,0,0,0),o=new Date(a.getFullYear(),a.getMonth()+3,0,23,59,59,999),n=obtenerRegistrosEntreFechas(a,o),i=sumarMinutos(n.filter(d=>d.tipo==="ministerio")),r=sumarMinutos(n.filter(d=>d.tipo!=="ministerio")),c=i+r,l=document.createElement("article");l.className="tarjeta trimestre-card";const s=new Intl.DateTimeFormat("es-ES",{month:"short",year:"numeric"});return l.innerHTML=`
+      </div>`;
+
+    leyenda.innerHTML="";
+    leyenda.hidden=true;
+    requestAnimationFrame(resolverColisionesOrbitasV120);
+}
+
+// =========================================================
+// NOMBRE DEL MES ACTUAL
+// =========================================================
+
+function actualizarNombreMes() {
+
+    const hoy =
+        new Date();
+
+
+    const texto =
+        new Intl.DateTimeFormat(
+            "es-ES",
+            {
+                month: "long",
+                year: "numeric"
+            }
+        ).format(
+            hoy
+        );
+
+
+    ponerTexto(
+        "nombreMes",
+        capitalizar(
+            texto
+        )
+    );
+}
+
+
+// =========================================================
+// OBTENER REGISTROS DEL MES ACTUAL
+// =========================================================
+
+/* V109: obtenerRegistrosMesActual → registrar.js */
+
+
+
+// =========================================================
+// OBJETIVO MENSUAL
+// =========================================================
+//
+// IMPORTANTE:
+// Para el objetivo mensual computa TODO el tiempo
+// registrado: Ministerio, LDC, Asambleas y Otras.
+// =========================================================
+
+function actualizarObjetivo(
+    totalComputableMes
+) {
+
+    const objetivo =
+        Math.max(
+            Number(
+                estado.preferencias
+                    .objetivoMensualMinutos
+            ) || 0,
+            0
+        );
+
+
+    // -----------------------------------------
+    // Porcentaje
+    // -----------------------------------------
+
+    const porcentaje =
+        objetivo > 0
+            ? Math.round(
+                (
+                    totalComputableMes /
+                    objetivo
+                ) * 100
+            )
+            : 0;
+
+
+    // -----------------------------------------
+    // Valor registrado
+    // -----------------------------------------
+
+    ponerTexto(
+        "valorObjetivo",
+        formatearTiempo(
+            totalComputableMes
+        )
+    );
+
+
+    // -----------------------------------------
+    // Porcentaje
+    // -----------------------------------------
+
+    ponerTexto(
+        "porcentajeObjetivo",
+        `${porcentaje}%`
+    );
+
+
+    // -----------------------------------------
+    // Barra de progreso
+    // -----------------------------------------
+
+    const barra =
+        document.getElementById(
+            "barraProgreso"
+        );
+
+
+    if (barra) {
+
+        const porcentajeVisual =
+            Math.min(
+                Math.max(
+                    porcentaje,
+                    0
+                ),
+                100
+            );
+
+
+        barra.style.width =
+            `${porcentajeVisual}%`;
+
+        // Mantener sincronizado también el personaje
+        // con el mismo porcentaje del progreso mensual.
+        actualizarPersonajeProgreso(
+            porcentajeVisual
+        );
+    } else {
+        actualizarPersonajeProgreso(
+            Math.min(
+                Math.max(porcentaje, 0),
+                100
+            )
+        );
+    }
+
+
+    // -----------------------------------------
+    // Mensaje
+    // -----------------------------------------
+
+    const mensaje =
+        document.getElementById(
+            "mensajeObjetivo"
+        );
+
+
+    if (!mensaje) {
+        return;
+    }
+
+
+    // -----------------------------------------
+    // Sin objetivo configurado
+    // -----------------------------------------
+
+    if (objetivo <= 0) {
+
+        mensaje.textContent =
+            totalComputableMes > 0
+                ? "Configura un objetivo mensual en Ajustes."
+                : "Empieza registrando tu primera actividad de ministerio.";
+
+        return;
+    }
+
+
+    // -----------------------------------------
+    // Objetivo alcanzado
+    // -----------------------------------------
+
+    if (
+        totalComputableMes >=
+        objetivo
+    ) {
+
+        celebrarObjetivoV188(mensaje);
+
+        const superado =
+            totalComputableMes -
+            objetivo;
+
+
+        if (superado > 0) {
+
+            mensaje.textContent =
+                `Objetivo alcanzado. Lo superas por ${formatearTiempo(superado)}.`;
+
+        } else {
+
+            mensaje.textContent =
+                "Has alcanzado tu objetivo mensual.";
+        }
+
+
+        return;
+    }
+
+
+    // -----------------------------------------
+    // Objetivo pendiente
+    // -----------------------------------------
+
+    reiniciarObjetivoV188(mensaje);
+
+    const restante =
+        objetivo -
+        totalComputableMes;
+
+
+    mensaje.textContent =
+        `Te faltan ${formatearTiempo(restante)} para alcanzar tu objetivo.`;
+}
+
+
+// =========================================================
+// PERSONAJE DEL PROGRESO MENSUAL
+// =========================================================
+
+function actualizarPersonajeProgreso(porcentaje) {
+
+    const contenedor =
+        document.getElementById(
+            "progresoPersonaje"
+        );
+
+    const personaje =
+        document.getElementById(
+            "animalProgreso"
+        );
+
+    const estadoPersonaje =
+        document.getElementById(
+            "estadoAnimal"
+        );
+
+    if (!contenedor || !personaje) {
+        return;
+    }
+
+    const progreso =
+        Math.min(
+            Math.max(
+                Number(porcentaje) || 0,
+                0
+            ),
+            100
+        );
+
+    const personajeElegido =
+        estado.preferencias?.personajeProgreso || "hombre";
+
+    const iconosPersonaje = {
+        hombre: { normal: "🚶‍♂️", rapido: "🏃‍♂️", meta: "🕺" },
+        mujer: { normal: "🚶‍♀️", rapido: "🏃‍♀️", meta: "💃" },
+        koala: { normal: "🐨", rapido: "🐨", meta: "🐨✨" },
+        mariposa: { normal: "🦋", rapido: "🦋", meta: "🦋✨" },
+        pantera: { normal: "🐈", rapido: "🐈", meta: "🐈✨" },
+        tortuga: { normal: "🐢", rapido: "🐢", meta: "🐢✨" },
+        liebre: { normal: "🐇", rapido: "🐇", meta: "🐇✨" },
+        corazon: { normal: "❤️", rapido: "❤️", meta: "❤️✨" },
+        pajarito: { normal: "🐥", rapido: "🐥", meta: "🐥✨" },
+        gatito: { normal: "🐱", rapido: "🐱", meta: "🐱✨" }
+    };
+    const setIconos = iconosPersonaje[personajeElegido] || iconosPersonaje.hombre;
+    // El ritmo se compara con el día actual del mes.
+    const hoy = new Date();
+    const diasDelMes =
+        new Date(
+            hoy.getFullYear(),
+            hoy.getMonth() + 1,
+            0
+        ).getDate();
+
+    const ritmoEsperado =
+        (hoy.getDate() / diasDelMes) * 100;
+
+    const diferenciaRitmo =
+        progreso - ritmoEsperado;
+
+    const margenRitmo = 5;
+
+    let estadoRitmo = "en-ritmo";
+    let icono = setIconos.normal;
+    let aria = "Vas al ritmo del mes";
+
+    if (progreso >= 100) {
+
+        estadoRitmo = "completado";
+        icono = setIconos.meta;
+        aria = "Objetivo conseguido";
+
+    } else if (diferenciaRitmo >= margenRitmo) {
+
+        estadoRitmo = "adelantado";
+        icono = setIconos.rapido;
+        aria = "Vas por delante del ritmo del mes";
+
+    } else if (diferenciaRitmo <= -margenRitmo) {
+
+        estadoRitmo = "atrasado";
+        icono = setIconos.normal;
+        aria = "Vas por detrás del ritmo del mes";
+    }
+
+    const imagenesPersonaje={hombre:"personaje-95d7b35c957c.png",mujer:"personaje-635d3bce67f2.png",koala:"personaje-56dd433b1692.png",mariposa:"personaje-ff4383d3590d.png",pantera:"personaje-698db747b8fb.png",tortuga:"personaje-5638b822e9ec.png",liebre:"personaje-e4168da17cdf.png",corazon:"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxODAiIGhlaWdodD0iMjMwIiB2aWV3Qm94PSIwIDAgMTgwIDIzMCI+CjxnIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgPHBhdGggZD0iTTkwIDE2OUM2OSAxNDYgMjUgMTE2IDI1IDcyQzI1IDQ0IDQzIDI3IDY2IDI3Qzc5IDI3IDg4IDM0IDkwIDQ1Qzk0IDM0IDEwMyAyNyAxMTYgMjdDMTM5IDI3IDE1NyA0NCAxNTcgNzJDMTU3IDExNiAxMTIgMTQ2IDkwIDE2OVoiIGZpbGw9IiNmZjRmN2QiLz4KICA8ZWxsaXBzZSBjeD0iNjkiIGN5PSI3NSIgcng9IjgiIHJ5PSIxMCIgZmlsbD0iI2ZmZiIvPjxlbGxpcHNlIGN4PSIxMTIiIGN5PSI3NSIgcng9IjgiIHJ5PSIxMCIgZmlsbD0iI2ZmZiIvPgogIDxjaXJjbGUgY3g9IjcyIiBjeT0iNzciIHI9IjQiIGZpbGw9IiMyNDI0MmEiLz48Y2lyY2xlIGN4PSIxMTUiIGN5PSI3NyIgcj0iNCIgZmlsbD0iIzI0MjQyYSIvPgogIDxwYXRoIGQ9Ik03NCAxMDFROTEgMTE2IDEwOCAxMDEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzdiMTczNiIgc3Ryb2tlLXdpZHRoPSI2Ii8+CiAgPHBhdGggZD0iTTM5IDEwNFExNiAxMTYgMTggMTM5IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZjRmN2QiIHN0cm9rZS13aWR0aD0iMTIiLz4KICA8cGF0aCBkPSJNMTQzIDEwNFExNjUgOTQgMTcxIDc2IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZjRmN2QiIHN0cm9rZS13aWR0aD0iMTIiLz4KICA8cGF0aCBkPSJNNzIgMTU3UTY1IDE4NCA1MyAyMDciIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmNGY3ZCIgc3Ryb2tlLXdpZHRoPSIxNCIvPgogIDxwYXRoIGQ9Ik0xMDggMTU3UTExNiAxODEgMTM1IDIwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmY0ZjdkIiBzdHJva2Utd2lkdGg9IjE0Ii8+CiAgPHBhdGggZD0iTTQwIDIxMFE1MyAyMDQgNjUgMjExIiBmaWxsPSJub25lIiBzdHJva2U9IiMzMDMyM2EiIHN0cm9rZS13aWR0aD0iMTMiLz4KICA8cGF0aCBkPSJNMTI2IDIwNFExMzkgMTk2IDE1MSAyMDIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzMwMzIzYSIgc3Ryb2tlLXdpZHRoPSIxMyIvPgogIDxjaXJjbGUgY3g9IjE2OSIgY3k9IjcyIiByPSI3IiBmaWxsPSIjZmY0ZjdkIi8+CjwvZz48L3N2Zz4=",pajarito:"personaje-e524cff3980b.png",gatito:"personaje-51219b70e7f1.png"};
+    const contextoVisual = obtenerContextoVisualPersonajeV186();
+    const accesorioVisual = contextoVisual?.accesorio
+        ? `<span class="personaje-accesorio-v186" aria-hidden="true">${contextoVisual.accesorio}</span>`
+        : "";
+    personaje.innerHTML = `<span class="personaje-sombra-suelo-v186" aria-hidden="true"></span><img class="personaje-cuerpo-img" src="${imagenesPersonaje[personajeElegido] || imagenesPersonaje.hombre}" alt="">${accesorioVisual}`;
+    personaje.dataset.personaje = personajeElegido;
+    personaje.dataset.contexto = contextoVisual?.tipo || "normal";
+    personaje.setAttribute(
+        "aria-label",
+        contextoVisual?.descripcion
+            ? `${aria} · ${contextoVisual.descripcion}`
+            : aria
+    );
+
+    personaje.classList.remove(
+        "estado-atrasado",
+        "estado-en-ritmo",
+        "estado-adelantado",
+        "estado-completado",
+        "moviendo",
+        "contexto-vacaciones-v186",
+        "contexto-viaje-v186",
+        "contexto-normal-v186"
+    );
+
+    personaje.classList.add(
+        `estado-${estadoRitmo}`
+    );
+
+    personaje.classList.add(
+        `contexto-${contextoVisual?.tipo || "normal"}-v186`
+    );
+
+    personaje.classList.remove(
+        "animacion-vacaciones-v187",
+        "animacion-viaje-v187",
+        "animacion-normal-v187"
+    );
+    personaje.classList.add(
+        contextoVisual?.tipo === "vacaciones"
+            ? "animacion-vacaciones-v187"
+            : contextoVisual?.tipo === "viaje"
+                ? "animacion-viaje-v187"
+                : "animacion-normal-v187"
+    );
+
+    contenedor.classList.remove(
+        "ritmo-atrasado",
+        "ritmo-en-ritmo",
+        "ritmo-adelantado",
+        "ritmo-completado"
+    );
+    contenedor.classList.add(`ritmo-${estadoRitmo}`);
+    contenedor.style.setProperty("--camino-avance", `${progreso}%`);
+
+    // Medimos el personaje real después de cambiar los emojis.
+    // Así nunca se sale de la pista aunque tenga dos o tres símbolos.
+    const anchoPersonaje =
+        Math.max(
+            personaje.offsetWidth || 0,
+            window.matchMedia("(max-width: 430px)").matches
+                ? 54
+                : 62
+        );
+
+    const correccionPx =
+        (progreso / 100) * anchoPersonaje;
+
+    personaje.style.left =
+        `calc(${progreso}% - ${correccionPx}px)`;
+
+    const desplazamientoVertical = 0;
+
+    personaje.style.setProperty(
+        "--desplazamiento-ritmo",
+        `${desplazamientoVertical}px`
+    );
+
+    personaje.style.marginLeft = "0";
+    personaje.style.transform = "";
+
+    // Reiniciar la animación cada vez que se actualiza el progreso.
+    void personaje.offsetWidth;
+
+    if (progreso > 0) {
+        personaje.classList.add(
+            "moviendo"
+        );
+    }
+
+    contenedor.classList.toggle(
+        "completado",
+        progreso >= 100
+    );
+
+    if (estadoPersonaje) {
+
+        if (estadoRitmo === "completado") {
+
+            estadoPersonaje.textContent =
+                "¡Meta conseguida! 🎉";
+
+        } else if (estadoRitmo === "adelantado") {
+
+            estadoPersonaje.textContent =
+                "¡Vas lanzado! 🐇💨 Vas por delante del ritmo 😄";
+
+        } else if (estadoRitmo === "atrasado") {
+
+            estadoPersonaje.textContent =
+                "Paso a paso 🐢. Aún puedes recuperar el ritmo.";
+
+        } else {
+
+            estadoPersonaje.textContent =
+                "¡Buen ritmo! Sigue así ✨";
+        }
+    }
+
+    actualizarHitosProgreso(progreso);
+    aplicarContextoCalendarioProgresoV181(
+        progreso,
+        estadoPersonaje,
+        contenedor
+    );
+
+}
+
+
+function actualizarHitosProgreso(progreso) {
+    const contenedor = document.getElementById("hitosProgresoMes");
+    const celebracion = document.getElementById("celebracionProgreso");
+    if (!contenedor) return;
+
+    const valor = Math.max(0, Math.min(100, Number(progreso) || 0));
+    const hitos = Array.from(contenedor.querySelectorAll(".hito-mes"));
+
+    hitos.forEach(hito => {
+        const limite = Number(hito.dataset.hito) || 0;
+        hito.classList.toggle("alcanzado", valor >= limite);
+        const pendientes = hitos
+            .map(x => Number(x.dataset.hito) || 0)
+            .filter(x => x > valor);
+        const siguiente = pendientes.length ? Math.min(...pendientes) : -1;
+        hito.classList.toggle("siguiente", limite === siguiente);
+    });
+
+    if (!celebracion) return;
+
+    let nivel = 0;
+    if (valor >= 100) nivel = 100;
+    else if (valor >= 75) nivel = 75;
+    else if (valor >= 50) nivel = 50;
+    else if (valor >= 25) nivel = 25;
+
+    if (nivel > 0 && celebracion.dataset.ultimoNivel !== String(nivel)) {
+        const anterior=Number(celebracion.dataset.ultimoNivel)||0;
+        celebracion.dataset.ultimoNivel = String(nivel);
+
+        if(nivel>anterior){
+            const hitoNuevo=contenedor.querySelector(`[data-hito="${nivel}"]`);
+            if(hitoNuevo){
+                hitoNuevo.classList.remove("hito-recien-v194");
+                void hitoNuevo.offsetWidth;
+                hitoNuevo.classList.add("hito-recien-v194");
+                setTimeout(()=>hitoNuevo.classList.remove("hito-recien-v194"),900);
+            }
+            if(typeof hapticoV191==="function"){
+                hapticoV191(nivel>=100?10:6);
+            }
+        }
+        celebracion.innerHTML =
+            nivel >= 100
+                ? "<span>🎉</span><span>🏆</span><span>✨</span><span>🎊</span><span>⭐</span>"
+                : "<span>✨</span><span>⭐</span><span>✨</span>";
+        celebracion.classList.remove("activo");
+        void celebracion.offsetWidth;
+        celebracion.classList.add("activo");
+        setTimeout(() => celebracion.classList.remove("activo"), nivel >= 100 ? 2200 : 1200);
+    }
+}
+
+
+// =========================================================
+// FIN BLOQUE 3
+// =========================================================
+
+// =========================================================
+// BLOQUE 4
+// ESTADÍSTICAS + PERIODOS + GRÁFICOS + TRIMESTRES
+// =========================================================
+
+
+// =========================================================
+// CONFIGURAR ESTADÍSTICAS
+// =========================================================
+
+/* V108: configurarEstadisticas → estadisticas-render.js */
+
+
+
+// =========================================================
+// SELECCIONAR SEMANA / MES / AÑO
+// =========================================================
+
+/* V108: seleccionarPeriodoEstadisticas → estadisticas-render.js */
+
+
+
+// =========================================================
+// MOVER PERIODO
+// =========================================================
+
+/* V108: moverPeriodoEstadisticas → estadisticas-render.js */
+
+
+
+// =========================================================
+// ACTUALIZAR ESTADÍSTICAS
+// =========================================================
+
+/* V108: actualizarEstadisticas → estadisticas-render.js */
+
+
+
+// =========================================================
+// BARRAS DE ACTIVIDAD DE ESTADÍSTICAS
+// =========================================================
+
+/* V108: actualizarBarrasActividadEstadisticas → estadisticas-render.js */
+
+
+
+// =========================================================
+// OBTENER RANGO ACTUAL
+// =========================================================
+
+/* V108: obtenerRangoEstadisticas → estadisticas-render.js */
+
+
+
+// =========================================================
+// RANGO SEMANAL
+// LUNES → DOMINGO
+// =========================================================
+
+function rangoSemana(
+    fecha
+) {
+
+    const inicio =
+        copiarFecha(
+            fecha
+        );
+
+
+    const diaSemana =
+        inicio.getDay();
+
+
+    const desplazamiento =
+        diaSemana === 0
+            ? -6
+            : 1 - diaSemana;
+
+
+    inicio.setDate(
+        inicio.getDate() +
+        desplazamiento
+    );
+
+
+    inicio.setHours(
+        0,
+        0,
+        0,
+        0
+    );
+
+
+    const fin =
+        copiarFecha(
+            inicio
+        );
+
+
+    fin.setDate(
+        fin.getDate() + 6
+    );
+
+
+    fin.setHours(
+        23,
+        59,
+        59,
+        999
+    );
+
+
+    return {
+        inicio,
+        fin
+    };
+}
+
+
+// =========================================================
+// RANGO MENSUAL
+// =========================================================
+
+function rangoMes(
+    fecha
+) {
+
+    const anio =
+        fecha.getFullYear();
+
+
+    const mes =
+        fecha.getMonth();
+
+
+    return {
+
+        inicio:
+            new Date(
+                anio,
+                mes,
+                1,
+                0,
+                0,
+                0,
+                0
+            ),
+
+
+        fin:
+            new Date(
+                anio,
+                mes + 1,
+                0,
+                23,
+                59,
+                59,
+                999
+            )
+    };
+}
+
+
+// =========================================================
+// RANGO ANUAL
+// =========================================================
+
+function rangoAnio(
+    fecha
+) {
+
+    const anioNatural =
+        fecha.getFullYear();
+
+    const mes =
+        fecha.getMonth();
+
+
+    // El año de servicio comienza el 1 de septiembre
+    // y termina el 31 de agosto del año siguiente.
+    // Ejemplo: septiembre de 2026 pertenece al
+    // año de servicio 2027.
+
+    const anioInicio =
+        mes >= 8
+            ? anioNatural
+            : anioNatural - 1;
+
+
+    return {
+
+        inicio:
+            new Date(
+                anioInicio,
+                8,
+                1,
+                0,
+                0,
+                0,
+                0
+            ),
+
+
+        fin:
+            new Date(
+                anioInicio + 1,
+                7,
+                31,
+                23,
+                59,
+                59,
+                999
+            )
+    };
+}
+
+// =========================================================
+// REGISTROS ENTRE DOS FECHAS
+// =========================================================
+
+/* V109: obtenerRegistrosEntreFechas → registrar.js */
+
+
+
+// =========================================================
+// DÍAS ACTIVOS
+// =========================================================
+
+function contarDiasActivos(
+    registros
+) {
+
+    return new Set(
+        registros.map(
+            registro =>
+                registro.fecha
+        )
+    ).size;
+}
+
+
+// =========================================================
+// TEXTO DEL PERIODO
+// =========================================================
+
+/* V108: actualizarTextoPeriodoEstadisticas → estadisticas-render.js */
+
+
+
+// =========================================================
+// FORMATEAR RANGO SEMANAL
+// =========================================================
+
+function formatearRangoSemana(
+    inicio,
+    fin
+) {
+
+    const mismoMes =
+        inicio.getMonth() ===
+            fin.getMonth()
+        &&
+        inicio.getFullYear() ===
+            fin.getFullYear();
+
+
+    if (mismoMes) {
+
+        const mes =
+            new Intl.DateTimeFormat(
+                "es-ES",
+                {
+                    month: "long"
+                }
+            ).format(
+                inicio
+            );
+
+
+        return (
+            `${inicio.getDate()}–` +
+            `${fin.getDate()} de ` +
+            `${mes} de ` +
+            `${fin.getFullYear()}`
+        );
+    }
+
+
+    const formato =
+        new Intl.DateTimeFormat(
+            "es-ES",
+            {
+                day: "numeric",
+                month: "short"
+            }
+        );
+
+
+    return (
+        `${formato.format(inicio)} – ` +
+        `${formato.format(fin)} ` +
+        `de ${fin.getFullYear()}`
+    );
+}
+
+
+// =========================================================
+// ¿ES EL PERIODO ACTUAL?
+// =========================================================
+
+function esSemanaActual(
+    inicio,
+    fin
+) {
+
+    const hoy =
+        new Date();
+
+
+    return (
+        hoy >= inicio &&
+        hoy <= fin
+    );
+}
+
+
+function esMesActual(
+    fecha
+) {
+
+    const hoy =
+        new Date();
+
+
+    return (
+        hoy.getFullYear() ===
+            fecha.getFullYear()
+        &&
+        hoy.getMonth() ===
+            fecha.getMonth()
+    );
+}
+
+
+function esAnioActual(
+    fechaInicio
+) {
+
+    const actual =
+        rangoAnio(
+            new Date()
+        );
+
+
+    return (
+        actual.inicio.getFullYear() ===
+            fechaInicio.getFullYear()
+        &&
+        actual.inicio.getMonth() ===
+            fechaInicio.getMonth()
+    );
+}
+
+
+// =========================================================
+// ACTUALIZAR GRÁFICO
+// =========================================================
+
+/* V108: actualizarGraficoEstadisticas → estadisticas-render.js */
+
+
+
+// =========================================================
+// DATOS GRÁFICO SEMANAL
+// =========================================================
+
+function obtenerDatosGraficoSemana(
+    inicioSemana
+) {
+
+    const nombres = [
+        "L",
+        "M",
+        "X",
+        "J",
+        "V",
+        "S",
+        "D"
+    ];
+
+
+    const hoy =
+        fechaLocalISO(
+            new Date()
+        );
+
+
+    const datos = [];
+
+
+    for (
+        let i = 0;
+        i < 7;
+        i++
+    ) {
+
+        const fecha =
+            copiarFecha(
+                inicioSemana
+            );
+
+
+        fecha.setDate(
+            fecha.getDate() + i
+        );
+
+
+        const fechaISO =
+            fechaLocalISO(
+                fecha
+            );
+
+
+        const registros =
+            estado.registros.filter(
+                registro =>
+                    registro.fecha ===
+                    fechaISO
+            );
+
+
+        datos.push({
+
+            nombre:
+                nombres[i],
+
+            minutos:
+                sumarMinutos(
+                    registros
+                ),
+
+            destacado:
+                fechaISO === hoy
+        });
+    }
+
+
+    return datos;
+}
+
+
+// =========================================================
+// DATOS GRÁFICO MENSUAL
+//
+// S1 = 1–7
+// S2 = 8–14
+// S3 = 15–21
+// S4 = 22–28
+// S5 = 29–fin
+// =========================================================
+
+function obtenerDatosGraficoMes(
+    inicioMes,
+    finMes
+) {
+
+    const datos = [];
+
+
+    const ultimoDia =
+        finMes.getDate();
+
+
+    const hoy =
+        new Date();
+
+
+    let numeroSemana = 1;
+
+
+    for (
+        let inicioDia = 1;
+        inicioDia <= ultimoDia;
+        inicioDia += 7
+    ) {
+
+        const finDia =
+            Math.min(
+                inicioDia + 6,
+                ultimoDia
+            );
+
+
+        const inicio =
+            new Date(
+                inicioMes.getFullYear(),
+                inicioMes.getMonth(),
+                inicioDia,
+                0,
+                0,
+                0,
+                0
+            );
+
+
+        const fin =
+            new Date(
+                inicioMes.getFullYear(),
+                inicioMes.getMonth(),
+                finDia,
+                23,
+                59,
+                59,
+                999
+            );
+
+
+        const registros =
+            obtenerRegistrosEntreFechas(
+                inicio,
+                fin
+            );
+
+
+        const destacado =
+            hoy.getFullYear() ===
+                inicioMes.getFullYear()
+            &&
+            hoy.getMonth() ===
+                inicioMes.getMonth()
+            &&
+            hoy.getDate() >=
+                inicioDia
+            &&
+            hoy.getDate() <=
+                finDia;
+
+
+        datos.push({
+
+            nombre:
+                `S${numeroSemana}`,
+
+            minutos:
+                sumarMinutos(
+                    registros
+                ),
+
+            destacado
+        });
+
+
+        numeroSemana++;
+    }
+
+
+    return datos;
+}
+
+
+// =========================================================
+// DATOS GRÁFICO ANUAL
+// =========================================================
+
+function obtenerDatosGraficoAnio(
+    inicioAnio
+) {
+
+    const nombres = [
+        "S",
+        "O",
+        "N",
+        "D",
+        "E",
+        "F",
+        "M",
+        "A",
+        "M",
+        "J",
+        "J",
+        "A"
+    ];
+
+
+    const hoy =
+        new Date();
+
+
+    const datos = [];
+
+
+    for (
+        let indice = 0;
+        indice < 12;
+        indice++
+    ) {
+
+        const inicio =
+            new Date(
+                inicioAnio.getFullYear(),
+                inicioAnio.getMonth() + indice,
+                1,
+                0,
+                0,
+                0,
+                0
+            );
+
+
+        const fin =
+            new Date(
+                inicio.getFullYear(),
+                inicio.getMonth() + 1,
+                0,
+                23,
+                59,
+                59,
+                999
+            );
+
+
+        const registros =
+            obtenerRegistrosEntreFechas(
+                inicio,
+                fin
+            );
+
+
+        datos.push({
+
+            nombre:
+                nombres[indice],
+
+            minutos:
+                sumarMinutos(
+                    registros
+                ),
+
+            destacado:
+                hoy.getFullYear() ===
+                    inicio.getFullYear()
+                &&
+                hoy.getMonth() ===
+                    inicio.getMonth()
+        });
+    }
+
+
+    return datos;
+}
+
+// =========================================================
+// RENDERIZAR COLUMNAS DEL GRÁFICO
+// =========================================================
+
+function renderizarColumnasGrafico(
+    grafico,
+    datos
+) {
+
+    grafico.innerHTML = "";
+
+
+    const maximo =
+        Math.max(
+            ...datos.map(
+                dato =>
+                    dato.minutos
+            ),
+            1
+        );
+
+
+    datos.forEach(
+        dato => {
+
+            const columna =
+                document.createElement(
+                    "div"
+                );
+
+
+            columna.className =
+                "grafico-dia";
+
+
+            if (
+                dato.destacado
+            ) {
+
+                columna.classList.add(
+                    "hoy"
+                );
+            }
+
+
+            if (
+                dato.minutos === 0
+            ) {
+
+                columna.classList.add(
+                    "sin-actividad"
+                );
+            }
+
+
+            // ---------------------------------------------
+            // Tiempo
+            // ---------------------------------------------
+
+            const tiempo =
+                document.createElement(
+                    "div"
+                );
+
+
+            tiempo.className =
+                "grafico-tiempo";
+
+
+            tiempo.textContent =
+                dato.minutos > 0
+                    ? formatearTiempoGrafico(
+                        dato.minutos
+                    )
+                    : "";
+
+
+            // ---------------------------------------------
+            // Contenedor
+            // ---------------------------------------------
+
+            const contenedor =
+                document.createElement(
+                    "div"
+                );
+
+
+            contenedor.className =
+                "grafico-barra-contenedor";
+
+
+            // ---------------------------------------------
+            // Barra
+            // ---------------------------------------------
+
+            const barra =
+                document.createElement(
+                    "div"
+                );
+
+
+            barra.className =
+                "grafico-barra";
+
+
+            const porcentaje =
+                dato.minutos > 0
+                    ? (
+                        dato.minutos /
+                        maximo
+                    ) * 100
+                    : 0;
+
+
+            barra.style.height =
+                `${porcentaje}%`;
+
+
+            contenedor.appendChild(
+                barra
+            );
+
+
+            // ---------------------------------------------
+            // Nombre
+            // ---------------------------------------------
+
+            const nombre =
+                document.createElement(
+                    "div"
+                );
+
+
+            nombre.className =
+                "grafico-dia-nombre";
+
+
+            nombre.textContent =
+                dato.nombre;
+
+
+            columna.append(
+                tiempo,
+                contenedor,
+                nombre
+            );
+
+
+            grafico.appendChild(
+                columna
+            );
+        }
+    );
+}
+
+
+// =========================================================
+// FORMATO COMPACTO PARA GRÁFICO
+// =========================================================
+
+function formatearTiempoGrafico(
+    totalMinutos
+) {
+
+    const total =
+        Math.max(
+            Math.round(
+                Number(
+                    totalMinutos
+                ) || 0
+            ),
+            0
+        );
+
+
+    const horas =
+        Math.floor(
+            total / 60
+        );
+
+
+    const minutos =
+        total % 60;
+
+
+    if (
+        horas === 0
+    ) {
+
+        return `${minutos}m`;
+    }
+
+
+    if (
+        minutos === 0
+    ) {
+
+        return `${horas}h`;
+    }
+
+
+    return (
+        `${horas}h${minutos}`
+    );
+}
+
+
+// =========================================================
+// TRIMESTRES
+// =========================================================
+
+function actualizarTrimestres(
+    rangoAnual
+) {
+
+    const seccion =
+        document.getElementById(
+            "seccionTrimestres"
+        );
+
+    const lista =
+        document.getElementById(
+            "listaTrimestres"
+        );
+
+
+    if (!seccion || !lista) {
+        return;
+    }
+
+
+    const esAnio =
+        estado.estadisticas.periodo ===
+        "anio";
+
+
+    seccion.classList.toggle(
+        "oculto",
+        !esAnio
+    );
+
+
+    if (!esAnio) {
+        return;
+    }
+
+
+    const anioServicio =
+        rangoAnual.fin
+            .getFullYear();
+
+
+    ponerTexto(
+        "anioTrimestres",
+        `Año de servicio ${anioServicio}`
+    );
+
+
+    lista.innerHTML = "";
+
+
+    for (
+        let trimestre = 1;
+        trimestre <= 4;
+        trimestre++
+    ) {
+
+        lista.appendChild(
+            crearTarjetaTrimestre(
+                trimestre,
+                rangoAnual.inicio
+            )
+        );
+    }
+}
+
+
+// =========================================================
+// CREAR TARJETA DE TRIMESTRE
+// =========================================================
+
+function crearTarjetaTrimestre(
+    numero,
+    inicioAnioServicio
+) {
+
+    const inicio =
+        new Date(
+            inicioAnioServicio.getFullYear(),
+            inicioAnioServicio.getMonth() +
+                (numero - 1) * 3,
+            1,
+            0,
+            0,
+            0,
+            0
+        );
+
+    const fin =
+        new Date(
+            inicio.getFullYear(),
+            inicio.getMonth() + 3,
+            0,
+            23,
+            59,
+            59,
+            999
+        );
+
+
+    const registros =
+        obtenerRegistrosEntreFechas(
+            inicio,
+            fin
+        );
+
+
+    const ministerio =
+        sumarMinutos(
+            registros.filter(
+                registro =>
+                    registro.tipo ===
+                    "ministerio"
+            )
+        );
+
+
+    const otrasActividades =
+        sumarMinutos(
+            registros.filter(
+                registro =>
+                    registro.tipo !==
+                    "ministerio"
+            )
+        );
+
+
+    const total =
+        ministerio +
+        otrasActividades;
+
+
+    const tarjeta =
+        document.createElement(
+            "article"
+        );
+
+    tarjeta.className =
+        "tarjeta trimestre-card";
+
+
+    const formatoMes =
+        new Intl.DateTimeFormat(
+            "es-ES",
+            {
+                month: "short",
+                year: "numeric"
+            }
+        );
+
+
+    tarjeta.innerHTML = `
         <div class="trimestre-cabecera">
             <div>
                 <h3 class="trimestre-titulo">
-                    ${e}.\xBA trimestre
+                    ${numero}.º trimestre
                 </h3>
                 <p class="trimestre-fechas">
-                    ${capitalizar(s.format(a))}
-                    \u2013
-                    ${capitalizar(s.format(o))}
+                    ${capitalizar(formatoMes.format(inicio))}
+                    –
+                    ${capitalizar(formatoMes.format(fin))}
                 </p>
             </div>
             <strong class="trimestre-total">
-                ${formatearTiempo(c)}
+                ${formatearTiempo(total)}
             </strong>
         </div>
         <div class="separador"></div>
         <div class="fila-dato">
             <span>Ministerio</span>
-            <strong>${formatearTiempo(i)}</strong>
+            <strong>${formatearTiempo(ministerio)}</strong>
         </div>
         <div class="fila-dato">
             <span>Otras actividades</span>
-            <strong>${formatearTiempo(r)}</strong>
+            <strong>${formatearTiempo(otrasActividades)}</strong>
         </div>
-    `,l}function configurarRecordatorioCopiaSeguridad(){const e=document.getElementById("hacerCopiaDesdeInicio");e&&e.addEventListener("click",exportarCopiaSeguridad)}function leerUltimaCopiaSeguridad(){try{const e=localStorage.getItem(STORAGE_KEYS.ultimaCopiaSeguridad);if(!e)return null;const t=new Date(e);return Number.isNaN(t.getTime())?null:t}catch(e){return console.error("No se pudo leer la fecha de la \xFAltima copia:",e),null}}function guardarUltimaCopiaSeguridad(e=new Date){try{return localStorage.setItem(STORAGE_KEYS.ultimaCopiaSeguridad,e.toISOString()),!0}catch(t){return console.error("No se pudo guardar la fecha de la \xFAltima copia:",t),!1}}function formatearFechaCopia(e){return new Intl.DateTimeFormat("es-ES",{day:"numeric",month:"long",year:"numeric"}).format(e)}function actualizarRecordatorioCopiaSeguridad(){const e=document.getElementById("recordatorioCopiaInicio"),t=document.getElementById("textoRecordatorioCopia"),a=document.getElementById("ultimaCopiaAjustes"),o=leerUltimaCopiaSeguridad();if(a&&(a.textContent=o?`\xDAltima copia: ${formatearFechaCopia(o)}`:"Todav\xEDa no hay una copia registrada"),!e)return;const i=!o||new Date>=sumarUnMesCalendario(o);if(e.classList.toggle("oculto",!i),!(!i||!t)){if(!o){t.textContent="Haz una copia ahora. Despu\xE9s te lo recordaremos una vez al mes.";return}t.textContent=`La \xFAltima copia fue el ${formatearFechaCopia(o)}.`}}function configurarAjustes(){const e=document.getElementById("guardarAjustes");e&&e.addEventListener("click",guardarAjustesDesdeFormulario);const t=document.getElementById("tipoPublicador");t&&t.addEventListener("change",aplicarObjetivoSugerido);const a=document.getElementById("exportarDatos"),o=document.getElementById("importarDatos"),n=document.getElementById("archivoImportacion");a&&a.addEventListener("click",exportarCopiaSeguridad),o&&n&&(o.addEventListener("click",()=>{n.value="",n.click()}),n.addEventListener("change",i=>{var c;const r=(c=i.target.files)==null?void 0:c[0];r&&importarCopiaSeguridad(r)}))}function cargarFormularioAjustes(){const e=document.getElementById("tipoPublicador"),t=document.getElementById("objetivoMensual"),a=document.getElementById("personajeProgreso");if(e&&(e.value=estado.preferencias.tipoPublicador||"publicador"),a&&(a.value=estado.preferencias.personajeProgreso||"hombre"),t){const c=Number(estado.preferencias.objetivoMensualMinutos)||0;t.value=c>0?String(c/60):"0"}const o=document.getElementById("mostrarLDC"),n=document.getElementById("mostrarAsambleas"),i=document.getElementById("mostrarOtras");o&&(o.checked=estado.preferencias.mostrarLDC!==!1),n&&(n.checked=estado.preferencias.mostrarAsambleas!==!1),i&&(i.checked=estado.preferencias.mostrarOtras!==!1);const r=document.getElementById("nombreOtrasV260");r&&(r.value=normalizarNombreOtrasV260(estado.preferencias.nombreOtras))}function aplicarObjetivoSugerido(){const e=document.getElementById("tipoPublicador"),t=document.getElementById("objetivoMensual");if(!(!e||!t))switch(e.value){case"precursorRegular":t.value="50";break;case"precursorAuxiliar":t.value="15";break;default:(Number(t.value)===50||Number(t.value)===15)&&(t.value="0");break}}function guardarAjustesDesdeFormulario(){var u,m;const e=document.getElementById("tipoPublicador"),t=document.getElementById("objetivoMensual"),a=document.getElementById("personajeProgreso"),o=document.getElementById("mensajeAjustes");if(!e||!t||!a)return;if(limpiarMensajeFormulario(o),!["publicador","precursorAuxiliar","precursorRegular"].includes(e.value)){mostrarMensajeFormulario(o,"Selecciona un tipo v\xE1lido.",!0);return}const i=["hombre","mujer","koala","mariposa","pantera","tortuga","liebre","corazon","pajarito","gatito"];if(!["hombre","mujer","koala","mariposa","pantera","tortuga","liebre","corazon","pajarito","gatito"].includes(a.value)){mostrarMensajeFormulario(o,"Selecciona un personaje v\xE1lido.",!0);return}const r=Number(t.value);if(!Number.isFinite(r)||r<0||r>200){mostrarMensajeFormulario(o,"Introduce un objetivo entre 0 y 200 horas.",!0);return}const c={...estado.preferencias},l=document.getElementById("mostrarLDC"),s=document.getElementById("mostrarAsambleas"),d=document.getElementById("mostrarOtras");if(estado.preferencias={...estado.preferencias,tipoPublicador:e.value,personajeProgreso:a.value,objetivoMensualMinutos:Math.round(r*60),mostrarLDC:l?l.checked:!0,mostrarAsambleas:s?s.checked:!0,mostrarOtras:d?d.checked:!0,nombreOtras:normalizarNombreOtrasV260((m=(u=document.getElementById("nombreOtrasV260"))==null?void 0:u.value)!=null?m:estado.preferencias.nombreOtras)},!guardarPreferencias()){estado.preferencias=c,mostrarMensajeFormulario(o,"No se pudieron guardar los ajustes.",!0);return}mostrarMensajeFormulario(o,"Ajustes guardados \u2713",!1),aplicarVisibilidadActividades(),actualizarTodaLaInterfaz(),typeof actualizarInicio=="function"&&actualizarInicio()}const AJUSTES_CALENDARIO_V263=["miServicio.eventosCalendarioV172","miServicio.calendarioAppleImportV173"],AJUSTES_APARIENCIA_V263=["miServicio.ambienteVisual","miServicio.firmaColor","miServicio.acabadoMetal","miServicio.acabadoGrafico","miServicio.intensidadLuz","miServicio.estiloGraficoInicio","miServicio.estiloCaminoInicio","miServicio.fondoClimaInicio","miServicio.inicioCompactoV191","miServicio.escenaRegistrar","miServicio.aparienciaEstacionalV201","miServicio.nombreSaludo","miServicio.frasePersonal","miServicio.salidaHabitual","miServicio.localidadTiempo","miServicio.estiloSuperficiesV264","miServicio.fondoOledV264","miServicio.globoLiquidoV267","miServicio.globoInclinaV267","miServicio.firmaPersonalV269","miServicio.tipografiaV269","miServicio.anillosInicioV269"],AJUSTES_LOCALES_V263=AJUSTES_CALENDARIO_V263.concat(AJUSTES_APARIENCIA_V263),LIMITE_VALOR_AJUSTE_V263=2e6;function recogerAjustesLocalesV263(){const e={};return AJUSTES_LOCALES_V263.forEach(t=>{try{const a=localStorage.getItem(t);typeof a=="string"&&a!==""&&(e[t]=a)}catch{}}),e}function ajustesLocalesValidosV263(e){if(!e||typeof e!="object"||Array.isArray(e))return{};const t={};return Object.keys(e).forEach(a=>{if(!AJUSTES_LOCALES_V263.includes(a))return;const o=e[a];if(!(typeof o!="string"||o.length>LIMITE_VALOR_AJUSTE_V263)){if(AJUSTES_CALENDARIO_V263.includes(a))try{JSON.parse(o)}catch{return}t[a]=o}}),t}function aplicarAjustesLocalesV263(e,t={}){const a=ajustesLocalesValidosV263(e);let o=Object.keys(a);t.conservarApariencia&&(o=o.filter(r=>!AJUSTES_APARIENCIA_V263.includes(r)));const n={};let i=0;try{o.forEach(r=>{n[r]=localStorage.getItem(r),n[r]!==a[r]&&(localStorage.setItem(r,a[r]),i++)})}catch{return Object.keys(n).forEach(c=>{try{n[c]===null?localStorage.removeItem(c):localStorage.setItem(c,n[c])}catch{}}),{ok:!1,cambiados:0}}return{ok:!0,cambiados:i}}function recargarTrasAjustesV263(){window.setTimeout(()=>{try{window.location.reload()}catch{}},1600)}function crearDatosCopiaSeguridad(){return{formato:"mi-servicio-backup",version:3,exportadoEn:new Date().toISOString(),registros:estado.registros,preferencias:estado.preferencias,agendaSalidas:estado.agendaSalidas,ajustesLocales:recogerAjustesLocalesV263()}}function exportarCopiaSeguridad(){const e=document.getElementById("mensajeDatos");limpiarMensajeFormulario(e);try{const t=crearDatosCopiaSeguridad(),a=JSON.stringify(t,null,2),o=new Blob([a],{type:"application/json;charset=utf-8"}),n=URL.createObjectURL(o),i=document.createElement("a"),r=fechaLocalISO(new Date);return i.href=n,i.download=`Mi-Servicio-${r}.json`,i.style.display="none",document.body.appendChild(i),i.click(),window.setTimeout(()=>{URL.revokeObjectURL(n),i.remove()},1500),guardarUltimaCopiaSeguridad(new Date),actualizarRecordatorioCopiaSeguridad(),mostrarMensajeFormulario(e,"Copia de seguridad preparada \u2713",!1),!0}catch(t){return console.error("Error al exportar:",t),mostrarMensajeFormulario(e,"No se pudo crear la copia de seguridad.",!0),!1}}async function importarCopiaSeguridad(e){const t=document.getElementById("mensajeDatos");limpiarMensajeFormulario(t);try{const a=await e.text(),o=JSON.parse(a);if(!validarCopiaSeguridad(o)){mostrarMensajeFormulario(t,"El archivo no es una copia v\xE1lida de Mi Servicio.",!0);return}const n=normalizarRegistrosImportados(o.registros),i=normalizarPreferenciasImportadas(o.preferencias),r=o.agendaSalidas&&typeof o.agendaSalidas=="object"&&!Array.isArray(o.agendaSalidas)?Object.fromEntries(Object.entries(o.agendaSalidas).map(([S,y])=>[String(S),normalizarAgendaDia(y)]).filter(([,S])=>!!S.companero)):{},c=o.exportadoEn?new Date(o.exportadoEn):null,l=c&&!Number.isNaN(c.getTime())?formatearFechaCopia(c):"fecha desconocida",s=new Set((estado.registros||[]).map(S=>S&&S.id)),d=new Set(n.map(S=>S&&S.id)),u=n.filter(S=>!s.has(S.id)).length,m=(estado.registros||[]).filter(S=>!d.has(S&&S.id)).length,g=n.map(S=>String(S.fecha||"")).filter(Boolean).sort(),p=g.length?`${g[0]} \u2192 ${g[g.length-1]}`:"sin fechas",v=m>0?`
-\u26A0\uFE0F ${m} registro(s) que tienes ahora NO est\xE1n en esta copia y dejar\xE1n de estar en la app (quedan en la copia que se descarga antes).
-`:"";if(!window.confirm(`Vas a restaurar una copia de Mi Servicio.
+    `;
 
-Fecha de la copia: ${l}
-Registros en la copia: ${n.length} (${p})
-Registros actuales: ${(estado.registros||[]).length}
-Nuevos respecto a lo actual: ${u}
-Ya existentes: ${n.length-u}
-`+v+`
-Antes de restaurarla se descargar\xE1 autom\xE1ticamente una copia de seguridad de tus datos actuales.
 
-\xBFQuieres continuar?`)){mostrarMensajeFormulario(t,"Restauraci\xF3n cancelada. No se ha cambiado ning\xFAn dato.",!1);return}descargarCopiaSeguridadActual("Antes-de-restaurar");const f=estado.registros,h=estado.preferencias,E=estado.agendaSalidas;estado.registros=n,estado.preferencias=i,estado.agendaSalidas=r;const I=guardarRegistros(),M=guardarPreferencias(),x=guardarAgendaSalidas();if(!I||!M||!x){estado.registros=f,estado.preferencias=h,estado.agendaSalidas=E,guardarRegistros(),guardarPreferencias(),guardarAgendaSalidas(),mostrarMensajeFormulario(t,"No se pudieron guardar los datos importados. Se han conservado los datos anteriores.",!0);return}const C=aplicarAjustesLocalesV263(o.ajustesLocales);cargarFormularioAjustes(),actualizarTodaLaInterfaz();let L="";C.ok?C.cambiados>0&&(L=" Se restauraron tambi\xE9n el calendario y los ajustes; la app se recargar\xE1.",recargarTrasAjustesV263()):L=" Los eventos del calendario y los ajustes visuales no se pudieron restaurar.",mostrarMensajeFormulario(t,`Copia restaurada correctamente: ${textoCantidadRegistros(n.length)} \u2713${L}`,!C.ok)}catch(a){console.error("Error al importar:",a),mostrarMensajeFormulario(t,"No se pudo leer la copia de seguridad. Tus datos actuales no se han modificado.",!0)}}function descargarCopiaSeguridadActual(e="Copia"){const t=crearDatosCopiaSeguridad(),a=JSON.stringify(t,null,2),o=new Blob([a],{type:"application/json;charset=utf-8"}),n=URL.createObjectURL(o),i=document.createElement("a");i.href=n,i.download=`Mi-Servicio-${e}-${fechaLocalISO(new Date)}.json`,i.style.display="none",document.body.appendChild(i),i.click(),window.setTimeout(()=>{URL.revokeObjectURL(n),i.remove()},1500)}function validarCopiaSeguridad(e){return!(!e||typeof e!="object"||!Array.isArray(e.registros)||!e.preferencias||typeof e.preferencias!="object"||Array.isArray(e.preferencias)||e.formato&&e.formato!=="mi-servicio-backup")}function normalizarPreferenciasImportadas(e){const a=["publicador","precursorAuxiliar","precursorRegular"].includes(e==null?void 0:e.tipoPublicador)?e.tipoPublicador:"publicador",o=Math.max(Math.round(Number(e==null?void 0:e.objetivoMensualMinutos)||0),0);return{tipoPublicador:a,personajeProgreso:["hombre","mujer","koala","mariposa","pantera","tortuga","liebre","corazon","pajarito","gatito"].includes(e==null?void 0:e.personajeProgreso)?e.personajeProgreso:"hombre",objetivoMensualMinutos:o,mostrarLDC:(e==null?void 0:e.mostrarLDC)!==!1,mostrarAsambleas:(e==null?void 0:e.mostrarAsambleas)!==!1,mostrarOtras:(e==null?void 0:e.mostrarOtras)!==!1,nombreOtras:normalizarNombreOtrasV260(e==null?void 0:e.nombreOtras)}}function fechaISOValida(e){if(!/^\d{4}-\d{2}-\d{2}$/.test(e))return!1;const t=fechaDesdeISO(e);return Number.isNaN(t.getTime())?!1:fechaLocalISO(t)===e}function actividadVisible(e){switch(e){case"ldc":return estado.preferencias.mostrarLDC!==!1;case"asambleas":return estado.preferencias.mostrarAsambleas!==!1;case"otras":return estado.preferencias.mostrarOtras!==!1;default:return!0}}function aplicarVisibilidadActividades(){var a;["ldc","asambleas","otras"].forEach(o=>{const n=actividadVisible(o);document.querySelectorAll(`.actividad-boton[data-tipo="${o}"]`).forEach(i=>i.classList.toggle("oculto",!n)),document.querySelectorAll(`.filtro-historial[data-filtro="${o}"]`).forEach(i=>i.classList.toggle("oculto",!n))}),[["totalLDC","ldc"],["totalAsambleas","asambleas"],["totalOtras","otras"],["estadisticasLDC","ldc"],["estadisticasAsambleas","asambleas"],["estadisticasOtras","otras"]].forEach(([o,n])=>{const i=document.getElementById(o),r=i==null?void 0:i.closest(".fila-dato");r&&r.classList.toggle("oculto",!actividadVisible(n))}),!actividadVisible(estado.filtroHistorial)&&estado.filtroHistorial!=="todos"&&(estado.filtroHistorial="todos",document.querySelectorAll(".filtro-historial").forEach(o=>o.classList.toggle("activo",o.dataset.filtro==="todos")));const t=(a=document.getElementById("tipoRegistro"))==null?void 0:a.value;t&&!actividadVisible(t)&&seleccionarActividad("ministerio")}function actualizarTodaLaInterfaz(){aplicarNombreOtrasV260(),aplicarVisibilidadActividades(),actualizarInicio(),estado.vistaActual==="historial"&&renderizarHistorial(),actualizarEstadisticas(),actualizarMeta(),refrescarResumenMensualV198(),actualizarSemanaVisualV193(),typeof actualizarComparacionMesesV202=="function"&&actualizarComparacionMesesV202(),typeof actualizarRegistrarV203=="function"&&actualizarRegistrarV203(),typeof actualizarInicioSimpleV260=="function"&&actualizarInicioSimpleV260(),window.dispatchEvent(new Event("miServicio:interfazListaV201"))}function minutosTotales(e,t){const a=Math.max(Number(e)||0,0),o=Math.max(Number(t)||0,0);return Math.round(a*60+o)}function sumarMinutos(e){return Array.isArray(e)?e.reduce((t,a)=>{const o=Math.max(Number(a==null?void 0:a.minutos)||0,0);return t+o},0):0}function formatearTiempo(e){const t=Math.max(Math.round(Number(e)||0),0),a=Math.floor(t/60),o=t%60;return a===0?`${o} min`:o===0?`${a} h`:`${a} h ${o} min`}function formatearFecha(e){const t=fechaDesdeISO(e);return Number.isNaN(t.getTime())?e||"":capitalizar(new Intl.DateTimeFormat("es-ES",{weekday:"long",day:"numeric",month:"long",year:"numeric"}).format(t))}function fechaDesdeISO(e){const t=String(e||"").split("-").map(Number);if(t.length!==3||t.some(i=>!Number.isFinite(i)))return new Date(e);const[a,o,n]=t;return new Date(a,o-1,n,12,0,0,0)}function fechaLocalISO(e){if(!(e instanceof Date)||Number.isNaN(e.getTime()))return"";const t=e.getFullYear(),a=String(e.getMonth()+1).padStart(2,"0"),o=String(e.getDate()).padStart(2,"0");return`${t}-${a}-${o}`}function copiarFecha(e){return new Date(e.getTime())}function nombreActividad(e){var t;switch(e){case"ministerio":return"Ministerio";case"ldc":return"LDC";case"asambleas":return"Asambleas";case"otras":return normalizarNombreOtrasV260((t=estado.preferencias)==null?void 0:t.nombreOtras)||"Otras";case"todos":return"actividad";default:return"Actividad"}}function iconoActividad(e){switch(e){case"ministerio":return"\u2726";case"ldc":return"\u2302";case"asambleas":return"\u25C6";case"otras":return"\uFF0B";default:return"\u2022"}}function ponerTexto(e,t){const a=document.getElementById(e);a&&(a.textContent=String(t!=null?t:""))}function capitalizar(e){const t=String(e||"");return t?t.charAt(0).toUpperCase()+t.slice(1):""}function crearID(){return window.crypto&&typeof window.crypto.randomUUID=="function"?window.crypto.randomUUID():Date.now().toString(36)+"-"+Math.random().toString(36).slice(2)+"-"+Math.random().toString(36).slice(2)}function almacenamientoDisponible(){const e="__miServicioPrueba__";try{return localStorage.setItem(e,"1"),localStorage.removeItem(e),!0}catch(t){return console.error("localStorage no est\xE1 disponible:",t),!1}}function diagnosticoMiServicio(){const e={almacenamiento:almacenamientoDisponible(),registros:estado.registros.length,vista:estado.vistaActual,periodoEstadisticas:estado.estadisticas.periodo,objetivoMensualMinutos:estado.preferencias.objetivoMensualMinutos,version:"1.0"};return console.table(e),e}function configurarTransferenciaPantallaInicio(){const e=document.getElementById("prepararAccesoInicio");e&&e.addEventListener("click",prepararTransferenciaPantallaInicio)}function prepararTransferenciaPantallaInicio(){const e=document.getElementById("mensajeDatos");try{const t=crearDatosCopiaSeguridad(),a=JSON.stringify(t),o=textoABase64URL(a);if(o.length>12e4){e&&(e.textContent="Hay demasiados datos para transferirlos en el acceso. Usa Exportar copia de seguridad y despu\xE9s imp\xF3rtala desde el icono.");return}const n=new URL(window.location.href);n.hash=`mi-servicio-transfer=${o}`,history.replaceState(null,"",n.toString()),e&&(e.textContent="\u2713 Datos preparados. Ahora pulsa Compartir \u2192 A\xF1adir a pantalla de inicio. No cierres ni recargues esta p\xE1gina antes de a\xF1adirlo."),window.alert(`Datos preparados \u2713
+    return tarjeta;
+}
 
-Ahora pulsa Compartir \u2192 A\xF1adir a pantalla de inicio.
 
-La primera vez que abras Mi Servicio desde el nuevo icono, los datos se copiar\xE1n autom\xE1ticamente.`)}catch(t){console.error("No se pudo preparar la transferencia:",t),e&&(e.textContent="No se pudo preparar la transferencia. Haz una copia de seguridad antes de continuar.")}}function importarTransferenciaDesdeURL(){try{const e="#mi-servicio-transfer=";if(!window.location.hash||!window.location.hash.startsWith(e))return!1;const t=window.location.hash.slice(e.length),a=base64URLATexto(t),o=JSON.parse(a);validarCopiaSeguridad(o);const n=normalizarRegistrosImportados(o.registros),i=normalizarPreferenciasImportadas(o.preferencias);return msStorageGuardar(STORAGE_KEYS.registros,n),msStorageGuardar(STORAGE_KEYS.preferencias,i),history.replaceState(null,"",window.location.pathname+window.location.search),sessionStorage.setItem("miServicio.transferenciaRecibida",String(n.length)),window.setTimeout(()=>{const r=sessionStorage.getItem("miServicio.transferenciaRecibida");r&&(sessionStorage.removeItem("miServicio.transferenciaRecibida"),window.alert(`Datos recuperados \u2713
+// =========================================================
+// FIN BLOQUE 4
+// =========================================================
 
-Mi Servicio ha recibido ${r} registros desde Safari.`))},450),!0}catch(e){return console.error("No se pudo importar la transferencia desde Safari:",e),!1}}function textoABase64URL(e){const t=new TextEncoder().encode(e);let a="";for(const o of t)a+=String.fromCharCode(o);return btoa(a).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/g,"")}function base64URLATexto(e){let t=e.replace(/-/g,"+").replace(/_/g,"/");for(;t.length%4;)t+="=";const a=atob(t),o=Uint8Array.from(a,n=>n.charCodeAt(0));return new TextDecoder().decode(o)}function configurarSincronizacionIPhone(){const e=document.getElementById("exportarIPhone");if(!e){console.warn("No se encontr\xF3 el bot\xF3n exportarIPhone.");return}e.addEventListener("click",exportarSincronizacionIPhone),console.log("Exportaci\xF3n para iPhone preparada.")}function exportarSincronizacionIPhone(){const e=document.getElementById("mensajeDatos");limpiarMensajeFormulario(e);try{const t=estado.registros.filter(c=>Number(c.minutos)>0).map(c=>{const l=new Date().toISOString(),s={id:String(c.id||crearID()),fecha:convertirFechaWebAISO8601(c.fecha),minutos:Math.max(Math.round(Number(c.minutos)||0),0),tipo:normalizarTipoSincronizacion(c.tipo),notas:String(c.notas||""),actividadPersonalizadaID:null,nombreActividadPersonalizada:null,creadoEn:normalizarFechaSincronizacion(c.creadoEn)||l,modificadoEn:normalizarFechaSincronizacion(c.modificadoEn)||normalizarFechaSincronizacion(c.creadoEn)||l,estado:"pendiente"};if(c.tipo==="otras"){s.actividadPersonalizadaID=c.actividadPersonalizadaID||null;const d=String(c.nombreActividadPersonalizada||c.nombreActividad||"Otra actividad").trim();s.nombreActividadPersonalizada=d||"Otra actividad"}return s}).filter(c=>!!c.fecha),a={version:2,generadoEn:new Date().toISOString(),registros:t},o=JSON.stringify(a,null,2),n=new Blob([o],{type:"application/json;charset=utf-8"}),i=URL.createObjectURL(n),r=document.createElement("a");r.href=i,r.download=`Mi-Servicio-iPhone-${fechaLocalISO(new Date)}.json`,r.style.display="none",document.body.appendChild(r),r.click(),window.setTimeout(()=>{URL.revokeObjectURL(i),r.remove()},1500),mostrarMensajeFormulario(e,`Archivo para iPhone preparado: ${textoCantidadRegistros(t.length)} \u2713`,!1),console.log("Archivo de sincronizaci\xF3n creado:",a)}catch(t){console.error("Error al exportar para iPhone:",t),mostrarMensajeFormulario(e,"No se pudo preparar el archivo para iPhone.",!0)}}function convertirFechaWebAISO8601(e){if(!fechaISOValida(e))return null;const t=e.split("-").map(Number),a=t[0],o=t[1],n=t[2];return new Date(Date.UTC(a,o-1,n,12,0,0,0)).toISOString()}function normalizarFechaSincronizacion(e){if(!e)return null;const t=new Date(e);return Number.isNaN(t.getTime())?null:t.toISOString()}function normalizarTipoSincronizacion(e){switch(e){case"ministerio":return"ministerio";case"ldc":return"ldc";case"asambleas":return"asambleas";case"otras":return"otras";default:return"ministerio"}}const ONEDRIVE_CONFIG={clientId:"ec18d1ba-8036-4acf-bf6e-2cb940acf34b",authority:"https://login.microsoftonline.com/common",redirectUri:"https://jositomb.github.io/mi-servicio/",scopes:["User.Read","Files.ReadWrite.AppFolder"],archivo:"mi-servicio.json"};let clienteMSALOneDrive=null,aplicandoDatosOneDrive=!1,temporizadorSyncOneDrive=null,sincronizandoOneDrive=!1;function configurarOneDrive(){const e=document.getElementById("conectarOneDrive"),t=document.getElementById("sincronizarOneDrive"),a=document.getElementById("desconectarOneDrive");e&&e.addEventListener("click",conectarConOneDrive),t&&t.addEventListener("click",()=>sincronizarConOneDrive(!0)),a&&a.addEventListener("click",desconectarOneDrive),iniciarOneDrive()}async function iniciarOneDrive(){if(typeof msal=="undefined"){actualizarEstadoOneDrive("No se pudo cargar el acceso a Microsoft",!1);return}try{clienteMSALOneDrive=new msal.PublicClientApplication({auth:{clientId:ONEDRIVE_CONFIG.clientId,authority:ONEDRIVE_CONFIG.authority,redirectUri:ONEDRIVE_CONFIG.redirectUri,navigateToLoginRequestUrl:!1},cache:{cacheLocation:"localStorage",storeAuthStateInCookie:!1}});const e=await clienteMSALOneDrive.handleRedirectPromise(),t=clienteMSALOneDrive.getAllAccounts(),a=(e==null?void 0:e.account)||t[0]||null;a&&clienteMSALOneDrive.setActiveAccount(a),e!=null&&e.account&&almacenamiento.guardar(STORAGE_KEYS.onedriveConectado,!0);const o=almacenamiento.leer(STORAGE_KEYS.onedriveConectado,!1)&&!!a;actualizarInterfazOneDrive(o,a),o&&setTimeout(()=>sincronizarConOneDrive(!1),650)}catch(e){console.error("Error iniciando OneDrive:",e),actualizarEstadoOneDrive("No se pudo iniciar OneDrive",!1)}}async function conectarConOneDrive(){if(!(!clienteMSALOneDrive&&(await iniciarOneDrive(),!clienteMSALOneDrive)))try{await clienteMSALOneDrive.loginRedirect({scopes:ONEDRIVE_CONFIG.scopes,prompt:"select_account"})}catch(e){console.error("Error conectando OneDrive:",e),mostrarMensajeOneDrive("No se pudo abrir el inicio de sesi\xF3n de Microsoft.",!0)}}function desconectarOneDrive(){almacenamiento.guardar(STORAGE_KEYS.onedriveConectado,!1),actualizarInterfazOneDrive(!1,null),mostrarMensajeOneDrive("OneDrive se ha desconectado de Mi Servicio en este dispositivo.",!1)}function actualizarInterfazOneDrive(e,t){const a=document.getElementById("conectarOneDrive"),o=document.getElementById("sincronizarOneDrive"),n=document.getElementById("desconectarOneDrive"),i=document.getElementById("estadoOneDrive"),r=document.getElementById("indicadorOneDrive"),c=document.getElementById("ultimaSyncOneDrive");a&&(a.hidden=e),o&&(o.hidden=!e),n&&(n.hidden=!e),i&&(i.textContent=e?`Conectado${t!=null&&t.username?` \xB7 ${t.username}`:""}`:"No conectado"),r&&r.classList.toggle("conectado",e);const l=almacenamiento.leer(STORAGE_KEYS.ultimaSyncOneDrive,null);c&&(c.hidden=!e||!l,l&&(c.textContent=`\xDAltima sincronizaci\xF3n: ${formatearFechaHoraOneDrive(l)}`)),typeof actualizarSyncV260=="function"&&actualizarSyncV260()}function mostrarMensajeOneDrive(e,t=!1){const a=document.getElementById("mensajeDatos");a&&(a.textContent=e,a.classList.toggle("error",t),a.classList.toggle("exito",!t),a.classList.add("visible"))}function marcarModificacionLocalOneDrive(){almacenamiento.guardar(STORAGE_KEYS.ultimaModificacionLocal,new Date().toISOString())}function programarSincronizacionOneDrive(){aplicandoDatosOneDrive||almacenamiento.leer(STORAGE_KEYS.onedriveConectado,!1)&&(clearTimeout(temporizadorSyncOneDrive),temporizadorSyncOneDrive=setTimeout(()=>sincronizarConOneDrive(!1),350))}async function obtenerTokenOneDrive(){if(!clienteMSALOneDrive)throw new Error("MSAL no iniciado");const e=clienteMSALOneDrive.getActiveAccount()||clienteMSALOneDrive.getAllAccounts()[0];if(!e)throw new Error("No hay cuenta Microsoft conectada");try{return(await clienteMSALOneDrive.acquireTokenSilent({scopes:ONEDRIVE_CONFIG.scopes,account:e})).accessToken}catch(t){if(t instanceof msal.InteractionRequiredAuthError)return await clienteMSALOneDrive.acquireTokenRedirect({scopes:ONEDRIVE_CONFIG.scopes,account:e}),null;throw t}}async function sincronizarConOneDrive(e=!1){if(sincronizandoOneDrive||!almacenamiento.leer(STORAGE_KEYS.onedriveConectado,!1)||!clienteMSALOneDrive)return;sincronizandoOneDrive=!0;const t=document.getElementById("indicadorOneDrive");t&&t.classList.add("sincronizando");try{if(!navigator.onLine){estadoSyncV134("Sin conexi\xF3n \xB7 cambios pendientes","pendiente");return}estadoSyncV134("Comprobando cu\xE1l es la copia m\xE1s reciente\u2026","subiendo");const a=await obtenerTokenOneDrive();if(!a)return;const o=await descargarDatosOneDrive(a),n=almacenamiento.leer("miServicio.onedriveCambioLocalPendiente",!1)===!0,i=almacenamiento.leer(STORAGE_KEYS.ultimaSyncOneDrive,null),r=i&&Date.parse(i)||0,c=o!=null&&o.updatedAt&&Date.parse(o.updatedAt)||0,l=obtenerFechaModificacionLocalOneDrive(),s=!!o&&(r===0?c>0:c>r+1e3),d=n&&(r===0?l>0:l>r+1e3);let u="al d\xEDa";if(!o)obtenerRevisionLocalV133()===0&&establecerRevisionLocalV133(1),estadoSyncV134("Guardando la primera copia en OneDrive\u2026","subiendo"),await subirDatosOneDrive(a,null),u="subidos";else if(s&&!d)estadoSyncV134("OneDrive tiene datos m\xE1s recientes \xB7 actualizando este dispositivo\u2026","bajando"),aplicarDatosDesdeOneDrive(o),u="descargados";else if(d&&!s){const g=Math.max(obtenerRevisionLocalV133(),Number(o==null?void 0:o.revision)||0)+1;establecerRevisionLocalV133(g),estadoSyncV134("Guardando tus cambios m\xE1s recientes en OneDrive\u2026","subiendo"),await subirDatosOneDrive(a,o),u="subidos"}else{if(d&&s)throw guardarSnapshotLocalV134(),new Error("Hay cambios nuevos en este dispositivo y tambi\xE9n en OneDrive. Por seguridad no se ha sobrescrito ninguna copia.");if(r===0&&o){if(n)throw guardarSnapshotLocalV134(),new Error("Este dispositivo no tiene una base de sincronizaci\xF3n conocida y OneDrive ya contiene datos. Por seguridad no se ha sobrescrito la copia de OneDrive.");estadoSyncV134("Recibiendo la copia m\xE1s reciente de OneDrive\u2026","bajando"),aplicarDatosDesdeOneDrive(o),u="descargados"}else(Number(o==null?void 0:o.revision)||0)>obtenerRevisionLocalV133()&&establecerRevisionLocalV133(Number(o.revision)||0),registrarSincronizacionOneDrive(o.updatedAt||i||new Date().toISOString())}const m=clienteMSALOneDrive.getActiveAccount()||clienteMSALOneDrive.getAllAccounts()[0]||null;almacenamiento.guardar("miServicio.ultimaComprobacionOneDrive",new Date().toISOString()),actualizarInterfazOneDrive(!0,m),estadoSyncV134(u==="descargados"?"Sincronizado \xB7 se conserva la copia m\xE1s reciente de OneDrive":u==="subidos"?"Sincronizado \xB7 OneDrive contiene tus \xFAltimos cambios":"Sincronizado \xB7 todo al d\xEDa","ok"),e&&mostrarMensajeOneDrive(u==="descargados"?"\u2713 Este dispositivo se ha actualizado con la copia m\xE1s reciente de OneDrive.":u==="subidos"?"\u2713 Tus cambios m\xE1s recientes est\xE1n guardados en OneDrive.":"\u2713 OneDrive est\xE1 al d\xEDa.",!1)}catch(a){console.error("Error sincronizando OneDrive:",a);const o=/por seguridad|cambios nuevos|base de sincronización|412|precondition/i.test(String((a==null?void 0:a.message)||""));estadoSyncV134(o?"Protecci\xF3n activa \xB7 OneDrive no se ha sobrescrito":navigator.onLine?"No se pudo sincronizar \xB7 se conserva la copia local":"Sin conexi\xF3n \xB7 cambios pendientes","pendiente"),e&&mostrarMensajeOneDrive((a==null?void 0:a.message)||"No se pudo sincronizar con OneDrive.",!0)}finally{sincronizandoOneDrive=!1,t&&t.classList.remove("sincronizando")}}function obtenerFechaModificacionLocalOneDrive(){const e=almacenamiento.leer(STORAGE_KEYS.ultimaModificacionLocal,null);if(e)return Date.parse(e)||0;let t=0;for(const a of estado.registros||[]){const o=a.modificadoEn||a.creadoEn||a.fecha,n=Date.parse(o)||0;n>t&&(t=n)}return t}async function descargarDatosOneDrive(e){const t=`https://graph.microsoft.com/v1.0/me/drive/special/approot:/${encodeURIComponent(ONEDRIVE_CONFIG.archivo)}:/content`,a=await fetch(t,{headers:{Authorization:`Bearer ${e}`},cache:"no-store"});if(a.status===404)return null;if(!a.ok)throw new Error(`Graph download ${a.status}`);const o=await a.json();if(!o||o.formato!=="mi-servicio-onedrive"||!o.copia)throw new Error("Formato de OneDrive no reconocido");return o._etagV192=a.headers.get("ETag")||a.headers.get("etag")||null,o}async function subirDatosOneDrive(e,t=null){const a=new Date().toISOString(),o={formato:"mi-servicio-onedrive",version:4,revision:obtenerRevisionLocalV133(),updatedAt:a,copia:crearDatosCopiaSeguridad()},n={Authorization:`Bearer ${e}`,"Content-Type":"application/json"};t!=null&&t._etagV192&&(n["If-Match"]=t._etagV192);const i=await fetch(`https://graph.microsoft.com/v1.0/me/drive/special/approot:/${encodeURIComponent(ONEDRIVE_CONFIG.archivo)}:/content`,{method:"PUT",headers:n,body:JSON.stringify(o)});if(i.status===409||i.status===412)throw new Error("OneDrive cambi\xF3 mientras se estaba sincronizando. No se ha sobrescrito la copia m\xE1s reciente (412).");if(!i.ok)throw new Error(`No se pudo subir la copia a OneDrive (${i.status})`);almacenamiento.guardar(STORAGE_KEYS.ultimaModificacionLocal,a),almacenamiento.guardar("miServicio.onedriveCambioLocalPendiente",!1),registrarSincronizacionOneDrive(a)}function aplicarDatosDesdeOneDrive(e){const t=e.copia;if(!validarCopiaSeguridad(t))throw new Error("La copia de OneDrive no es v\xE1lida");const a=normalizarRegistrosImportados(t.registros),o=normalizarPreferenciasImportadas(t.preferencias),n=t.agendaSalidas&&typeof t.agendaSalidas=="object"&&!Array.isArray(t.agendaSalidas)?t.agendaSalidas:{};guardarSnapshotLocalV134();const i={registros:estado.registros,preferencias:estado.preferencias,agendaSalidas:estado.agendaSalidas};aplicandoDatosOneDrive=!0;try{if(estado.registros=a,estado.preferencias=o,estado.agendaSalidas=n,!guardarJSON(STORAGE_KEYS.registros,estado.registros)||!guardarJSON(STORAGE_KEYS.preferencias,estado.preferencias)||!guardarJSON(STORAGE_KEYS.agendaSalidas,estado.agendaSalidas)){estado.registros=i.registros,estado.preferencias=i.preferencias,estado.agendaSalidas=i.agendaSalidas;const l=guardarJSON(STORAGE_KEYS.registros,estado.registros),s=guardarJSON(STORAGE_KEYS.preferencias,estado.preferencias),d=guardarJSON(STORAGE_KEYS.agendaSalidas,estado.agendaSalidas);throw new Error(l&&s&&d?"No se pudo guardar la copia de OneDrive. Se mantienen los datos anteriores.":"No se pudo completar el guardado local. Revisa el espacio del dispositivo y conserva la copia previa antes de continuar.")}const r=!Array.isArray(i.registros)||i.registros.length===0,c=aplicarAjustesLocalesV263(t.ajustesLocales,{conservarApariencia:!r});c.ok&&c.cambiados>0&&recargarTrasAjustesV263(),establecerRevisionLocalV133(Number(e.revision)||0),almacenamiento.guardar("miServicio.onedriveCambioLocalPendiente",!1),almacenamiento.guardar(STORAGE_KEYS.ultimaModificacionLocal,e.updatedAt||new Date().toISOString()),registrarSincronizacionOneDrive(e.updatedAt||new Date().toISOString())}finally{aplicandoDatosOneDrive=!1}cargarFormularioAjustes(),actualizarTodaLaInterfaz(),actualizarRecordatorioCopiaSeguridad()}function formatearFechaHoraOneDrive(e){const t=new Date(e);return Number.isNaN(t.getTime())?"ahora":new Intl.DateTimeFormat("es-ES",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}).format(t)}const LIMITE_MENSUAL_META_MINUTOS=3300;function calcularComputoMesMeta(e){const t=Array.isArray(e)?e:[],a=sumarMinutos(t.filter(r=>r.tipo==="ministerio")),o=sumarMinutos(t.filter(r=>r.tipo!=="ministerio")),n=a+o,i=o>0?Math.min(n,LIMITE_MENSUAL_META_MINUTOS):a;return{ministerio:a,actividadAdicional:o,actividadTotal:n,computable:i,excedente:Math.max(n-i,0)}}function calcularComputoAnualMeta(e,t){const a=Array.isArray(e)?e:[];let o=0,n=0;for(let i=0;i<12;i+=1){const r=new Date(t.getFullYear(),t.getMonth()+i,1,0,0,0,0),c=new Date(t.getFullYear(),t.getMonth()+i+1,0,23,59,59,999),l=a.filter(d=>{const u=fechaDesdeISO(d.fecha);return u>=r&&u<=c}),s=calcularComputoMesMeta(l);o+=s.actividadTotal,n+=s.computable}return{actividadTotal:o,computable:n}}function actualizarMeta(){var U;const e=document.getElementById("vista-meta");if(!e)return;const t=((U=estado.preferencias)==null?void 0:U.tipoPublicador)==="precursorRegular",a=e.querySelector(".meta-principal"),o=e.querySelectorAll(".meta-dos-columnas, .meta-ritmo, .meta-restante"),n=document.getElementById("metaSinObjetivo");if(!t){a==null||a.classList.add("oculto"),o.forEach(B=>B.classList.add("oculto")),n==null||n.classList.remove("oculto");return}a==null||a.classList.remove("oculto"),o.forEach(B=>B.classList.remove("oculto")),n==null||n.classList.add("oculto");const i=new Date,r=rangoAnio(i),c=obtenerRegistrosEntreFechas(r.inicio,r.fin),l=calcularComputoAnualMeta(c,r.inicio),s=l.actividadTotal,d=l.computable,u=Math.max(s-d,0),m=new Date(i.getFullYear(),i.getMonth(),1,0,0,0,0),g=new Date(i.getFullYear(),i.getMonth()+1,0,23,59,59,999),p=obtenerRegistrosEntreFechas(m,g),v=calcularComputoMesMeta(p),b=Math.max(v.actividadTotal-v.computable,0),f=600*60,h=Math.max(f-d,0),E=f>0?d/f:0,I=Math.min(Math.max(E,0),1),M=Math.round(E*100),x=r.fin.getTime()-r.inicio.getTime(),C=Math.min(Math.max(i.getTime()-r.inicio.getTime(),0),x),L=x>0?C/x:0,S=Math.round(f*L),y=d-S,A=new Date(r.fin.getFullYear(),r.fin.getMonth(),r.fin.getDate()+1),$=Math.max(Math.ceil((A.getTime()-i.getTime())/864e5),0),T=Math.max($/30.4375,1/30.4375),q=h>0?Math.round(h/T):0,N=Math.max((i.getTime()-r.inicio.getTime())/864e5,1),D=d/N;let w="A\xFAn no hay datos suficientes",R="Registra actividad para calcular una previsi\xF3n.",O="neutral";if(h===0)w="Meta alcanzada \u2713",R="Ya has llegado a las 600 h computables.",O="positivo";else if(D>0){const B=Math.ceil(h/D),P=new Date(i);P.setDate(P.getDate()+B);const Z=P<=A;w=P.toLocaleDateString("es-ES",{day:"numeric",month:"long",year:"numeric"}),R=Z?"Manteniendo tu ritmo computable actual, alcanzar\xEDas las 600 h aproximadamente en esa fecha.":"A tu ritmo computable actual, la previsi\xF3n queda despu\xE9s del final del a\xF1o de servicio.",O=Z?"positivo":"atencion"}ponerTexto("metaPrevisionFecha",w),ponerTexto("metaPrevisionDetalle",R);const j=document.getElementById("metaPrevisionV140");j==null||j.classList.toggle("meta-prevision-positiva",O==="positivo"),j==null||j.classList.toggle("meta-prevision-atencion",O==="atencion");const G=r.fin.getFullYear();ponerTexto("metaAnioServicio",`A\xF1o de servicio ${G}`),ponerTexto("metaPeriodo",`sep ${r.inicio.getFullYear()} \u2013 ago ${G}`),ponerTexto("metaPorcentaje",`${M}%`),ponerTexto("metaTotal",formatearTiempo(d)),ponerTexto("metaObjetivoTexto",`de ${formatearTiempo(f)}`),ponerTexto("metaActividadTotal",formatearTiempo(s)),ponerTexto("metaComputableClaro",formatearTiempo(d)),ponerTexto("metaExcedente",formatearTiempo(u)),ponerTexto("metaMesActividad",`${formatearTiempo(v.actividadTotal)} de actividad`),ponerTexto("metaMesComputable",formatearTiempo(v.computable)),ponerTexto("metaMesExcedente",formatearTiempo(b));const F=v.actividadAdicional>0,k=document.getElementById("metaMesEstado");k&&(k.textContent=F?"L\xEDmite 55 h":"Computa todo",k.classList.toggle("con-limite",F)),ponerTexto("metaMesExplicacion",F?b>0?`${formatearTiempo(v.computable)} suman a las 600 h y ${formatearTiempo(b)} quedan como actividad adicional sin computar.`:"Este mes hay actividad adicional. Hasta 55 h del total pueden computar para la meta anual.":"Este mes solo hay Ministerio: todas las horas registradas computan para las 600 h."),ponerTexto("metaLlevas",formatearTiempo(d)),ponerTexto("metaQueda",formatearTiempo(h)),ponerTexto("metaEsperado",formatearTiempo(S));const Y=document.getElementById("metaAnillo");Y&&Y.style.setProperty("--meta-progreso",`${I*360}deg`);const _=document.getElementById("metaBarraRelleno");_&&(_.style.width=`${I*100}%`);const H=y>=0;ponerTexto("metaDiferenciaTitulo",H?"Vas por delante":"Vas por detr\xE1s"),ponerTexto("metaDiferencia",formatearTiempo(Math.abs(y)));const V=document.getElementById("metaDiferencia");V==null||V.classList.toggle("meta-positivo",H),V==null||V.classList.toggle("meta-atencion",!H);let z;h===0?z="Ya has alcanzado la meta del a\xF1o de servicio.":y>0?z=`Llevas ${formatearTiempo(y)} m\xE1s de lo necesario para el ritmo de hoy.`:y<0?z=`Con ${formatearTiempo(Math.abs(y))} recuperar\xEDas el ritmo esperado para hoy.`:z="Est\xE1s exactamente en el ritmo previsto para alcanzar la meta.",ponerTexto("metaMensaje",z),ponerTexto("metaTiempoRestante",textoTiempoRestanteMeta(i,A)),ponerTexto("metaRitmoNecesario",h===0?"Meta \u2713":`${formatearTiempo(q)}/mes`)}function textoTiempoRestanteMeta(e,t){if(t<=e)return"0 d\xEDas";let a=(t.getFullYear()-e.getFullYear())*12+(t.getMonth()-e.getMonth()),o=new Date(e.getFullYear(),e.getMonth()+a,e.getDate());o>t&&(a-=1,o=new Date(e.getFullYear(),e.getMonth()+a,e.getDate()));const n=Math.max(Math.round((t.getTime()-o.getTime())/864e5),0);return a>0&&n>0?`${a} meses y ${n} d\xEDas`:a>0?a===1?"1 mes":`${a} meses`:n===1?"1 d\xEDa":`${n} d\xEDas`}function configurarInteraccionAnillosProgreso(){const e=document.getElementById("graficoInicio"),t=document.getElementById("infoAnilloActivo");if(!e||!t)return;const a=Array.from(e.querySelectorAll("svg circle"));a.forEach(o=>{const n=o.getAttribute("stroke-dasharray")||o.style.strokeDasharray||"";n&&n!=="none"&&o.classList.add("anillo-con-progreso"),o.onclick=i=>{var c;i.stopPropagation(),a.forEach(l=>l.classList.remove("anillo-activo")),o.classList.add("anillo-activo"),e.classList.add("anillo-enfocado");const r=((c=o.querySelector("title"))==null?void 0:c.textContent)||o.getAttribute("aria-label")||"Progreso de actividad";t.textContent=r,t.classList.add("visible"),clearTimeout(e._temporizadorAnillo),e._temporizadorAnillo=setTimeout(()=>{e.classList.remove("anillo-enfocado"),a.forEach(l=>l.classList.remove("anillo-activo")),t.classList.remove("visible")},2600)}})}document.addEventListener("DOMContentLoaded",()=>{const e=document.getElementById("graficoInicio");e&&(configurarInteraccionAnillosProgreso(),new MutationObserver(()=>configurarInteraccionAnillosProgreso()).observe(e,{childList:!0,subtree:!0}))});const CLAVE_LOCALIDAD_TIEMPO="miServicio.localidadTiempo";function descripcionTiempo(e){return e===0?["\u2600\uFE0F","Despejado"]:[1,2].includes(e)?["\u{1F324}\uFE0F","Poco nuboso"]:e===3?["\u2601\uFE0F","Nublado"]:[45,48].includes(e)?["\u{1F32B}\uFE0F","Niebla"]:[51,53,55,61,63,65,80,81,82].includes(e)?["\u{1F327}\uFE0F","Lluvia"]:[71,73,75,85,86].includes(e)?["\u{1F328}\uFE0F","Nieve"]:[95,96,99].includes(e)?["\u26C8\uFE0F","Tormenta"]:["\u{1F324}\uFE0F","Variable"]}function consejoRopa(e,t,a){return t>=55?e<=12?"\u{1F9E5}\u2602\uFE0F Abr\xEDgate y lleva paraguas.":"\u2602\uFE0F Lleva paraguas o impermeable.":e<=7?"\u{1F9E5} Abrigo y ropa c\xE1lida.":e<=14?"\u{1F9E5} Chaqueta ligera.":e>=27?"\u{1F455} Ropa fresca y agua.":a>=30?"\u{1F4A8} Chaqueta ligera para el viento.":"\u{1F455} Ropa c\xF3moda; temperatura agradable."}async function actualizarTiempoInicio(){var l,s,d,u,m,g,p,v,b,f,h;const e=document.getElementById("tiempoLugar"),t=document.getElementById("tiempoTemperatura"),a=document.getElementById("tiempoDescripcion"),o=document.getElementById("tiempoIcono"),n=document.getElementById("tiempoLluvia"),i=document.getElementById("tiempoViento"),r=document.getElementById("tiempoConsejo");if(!e)return;const c=localStorage.getItem(CLAVE_LOCALIDAD_TIEMPO)||"Arteixo";e.textContent=c,a.textContent="Consultando\u2026";try{const E=await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(c)}&count=1&language=es&format=json`).then(A=>A.json()),I=(l=E.results)==null?void 0:l[0];if(!I)throw 0;const M=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${I.latitude}&longitude=${I.longitude}&current=temperature_2m,weather_code,is_day,wind_speed_10m&hourly=precipitation_probability&forecast_days=1&timezone=auto`).then(A=>A.json()),x=Math.round((d=(s=M.current)==null?void 0:s.temperature_2m)!=null?d:0),C=Math.round((m=(u=M.current)==null?void 0:u.wind_speed_10m)!=null?m:0),L=new Date().getHours(),S=Math.round((v=(p=(g=M.hourly)==null?void 0:g.precipitation_probability)==null?void 0:p[L])!=null?v:0),y=descripcionTiempo((b=M.current)==null?void 0:b.weather_code);aplicarAmbienteClima((f=M.current)==null?void 0:f.weather_code,(h=M.current)==null?void 0:h.is_day),e.textContent=I.name,o.textContent=y[0],t.textContent=`${x}\xB0`,a.textContent=y[1],n.textContent=`\u{1F4A7} ${S}%`,i.textContent=`\u{1F4A8} ${C} km/h`,r.textContent=consejoRopa(x,S,C)}catch{aplicarAmbienteClima(null),a.textContent="No disponible",r.textContent="Comprueba la conexi\xF3n."}}document.addEventListener("DOMContentLoaded",()=>{var e;(e=document.getElementById("actualizarTiempoInicio"))==null||e.addEventListener("click",actualizarTiempoInicio)});function actualizarPlanInteligenteMes(){var v;const e=new Date,t=new Date(e.getFullYear(),e.getMonth()+1,0),a=Number((v=estado.preferencias)==null?void 0:v.objetivoMensualMinutos)||3300,o=(estado.registros||[]).filter(b=>{const f=new Date(b.fecha+"T12:00:00");return f.getFullYear()===e.getFullYear()&&f.getMonth()===e.getMonth()}),n=calcularComputoMesMeta(o).computable,i=Math.max(a-n,0),r=Math.max(t.getDate()-e.getDate()+1,1);let c=0;Object.keys(estado.agendaSalidas||{}).forEach(b=>{const f=new Date(b+"T12:00:00");f>=new Date(e.getFullYear(),e.getMonth(),e.getDate())&&f<=t&&c++});const l=minutosPlanificadosMesActual(),s=Math.max(c,Math.ceil(r/3),1),d=Math.ceil(Math.max(i-l,0)/s/15)*15,u=b=>{const f=Math.floor(b/60),h=b%60;return h?`${f} h ${h} min`:`${f} h`},m=document.getElementById("planHorasRestantes"),g=document.getElementById("planRitmoSugerido"),p=document.getElementById("planMensajeMes");m&&(m.textContent=u(i)),g&&(g.textContent=i?`${u(d)} / salida`:"Meta conseguida"),p&&(p.textContent=i===0?"\u{1F389} Has alcanzado tu objetivo mensual.":l>0?`Tienes ${u(l)} previstas este mes. Si las completas, quedar\xEDan ${u(Math.max(i-l,0))} para alcanzar la meta.`:c?`Tienes ${c} salida${c===1?"":"s"} planificada${c===1?"":"s"}. A\xF1ade el tiempo previsto para calcular mejor tu avance.`:`Te quedan ${r} d\xEDas. Si planificas unas ${s} salidas, con aproximadamente ${u(d)} cada una mantendr\xEDas un ritmo c\xF3modo.`)}document.addEventListener("DOMContentLoaded",()=>setTimeout(actualizarPlanInteligenteMes,120));var temporizadorPlanV262=0;document.addEventListener("click",()=>{estado.vistaActual==="estadisticas"&&(clearTimeout(temporizadorPlanV262),temporizadorPlanV262=setTimeout(actualizarPlanInteligenteMes,150))});function aplicarAmbienteClima(e,t){datosClimaVisualV260={codigo:e,esDia:t};const a=document.querySelector("#vista-inicio .tarjeta-grafico-inicio");if(!a)return;a.classList.remove("clima-sol","clima-nubes","clima-lluvia");const o=tipoFondoClimaV260(e,t);o==="sol"?a.classList.add("clima-sol"):o==="lluvia"?a.classList.add("clima-lluvia"):["nubes","parcial","niebla","nieve"].includes(o)&&a.classList.add("clima-nubes"),pintarFondoClimaV260(a,o)}function configurarGaleriaPersonajes(){const e=document.getElementById("galeriaPersonajes"),t=document.getElementById("personajeProgreso");if(!e||!t)return;const a=()=>{e.querySelectorAll("[data-personaje]").forEach(o=>{o.classList.toggle("seleccionado",o.dataset.personaje===t.value)}),typeof actualizarResumenPersonaje=="function"&&actualizarResumenPersonaje()};e.onclick=o=>{const n=o.target.closest("button[data-personaje]");if(!n)return;o.preventDefault();const i=n.dataset.personaje;if(!["hombre","mujer","koala","mariposa","pantera","tortuga","liebre","corazon","pajarito","gatito"].includes(i))return;t.value=i,t.dispatchEvent(new Event("change",{bubbles:!0})),a();const r=estado.preferencias.personajeProgreso;estado.preferencias.personajeProgreso=i;const c=Number(estado.preferencias.objetivoMensualMinutos)||1,l=new Date,s=(estado.registros||[]).filter(d=>{const u=new Date(d.fecha+"T12:00:00");return u.getFullYear()===l.getFullYear()&&u.getMonth()===l.getMonth()});actualizarPersonajeProgreso(Math.min(100,calcularComputoMesMeta(s).computable/c*100)),estado.preferencias.personajeProgreso=r},t.addEventListener("change",a),a()}document.addEventListener("DOMContentLoaded",()=>setTimeout(configurarGaleriaPersonajes,100));const PERSONAJES_UI={hombre:{nombre:"Hombre",icono:"\u{1F6B6}\u200D\u2642\uFE0F"},mujer:{nombre:"Mujer",icono:"\u{1F6B6}\u200D\u2640\uFE0F"},koala:{nombre:"Koala",icono:"\u{1F428}"},mariposa:{nombre:"Mariposa",icono:"\u{1F98B}"},pantera:{nombre:"Pantera rosa",icono:"\u{1F408}"},tortuga:{nombre:"Tortuga",icono:"\u{1F422}"},liebre:{nombre:"Liebre",icono:"\u{1F407}"},corazon:{nombre:"Coraz\xF3n",icono:"\u2764\uFE0F"},pajarito:{nombre:"Pajarito",icono:"\u{1F425}"},gatito:{nombre:"Gatito",icono:"\u{1F431}"}};function actualizarResumenPersonaje(){const e=document.getElementById("personajeProgreso"),t=document.getElementById("personajeSeleccionadoResumen"),a=document.getElementById("personajeSeleccionadoIcono");if(!e||!t||!a)return;const o=PERSONAJES_UI[e.value]||PERSONAJES_UI.hombre;t.textContent=o.nombre;const n=document.querySelector(`#galeriaPersonajes [data-personaje="${e.value}"] img`);a.innerHTML=n?`<img src="${n.src}" alt="">`:o.icono,a.classList.add("es-personaje-imagen")}function configurarDesplegablePersonaje(){const e=document.getElementById("abrirSelectorPersonaje"),t=document.getElementById("selectorPersonajeDesplegable"),a=document.getElementById("personajeProgreso"),o=document.getElementById("galeriaPersonajes");!e||!t||!a||!o||(e.onclick=()=>{const n=t.hidden;t.hidden=!n,e.setAttribute("aria-expanded",String(n))},o.addEventListener("click",n=>{n.target.closest("[data-personaje]")&&setTimeout(()=>{actualizarResumenPersonaje(),t.hidden=!0,e.setAttribute("aria-expanded","false")},40)}),a.addEventListener("change",actualizarResumenPersonaje),actualizarResumenPersonaje())}document.addEventListener("DOMContentLoaded",()=>setTimeout(configurarDesplegablePersonaje,130));function conectarRenderizadorHistorialModular(){window.MiServicioHistorial&&typeof window.MiServicioHistorial.registrarRenderizador=="function"&&typeof renderizarHistorial=="function"&&window.MiServicioHistorial.registrarRenderizador(renderizarHistorial)}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",conectarRenderizadorHistorialModular,{once:!0}):conectarRenderizadorHistorialModular(),document.addEventListener("DOMContentLoaded",()=>{const e=document.querySelector("#vista-inicio .orbita-grafico");if(!e)return;let t=!1;const a=()=>{t||(t=!0,requestAnimationFrame(()=>{t=!1,resolverColisionesOrbitasV120()}))};new MutationObserver(a).observe(e,{childList:!0,subtree:!0}),a()}),(function(){let t=0;function a(){clearTimeout(t),t=setTimeout(()=>{typeof resolverColisionesOrbitasV120=="function"&&resolverColisionesOrbitasV120()},90)}window.addEventListener("resize",a,{passive:!0}),window.addEventListener("orientationchange",a,{passive:!0}),window.visualViewport&&window.visualViewport.addEventListener("resize",a,{passive:!0}),document.addEventListener("click",o=>{var i,r;(r=(i=o.target).closest)!=null&&r.call(i,"[data-vista='inicio'], [data-view='inicio'], [data-target='inicio']")&&setTimeout(()=>{a(),typeof refrescarFraseAlVolverAInicio=="function"&&refrescarFraseAlVolverAInicio()},60)})})();function mostrarVersionPublicadaV156(){const e=document.getElementById("estadoOneDrive")||document.getElementById("mensajeOneDrive")||document.querySelector("[data-onedrive]");if(!e||document.getElementById("versionPublicadaV156"))return;const t=document.createElement("div");t.id="versionPublicadaV156",t.textContent="Versi\xF3n instalada: V269",t.style.cssText="font-size:11px;opacity:.55;text-align:center;margin-top:8px;",e.insertAdjacentElement("afterend",t)}document.addEventListener("DOMContentLoaded",()=>{setTimeout(()=>{mostrarVersionPublicadaV156(),configurarEstadoSyncV134()},500)});function organizarCopiasV135(){var l;const t=[...document.querySelectorAll("h1,h2,h3,h4,p,div,span")].find(s=>(s.textContent||"").trim().toLowerCase()==="datos y copias de seguridad");if(!t)return;const a=t.closest(".card, .ajustes-card, section")||((l=t.parentElement)==null?void 0:l.parentElement)||t.parentElement;if(!a||a.dataset.v135Organizado==="1")return;a.dataset.v135Organizado="1",a.classList.add("v135-backup-card");const o=[...a.querySelectorAll("button,a")],n=o.find(s=>/exportar para iphone/i.test((s.textContent||"").trim()));n&&n.classList.add("v135-hide-redundant");const i=o.find(s=>/preparar acceso a pantalla de inicio/i.test((s.textContent||"").trim()));if(i&&!a.querySelector(".v135-section-label")){const s=document.createElement("div");s.className="v135-section-label",s.textContent="Otras opciones",i.insertAdjacentElement("beforebegin",s)}o.filter(s=>/preparar acceso a pantalla de inicio|importar copia de seguridad/i.test((s.textContent||"").trim())).forEach(s=>s.style.width="100%");const c=document.getElementById("estadoSyncV134");c&&(c.style.padding="10px 12px",c.style.borderRadius="14px",c.style.background="rgba(52,199,89,.08)")}document.addEventListener("DOMContentLoaded",()=>{setTimeout(organizarCopiasV135,650)});function montarHistorialCopiasV136(){var o;if(document.getElementById("historialCopiasV136"))return;const e=[...document.querySelectorAll("h1,h2,h3,h4,p,div,span")].find(n=>(n.textContent||"").trim().toLowerCase()==="datos y copias de seguridad");if(!e)return;const t=e.closest(".card,.ajustes-card,section")||((o=e.parentElement)==null?void 0:o.parentElement)||e.parentElement;if(!t)return;const a=document.createElement("div");a.className="v136-history",a.innerHTML='<div class="v135-section-label">Copias recuperables</div><div id="historialCopiasV136"></div>',t.appendChild(a),renderHistorialCopiasV136()}document.addEventListener("DOMContentLoaded",()=>setTimeout(()=>{montarHistorialCopiasV136()},850));function resumenComparacionSemanaV260(e,t=new Date){const a=inicioSemanaV193(t),o=new Date(a),n=new Date(a);o.setDate(o.getDate()-7),n.setDate(n.getDate()+7);const i=fechaLocalISO(o),r=fechaLocalISO(a),c=fechaLocalISO(n);let l=0,s=0;return(Array.isArray(e)?e:[]).forEach(d=>{const u=String((d==null?void 0:d.fecha)||"").slice(0,10),m=Math.max(0,minutosRegistroV143(d));u>=r&&u<c?l+=m:u>=i&&u<r&&(s+=m)}),{actual:l,previa:s,diferencia:l-s}}function actualizarComparacionSemanalV139(){const e=document.getElementById("comparacionSemanalV139");if(!e)return;const t=resumenComparacionSemanaV260(estado.registros),a=t.diferencia>0?`\u2191 +${formatearTiempo(t.diferencia)}`:t.diferencia<0?`\u2193 \u2212${formatearTiempo(-t.diferencia)}`:"Igual";e.textContent=t.actual===0&&t.previa===0?"Sin actividad registrada en ambas semanas":`${a} respecto a la semana anterior \xB7 Antes: ${formatearTiempo(t.previa)}`}document.addEventListener("DOMContentLoaded",()=>setTimeout(actualizarComparacionSemanalV139,700));function minutosPlanificadosV141(e){return e&&typeof e=="object"?Number(e.minutosTotales)||(Number(e.horas)||0)*60+(Number(e.minutos)||0):0}function planRealizadoV141(e,t){const a=String((t==null?void 0:t.tipo)||(t==null?void 0:t.actividad)||"").toLowerCase();return(Array.isArray(estado.registros)?estado.registros:[]).some(o=>{if(String(o.fecha||"").slice(0,10)!==e)return!1;if(!a)return!0;const n=String(o.tipo||o.actividad||"").toLowerCase();return n===a||n.includes(a)||a.includes(n)})}function resumenAgendaMesV141(e=new Date){const t=estado.agendaSalidas&&typeof estado.agendaSalidas=="object"?estado.agendaSalidas:{};let a=0,o=0,n=0,i=0;return Object.entries(t).forEach(([r,c])=>{const l=new Date(`${String(r).slice(0,10)}T12:00:00`);Number.isNaN(l.getTime())||l.getFullYear()!==e.getFullYear()||l.getMonth()!==e.getMonth()||(Array.isArray(c)?c:[c]).filter(Boolean).forEach(s=>{i++;const d=minutosPlanificadosV141(s);a+=d,planRealizadoV141(String(r).slice(0,10),s)?o+=d:n+=d})}),{previstos:a,realizados:o,pendientes:n,planes:i}}function actualizarAgendaInteligenteV141(){const e=document.getElementById("resumenAgendaV141");if(!e)return;const t=resumenAgendaMesV141(),a=o=>`${Math.floor(o/60)} h${o%60?` ${o%60} min`:""}`;e.querySelector("[data-v141-previstas]").textContent=a(t.previstos),e.querySelector("[data-v141-realizadas]").textContent=a(t.realizados),e.querySelector("[data-v141-pendientes]").textContent=a(t.pendientes),e.querySelector("[data-v141-planes]").textContent=`${t.planes} ${t.planes===1?"plan":"planes"}`}function actualizarProyeccionPlanificadaV141(){const e=document.getElementById("metaPlanificadoV141");if(!e)return;const t=new Date,a=resumenAgendaMesV141(t),o=new Date(t.getFullYear(),t.getMonth(),1),n=new Date(t.getFullYear(),t.getMonth()+1,1);let i=0;(Array.isArray(estado.registros)?estado.registros:[]).forEach(l=>{const s=new Date(`${String(l.fecha||"").slice(0,10)}T12:00:00`);!Number.isNaN(s.getTime())&&s>=o&&s<n&&(i+=Number(l.minutosTotales)||(Number(l.horas)||0)*60+(Number(l.minutos)||0))});const r=i+a.pendientes,c=l=>`${Math.floor(l/60)} h${l%60?` ${l%60} min`:""}`;e.querySelector("[data-v141-proyectado]").textContent=c(r),e.querySelector("[data-v141-detalle]").textContent=a.pendientes?`Incluye ${c(a.pendientes)} que todav\xEDa tienes planificadas este mes.`:"No tienes horas pendientes planificadas este mes."}document.addEventListener("DOMContentLoaded",()=>setTimeout(()=>{actualizarAgendaInteligenteV141(),actualizarProyeccionPlanificadaV141()},800));function claveMesV143(e){const t=new Date(e);return`${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,"0")}`}function nombreMesV143(e){return e.toLocaleDateString("es-ES",{month:"long",year:"numeric"}).replace(/^./,t=>t.toUpperCase())}function minutosRegistroV143(e){return Number(e==null?void 0:e.minutosTotales)||(Number(e==null?void 0:e.horas)||0)*60+(Number(e==null?void 0:e.minutos)||0)}function resumenMesV143(e){const t=new Date(e.getFullYear(),e.getMonth(),1),a=new Date(e.getFullYear(),e.getMonth()+1,1),o=(Array.isArray(estado.registros)?estado.registros:[]).filter(d=>{const u=new Date(`${String(d.fecha||"").slice(0,10)}T12:00:00`);return!Number.isNaN(u.getTime())&&u>=t&&u<a});let n=0;const i=new Set,r={},c={};o.forEach(d=>{const u=minutosRegistroV143(d);n+=u;const m=String(d.fecha||"").slice(0,10);m&&i.add(m);const g=String(d.tipo||d.actividad||"ministerio").toLowerCase(),p={ministerio:"Ministerio",ldc:"LDC",asamblea:"Asambleas",asambleas:"Asambleas",otras:"Otras"}[g]||"Otras";r[p]=(r[p]||0)+u;const v=new Date(`${m}T12:00:00`);if(!Number.isNaN(v.getTime())){const b=new Date(v);b.setDate(b.getDate()-(b.getDay()+6)%7);const f=fechaLocalISO(b);c[f]=(c[f]||0)+u}});const l=Math.max(0,...Object.values(c)),s=calcularComputoMesMeta(o);return{total:n,dias:i.size,tipos:r,mejor:l,registros:o.length,computable:s.computable,excedente:s.excedente}}function pintarResumenMensualV143(e){const t=document.getElementById("resumenMensualV143");if(!t)return;const a=resumenMesV143(e),o=resumenMesV143(new Date(e.getFullYear(),e.getMonth()-1,1)),n=u=>`${Math.floor(u/60)} h${u%60?` ${u%60} min`:""}`,i=a.total-o.total,r=i>0?`\u2191 +${n(i)}`:i<0?`\u2193 \u2212${n(Math.abs(i))}`:"=";t.querySelector("[data-v143-mes]").textContent=nombreMesV143(e),t.querySelector("[data-v143-total]").textContent=n(a.total),pintarComputoMesV260(document.getElementById("computoResumenMesV260"),{actividadTotal:a.total,computable:a.computable,excedente:a.excedente}),t.querySelector("[data-v143-dias]").textContent=a.dias,t.querySelector("[data-v143-semana]").textContent=n(a.mejor),t.querySelector("[data-v143-compara]").textContent=o.total?`${r} frente al mes anterior`:"Sin comparaci\xF3n anterior";const c=t.querySelector("[data-v143-dist]"),l=[["Ministerio","\u{1F4D6}","ministerio"],["LDC","\u{1F6E0}\uFE0F","ldc"],["Asambleas","\u{1F3A4}","asambleas"],["Otras","\u2728","otras"]];c.replaceChildren(),c.hidden=!l.some(([u])=>(a.tipos[u]||0)>0),l.filter(([u])=>(a.tipos[u]||0)>0).forEach(([u,m,g])=>{const p=document.createElement("div");p.className="resumen-actividad-v198",p.dataset.tipo=g;const v=document.createElement("span");v.textContent=m+" "+(g==="otras"?nombreActividad("otras"):u);const b=document.createElement("b");b.textContent=n(a.tipos[u]||0),p.append(v,b),c.appendChild(p)});const s=t.querySelector("[data-v143-mensaje]");s.textContent=a.total===0?"Un nuevo mes es una nueva oportunidad para avanzar paso a paso.":i>0?"Este mes has avanzado m\xE1s que el anterior. \xA1Sigue as\xED!":a.dias>=8?"La constancia tambi\xE9n se construye paso a paso.":"Cada registro cuenta. Sigue avanzando a tu ritmo.";const d=cierreMesV260(e,estado.registros);d&&(s.textContent=d)}function cambiarMesResumenV143(e){const t=document.getElementById("mesResumenV143");if(!t)return;const[a,o]=t.value.split("-").map(Number),n=new Date(a,o-1+e,1);t.value=claveMesV143(n),pintarResumenMensualV143(n)}function iniciarResumenMensualV143(){const e=document.getElementById("mesResumenV143");if(!e)return;const t=new Date;fechaMesV202(e.value)||(e.value=claveMesV143(t)),e.addEventListener("change",()=>{const[a,o]=e.value.split("-").map(Number);pintarResumenMensualV143(new Date(a,o-1,1))}),pintarResumenMensualV143(fechaMesV202(e.value)||t)}document.addEventListener("DOMContentLoaded",()=>setTimeout(iniciarResumenMensualV143,850));function actualizarTendenciaV144(){const e=document.getElementById("tendenciaV144");if(!e)return;const t=new Date,a=[];for(let s=5;s>=0;s--){const d=new Date(t.getFullYear(),t.getMonth()-s,1),u=resumenMesV143(d);a.push({d,total:u.total})}const o=Math.max(60,...a.map(s=>s.total)),n=s=>`${Math.floor(s/60)}h${s%60?` ${s%60}m`:""}`,i=s=>s.toLocaleDateString("es-ES",{month:"short"}).replace(".","");e.querySelector("[data-v144-barras]").innerHTML=a.map((s,d)=>{const u=s.total?Math.max(8,Math.round(s.total/o*100)):3;return`<div class="v144-col ${d===a.length-1?"actual":""}">
-     <div class="v144-valor">${n(s.total)}</div>
-     <div class="v144-bar-wrap"><div class="v144-bar" style="height:${u}%"></div></div>
-     <small>${i(s.d)}</small>
-   </div>`}).join("");const r=a[0].total,c=a[a.length-1].total,l=e.querySelector("[data-v144-mensaje]");a.some(s=>s.total)?c>r?l.textContent="Tu actividad reciente est\xE1 por encima de la de hace cinco meses.":c<r?l.textContent="Este mes est\xE1 por debajo de hace cinco meses; todav\xEDa puedes seguir sumando.":l.textContent="Tu actividad se mantiene estable respecto a hace cinco meses.":l.textContent="La tendencia aparecer\xE1 cuando haya actividad registrada."}document.addEventListener("DOMContentLoaded",()=>setTimeout(actualizarTendenciaV144,900));function sincronizarMetaVisualV152(){var e,t;try{const a=((e=document.getElementById("metaPorcentaje"))==null?void 0:e.textContent)||"0%",o=document.querySelector("[data-v152-ringpct]");o&&(o.textContent=a);const i=((((t=document.getElementById("metaMesActividad"))==null?void 0:t.textContent)||"0 h").match(/[\d.,]+\s*h/)||["0 h"])[0],r=document.querySelector("[data-v152-mes-total]");r&&(r.textContent=i);const c=parseFloat((i.match(/[\d.,]+/)||["0"])[0].replace(",","."))||0,l=document.querySelector("[data-v152-mes-fill]");l&&(l.style.width=Math.max(0,Math.min(100,c/55*100))+"%");const s=document.querySelector(".meta-v152-mini-ring");if(s){const m=Math.max(0,Math.min(100,c/55*100));s.style.background=`conic-gradient(#ff4f9a 0 ${m}%, #253044 ${m}% 100%)`}const d=document.querySelector(".meta-v152-personaje"),u=document.querySelector("#animalProgreso img, #animalProgreso .personaje-cuerpo-img, #animalProgreso .pantera-personaje-img");if(d&&u&&!d.querySelector("img")){const m=u.cloneNode(!0);m.removeAttribute("id"),m.removeAttribute("style"),d.appendChild(m)}}catch(a){console.warn("V152 visual",a)}}document.addEventListener("DOMContentLoaded",()=>{setTimeout(sincronizarMetaVisualV152,900),setTimeout(sincronizarMetaVisualV152,1800)}),document.addEventListener("click",e=>{var t,a;(a=(t=e.target).closest)!=null&&a.call(t,'[data-vista="meta"],[data-tab="meta"],[href="#meta"]')&&setTimeout(sincronizarMetaVisualV152,250)});function actualizarFechaCalendarioInicioV157(){const e=document.getElementById("fechaCalendarioInicioV157");if(!e)return;const t=new Date,a=String(t.getDate()).padStart(2,"0"),o=String(t.getMonth()+1).padStart(2,"0");e.textContent=`${a}/${o}/${t.getFullYear()}`}document.addEventListener("DOMContentLoaded",actualizarFechaCalendarioInicioV157);function animarInicioV167(){const e=document.getElementById("vista-inicio");e&&(e.classList.remove("v167-animar"),e.offsetWidth,e.classList.add("v167-animar"),setTimeout(()=>e.classList.remove("v167-animar"),800))}document.addEventListener("DOMContentLoaded",()=>setTimeout(animarInicioV167,120)),document.addEventListener("click",e=>{var a,o;(o=(a=e.target).closest)!=null&&o.call(a,'[data-vista="inicio"],[data-tab="inicio"],a[href="#inicio"]')&&setTimeout(animarInicioV167,40)}),window.miServicioArranqueRapidoV168=!0;function tareasRedDiferidasV168(){if(document.visibilityState==="hidden"){document.addEventListener("visibilitychange",tareasRedDiferidasV168,{once:!0});return}try{typeof actualizarTiempoInicio=="function"&&setTimeout(()=>{try{actualizarTiempoInicio()}catch{}},350)}catch{}try{const e=typeof sincronizarConOneDrive=="function"&&sincronizarConOneDrive||typeof sincronizarOneDrive=="function"&&sincronizarOneDrive||null;e&&setTimeout(()=>{try{e()}catch{}},900)}catch{}}window.addEventListener("load",()=>{"requestIdleCallback"in window?requestIdleCallback(tareasRedDiferidasV168,{timeout:2200}):setTimeout(tareasRedDiferidasV168,1400)},{once:!0});const EVENTOS_CALENDARIO_KEY_V181="miServicio.eventosCalendarioV172";function leerEventosCalendarioV181(){try{const e=JSON.parse(localStorage.getItem(EVENTOS_CALENDARIO_KEY_V181)||"[]");return Array.isArray(e)?e.filter(Boolean):[]}catch{return[]}}function fechaLocalV181(e){const t=e.getFullYear(),a=String(e.getMonth()+1).padStart(2,"0"),o=String(e.getDate()).padStart(2,"0");return`${t}-${a}-${o}`}function tipoContextoV181(e){const t=String((e==null?void 0:e.tipo)||"").toLowerCase(),a=String((e==null?void 0:e.titulo)||(e==null?void 0:e.title)||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,""),o=n=>n.test(a);return t==="vacaciones"||o(/\b(vacacion|vacaciones|holiday|descanso|libre|dias libres|dia libre)\b/)?{tipo:"vacaciones",icono:"\u{1F334}",nombre:"Vacaciones",tituloHoy:"Vacaciones hoy",bloquea:!0}:t==="viaje"||o(/\b(viaje|vuelo|avion|tren|hotel|aeropuerto|ferry|barco|maleta)\b/)?{tipo:"viaje",icono:"\u{1F9F3}",nombre:"Viaje",tituloHoy:"Viaje hoy",bloquea:!!(e!=null&&e.todoElDia)}:o(/\b(cumple|cumpleanos|aniversario|fiesta|celebracion|boda)\b/)?{tipo:"celebracion",icono:"\u{1F389}",nombre:"Celebraci\xF3n",tituloHoy:"Celebraci\xF3n hoy",bloquea:!1}:t==="cita"||o(/\b(medico|medica|dentista|hospital|consulta|revision|analisis|cita)\b/)?{tipo:"cita",icono:"\u{1FA7A}",nombre:"Cita",tituloHoy:"Cita hoy",bloquea:!1}:t==="trabajo"||o(/\b(trabajo|oficina|reunion|curso|formacion)\b/)?{tipo:"trabajo",icono:"\u{1F4BC}",nombre:"Compromiso",tituloHoy:"Compromiso hoy",bloquea:!1}:t==="asamblea"||o(/\b(asamblea|congreso)\b/)?{tipo:"asamblea",icono:"\u{1F3A4}",nombre:"Asamblea",tituloHoy:"Asamblea hoy",bloquea:!1}:t==="ldc"||o(/\b(ldc|construccion|mantenimiento|obra)\b/)?{tipo:"ldc",icono:"\u{1F6E0}\uFE0F",nombre:"LDC",tituloHoy:"LDC hoy",bloquea:!1}:t==="ministerio"||o(/\b(predicacion|servicio|ministerio|revisita|curso biblico)\b/)?{tipo:"servicio",icono:"\u{1F4D6}",nombre:"Servicio",tituloHoy:"Servicio hoy",bloquea:!1}:o(/\b(familia|comida|cena|almuerzo|visita|merienda)\b/)?{tipo:"familia",icono:"\u{1F37D}\uFE0F",nombre:"Plan familiar",tituloHoy:"Plan familiar hoy",bloquea:!1}:{tipo:"personal",icono:"\u2728",nombre:"Evento",tituloHoy:"Evento hoy",bloquea:!1}}function eventosMesV181(e=new Date){const t=e.getFullYear(),a=e.getMonth()+1,o=`${t}-${String(a).padStart(2,"0")}-`;return leerEventosCalendarioV181().filter(n=>String((n==null?void 0:n.fecha)||"").startsWith(o)).map(n=>({...n,_ctx:tipoContextoV181(n)})).sort((n,i)=>String(n.fecha).localeCompare(String(i.fecha))||String(n.hora||"").localeCompare(String(i.hora||"")))}function resumenDisponibilidadV181(e=new Date){const t=eventosMesV181(e),a=new Date(e.getFullYear(),e.getMonth()+1,0).getDate(),o=Math.min(e.getDate(),a),n=new Set(t.filter(m=>m._ctx.bloquea).map(m=>String(m.fecha)));let i=0,r=0,c=0;for(let m=1;m<=a;m++){const g=new Date(e.getFullYear(),e.getMonth(),m,12,0,0),p=fechaLocalV181(g);n.has(p)||(i++,m<=o&&r++,m>=o&&c++)}const l=i>0?r/i*100:o/a*100,s=fechaLocalV181(e),d=t.filter(m=>m.fecha===s),u=d.some(m=>m._ctx.bloquea);return{eventos:t,bloqueados:n,diasMes:a,esperado:l,disponiblesTotales:i,disponiblesTranscurridos:r,disponiblesRestantes:c,hoyEventos:d,hoyBloqueado:u}}function asegurarMarcadoresV181(e){let t=e==null?void 0:e.querySelector(".progreso-eventos-v181");return!t&&e&&(t=document.createElement("div"),t.className="progreso-eventos-v181",t.setAttribute("aria-hidden","true"),e.appendChild(t)),t}function renderMarcadoresV181(e,t){const a=asegurarMarcadoresV181(e);if(!a)return;a.innerHTML="";const o=new Map;t.eventos.forEach(n=>{n._ctx.tipo!=="personal"&&(o.has(n.fecha)?n._ctx.bloquea&&!o.get(n.fecha)._ctx.bloquea&&o.set(n.fecha,n):o.set(n.fecha,n))}),[...o.values()].forEach(n=>{const i=Number(String(n.fecha).slice(8,10));if(!i)return;const r=document.createElement("span");r.className=`progreso-evento-marca-v181 tipo-${n._ctx.tipo}`,r.textContent=n._ctx.icono,r.style.left=`${(i-.5)/t.diasMes*100}%`,r.title=`${i} \xB7 ${n.titulo||n._ctx.nombre}`,a.appendChild(r)})}function textoContextoV181(e){const t=[...e.bloqueados].length,a=e.hoyEventos[0];if(e.hoyBloqueado&&a)return{icono:a._ctx.icono,fuerte:"Pausa planificada",detalle:`${a._ctx.nombre} hoy \xB7 el objetivo no cambia`};if(t>0)return{icono:"\u{1F3D6}\uFE0F",fuerte:`${t} ${t===1?"d\xEDa":"d\xEDas"} no disponible${t===1?"":"s"} este mes`,detalle:`${e.disponiblesRestantes} d\xEDas disponibles desde hoy \xB7 ritmo ajustado`};if(a)return{icono:a._ctx.icono,fuerte:a._ctx.tituloHoy||`${a._ctx.nombre} hoy`,detalle:"Se muestra como contexto; tus horas y objetivo siguen iguales",tipo:a._ctx.tipo};const o=e.eventos.find(n=>n.fecha>fechaLocalV181(new Date));if(o){const n=Number(String(o.fecha).slice(8,10));return{icono:o._ctx.icono,fuerte:`${o._ctx.nombre} el ${n}`,detalle:o._ctx.tipo==="personal"?"Consulta los detalles en el calendario":"Evento pr\xF3ximo reflejado en la l\xEDnea de progreso"}}return null}function aplicarContextoCalendarioProgresoV181(e,t,a){const o=document.getElementById("contextoCalendarioProgresoV181");if(!o||!a)return;const n=resumenDisponibilidadV181(new Date);renderMarcadoresV181(a,n);const i=textoContextoV181(n);if(i?(o.className="contexto-calendario-progreso-v181",o.classList.add(`tipo-${i.tipo||"personal"}`),o.innerHTML=`<span class="contexto-icono-v181">${i.icono}</span><span><strong>${i.fuerte}</strong><small>${i.detalle}</small></span>`):(o.innerHTML="",o.className="contexto-calendario-progreso-v181 oculto"),!n.bloqueados.size)return;const r=Math.max(0,Math.min(100,Number(e)||0)),c=r-n.esperado,l=5;if(a.classList.remove("ritmo-atrasado","ritmo-en-ritmo","ritmo-adelantado","ritmo-pausa"),n.hoyBloqueado){a.classList.add("ritmo-pausa"),t&&(t.textContent="\u{1F3D6}\uFE0F Pausa planificada. Tu objetivo sigue igual.");return}r>=100||(c>=l?(a.classList.add("ritmo-adelantado"),t&&(t.textContent="Ritmo ajustado: vas por delante \u2728")):c<=-l?(a.classList.add("ritmo-atrasado"),t&&(t.textContent="Ritmo ajustado: a\xFAn puedes recuperar el ritmo.")):(a.classList.add("ritmo-en-ritmo"),t&&(t.textContent="Ritmo ajustado: vas bien \u2728")))}function refrescarContextoProgresoV181(){var e;try{const t=Number((e=estado==null?void 0:estado.preferencias)==null?void 0:e.objetivoMensualMinutos)||0,a=typeof obtenerRegistrosMesActual=="function"?obtenerRegistrosMesActual():Array.isArray(estado==null?void 0:estado.registros)?estado.registros:[],o=calcularComputoMesMeta(a).computable,n=t>0?Math.min(100,Math.max(0,o/t*100)):0,i=document.getElementById("progresoPersonaje"),r=document.getElementById("estadoAnimal");typeof actualizarPersonajeProgreso=="function"?actualizarPersonajeProgreso(n):aplicarContextoCalendarioProgresoV181(n,r,i)}catch(t){console.warn("Contexto progreso V181",t)}}window.addEventListener("miServicio:eventosCalendarioActualizados",()=>{setTimeout(refrescarContextoProgresoV181,80)}),document.addEventListener("DOMContentLoaded",()=>{setTimeout(refrescarContextoProgresoV181,1100)}),document.addEventListener("visibilitychange",()=>{document.hidden||setTimeout(refrescarContextoProgresoV181,120)});function obtenerContextoVisualPersonajeV186(){var e;try{if(typeof resumenDisponibilidadV181!="function")return null;const t=resumenDisponibilidadV181(new Date),a=Array.isArray(t==null?void 0:t.hoyEventos)?t.hoyEventos[0]:null,o=((e=a==null?void 0:a._ctx)==null?void 0:e.tipo)||"";return o==="vacaciones"?{tipo:"vacaciones",accesorio:"\u{1F60E}",descripcion:"Contexto del d\xEDa: vacaciones",tono:"relajado"}:o==="viaje"?{tipo:"viaje",accesorio:"\u{1F9F3}",descripcion:"Contexto del d\xEDa: viaje",tono:"desplazamiento"}:null}catch{return null}}function pulsoVisualV188(e,t="micro-pulso-v188"){e&&(e.classList.remove(t),e.offsetWidth,e.classList.add(t),setTimeout(()=>e.classList.remove(t),760))}function destelloV188(e,t){let a=document.getElementById("microToastV188");a||(a=document.createElement("div"),a.id="microToastV188",a.className="micro-toast-v188",a.setAttribute("aria-live","polite"),document.body.appendChild(a)),a.innerHTML=`<span class="micro-toast-icono-v188">${e}</span><span>${t}</span>`,a.classList.remove("visible"),a.offsetWidth,a.classList.add("visible"),clearTimeout(destelloV188._t),destelloV188._t=setTimeout(()=>{a.classList.remove("visible")},1350)}function celebrarObjetivoV188(e){const t=e==null?void 0:e.closest(".tarjeta");if(!t||t.dataset.v188ObjetivoAlcanzado==="1")return;t.dataset.v188ObjetivoAlcanzado="1",pulsoVisualV188(t,"micro-objetivo-v188"),destelloV188("\u2728","Objetivo conseguido");const a=document.getElementById("animalProgreso");a&&pulsoVisualV188(a,"micro-personaje-meta-v188")}function reiniciarObjetivoV188(e){const t=e==null?void 0:e.closest(".tarjeta");t&&(t.dataset.v188ObjetivoAlcanzado="0")}window.addEventListener("miServicio:registroGuardadoV188",()=>{mostrarGuardadoV260()}),window.addEventListener("miServicio:calendarioSincronizadoV188",e=>{var n;const t=document.getElementById("sincronizarCalendarioV176"),a=document.getElementById("estadoCalendarioAppleV173");pulsoVisualV188(t,"micro-sync-v188"),a&&pulsoVisualV188(a,"micro-mensaje-v188");const o=Number(((n=e==null?void 0:e.detail)==null?void 0:n.total)||0);destelloV188("\u21BB",o===1?"1 evento sincronizado":`${o} eventos sincronizados`)});function pintarEstadoConexionV190(e,t){const a=document.getElementById("estadoConexionV190"),o=document.getElementById("estadoConexionTextoV190");if(!a||!o)return;let n="estado-online-v190",i="Al d\xEDa";navigator.onLine?t==="subiendo"||t==="bajando"?(n="estado-sync-v190",i="Sincronizando\u2026"):t==="pendiente"?(n="estado-pendiente-v190",i=/protección activa/i.test(String(e||""))?"Protegido":"Pendiente"):/no se pudo|error|fall/i.test(String(e||""))&&(n="estado-pendiente-v190",i="Solo local"):(n="estado-offline-v190",i="Local \xB7 sin conexi\xF3n"),a.className=`estado-conexion-v190 ${n}`,o.textContent=i,a.title=String(e||i)}window.addEventListener("miServicio:estadoSyncV190",e=>{var t,a;pintarEstadoConexionV190((t=e==null?void 0:e.detail)==null?void 0:t.texto,(a=e==null?void 0:e.detail)==null?void 0:a.tipo)}),window.addEventListener("offline",()=>pintarEstadoConexionV190("Sin conexi\xF3n \xB7 trabajando localmente","pendiente")),window.addEventListener("online",()=>{pintarEstadoConexionV190("Conexi\xF3n recuperada \xB7 sincronizando\u2026","subiendo")}),document.addEventListener("DOMContentLoaded",()=>{let e=null;try{e=almacenamiento.leer("miServicio.estadoSyncV134",null)}catch{}pintarEstadoConexionV190(e==null?void 0:e.texto,(e==null?void 0:e.tipo)||"ok"),document.body.classList.add("v190-shell-listo")});const KEY_INICIO_COMPACTO_V191="miServicio.inicioCompactoV191";function leerInicioCompactoV191(){try{return JSON.parse(localStorage.getItem(KEY_INICIO_COMPACTO_V191)||"{}")||{}}catch{return{}}}function guardarInicioCompactoV191(e){const t=leerInicioCompactoV191();localStorage.setItem(KEY_INICIO_COMPACTO_V191,JSON.stringify({...t,...e}))}function aplicarEstadoCompactoV191(){const e=leerInicioCompactoV191(),t=document.getElementById("panelCalendarioInicio"),a=document.getElementById("botonCalendarioInicio"),o=document.getElementById("iconoCalendarioInicio"),n=e.calendario===!0;t&&a&&(t.classList.toggle("oculto",!n),a.setAttribute("aria-expanded",String(n)),o&&(o.textContent=n?"\u2303":"\u2304"),n&&typeof actualizarCalendarioInicio=="function"&&setTimeout(actualizarCalendarioInicio,30))}function instalarPersistenciaCompactaV191(){const e=document.getElementById("botonCalendarioInicio"),t=document.getElementById("panelCalendarioInicio");e==null||e.addEventListener("click",()=>{setTimeout(()=>{guardarInicioCompactoV191({calendario:!(t!=null&&t.classList.contains("oculto"))}),hapticoV191(5)},0)})}function hapticoV191(e=6){try{if(typeof navigator.vibrate=="function")return navigator.vibrate(Math.max(1,Math.min(12,Number(e)||6))),!0}catch{}return!1}window.addEventListener("miServicio:registroGuardadoV188",()=>hapticoV191(8)),document.addEventListener("click",e=>{var t,a;(a=(t=e.target).closest)!=null&&a.call(t,"[data-personaje]")&&hapticoV191(5)});function abrirRegistroRapidoV191(){seleccionarVista("registrar")}function instalarRegistroRapidoV191(){var e;(e=document.getElementById("abrirRegistroRapidoV191"))==null||e.addEventListener("click",abrirRegistroRapidoV191)}const celebrarObjetivoV188Original=typeof celebrarObjetivoV188=="function"?celebrarObjetivoV188:null;celebrarObjetivoV188Original&&(celebrarObjetivoV188=function(e){var o,n;const t=e==null?void 0:e.closest(".tarjeta"),a=((o=t==null?void 0:t.dataset)==null?void 0:o.v188ObjetivoAlcanzado)==="1";celebrarObjetivoV188Original(e),!a&&((n=t==null?void 0:t.dataset)==null?void 0:n.v188ObjetivoAlcanzado)==="1"&&hapticoV191(10)}),document.addEventListener("DOMContentLoaded",()=>{setTimeout(()=>{aplicarEstadoCompactoV191(),instalarPersistenciaCompactaV191(),instalarRegistroRapidoV191()},120)});function inicioSemanaV193(e=new Date){const t=new Date(e);t.setHours(12,0,0,0);const a=(t.getDay()+6)%7;return t.setDate(t.getDate()-a),t}function minutosDiaV193(e){return(Array.isArray(estado==null?void 0:estado.registros)?estado.registros:[]).filter(t=>String((t==null?void 0:t.fecha)||"").slice(0,10)===e).reduce((t,a)=>t+(Number(a==null?void 0:a.minutos)||Number(a==null?void 0:a.minutosTotales)||0),0)}function actualizarSemanaVisualV193(){const e=document.getElementById("semanaVisualDiasV193"),t=document.getElementById("semanaVisualTotalV193");if(!e||!t)return;const a=inicioSemanaV193(new Date),o=fechaLocalISO(new Date),n=["L","M","X","J","V","S","D"];let i=0;e.innerHTML="";for(let r=0;r<7;r++){const c=new Date(a);c.setDate(a.getDate()+r);const l=fechaLocalISO(c),s=minutosDiaV193(l);i+=s;const d=document.createElement("div");d.className="v193-dia",s>0&&d.classList.add("con-actividad"),l===o&&d.classList.add("hoy");const u=document.createElement("small");u.textContent=n[r];const m=document.createElement("span");m.className="v193-dia-punto",m.title=s>0?`${n[r]} \xB7 ${formatearTiempo(s)}`:`${n[r]} \xB7 sin actividad`;const g=document.createElement("strong");g.textContent=s>0?formatearTiempo(s):"\u2014",d.append(u,m,g),e.appendChild(d)}t.textContent=formatearTiempo(i),actualizarComparacionSemanalV139()}function animarVistaActivaV193(){const e=document.querySelector(".vista.activa");e&&(e.classList.remove("v193-entrada"),e.offsetWidth,e.classList.add("v193-entrada"),setTimeout(()=>e.classList.remove("v193-entrada"),320))}document.addEventListener("click",e=>{var a,o;(o=(a=e.target).closest)!=null&&o.call(a,"[data-vista],[data-tab],.barra-navegacion button,nav.barra-navegacion button")&&setTimeout(()=>{animarVistaActivaV193(),actualizarSemanaVisualV193()},40)}),window.addEventListener("miServicio:registroGuardadoV188",()=>{setTimeout(actualizarSemanaVisualV193,80)}),document.addEventListener("DOMContentLoaded",()=>{setTimeout(()=>{actualizarSemanaVisualV193(),animarVistaActivaV193()},160)});function saludoDinamicoV195(){var n,i,r;const e=document.getElementById("saludoDinamicoV195");if(!e)return;const t=new Date().getHours();let a=t<12?"Buenos d\xEDas":t<20?"Buenas tardes":"Buenas noches";const o=nombreSaludoV260();o&&(a+=`, ${o}`);try{if(typeof resumenDisponibilidadV181=="function"){const c=resumenDisponibilidadV181(new Date),l=((r=(i=(n=c==null?void 0:c.hoyEventos)==null?void 0:n[0])==null?void 0:i._ctx)==null?void 0:r.tipo)||"";l==="vacaciones"?a+=" \xB7 modo descanso \u{1F334}":l==="viaje"?a+=" \xB7 d\xEDa de viaje \u{1F9F3}":l==="asamblea"?a+=" \xB7 d\xEDa especial \u{1F3A4}":l==="ldc"&&(a+=" \xB7 d\xEDa de LDC \u{1F6E0}\uFE0F")}}catch{}e.textContent=a,e.dataset.periodo=t<12?"manana":t<20?"tarde":"noche",e.dataset.contexto=a.includes(" \xB7 ")?"especial":"normal"}function textoHaceV195(e){const t=Math.max(0,Date.now()-e.getTime());if(t<6e4)return"Actualizado ahora";const a=Math.floor(t/6e4);if(a<60)return`Actualizado hace ${a} min`;const o=Math.floor(a/60);return o<24?`Actualizado hace ${o} h`:`Actualizado ${e.toLocaleDateString("es-ES",{day:"numeric",month:"short"})}`}function ultimaActualizacionV195(){const e=document.getElementById("ultimaActualizacionV195");if(!e)return;let t=new Date;try{const a=almacenamiento.leer(STORAGE_KEYS.ultimaSyncOneDrive,null);if(a){const o=new Date(a);Number.isNaN(o.getTime())||(t=o)}else{const n=(Array.isArray(estado==null?void 0:estado.registros)?estado.registros:[]).map(i=>new Date((i==null?void 0:i.modificadoEn)||(i==null?void 0:i.creadoEn)||(i==null?void 0:i.fecha)||0)).filter(i=>!Number.isNaN(i.getTime())).sort((i,r)=>r-i)[0];n&&(t=n)}}catch{}e.textContent=textoHaceV195(t)}window.addEventListener("miServicio:estadoSyncV190",()=>{setTimeout(ultimaActualizacionV195,120)}),window.addEventListener("miServicio:registroGuardadoV188",()=>{setTimeout(ultimaActualizacionV195,100)});function aplicarEstadosVaciosV195(){const e=Array.isArray(estado==null?void 0:estado.registros)?estado.registros:[],t=document.getElementById("vista-historial");if(t){let o=t.querySelector(".estado-vacio-v195");e.length?o==null||o.remove():o||(o=document.createElement("div"),o.className="estado-vacio-v195",o.innerHTML='<span class="estado-vacio-icono-v195">\u{1F4DD}</span><strong>A\xFAn no hay actividad</strong><small>Cuando registres tiempo, aparecer\xE1 aqu\xED.</small>',t.appendChild(o))}const a=document.getElementById("vista-estadisticas");if(a){let o=a.querySelector(".estado-vacio-v195");e.length?o==null||o.remove():o||(o=document.createElement("div"),o.className="estado-vacio-v195",o.innerHTML='<span class="estado-vacio-icono-v195">\u{1F4CA}</span><strong>Todav\xEDa no hay estad\xEDsticas</strong><small>Se ir\xE1n formando a medida que registres actividad.</small>',a.appendChild(o))}}document.addEventListener("DOMContentLoaded",()=>{setTimeout(()=>{saludoDinamicoV195(),ultimaActualizacionV195(),aplicarEstadosVaciosV195()},180),setInterval(ultimaActualizacionV195,6e4)}),window.addEventListener("miServicio:registroGuardadoV188",()=>{setTimeout(aplicarEstadosVaciosV195,100)});function datosHoyCompactoV197(e=[],t=[],a=[]){var u;const o=e.length?e:t,n=m=>m.minutosTotales!=null?Number(m.minutosTotales)||0:Number(m.minutos)||0,i=e.length?e.reduce((m,g)=>m+n(g),0):t.reduce((m,g)=>m+minutosPlanificadosV141(g),0),r=[...new Set(o.map(m=>String(m.tipo||m.actividad||"ministerio").toLowerCase()))],c={ministerio:["Ministerio","\u{1F4D6}"],ldc:["LDC","\u{1F6E0}\uFE0F"],asambleas:["Asamblea","\u{1F3A4}"],asamblea:["Asamblea","\u{1F3A4}"],otras:[nombreActividad("otras"),"\u2728"]},l=r.length===1?r[0]:r.length>1?"mixto":"",s=[...new Set(o.map(m=>String(m.companero||m.acompanante||"").trim()).filter(Boolean))],d=[];return o.length?(i>0&&d.push(formatearTiempo(i)+(e.length?"":" previstas")),d.push(r.map(m=>{var g;return((g=c[m])==null?void 0:g[0])||m}).join(" + ")),s.length===1?d.push("con "+s[0]):s.length>1&&d.push("con "+s.length+" acompa\xF1antes")):a.length?d.push(a[0].titulo||"Evento de hoy"):d.push("Sin actividad planificada"),{texto:"Hoy: "+d.join(" \xB7 "),tipo:l,icono:((u=c[l])==null?void 0:u[1])||"\u{1F4C5}"}}function estadoVacioV197(e,t){const a=document.createElement("div");a.className="estado-vacio-compacto-v197";const o=document.createElement("span");o.setAttribute("aria-hidden","true"),o.textContent=e;const n=document.createElement("span");return n.textContent=t,a.append(o,n),a}function refrescarResumenMensualV198(){const e=document.getElementById("mesResumenV143");if(!e)return;/^\d{4}-\d{2}$/.test(e.value)||(e.value=claveMesV143(new Date));const[t,a]=e.value.split("-").map(Number);pintarResumenMensualV143(new Date(t,a-1,1))}document.addEventListener("click",e=>{var t,a;(a=(t=e.target).closest)!=null&&a.call(t,'[data-vista="estadisticas"]')&&setTimeout(refrescarResumenMensualV198,40)}),window.addEventListener("miServicio:estadoSyncV190",()=>setTimeout(refrescarResumenMensualV198,100)),document.addEventListener("visibilitychange",()=>{document.visibilityState==="visible"&&saludoDinamicoV195()}),setInterval(saludoDinamicoV195,6e4);var datosGraficoPersonalV260=null;const ESTILOS_GRAFICO_V260=["burbujas","anillos","donut","barras","corazones","arcos","quesitos"];function leerEstiloGraficoV260(){try{const e=localStorage.getItem("miServicio.estiloGraficoInicio");return ESTILOS_GRAFICO_V260.includes(e)?e:"burbujas"}catch{return"burbujas"}}function crearGraficoPersonalV260(e,t){if(e==="quesitos")return crearGraficoQuesitosV260(t);if(e==="arcos")return crearGraficoArcosV260(t);const a={ministerio:"#3478f6",ldc:"#ed8abb",asambleas:"#f5a623",otras:"#9a80e8"},o=t.reduce((r,c)=>r+c.minutos,0);if(!o&&e==="corazones")return`<div class="grafico-personal-v260 corazones-vacios-v260"><div class="corazon-globo-v260" style="--corazon:#c9d2df;--corazon-texto:var(--text-primary)">${svgCorazonV260()}<div class="corazon-datos-v260"><span>este mes</span><strong>0 min</strong></div></div><p>Tu actividad aparecer\xE1 aqu\xED</p></div>`;if(!o)return'<div class="grafico-personal-v260 grafico-vacio-v260"><div class="grafico-total-v260"><strong>0 min</strong><span>este mes</span></div><p>Tu actividad aparecer\xE1 aqu\xED</p></div>';const n=t.map(r=>`<li style="--actividad:${a[r.tipo]}"><i aria-hidden="true"></i><span>${textoArcosV260(r.nombre)}</span><strong>${formatearTiempo(r.minutos)}</strong><small>${Math.round(r.minutos/o*100)}%</small></li>`).join("");let i="";if(e==="corazones"){const r={1:[[50,17]],2:[[17,50],[83,50]],3:[[50,16],[18,78],[82,78]],4:[[50,16],[83,50],[50,84],[17,50]]}[t.length];i=`<div class="corazones-orbita-v260"><div class="corazones-orbita-trazo-v260" aria-hidden="true"></div><div class="corazones-total-centro-v260"><strong>${formatearTiempo(o)}</strong><span>este mes</span></div>${t.map((c,l)=>`<div class="corazon-posicion-v260" style="--corazon-x:${r[l][0]}%;--corazon-y:${r[l][1]}%;--corazon-diametro:${(tamanoCorazonV260(c.minutos,t)*.34).toFixed(2)}%"><div class="corazon-globo-v260" role="button" tabindex="0" data-actividad-inicio="${c.tipo}" title="Ver registros del mes" aria-label="Ver registros de ${textoArcosV260(c.nombre)}: ${formatearTiempo(c.minutos)}" style="--corazon:${a[c.tipo]};--corazon-texto:${c.tipo==="ministerio"?"#fff":"#182238"};--corazon-duracion:${4.8+l*.55}s;--corazon-retraso:${-l*1.2}s">${svgCorazonV260()}<div class="corazon-datos-v260"><span>${textoArcosV260(c.nombre)}</span><strong>${formatearTiempoCortoCalendario(c.minutos)}</strong><small>${Math.round(c.minutos/o*100)}%</small></div></div></div>`).join("")}</div>`}else if(e==="barras")i=`<div class="grafico-total-barras-v260"><strong>${formatearTiempo(o)}</strong><span>este mes</span></div><div class="grafico-barras-v260">${t.map(r=>`<div style="--actividad:${a[r.tipo]}"><div class="grafico-barra-titulo-v260"><span>${textoArcosV260(r.nombre)}</span><strong>${formatearTiempo(r.minutos)}</strong><small>${Math.round(r.minutos/o*100)}%</small></div><div class="grafico-barra-pista-v260"><span style="width:${r.minutos/o*100}%"></span></div></div>`).join("")}</div>`;else{let r=0;const c=idVolumenV260("tubo");let l="";const s=t.map((d,u)=>{const m=e==="anillos"?100-u*17:92,g=2*Math.PI*m,p=d.minutos/o*g,v=c+"-"+u;l+=gradienteTuboV260(v,a[d.tipo],m,e==="anillos"?12:30,120,120);const b=e==="anillos"?`<circle cx="120" cy="120" r="${m}" class="grafico-pista-v260"/>`:"",f=e==="donut"?-r:0;return r+=p,`${b}<circle class="acabado-anillo-canto-v260" cx="120" cy="120" r="${m}" stroke="${a[d.tipo]}" stroke-dasharray="${p} ${g-p}" stroke-dashoffset="${f}" stroke-linecap="${e==="anillos"?"round":"butt"}"/><circle class="volumen-tubo-cara-v260" style="--tubo-material:url(#${v})" cx="120" cy="120" r="${m}" stroke="${a[d.tipo]}" stroke-dasharray="${p} ${g-p}" stroke-dashoffset="${f}" stroke-linecap="${e==="anillos"?"round":"butt"}"/><circle class="acabado-anillo-brillo-v260" cx="120" cy="120" r="${m}" stroke="#fff" stroke-dasharray="${p} ${g-p}" stroke-dashoffset="${f}" stroke-linecap="${e==="anillos"?"round":"butt"}"/>`}).join("");i=`<div class="grafico-rueda-v260"><svg viewBox="0 0 240 240" aria-hidden="true" class="grafico-svg-v260 ${e}"><defs>${l}</defs>${e==="donut"?'<circle cx="120" cy="120" r="92" class="grafico-pista-v260"/>':""}${s}</svg><div class="grafico-total-v260"><strong>${formatearTiempo(o)}</strong><span>este mes</span></div></div>`}return`<div class="grafico-personal-v260" role="group" aria-label="Actividad del mes: ${formatearTiempo(o)}">${i}${["barras","corazones"].includes(e)?"":`<ul class="grafico-leyenda-v260">${n}</ul>`}</div>`}function instalarEstilosGraficoV260(){const e=document.getElementById("estilosGraficoInicioV260");if(!e)return;const t={burbujas:"Burbujas 3D",anillos:"Anillos",donut:"Donut",barras:"Barras",corazones:"Corazones",arcos:"Arcos 3D",quesitos:"Quesitos 3D"},a=[{tipo:"ministerio",nombre:"Ministerio",minutos:180},{tipo:"ldc",nombre:"LDC",minutos:120},{tipo:"asambleas",nombre:"Asambleas",minutos:60}];ESTILOS_GRAFICO_V260.forEach(o=>{const n=document.createElement("button");n.type="button",n.dataset.estilo=o,n.setAttribute("aria-label",`Elegir ${t[o]}`),n.setAttribute("aria-pressed",String(o===leerEstiloGraficoV260()));const i=document.createElement("div");i.className="grafico-preview-v260",i.setAttribute("aria-hidden","true"),i.innerHTML=o==="corazones"?`<div class="preview-corazon-v260" style="--corazon:#ed8abb">${svgCorazonV260()}</div>`:o==="burbujas"?'<div class="preview-burbujas-v260"><i></i><i></i><i></i><i></i></div>':crearGraficoPersonalV260(o,a),i.querySelectorAll("[tabindex]").forEach(c=>{c.removeAttribute("tabindex"),c.removeAttribute("role"),c.removeAttribute("data-actividad-inicio")});const r=document.createElement("span");r.textContent=t[o],n.append(i,r),n.addEventListener("click",()=>{const c=document.getElementById("estadoEstiloGraficoV260");try{localStorage.setItem("miServicio.estiloGraficoInicio",o)}catch{c.textContent="No se pudo guardar. Int\xE9ntalo de nuevo.";return}e.querySelectorAll("button").forEach(l=>l.setAttribute("aria-pressed",String(l===n))),datosGraficoPersonalV260&&actualizarGraficoInicio(datosGraficoPersonalV260),c.textContent=`${t[o]} seleccionado`}),e.appendChild(n)})}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",instalarEstilosGraficoV260,{once:!0}):instalarEstilosGraficoV260();function svgCorazonV260(){const e=idVolumenV260("corazon");return`<svg class="corazon-svg-v260" viewBox="0 0 160 148" aria-hidden="true" focusable="false"><defs><radialGradient id="${e}" cx="28%" cy="23%" r="78%"><stop offset="0" stop-color="#fff" stop-opacity=".65"/><stop offset=".20" stop-color="#fff" stop-opacity=".18"/><stop offset=".47" stop-color="#fff" stop-opacity="0"/><stop offset=".78" stop-color="#10223c" stop-opacity=".19"/><stop offset="1" stop-color="#08162d" stop-opacity=".48"/></radialGradient></defs><path class="corazon-cuerda-v260" d="M80 125Q74 137 81 145"/><path class="corazon-forma-v260" d="M80 29C50-5 2 9 8 47C12 70 54 96 80 119C106 96 148 70 152 47C158 9 110-5 80 29Z"/><path class="volumen-corazon-v260" fill="url(#${e})" d="M80 29C50-5 2 9 8 47C12 70 54 96 80 119C106 96 148 70 152 47C158 9 110-5 80 29Z"/><path class="acabado-corazon-autor-v260" fill="none" stroke="#fff" stroke-opacity=".65" stroke-width="3" d="M91 30C116 12 142 23 145 44"/><path class="acabado-corazon-v260" fill="none" stroke="#fff" stroke-width="3" opacity=".52" d="M16 46C10 16 49 5 77 33M88 29C113 10 143 21 145 43"/><path fill="#fff" opacity=".23" d="M18 40C17 16 47 12 63 27C44 18 28 27 24 45C22 51 18 47 18 40Z"/><path fill="#000" opacity=".08" d="M80 119C106 96 148 70 152 47C143 65 118 90 80 110C48 89 25 71 8 47C12 70 54 96 80 119Z"/><path fill="var(--corazon)" d="M80 119l-4 7h8z"/></svg>`}function tamanoCorazonV260(e,t){const a=t.map(r=>r.minutos),o=Math.min(...a),n=Math.max(...a),i=n===o?.5:(e-o)/(n-o);return Math.round(78+i*22)}const ESTILOS_CAMINO_V260={sendero:"Sendero suave",luz:"Camino de luz",pasarela:"Pasarela 3D",natural:"Sendero natural"};function leerEstiloCaminoV260(){try{const e=localStorage.getItem("miServicio.estiloCaminoInicio");return Object.hasOwn(ESTILOS_CAMINO_V260,e)?e:"sendero"}catch{return"sendero"}}function aplicarEstiloCaminoV260(e){Object.hasOwn(ESTILOS_CAMINO_V260,e)||(e="sendero");const t=document.getElementById("vista-inicio");t&&(t.dataset.camino=e)}function instalarEstilosCaminoV260(){aplicarEstiloCaminoV260(leerEstiloCaminoV260());const e=document.getElementById("estilosCaminoInicioV260");e&&Object.entries(ESTILOS_CAMINO_V260).forEach(([t,a])=>{const o=document.createElement("button");o.type="button",o.dataset.camino=t,o.setAttribute("aria-label",`Elegir ${a}`),o.setAttribute("aria-pressed",String(t===leerEstiloCaminoV260()));const n=document.createElement("span");n.className="camino-preview-v260",n.dataset.camino=t,n.setAttribute("aria-hidden","true");const i=document.createElement("i");i.className="camino-muestra-v260",n.appendChild(i);const r=document.createElement("span");r.textContent=a,o.append(n,r),o.addEventListener("click",()=>{const c=document.getElementById("estadoEstiloCaminoV260");try{localStorage.setItem("miServicio.estiloCaminoInicio",t)}catch{c.textContent="No se pudo guardar. Int\xE9ntalo de nuevo.";return}aplicarEstiloCaminoV260(t),e.querySelectorAll("button").forEach(l=>l.setAttribute("aria-pressed",String(l===o))),c.textContent=`${a} seleccionado`}),e.appendChild(o)})}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",instalarEstilosCaminoV260,{once:!0}):instalarEstilosCaminoV260();var retornoEdicionV260=null;function tarjetaRegistroV260(e){return Array.from(document.querySelectorAll("#vista-historial .registro-card")).find(t=>t.dataset.registroId===String(e))||null}function capturarRetornoEdicionV260(e){var a;const t=tarjetaRegistroV260(e);retornoEdicionV260=estado.vistaActual==="historial"?{id:e,y:window.scrollY,arriba:(a=t==null?void 0:t.getBoundingClientRect().top)!=null?a:null,guardado:!1}:null}function restaurarRetornoEdicionV260(){var a;const e=retornoEdicionV260;if(retornoEdicionV260=null,!e||estado.vistaActual!=="historial")return;const t=tarjetaRegistroV260(e.id);if(t){const o=t.closest("details");o&&(o.open=!0);const n=e.arriba===null?e.y:window.scrollY+t.getBoundingClientRect().top-e.arriba;window.scrollTo({top:Math.max(0,n),behavior:"instant"}),(a=t.querySelector(".boton-editar-registro"))==null||a.focus({preventScroll:!0}),e.guardado&&(t.classList.add("registro-recien-editado-v260"),setTimeout(()=>t.classList.remove("registro-recien-editado-v260"),2200))}else window.scrollTo({top:e.y,behavior:"instant"});e.guardado&&typeof avisoV202=="function"&&avisoV202("\u2713 Cambios guardados")}function limpiarCampoV260(e){var o;if(!(e!=null&&e.id))return;const t=e.id+"-ayuda-v260";(o=document.getElementById(t))==null||o.remove(),e.removeAttribute("aria-invalid");const a=(e.getAttribute("aria-describedby")||"").split(/\s+/).filter(n=>n&&n!==t);a.length?e.setAttribute("aria-describedby",a.join(" ")):e.removeAttribute("aria-describedby")}function indicarCampoV260(e,t){if(!(e!=null&&e.id))return;limpiarCampoV260(e);const a=document.createElement("small");a.id=e.id+"-ayuda-v260",a.className="error-campo-v260",a.textContent=t,e.insertAdjacentElement("afterend",a),e.setAttribute("aria-invalid","true"),e.setAttribute("aria-describedby",[e.getAttribute("aria-describedby"),a.id].filter(Boolean).join(" ")),e.focus()}function instalarPulidoV260(){for(const a of["formRegistro","formEditarRegistro"]){const o=document.getElementById(a);o&&(o.addEventListener("submit",()=>o.querySelectorAll('[aria-invalid="true"]').forEach(limpiarCampoV260),!0),o.addEventListener("input",n=>{n.target.matches("input,select,textarea")&&limpiarCampoV260(n.target)}),o.addEventListener("change",n=>{n.target.matches("input,select,textarea")&&limpiarCampoV260(n.target)}),o.addEventListener("invalid",n=>indicarCampoV260(n.target,n.target.validationMessage),!0))}document.addEventListener("visibilitychange",()=>{document.visibilityState==="hidden"&&typeof guardarBorradorV260=="function"&&guardarBorradorV260()}),window.addEventListener("pagehide",()=>{typeof guardarBorradorV260=="function"&&guardarBorradorV260()});const e=document.getElementById("sincronizarCalendarioV176");if(e){const a=()=>e.setAttribute("aria-busy",String(e.disabled));new MutationObserver(a).observe(e,{attributes:!0,attributeFilter:["disabled"]}),a()}let t;window.addEventListener("resize",()=>{clearTimeout(t),t=setTimeout(resolverColisionesOrbitasV120,120)})}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",instalarPulidoV260,{once:!0}):instalarPulidoV260();var datosClimaVisualV260=null;function tipoFondoClimaV260(e,t){if(e==null||e==="")return"neutro";const a=Number(e);return Number.isInteger(a)?[0,1].includes(a)?t===0||t==="0"?"noche":"sol":a===2?t===0||t==="0"?"nubes":"parcial":a===3?"nubes":[45,48].includes(a)?"niebla":[51,53,55,56,57,61,63,65,66,67,80,81,82,95,96,99].includes(a)?"lluvia":[71,73,75,77,85,86].includes(a)?"nieve":"neutro":"neutro"}function fondoClimaActivoV260(){try{return localStorage.getItem("miServicio.fondoClimaInicio")!=="no"}catch{return!0}}function pintarFondoClimaV260(e,t){let a=e.querySelector(".clima-escena-v260");if(!a){a=document.createElement("div"),a.className="clima-escena-v260",a.setAttribute("aria-hidden","true");const o=Array.from({length:12},(n,i)=>{const r=i*Math.PI/6;return`<line x1="${60+35*Math.cos(r)}" y1="${60+35*Math.sin(r)}" x2="${60+49*Math.cos(r)}" y2="${60+49*Math.sin(r)}"/>`}).join("");a.innerHTML=`<div class="clima-sol-visual-v260"><svg viewBox="0 0 120 120" focusable="false"><g>${o}</g><circle cx="60" cy="60" r="24"/></svg></div><div class="clima-luna-v260"></div><i class="clima-nube-v260 nube-a-v260"></i><i class="clima-nube-v260 nube-b-v260"></i><i class="clima-nube-v260 nube-c-v260"></i><div class="clima-gotas-v260">${Array.from({length:20},(n,i)=>`<i style="--x:${i*37%100}%;--y:${i*53%93}%;--retraso:${-(i%7)*.29}s;--duracion:${1.3+i%4*.28}s"></i>`).join("")}</div>`,e.insertBefore(a,e.firstChild)}a.dataset.tiempo=t,a.hidden=!fondoClimaActivoV260()||t==="neutro"}function instalarFondoClimaV260(){const e=document.getElementById("fondoClimaInicioV260");e&&(e.checked=fondoClimaActivoV260(),e.addEventListener("change",()=>{try{localStorage.setItem("miServicio.fondoClimaInicio",e.checked?"si":"no")}catch{e.checked=fondoClimaActivoV260();return}datosClimaVisualV260&&aplicarAmbienteClima(datosClimaVisualV260.codigo,datosClimaVisualV260.esDia)}))}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",instalarFondoClimaV260,{once:!0}):instalarFondoClimaV260();var mesFiltroHistorialV260="";function abrirActividadInicioV260(e){if(!["ministerio","ldc","asambleas","otras"].includes(e)||!actividadVisible(e))return;mesFiltroHistorialV260=claveMesV143(new Date);const t=document.getElementById("buscarHistorialV260");t&&(t.value=""),seleccionarFiltroHistorial(e),seleccionarVista("historial"),pintarContextoHistorialV260(),animarOrigenActividadV260(e)}function pintarContextoHistorialV260(){const e=document.getElementById("contextoHistorialV260");if(!e)return;e.hidden=!mesFiltroHistorialV260;const t=document.getElementById("textoContextoHistorialV260");mesFiltroHistorialV260&&(t.textContent=`${estado.filtroHistorial==="todos"?"Todas las actividades":nombreActividad(estado.filtroHistorial)} \xB7 ${fechaDesdeISO(mesFiltroHistorialV260+"-01").toLocaleDateString("es-ES",{month:"long",year:"numeric"})}`)}function volverHistorialRecienteV260(){mesFiltroHistorialV260="",document.getElementById("buscarHistorialV260").value="",seleccionarFiltroHistorial("todos"),pintarContextoHistorialV260(),requestAnimationFrame(()=>{const e=fechaLocalISO(new Date),t=Array.from(document.querySelectorAll("#vista-historial .registro-card")),a=t.find(n=>n.dataset.registroFecha===e)||t[0];if(!a){avisoV202("Todav\xEDa no hay registros");return}const o=a.closest("details");o&&(o.open=!0),a.scrollIntoView({block:"center",behavior:window.matchMedia("(prefers-reduced-motion:reduce)").matches?"instant":"smooth"}),a.dataset.registroFecha!==e&&avisoV202("Hoy no hay registros \xB7 Te mostramos el m\xE1s reciente")})}function actualizarSugerenciaPlanV260(){var c;const e=document.getElementById("sugerenciaCompaneroV260");if(!e)return;const t=document.getElementById("fechaRegistro").value,a=(c=estado.agendaSalidas)==null?void 0:c[t],o=a?normalizarAgendaDia(a):null,n=document.getElementById("companeroRegistro").value.trim(),i=String((o==null?void 0:o.companero)||"").trim().slice(0,80),r=!!(i&&!n&&o.tipo===document.getElementById("tipoRegistro").value&&actividadVisible(o.tipo));e.hidden=!r,e.textContent=r?`Usar acompa\xF1ante previsto: ${i}`:"",e.dataset.nombre=r?i:""}function textoCalendarioV260(e){return String(e||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim()}function buscarCalendarioV260(e){var n;const t=textoCalendarioV260(e);if(!t)return[];const a=new Set;(estado.registros||[]).filter(i=>actividadVisible(i.tipo)).forEach(i=>a.add(String(i.fecha).slice(0,10))),Object.keys(estado.agendaSalidas||{}).forEach(i=>a.add(i)),(((n=window.MiServicioEventosCalendario)==null?void 0:n.listar())||[]).forEach(i=>a.add(i.fecha));const o=[];return[...a].filter(i=>/^\d{4}-\d{2}-\d{2}$/.test(i)).sort().forEach(i=>{const r=fechaDesdeISO(i).toLocaleDateString("es-ES",{day:"numeric",month:"long",year:"numeric"}),c=entradasAgendaV260(i).filter(l=>(l.tipo==="evento"||actividadVisible(l.tipo))&&textoCalendarioV260([i,r,l.titulo,l.detalle,l.hora].join(" ")).includes(t));c.length&&o.push({fecha:i,etiqueta:r,filas:c})}),o}var limiteBusquedaCalendarioV260=20;function pintarBusquedaCalendarioV260(){const e=document.getElementById("buscarCalendarioV260"),t=document.getElementById("resultadosCalendarioV260");if(!e||!t)return;const a=e.value.trim();if(t.replaceChildren(),t.hidden=!a,!a)return;const o=buscarCalendarioV260(a),n=document.createElement("p");if(n.className="busqueda-calendario-estado-v260",n.setAttribute("role","status"),n.textContent=o.length?`${o.length} d\xEDa${o.length===1?"":"s"} con coincidencias`:"No hay coincidencias",t.appendChild(n),o.slice(0,limiteBusquedaCalendarioV260).forEach(i=>{const r=document.createElement("button");r.type="button",r.className="resultado-calendario-v260";const c=document.createElement("strong");c.textContent=i.etiqueta;const l=document.createElement("span");l.textContent=i.filas.map(s=>[s.hora,s.titulo,s.detalle].filter(Boolean).join(" \xB7 ")).join(" / "),r.append(c,l),r.addEventListener("click",()=>{const s=fechaDesdeISO(i.fecha);referenciaCalendarioV260=new Date(s.getFullYear(),s.getMonth(),1,12),diaSeleccionadoV260=i.fecha,actualizarCalendarioInicio(),abrirDetalleDiaV260(s.getDate(),s.getMonth(),s.getFullYear(),(estado.registros||[]).filter(d=>String(d.fecha).slice(0,10)===i.fecha))}),t.appendChild(r)}),o.length>limiteBusquedaCalendarioV260){const i=document.createElement("button");i.type="button",i.className="boton-secundario",i.textContent="Ver m\xE1s resultados",i.onclick=()=>{limiteBusquedaCalendarioV260+=20,pintarBusquedaCalendarioV260()},t.appendChild(i)}}function instalarAccesosV260(){var o,n,i,r;const e=document.getElementById("graficoInicio"),t=c=>{const l=c.target.closest("[data-actividad-inicio]");l&&(c.type==="keydown"&&!["Enter"," "].includes(c.key)||(c.preventDefault(),abrirActividadInicioV260(l.dataset.actividadInicio)))};e==null||e.addEventListener("click",t),e==null||e.addEventListener("keydown",t),(o=document.getElementById("historialHoyV260"))==null||o.addEventListener("click",volverHistorialRecienteV260),(n=document.getElementById("quitarContextoHistorialV260"))==null||n.addEventListener("click",()=>{mesFiltroHistorialV260="",seleccionarFiltroHistorial("todos"),pintarContextoHistorialV260()});const a=document.createElement("button");a.type="button",a.id="sugerenciaCompaneroV260",a.className="sugerencia-plan-v260",a.hidden=!0,a.addEventListener("click",()=>{actualizarSugerenciaPlanV260(),a.dataset.nombre&&(document.getElementById("companeroRegistro").value=a.dataset.nombre,actualizarRegistrarV203(),guardarBorradorV260())}),(i=document.getElementById("companeroRegistro"))==null||i.insertAdjacentElement("afterend",a),actualizarSugerenciaPlanV260(),(r=document.getElementById("buscarCalendarioV260"))==null||r.addEventListener("input",()=>{limiteBusquedaCalendarioV260=20,pintarBusquedaCalendarioV260()})}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",instalarAccesosV260,{once:!0}):instalarAccesosV260();var actividadGuardadaPendienteV260=null;function reducirMovimientoV260(){return window.matchMedia("(prefers-reduced-motion:reduce)").matches}function animarOrigenActividadV260(e){const t={ministerio:"#3478f6",ldc:"#ed8abb",asambleas:"#f5a623",otras:"#9a80e8"},a=document.getElementById("vista-historial");a&&(a.style.setProperty("--actividad-origen",t[e]||"#3478f6"),a.classList.remove("entrada-actividad-v260"),a.offsetWidth,a.classList.add("entrada-actividad-v260"),setTimeout(()=>a.classList.remove("entrada-actividad-v260"),650))}function recordarActividadGuardadaV260(e){var t;!e||!e.id||!String(e.fecha).startsWith(claveMesV143(new Date)+"-")||(actividadGuardadaPendienteV260||(actividadGuardadaPendienteV260={tipos:new Set,desde:((t=document.getElementById("animalProgreso"))==null?void 0:t.style.left)||""}),actividadGuardadaPendienteV260.tipos.add(e.tipo),estado.vistaActual==="inicio"&&requestAnimationFrame(animarActividadGuardadaV260))}function animarActividadGuardadaV260(){const e=actividadGuardadaPendienteV260;if(!e||estado.vistaActual!=="inicio"||(actividadGuardadaPendienteV260=null,reducirMovimientoV260()))return;const t=document.getElementById("graficoInicio");if(!t)return;let a=0;t.querySelectorAll("[data-actividad-inicio]").forEach(n=>{e.tipos.has(n.dataset.actividadInicio)&&typeof n.animate=="function"&&(n.animate([{scale:".88",filter:"brightness(1.06)"},{scale:"1.035",filter:"brightness(1.02)"},{scale:"1",filter:"brightness(1)"}],{duration:650,easing:"cubic-bezier(.2,.75,.25,1)"}),a++)}),!a&&typeof t.animate=="function"&&t.animate([{opacity:.65},{opacity:1}],{duration:500,easing:"ease-out"});const o=document.getElementById("animalProgreso");o&&e.desde&&o.style.left!==e.desde&&typeof o.animate=="function"&&o.animate([{left:e.desde},{left:o.style.left}],{duration:750,easing:"cubic-bezier(.2,.75,.25,1)"})}window.addEventListener("miServicio:registroGuardadoV188",e=>{var t;return recordarActividadGuardadaV260((t=e.detail)==null?void 0:t.registro)});function firmaEdicionV260(e){return e?JSON.stringify(Object.fromEntries(Object.entries(e).filter(([t])=>t!=="sincronizacion").sort(([t],[a])=>t.localeCompare(a)))):""}function deshacerEdicionV260(e,t,a){var r;if(Date.now()>a)return avisoV202("El plazo para deshacer ha terminado"),!1;const o=estado.registros.findIndex(c=>c.id===t.id);if(o<0||firmaEdicionV260(estado.registros[o])!==firmaEdicionV260(t))return avisoV202("El registro ha cambiado. Se conservan los cambios m\xE1s recientes."),!1;const n=estado.registros[o],i=window.scrollY;return estado.registros[o]={...e,modificadoEn:new Date().toISOString(),sincronizacion:{estado:"pendiente",ultimaSincronizacion:((r=n.sincronizacion)==null?void 0:r.ultimaSincronizacion)||null}},guardarRegistros()?(actualizarTodaLaInterfaz(),requestAnimationFrame(()=>{window.scrollTo({top:i,behavior:"instant"}),avisoV202("\u2713 Edici\xF3n deshecha")}),!0):(estado.registros[o]=n,avisoV202("No se pudo deshacer. Int\xE9ntalo de nuevo."),!1)}function ofrecerDeshacerEdicionV260(e,t){const a=JSON.parse(JSON.stringify(e)),o=JSON.parse(JSON.stringify(t)),n=Date.now()+1e4;avisoV202("\u2713 Cambios guardados",()=>deshacerEdicionV260(a,o,n))}var secuenciaArcosV260=0;function textoArcosV260(e){return String(e).replace(/[&<>"']/g,t=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[t])}function puntoArcoV260(e,t){const a=t*Math.PI/180;return{x:112+e*Math.cos(a),y:155+e*Math.sin(a)}}function rutaArcoV260(e,t,a){const o=puntoArcoV260(e,t),n=puntoArcoV260(e,t+a);return`M${o.x.toFixed(3)},${o.y.toFixed(3)} A${e},${e} 0 ${a>180?1:0} 1 ${n.x.toFixed(3)},${n.y.toFixed(3)}`}function crearGraficoArcosV260(e){const t={ministerio:"#3478f6",ldc:"#ed8abb",asambleas:"#f5a623",otras:"#9a80e8"},a=e.reduce((l,s)=>l+s.minutos,0);if(!a)return'<div class="grafico-personal-v260 grafico-vacio-v260"><div class="grafico-total-v260"><strong>0 min</strong><span>este mes</span></div><p>Tu actividad aparecer\xE1 aqu\xED</p></div>';const o="arcos-v260-"+ ++secuenciaArcosV260;let n=`<radialGradient id="${o}-perla" cx=".25" cy=".15" r=".9"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#edf4fc"/><stop offset="1" stop-color="#cbdff2"/></radialGradient>`,i="",r="";e.forEach((l,s)=>{const d=t[l.tipo],u=64+s*13,m=e.length===1?.5:s/(e.length-1),g=-65+m*130,p=46+m*224,v=l.minutos/a,b=v*260,f=rutaArcoV260(u,g,b),h=puntoArcoV260(u,g),E=o+"-"+s,M="rgb("+[1,3,5].map(L=>parseInt(d.slice(L,L+2),16)).map(L=>Math.round(L+(255-L)*.38)).join(",")+")";n+=`<linearGradient id="${E}" x1="0" y1="0" x2=".3" y2="1"><stop offset="0" stop-color="${M}"/><stop offset=".45" stop-color="${d}"/><stop offset="1" stop-color="${d}"/></linearGradient>`,n+=gradienteTuboV260(E+"-material",d,u,10,112,155),i+=`<path class="arco-pista-v260" d="${rutaArcoV260(u,g,260)}"/><path class="arco-canto-v260" d="${f}" stroke="${d}" transform="translate(0 4)"/><path class="arco-superficie-v260" style="--tubo-material:url(#${E}-material)" d="${f}" stroke="url(#${E})"/><path class="arco-reflejo-v260" d="${f}" transform="translate(0 -2)"/>`;const x=textoArcosV260(l.nombre),C=textoArcosV260(formatearTiempo(l.minutos));r+=`<path class="arco-conector-v260" stroke="${d}" d="M${h.x.toFixed(3)},${h.y.toFixed(3)} L235,${p} H251"/><g role="button" tabindex="0" data-actividad-inicio="${l.tipo}" aria-label="Ver registros de ${x}: ${C}" class="arco-llamada-v260"><rect class="arco-panel-v260" x="241" y="${p-27}" width="135" height="58" rx="12"/><ellipse cx="252" cy="${p}" rx="8" ry="8" fill="${d}"/><text class="arco-nombre-v260" x="267" y="${p-10}">${x}</text><text class="arco-horas-v260" x="267" y="${p+9}" fill="${d}">${C}</text><text class="arco-porcentaje-v260" x="267" y="${p+25}">${Math.round(v*100)}%</text></g>`});const c=textoArcosV260(formatearTiempo(a));return`<div class="grafico-arcos-v260"><svg class="arcos-svg-v260" viewBox="0 0 380 320" role="group" aria-label="Actividad mensual: ${c}"><defs>${n}</defs><g aria-hidden="true">${i}<ellipse class="arcos-total-sombra-v260" cx="112" cy="160" rx="47" ry="47"/><ellipse class="arcos-total-v260" style="--total-perla:url(#${o}-perla)" cx="112" cy="155" rx="47" ry="47"/><text class="arcos-total-etiqueta-v260" x="112" y="137">TOTAL</text><text class="arcos-total-horas-v260" x="112" y="159" style="font-size:${c.length>7?16:22}px">${c}</text><text class="arcos-total-etiqueta-v260" x="112" y="179">este mes</text></g>${r}</svg></div>`}var secuenciaQuesitosV260=0;function puntoQuesitoV260(e,t,a,o){const n=t*Math.PI/180;return{x:a+Math.cos(n)*e,y:o+Math.sin(n)*e*.9}}function sectorQuesitoV260(e,t,a,o,n){const i=puntoQuesitoV260(e,t,o,n),r=puntoQuesitoV260(e,a,o,n);return`M${o.toFixed(3)},${n.toFixed(3)} L${i.x.toFixed(3)},${i.y.toFixed(3)} A${e},${(e*.9).toFixed(3)} 0 ${a-t>180?1:0} 1 ${r.x.toFixed(3)},${r.y.toFixed(3)} Z`}function crearGraficoQuesitosV260(e){const t=e.reduce((f,h)=>f+h.minutos,0);if(!t)return'<div class="grafico-personal-v260 grafico-vacio-v260"><div class="grafico-total-v260"><strong>0 min</strong><span>este mes</span></div><p>Tu actividad aparecer\xE1 aqu\xED</p></div>';const a={ministerio:"#3478f6",ldc:"#ed8abb",asambleas:"#f5a623",otras:"#9a80e8"},o="quesitos-v260-"+ ++secuenciaQuesitosV260,n=e.map(f=>f.minutos),i=Math.min(...n),r=Math.max(...n);let c="",l="";const s=252/e.length;e.forEach((f,h)=>{const E=110+h*s,I=E+s-3,M=(E+I)/2,x=M*Math.PI/180,C=Math.round(108+(r===i?.5:(f.minutos-i)/(r-i))*40),L=180+Math.cos(x)*4,S=165+Math.sin(x)*4,y=sectorQuesitoV260(C,E,I,L,S),A=a[f.tipo],$=o+"-"+h,T=[1,3,5].map(w=>parseInt(A.slice(w,w+2),16)),q="rgb("+T.map(w=>Math.round(w+(255-w)*.3)).join(",")+")",N="rgb("+T.map(w=>Math.round(w*.62)).join(",")+")";c+=`<linearGradient id="${$}" x1="0" y1="0" x2=".7" y2="1"><stop offset="0" stop-color="${q}"/><stop offset="1" stop-color="${A}"/></linearGradient>`,c+=gradienteCaraV260($+"-material",A);const D=puntoQuesitoV260(C*.67,M,L,S);l+=`<g class="quesito-actividad-v260" role="button" tabindex="0" data-actividad-inicio="${f.tipo}" aria-label="Ver registros de ${textoArcosV260(f.nombre)}: ${textoArcosV260(formatearTiempo(f.minutos))}"><path class="quesito-canto-v260" d="${y}" fill="${N}" transform="translate(0 11)"/><path class="volumen-pared-v260" d="${paredQuesitoV260(C,E,I,L,S,20)}" fill="${N}"/><path class="quesito-cara-v260" style="--cara-material:url(#${$}-material)" d="${y}" fill="url(#${$})"/><path class="acabado-quesito-v260" d="${y}" fill="none" stroke="#fff" stroke-opacity=".48" stroke-width="2"/><g class="quesito-texto-v260" fill="${f.tipo==="ministerio"?"#fff":"#172638"}"><text x="${D.x.toFixed(3)}" y="${(D.y-7).toFixed(3)}" class="quesito-nombre-v260">${textoArcosV260(f.nombre)}</text><text x="${D.x.toFixed(3)}" y="${(D.y+14).toFixed(3)}" class="quesito-horas-v260">${textoArcosV260(formatearTiempoCortoCalendario(f.minutos))}</text></g></g>`});const d=64,u=d*Math.PI/180,m=180+Math.cos(u)*9,g=165+Math.sin(u)*9,p=sectorQuesitoV260(155,20,108,m,g),v=puntoQuesitoV260(102,d,m,g),b=textoArcosV260(formatearTiempo(t));return c+=`<linearGradient id="${o}-total" x1="0" y1="0" x2=".8" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#d3e7fa"/></linearGradient>`,`<div class="grafico-quesitos-v260"><svg class="quesitos-svg-v260" viewBox="0 0 360 345" role="group" aria-label="Actividad mensual: ${b}"><defs>${c}</defs>${l}<g class="quesito-total-v260" aria-label="Total del mes: ${b}"><path class="quesito-total-canto-v260" d="${p}" fill="#8faecb" transform="translate(0 12)"/><path class="volumen-pared-v260" d="${paredQuesitoV260(155,20,108,m,g,22)}" fill="#82a5c9"/><path class="quesito-cara-v260" d="${p}" fill="url(#${o}-total)"/><g class="quesito-texto-v260" fill="#172638"><text x="${v.x.toFixed(3)}" y="${(v.y-12).toFixed(3)}" class="quesito-nombre-v260">Total mes</text><text x="${v.x.toFixed(3)}" y="${(v.y+12).toFixed(3)}" class="quesito-total-horas-v260" style="font-size:${b.length>7?18:23}px">${b}</text></g></g></svg></div>`}const AMBIENTES_VISUALES_V260={esencial:{nombre:"Esencial",detalle:"Fondos limpios, sombras suaves y movimiento m\xEDnimo."},cristal:{nombre:"Cristal",detalle:"Tarjetas transl\xFAcidas, reflejos suaves y profundidad."},cielo:{nombre:"Cielo vivo",detalle:"M\xE1s ambiente en el fondo y protagonismo del tiempo."},escena:{nombre:"Escena 3D",detalle:"Cielo envolvente, base de cristal y luz que cambia con la hora."},autor:{nombre:"Escena de autor",detalle:"Luz coordinada, reflejos de tus actividades y composici\xF3n equilibrada."},metal:{nombre:"Metal y cristal",detalle:"Todas las pesta\xF1as con metal cepillado, tarjetas de cristal y controles con relieve."}};function leerAmbienteVisualV260(){try{const e=localStorage.getItem("miServicio.ambienteVisual");return Object.hasOwn(AMBIENTES_VISUALES_V260,e)?e:"cristal"}catch{return"cristal"}}function aplicarAmbienteVisualV260(e){Object.hasOwn(AMBIENTES_VISUALES_V260,e)||(e="cristal"),document.body.dataset.ambiente=e,actualizarEscena3DV260();const t=document.getElementById("ambientesVisualesV260");t==null||t.querySelectorAll("button").forEach(o=>o.setAttribute("aria-pressed",String(o.dataset.ambiente===e)));const a=document.getElementById("estadoAmbienteVisualV260");a&&(a.textContent=AMBIENTES_VISUALES_V260[e].detalle+" Se guarda en este dispositivo.")}function guardarAmbienteVisualV260(e){if(!Object.hasOwn(AMBIENTES_VISUALES_V260,e))return!1;try{localStorage.setItem("miServicio.ambienteVisual",e)}catch{const a=document.getElementById("estadoAmbienteVisualV260");return a&&(a.textContent="No se pudo guardar. Int\xE9ntalo de nuevo."),!1}return aplicarAmbienteVisualV260(e),!0}function instalarAmbientesVisualesV260(){const e=document.getElementById("ambientesVisualesV260");e&&(Object.entries(AMBIENTES_VISUALES_V260).forEach(([t,a])=>{const o=document.createElement("button");o.type="button",o.dataset.ambiente=t,o.setAttribute("aria-label",a.nombre+". "+a.detalle),o.title=a.detalle;const n=document.createElement("span");n.className="ambiente-mini-v260 ambiente-mini-"+t+"-v260",n.setAttribute("aria-hidden","true"),n.innerHTML='<i class="ambiente-mini-sol-v260"></i><i class="ambiente-mini-globo-v260"></i><i class="ambiente-mini-globo-v260"></i><i class="ambiente-mini-tarjeta-v260"></i><i class="ambiente-mini-linea-v260"></i>';const i=document.createElement("span");i.textContent=a.nombre,o.append(n,i),o.addEventListener("click",()=>guardarAmbienteVisualV260(t)),e.appendChild(o)}),aplicarAmbienteVisualV260(leerAmbienteVisualV260()))}window.addEventListener("storage",e=>{e.key==="miServicio.ambienteVisual"&&aplicarAmbienteVisualV260(leerAmbienteVisualV260())}),document.readyState==="loading"?document.addEventListener("DOMContentLoaded",instalarAmbientesVisualesV260,{once:!0}):instalarAmbientesVisualesV260();const FIRMAS_COLOR_V260={oceano:{nombre:"Azul oc\xE9ano",base:"#2864d7",luz:"#80b3ff",rgb:"40,100,215"},salvia:{nombre:"Verde salvia",base:"#357451",luz:"#8dccaa",rgb:"53,116,81"},lavanda:{nombre:"Lavanda",base:"#7752b9",luz:"#c2a8f3",rgb:"119,82,185"},rosa:{nombre:"Rosa suave",base:"#b64c79",luz:"#efa7c7",rgb:"182,76,121"},ambar:{nombre:"\xC1mbar",base:"#9a651b",luz:"#f1c47d",rgb:"154,101,27"}};function leerFirmaColorV260(){try{const e=localStorage.getItem("miServicio.firmaColor");return Object.hasOwn(FIRMAS_COLOR_V260,e)?e:"oceano"}catch{return"oceano"}}function aplicarFirmaColorV260(e){var o;Object.hasOwn(FIRMAS_COLOR_V260,e)||(e="oceano");const t=FIRMAS_COLOR_V260[e];document.body.dataset.firma=e,document.body.style.setProperty("--firma-base",t.base),document.body.style.setProperty("--firma-luz",t.luz),document.body.style.setProperty("--firma-rgb",t.rgb),(o=document.getElementById("firmasColorV260"))==null||o.querySelectorAll("button").forEach(n=>n.setAttribute("aria-pressed",String(n.dataset.firma===e)));const a=document.getElementById("estadoFirmaColorV260");a&&(a.textContent=t.nombre+" seleccionado. Los colores de las actividades se conservan.")}function guardarFirmaColorV260(e){if(!Object.hasOwn(FIRMAS_COLOR_V260,e))return!1;try{localStorage.setItem("miServicio.firmaColor",e)}catch{const a=document.getElementById("estadoFirmaColorV260");return a&&(a.textContent="No se pudo guardar. Int\xE9ntalo de nuevo."),!1}return aplicarFirmaColorV260(e),!0}function instalarFirmaColorV260(){const e=document.getElementById("firmasColorV260");e&&(Object.entries(FIRMAS_COLOR_V260).forEach(([t,a])=>{const o=document.createElement("button");o.type="button",o.dataset.firma=t,o.style.setProperty("--muestra-color",a.base),o.setAttribute("aria-label","Elegir "+a.nombre);const n=document.createElement("i");n.setAttribute("aria-hidden","true");const i=document.createElement("span");i.textContent=a.nombre,o.append(n,i),o.addEventListener("click",()=>guardarFirmaColorV260(t)),e.appendChild(o)}),aplicarFirmaColorV260(leerFirmaColorV260()))}window.addEventListener("storage",e=>{e.key==="miServicio.firmaColor"&&aplicarFirmaColorV260(leerFirmaColorV260())}),document.readyState==="loading"?document.addEventListener("DOMContentLoaded",instalarFirmaColorV260,{once:!0}):instalarFirmaColorV260();function leerAcabadoV260(){try{return localStorage.getItem("miServicio.acabadoGrafico")==="cristal"?"cristal":"clasico"}catch{return"clasico"}}function aplicarAcabadoV260(e){var t;e=e==="cristal"?"cristal":"clasico",document.body.dataset.acabado=e,(t=document.getElementById("acabadosGraficoV260"))==null||t.querySelectorAll("button").forEach(a=>a.setAttribute("aria-pressed",String(a.dataset.acabado===e)))}function guardarAcabadoV260(e){if(!["clasico","cristal"].includes(e))return!1;const t=document.getElementById("estadoAcabadoV260");try{localStorage.setItem("miServicio.acabadoGrafico",e)}catch{return t&&(t.textContent="No se pudo guardar. Int\xE9ntalo de nuevo."),!1}return aplicarAcabadoV260(e),t&&(t.textContent=e==="cristal"?"Cristal: volumen redondeado, cantos profundos y luz realista.":"Cl\xE1sico: el aspecto habitual de tus gr\xE1ficos."),!0}function instalarAcabadoV260(){const e=document.getElementById("acabadosGraficoV260");e&&(e.replaceChildren(),["clasico","cristal"].forEach(t=>{const a=document.createElement("button");a.type="button",a.dataset.acabado=t,a.innerHTML='<span class="acabado-muestra-v260" aria-hidden="true"><i></i><i></i><i></i></span><strong>'+(t==="cristal"?"Cristal":"Cl\xE1sico")+"</strong><small>"+(t==="cristal"?"Volumen y reflejos":"Aspecto habitual")+"</small>",a.addEventListener("click",()=>guardarAcabadoV260(t)),e.appendChild(a)}),aplicarAcabadoV260(leerAcabadoV260()))}window.addEventListener("storage",e=>{(e.key==="miServicio.acabadoGrafico"||e.key===null)&&aplicarAcabadoV260(leerAcabadoV260())}),document.readyState==="loading"?document.addEventListener("DOMContentLoaded",instalarAcabadoV260,{once:!0}):instalarAcabadoV260();function momentoEscenaV260(e){return e>=6&&e<12?"manana":e>=12&&e<20?"tarde":"noche"}function actualizarEscena3DV260(){document.body.dataset.luzEscena=momentoEscenaV260(new Date().getHours());const e=document.querySelector("#vista-inicio .tarjeta-grafico-inicio");if(!e)return;let t=e.querySelector(".escena-3d-v260");t||(t=document.createElement("div"),t.className="escena-3d-v260",t.setAttribute("aria-hidden","true"),t.innerHTML='<i class="escena-luz-v260"></i><i class="escena-horizonte-v260"></i><i class="escena-sombra-v260"></i><i class="escena-base-v260"></i>',e.insertBefore(t,e.firstChild)),t.hidden=!["escena","autor","metal"].includes(document.body.dataset.ambiente),actualizarReflejosAutorV260(),requestAnimationFrame(componerAutorV260)}function realzarPiezaEscenaV260(e){var n,i;if(!["escena","autor","metal"].includes(document.body.dataset.ambiente)||window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;const t=(i=(n=e.target).closest)==null?void 0:i.call(n,"#graficoInicio [data-actividad-inicio]");if(!t||typeof t.animate!="function")return;const o=document.body.dataset.ambiente==="autor"?[{filter:"brightness(1)",translate:"0 0"},{filter:"brightness(1.12)",translate:"0 -3px"},{filter:"brightness(1)",translate:"0 0"}]:[{filter:"brightness(1)"},{filter:"brightness(1.18)"},{filter:"brightness(1)"}];t.animate(o,{duration:220,easing:"ease-out"})}function instalarEscena3DV260(){var e,t;actualizarEscena3DV260(),(e=document.getElementById("graficoInicio"))==null||e.addEventListener("pointerdown",realzarPiezaEscenaV260),(t=document.getElementById("graficoInicio"))==null||t.addEventListener("keydown",a=>{(a.key==="Enter"||a.key===" ")&&realzarPiezaEscenaV260(a)})}document.addEventListener("visibilitychange",()=>{document.visibilityState==="visible"&&actualizarEscena3DV260()}),setInterval(()=>{document.visibilityState==="visible"&&["escena","autor","metal"].includes(document.body.dataset.ambiente)&&actualizarEscena3DV260()},6e4),document.readyState==="loading"?document.addEventListener("DOMContentLoaded",instalarEscena3DV260,{once:!0}):instalarEscena3DV260();function planoAutorV260(e,t,a){if(!e||!t||!a.length)return null;const o=a.length,n=Math.min(e,t),i=6,r=8,c=Math.min(40,n*.11),l=Math.max(...a),s=Math.min(...a),d=o===1?Math.min(72,n*.22):o===2?Math.min(66,n*.19):(n/2-c-r*2-i)/2,u=a.map(b=>d*(l===s?.9:.76+.24*(b-s)/(l-s))),m=e/2,g=o===1?t*.7:t/2,p=c+Math.max(...u)+r,v=o===1?[-90]:o===2?[-135,45]:Array.from({length:o},(b,f)=>-90+f*360/o);return{centro:{x:m,y:g,r:c},piezas:u.map((b,f)=>({x:m+Math.cos(v[f]*Math.PI/180)*p,y:g+Math.sin(v[f]*Math.PI/180)*p,r:b}))}}function actualizarReflejosAutorV260(){const e=document.querySelector("#vista-inicio .tarjeta-grafico-inicio");if(!e)return;const t=datosGraficoPersonalV260||{},a=["ministerio","ldc","asambleas","otras"],o=a.map(i=>actividadVisible(i)?Math.max(0,Number(t[i])||0):0),n=o.reduce((i,r)=>i+r,0);a.forEach((i,r)=>e.style.setProperty("--reflejo-"+i,n?String((.1+.27*o[r]/n)*(o[r]>0?1:0)):"0"))}function componerAutorV260(){if(document.body.classList.contains("inicio-encajado-v260")){componerInicioEncajadoV260();return}const e=document.getElementById("graficoInicio");if(!e)return;if(e.querySelectorAll("linearGradient").forEach(s=>{if(document.body.dataset.ambiente==="autor")s.hasAttribute("data-luz-autor")||s.setAttribute("data-luz-autor",JSON.stringify([s.getAttribute("x1"),s.getAttribute("x2")])),s.setAttribute("x1","1"),s.setAttribute("x2","0");else if(s.hasAttribute("data-luz-autor")){const d=JSON.parse(s.getAttribute("data-luz-autor"));["x1","x2"].forEach((u,m)=>{d[m]===null?s.removeAttribute(u):s.setAttribute(u,d[m])}),s.removeAttribute("data-luz-autor")}}),document.body.dataset.ambiente!=="autor"){e.querySelectorAll("[data-composicion-autor]").forEach(s=>{["left","top","width","height","min-height","max-width","--autor-horas"].forEach(d=>s.style.removeProperty(d)),delete s.dataset.composicionAutor});return}const t=e.dataset.estilo==="corazones",a=e.querySelector(t?".corazones-orbita-v260":".orbita-grafico");if(!a)return;const o=a.querySelector(t?".corazones-total-centro-v260":".orbita-centro"),n=[...a.querySelectorAll(t?".corazon-posicion-v260":".orbita-actividad")];if(!o||!n.length)return;const i=a.getBoundingClientRect(),r=n.map(s=>{var u;const d=(u=t?s.querySelector("[data-actividad-inicio]"):s)==null?void 0:u.dataset.actividadInicio;return Math.max(0,Number(datosGraficoPersonalV260==null?void 0:datosGraficoPersonalV260[d])||0)}),c=planoAutorV260(i.width,i.height,r);if(!c)return;const l=(s,d)=>{s.dataset.composicionAutor="si",s.style.setProperty("left",d.x+"px","important"),s.style.setProperty("top",d.y+"px","important"),s.style.setProperty("width",d.r*2+"px","important"),s.style.setProperty("max-width","none","important")};n.forEach((s,d)=>{var u;if(l(s,c.piezas[d]),!t){s.style.setProperty("height",c.piezas[d].r*2+"px","important");const m=((u=s.querySelector(":scope > span:not(.sector-icono)"))==null?void 0:u.textContent)||"";s.style.setProperty("--autor-horas",Math.max(11,Math.min(20,c.piezas[d].r*1.7/(Math.max(1,m.length)*.56)))+"px")}}),l(o,c.centro),o.style.setProperty("height",c.centro.r*2+"px","important"),o.style.setProperty("min-height","0","important")}window.addEventListener("resize",()=>{document.body.dataset.ambiente==="autor"&&requestAnimationFrame(componerAutorV260)});var secuenciaVolumenV260;function idVolumenV260(e){return secuenciaVolumenV260=(Number(secuenciaVolumenV260)||0)+1,"material-v260-"+e+"-"+secuenciaVolumenV260}function tonoVolumenV260(e,t){return"rgb("+[1,3,5].map(o=>parseInt(e.slice(o,o+2),16)).map(o=>Math.round(t>=0?o+(255-o)*t:o*(1+t))).join(",")+")"}function gradienteTuboV260(e,t,a,o,n,i){const r=a+o/2,c=(a-o/2)/r,l=s=>((c+(1-c)*s)*100).toFixed(3)+"%";return`<radialGradient id="${e}" gradientUnits="userSpaceOnUse" cx="${n}" cy="${i}" r="${r}"><stop offset="${l(0)}" stop-color="${tonoVolumenV260(t,-.4)}"/><stop offset="${l(.22)}" stop-color="${tonoVolumenV260(t,.42)}"/><stop offset="${l(.53)}" stop-color="${t}"/><stop offset="${l(1)}" stop-color="${tonoVolumenV260(t,-.32)}"/></radialGradient>`}function gradienteCaraV260(e,t){return`<radialGradient id="${e}" cx="28%" cy="18%" r="96%"><stop offset="0" stop-color="${tonoVolumenV260(t,.47)}"/><stop offset=".42" stop-color="${tonoVolumenV260(t,.12)}"/><stop offset=".76" stop-color="${t}"/><stop offset="1" stop-color="${tonoVolumenV260(t,-.2)}"/></radialGradient>`}function paredQuesitoV260(e,t,a,o,n,i){const r=puntoQuesitoV260(e,t,o,n),c=puntoQuesitoV260(e,a,o,n),l=i,s=u=>Number(u).toFixed(3);let d=`M${s(o)},${s(n)} L${s(r.x)},${s(r.y)} L${s(r.x)},${s(r.y+l)} L${s(o)},${s(n+l)} Z M${s(o)},${s(n)} L${s(c.x)},${s(c.y)} L${s(c.x)},${s(c.y+l)} L${s(o)},${s(n+l)} Z`;for(let u=Math.floor(t/360);u<=Math.floor(a/360);u++){const m=Math.max(t,360*u),g=Math.min(a,360*u+180);if(g<=m)continue;const p=puntoQuesitoV260(e,m,o,n),v=puntoQuesitoV260(e,g,o,n);d+=` M${s(p.x)},${s(p.y)} A${e},${s(e*.9)} 0 0 1 ${s(v.x)},${s(v.y)} L${s(v.x)},${s(v.y+l)} A${e},${s(e*.9)} 0 0 0 ${s(p.x)},${s(p.y+l)} Z`}return d}var rafEncajeV260=0,bloqueoEncajeV260="";function planoEncajeV260(e,t,a){if(e<=0||t<175||!a.length)return null;const o=a.length,n=Math.min(e,t),i=Math.max(22,Math.min(36,n*.11)),r=6,c=o===1?Math.min(66,n*.21):o===2?Math.min(58,n*.19):(n/2-i-r*2-4)/2,l=Math.max(...a),s=Math.min(...a),d=Math.min(c,Math.max(22,c*.82)),u=a.map(y=>s===l?(d+c)/2:d+(c-d)*(y-s)/(l-s)),m=e/2,g=o===1?t*.69:t/2,p=i+Math.max(...u)+r,v=o===1?[-90]:o===2?[-135,45]:Array.from({length:o},(y,A)=>-90+A*360/o),b=u.map((y,A)=>({x:m+Math.cos(v[A]*Math.PI/180)*p,y:g+Math.sin(v[A]*Math.PI/180)*p,r:y})),f=[{x:m,y:g,r:i},...b],h=Math.min(...f.map(y=>y.x-y.r)),E=Math.max(...f.map(y=>y.x+y.r)),I=Math.min(...f.map(y=>y.y-y.r)),M=Math.max(...f.map(y=>y.y+y.r)),x=Math.min(1.42,(e-12)/(E-h),(t-12)/(M-I)),C=(h+E)/2,L=(I+M)/2,S=y=>({x:e/2+(y.x-C)*x,y:t/2+(y.y-L)*x,r:y.r*x});return{centro:S(f[0]),piezas:b.map(S)}}function limpiarEncajeV260(){document.querySelectorAll("#graficoInicio [data-encaje-inicio]").forEach(e=>{["left","top","width","height","max-width","min-height","--encaje-horas"].forEach(t=>e.style.removeProperty(t)),delete e.dataset.encajeInicio,delete e.dataset.piezaMini})}function componerInicioEncajadoV260(){if(!document.body.classList.contains("inicio-encajado-v260"))return;const e=document.getElementById("graficoInicio");if(!e)return;const t=e.dataset.estilo==="corazones",a=e.querySelector(t?".corazones-orbita-v260":".orbita-grafico"),o=a==null?void 0:a.querySelector(t?".corazones-total-centro-v260":".orbita-centro");if(!a||!o)return;const n=[...a.querySelectorAll(t?".corazon-posicion-v260":".orbita-actividad")],i=a.getBoundingClientRect(),r=(s,d)=>{s.dataset.encajeInicio="si";for(const[u,m]of Object.entries({left:d.x+"px",top:d.y+"px",width:d.r*2+"px","max-width":"none"}))s.style.setProperty(u,m,"important")};if(!n.length){r(o,{x:i.width/2,y:i.height/2,r:Math.min(50,i.height*.3)}),o.style.setProperty("height",Math.min(100,i.height*.6)+"px","important");return}const c=n.map(s=>{var u;const d=(u=t?s.querySelector("[data-actividad-inicio]"):s)==null?void 0:u.dataset.actividadInicio;return Math.max(0,Number(datosGraficoPersonalV260==null?void 0:datosGraficoPersonalV260[d])||0)}),l=planoEncajeV260(i.width,i.height,c);l&&(n.forEach((s,d)=>{var m;const u=l.piezas[d];if(r(s,u),s.toggleAttribute("data-pieza-mini",u.r*2<64),!t){s.style.setProperty("height",u.r*2+"px","important");const g=((m=s.querySelector(":scope > span:not(.sector-icono)"))==null?void 0:m.textContent)||"";s.style.setProperty("--encaje-horas",Math.max(12,Math.min(20,u.r*1.75/(Math.max(1,g.length)*.55)))+"px")}}),r(o,l.centro),o.style.setProperty("height",l.centro.r*2+"px","important"),o.style.setProperty("min-height","0","important"))}function ajustarInicioPantallaV260(){var f,h,E,I,M;rafEncajeV260=0;const e=document.body,t=document.getElementById("vista-inicio"),a=document.getElementById("panelCalendarioInicio"),o=document.getElementById("climaDetalleV260"),n=((f=window.visualViewport)==null?void 0:f.height)||window.innerHeight,i=((h=window.visualViewport)==null?void 0:h.width)||window.innerWidth,r=Math.round(i)+"x"+Math.round(n),c=(E=document.activeElement)==null?void 0:E.matches('input,textarea,select,[contenteditable="true"]'),l=a&&!a.classList.contains("oculto"),s=(t==null?void 0:t.classList.contains("activa"))&&i<=600&&n>=600&&!l&&!(o!=null&&o.open)&&!((I=document.getElementById("cierreMesInicioV260"))!=null&&I.open)&&!c,d=e.classList.contains("inicio-encajado-v260");if(!s||bloqueoEncajeV260===r){e.classList.remove("inicio-encajado-v260"),limpiarEncajeV260(),d&&requestAnimationFrame(resolverColisionesOrbitasV120);return}(M=document.documentElement)==null||M.style.setProperty("--inicio-alto",n+"px"),e.style.setProperty("--inicio-alto",n+"px"),e.classList.add("inicio-encajado-v260");const u=document.querySelector(".barra-navegacion"),m=document.querySelector(".inicio-pie-v260"),g=u==null?void 0:u.getBoundingClientRect(),p=(g==null?void 0:g.height)||60,v=Number.isFinite(g==null?void 0:g.top)&&g.top>0?Math.min(n,g.top):n-p;e.style.setProperty("--inicio-zona-alto",Math.max(0,v)+"px"),e.style.setProperty("--inicio-nav-alto",p+"px"),e.style.setProperty("--inicio-pie-alto",((m==null?void 0:m.getBoundingClientRect().height)||44)+"px");const b=document.getElementById("graficoInicio");if(((b==null?void 0:b.getBoundingClientRect().height)||0)<175||((m==null?void 0:m.getBoundingClientRect().bottom)||0)>v-2){bloqueoEncajeV260=r,e.classList.remove("inicio-encajado-v260"),limpiarEncajeV260(),requestAnimationFrame(resolverColisionesOrbitasV120);return}componerInicioEncajadoV260()}function programarEncajeV260(e=!1){e&&(bloqueoEncajeV260=""),rafEncajeV260||(rafEncajeV260=requestAnimationFrame(ajustarInicioPantallaV260))}function instalarEncajeInicioV260(){var t,a;const e=document.getElementById("vista-inicio");if(e){if(new MutationObserver(()=>programarEncajeV260(!0)).observe(e,{attributes:!0,attributeFilter:["class","hidden","open"],childList:!0,subtree:!0}),(t=document.getElementById("climaDetalleV260"))==null||t.addEventListener("toggle",()=>programarEncajeV260(!0)),typeof ResizeObserver!="undefined"){const o=new ResizeObserver(()=>programarEncajeV260());document.querySelectorAll(".cabecera,.barra-navegacion,.inicio-pie-v260,#seccionObjetivoInicioV260").forEach(n=>o.observe(n))}window.addEventListener("resize",()=>programarEncajeV260(!0)),(a=window.visualViewport)==null||a.addEventListener("resize",()=>programarEncajeV260(!0)),document.addEventListener("focusin",()=>programarEncajeV260(!0)),document.addEventListener("focusout",()=>programarEncajeV260(!0)),document.addEventListener("visibilitychange",()=>{document.hidden||programarEncajeV260(!0)}),programarEncajeV260(!0)}}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",instalarEncajeInicioV260,{once:!0}):instalarEncajeInicioV260();const METALES_V260={plata:"Plata satinada",titanio:"Titanio",champan:"Champ\xE1n"};function leerMetalV260(){try{const e=localStorage.getItem("miServicio.acabadoMetal");return Object.hasOwn(METALES_V260,e)?e:"plata"}catch{return"plata"}}function aplicarMetalV260(e){var a;Object.hasOwn(METALES_V260,e)||(e="plata"),document.body.dataset.metal=e,(a=document.getElementById("acabadosMetalV260"))==null||a.querySelectorAll("button").forEach(o=>o.setAttribute("aria-pressed",String(o.dataset.metal===e)));const t=document.getElementById("estadoMetalV260");t&&(t.textContent=METALES_V260[e]+" seleccionado. Se aplica al ambiente Metal y cristal; tu firma de color se conserva.")}function guardarMetalV260(e){if(!Object.hasOwn(METALES_V260,e))return!1;try{localStorage.setItem("miServicio.acabadoMetal",e)}catch{const a=document.getElementById("estadoMetalV260");return a&&(a.textContent="No se pudo guardar. Int\xE9ntalo de nuevo."),!1}return aplicarMetalV260(e),!0}function instalarMetalesV260(){const e=document.getElementById("acabadosMetalV260");if(!e)return;e.replaceChildren();const t={plata:"Luz suave",titanio:"Gris profundo",champan:"Calidez discreta"};Object.entries(METALES_V260).forEach(([a,o])=>{const n=document.createElement("button");n.type="button",n.dataset.metal=a,n.setAttribute("aria-label","Elegir "+o),n.innerHTML='<span class="metal-muestra-v260" aria-hidden="true"><i></i><i></i><i></i></span><strong>'+o+"</strong><small>"+t[a]+"</small>",n.addEventListener("click",()=>guardarMetalV260(a)),e.appendChild(n)}),aplicarMetalV260(leerMetalV260())}window.addEventListener("storage",e=>{(e.key==="miServicio.acabadoMetal"||e.key===null)&&aplicarMetalV260(leerMetalV260())}),document.readyState==="loading"?document.addEventListener("DOMContentLoaded",instalarMetalesV260,{once:!0}):instalarMetalesV260();const LUCES_V260={suave:"Suave",realzada:"Realzada"};function leerLuzV260(){try{const e=localStorage.getItem("miServicio.intensidadLuz");return Object.hasOwn(LUCES_V260,e)?e:"suave"}catch{return"suave"}}function aplicarLuzV260(e){var a;Object.hasOwn(LUCES_V260,e)||(e="suave"),document.body.dataset.luz=e,(a=document.getElementById("intensidadLuzV260"))==null||a.querySelectorAll("button").forEach(o=>o.setAttribute("aria-pressed",String(o.dataset.luz===e)));const t=document.getElementById("estadoLuzV260");t&&(t.textContent="Iluminaci\xF3n "+LUCES_V260[e].toLowerCase()+" seleccionada. Tus colores se conservan.")}function guardarLuzV260(e){if(!Object.hasOwn(LUCES_V260,e))return!1;try{localStorage.setItem("miServicio.intensidadLuz",e)}catch{const a=document.getElementById("estadoLuzV260");return a&&(a.textContent="No se pudo guardar. Int\xE9ntalo de nuevo."),!1}return aplicarLuzV260(e),!0}function instalarLuzV260(){const e=document.getElementById("intensidadLuzV260");e&&(e.replaceChildren(),Object.entries(LUCES_V260).forEach(([t,a])=>{const o=document.createElement("button");o.type="button",o.dataset.luz=t,o.setAttribute("aria-label","Elegir iluminaci\xF3n "+a.toLowerCase()),o.innerHTML='<span class="luz-muestra-v260" aria-hidden="true"></span><strong>'+a+"</strong><small>"+(t==="suave"?"Reflejo discreto":"M\xE1s relieve")+"</small>",o.addEventListener("click",()=>guardarLuzV260(t)),e.appendChild(o)}),aplicarLuzV260(leerLuzV260()))}window.addEventListener("storage",e=>{(e.key==="miServicio.intensidadLuz"||e.key===null)&&aplicarLuzV260(leerLuzV260())}),document.readyState==="loading"?document.addEventListener("DOMContentLoaded",instalarLuzV260,{once:!0}):instalarLuzV260();function normalizarNombreOtrasV260(e){return typeof e!="string"?"":[...e.normalize("NFC").replace(/[\u0000-\u001f\u007f-\u009f\u202a-\u202e\u2066-\u2069]/g," ").replace(/\s+/g," ").trim()].slice(0,24).join("").trim()}function aplicarNombreOtrasV260(){const e=nombreActividad("otras");document.querySelectorAll("[data-nombre-otras-v260]").forEach(t=>{t.textContent=e,t.title=e})}function pintarComputoMesV260(e,t){if(!e)return;const a=Math.max(0,Number(t.excedente)||0);e.hidden=a<=0,e.querySelector("[data-computo-valor]").textContent=formatearTiempo(t.computable),e.querySelector("[data-excedente-valor]").textContent=formatearTiempo(a),e.title=`${formatearTiempo(t.actividadTotal)} registradas: ${formatearTiempo(t.computable)} computan y ${formatearTiempo(a)} quedan como excedente.`}
+// =========================================================
+// RECORDATORIO MENSUAL DE COPIA DE SEGURIDAD
+// =========================================================
+
+function configurarRecordatorioCopiaSeguridad() {
+
+    const boton =
+        document.getElementById(
+            "hacerCopiaDesdeInicio"
+        );
+
+    if (boton) {
+
+        boton.addEventListener(
+            "click",
+            exportarCopiaSeguridad
+        );
+    }
+}
+
+
+function leerUltimaCopiaSeguridad() {
+
+    try {
+
+        const valor =
+            localStorage.getItem(
+                STORAGE_KEYS.ultimaCopiaSeguridad
+            );
+
+        if (!valor) {
+            return null;
+        }
+
+        const fecha = new Date(valor);
+
+        return Number.isNaN(fecha.getTime())
+            ? null
+            : fecha;
+
+    } catch (error) {
+
+        console.error(
+            "No se pudo leer la fecha de la última copia:",
+            error
+        );
+
+        return null;
+    }
+}
+
+
+function guardarUltimaCopiaSeguridad(fecha = new Date()) {
+
+    try {
+
+        localStorage.setItem(
+            STORAGE_KEYS.ultimaCopiaSeguridad,
+            fecha.toISOString()
+        );
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            "No se pudo guardar la fecha de la última copia:",
+            error
+        );
+
+        return false;
+    }
+}
+
+
+/* V110: sumarUnMesCalendario → planificacion.js */
+
+
+
+function formatearFechaCopia(fecha) {
+
+    return new Intl.DateTimeFormat(
+        "es-ES",
+        {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        }
+    ).format(fecha);
+}
+
+
+function actualizarRecordatorioCopiaSeguridad() {
+
+    const aviso =
+        document.getElementById(
+            "recordatorioCopiaInicio"
+        );
+
+    const textoAviso =
+        document.getElementById(
+            "textoRecordatorioCopia"
+        );
+
+    const ultimaCopiaAjustes =
+        document.getElementById(
+            "ultimaCopiaAjustes"
+        );
+
+    const ultimaCopia =
+        leerUltimaCopiaSeguridad();
+
+    if (ultimaCopiaAjustes) {
+
+        ultimaCopiaAjustes.textContent =
+            ultimaCopia
+                ? `Última copia: ${formatearFechaCopia(ultimaCopia)}`
+                : "Todavía no hay una copia registrada";
+    }
+
+    if (!aviso) {
+        return;
+    }
+
+    const hoy = new Date();
+
+    const tocaHacerCopia =
+        !ultimaCopia ||
+        hoy >= sumarUnMesCalendario(ultimaCopia);
+
+    aviso.classList.toggle(
+        "oculto",
+        !tocaHacerCopia
+    );
+
+    if (!tocaHacerCopia || !textoAviso) {
+        return;
+    }
+
+    if (!ultimaCopia) {
+
+        textoAviso.textContent =
+            "Haz una copia ahora. Después te lo recordaremos una vez al mes.";
+
+        return;
+    }
+
+    textoAviso.textContent =
+        `La última copia fue el ${formatearFechaCopia(ultimaCopia)}.`;
+}
+
+
+// =========================================================
+// BLOQUE 5
+// AJUSTES + COPIAS DE SEGURIDAD
+// =========================================================
+
+
+// =========================================================
+// CONFIGURAR AJUSTES
+// =========================================================
+
+function configurarAjustes() {
+
+    const botonGuardar =
+        document.getElementById(
+            "guardarAjustes"
+        );
+
+    if (botonGuardar) {
+
+        botonGuardar.addEventListener(
+            "click",
+            guardarAjustesDesdeFormulario
+        );
+    }
+
+
+    const tipo =
+        document.getElementById(
+            "tipoPublicador"
+        );
+
+    if (tipo) {
+
+        tipo.addEventListener(
+            "change",
+            aplicarObjetivoSugerido
+        );
+    }
+
+
+    // -----------------------------------------------------
+    // COPIAS DE SEGURIDAD
+    // -----------------------------------------------------
+
+    const botonExportar =
+        document.getElementById(
+            "exportarDatos"
+        );
+
+    const botonImportar =
+        document.getElementById(
+            "importarDatos"
+        );
+    
+    const archivoImportacion =
+        document.getElementById(
+            "archivoImportacion"
+        );
+
+
+    if (botonExportar) {
+
+        botonExportar.addEventListener(
+            "click",
+            exportarCopiaSeguridad
+        );
+    }
+
+
+    if (
+        botonImportar &&
+        archivoImportacion
+    ) {
+
+        botonImportar.addEventListener(
+            "click",
+            () => {
+
+                // Reiniciamos el input.
+                // Así permite volver a seleccionar
+                // el mismo archivo si fuera necesario.
+
+                archivoImportacion.value = "";
+
+                archivoImportacion.click();
+            }
+        );
+
+
+        archivoImportacion.addEventListener(
+            "change",
+            evento => {
+
+                const archivo =
+                    evento.target.files?.[0];
+
+                if (!archivo) {
+                    return;
+                }
+
+                importarCopiaSeguridad(
+                    archivo
+                );
+            }
+        );
+    }
+}
+
+
+// =========================================================
+// CARGAR AJUSTES EN EL FORMULARIO
+// =========================================================
+
+function cargarFormularioAjustes() {
+
+    const tipo =
+        document.getElementById(
+            "tipoPublicador"
+        );
+
+
+    const objetivo =
+        document.getElementById(
+            "objetivoMensual"
+        );
+
+
+    const personaje =
+        document.getElementById(
+            "personajeProgreso"
+        );
+
+
+    if (tipo) {
+
+        tipo.value =
+            estado.preferencias
+                .tipoPublicador ||
+            "publicador";
+    }
+
+
+    if (personaje) {
+
+        personaje.value =
+            estado.preferencias
+                .personajeProgreso ||
+            "hombre";
+    }
+
+
+    if (objetivo) {
+
+        const minutos =
+            Number(
+                estado.preferencias
+                    .objetivoMensualMinutos
+            ) || 0;
+
+
+        objetivo.value =
+            minutos > 0
+                ? String(
+                    minutos / 60
+                )
+                : "0";
+    }
+
+    const mostrarLDC = document.getElementById("mostrarLDC");
+    const mostrarAsambleas = document.getElementById("mostrarAsambleas");
+    const mostrarOtras = document.getElementById("mostrarOtras");
+
+    if (mostrarLDC) mostrarLDC.checked = estado.preferencias.mostrarLDC !== false;
+    if (mostrarAsambleas) mostrarAsambleas.checked = estado.preferencias.mostrarAsambleas !== false;
+    if (mostrarOtras) mostrarOtras.checked = estado.preferencias.mostrarOtras !== false;
+    const nombreOtras=document.getElementById("nombreOtrasV260");if(nombreOtras)nombreOtras.value=normalizarNombreOtrasV260(estado.preferencias.nombreOtras);
+}
+
+
+// =========================================================
+// OBJETIVO SUGERIDO
+// =========================================================
+
+function aplicarObjetivoSugerido() {
+
+    const tipo =
+        document.getElementById(
+            "tipoPublicador"
+        );
+
+
+    const objetivo =
+        document.getElementById(
+            "objetivoMensual"
+        );
+
+
+    if (
+        !tipo ||
+        !objetivo
+    ) {
+        return;
+    }
+
+
+    switch (
+        tipo.value
+    ) {
+
+        case "precursorRegular":
+
+            objetivo.value = "50";
+
+            break;
+
+
+        case "precursorAuxiliar":
+
+            objetivo.value = "15";
+
+            break;
+
+
+        case "publicador":
+
+        default:
+
+            // Para publicador no imponemos
+            // ningún objetivo.
+
+            if (
+                Number(
+                    objetivo.value
+                ) === 50 ||
+                Number(
+                    objetivo.value
+                ) === 15
+            ) {
+
+                objetivo.value = "0";
+            }
+
+            break;
+    }
+}
+
+
+// =========================================================
+// GUARDAR AJUSTES
+// =========================================================
+
+function guardarAjustesDesdeFormulario() {
+
+    const tipo =
+        document.getElementById(
+            "tipoPublicador"
+        );
+
+
+    const objetivo =
+        document.getElementById(
+            "objetivoMensual"
+        );
+
+
+    const personaje =
+        document.getElementById(
+            "personajeProgreso"
+        );
+
+
+    const mensaje =
+        document.getElementById(
+            "mensajeAjustes"
+        );
+
+
+    if (
+        !tipo ||
+        !objetivo ||
+        !personaje
+    ) {
+        return;
+    }
+
+
+    limpiarMensajeFormulario(
+        mensaje
+    );
+
+
+    const tiposValidos = [
+        "publicador",
+        "precursorAuxiliar",
+        "precursorRegular"
+    ];
+
+
+    if (
+        !tiposValidos.includes(
+            tipo.value
+        )
+    ) {
+
+        mostrarMensajeFormulario(
+            mensaje,
+            "Selecciona un tipo válido.",
+            true
+        );
+
+        return;
+    }
+
+
+    const personajesValidos = [
+        "hombre","mujer","koala","mariposa","pantera","tortuga","liebre","corazon","pajarito","gatito"
+    ];
+
+    if (!["hombre","mujer","koala","mariposa","pantera","tortuga","liebre","corazon","pajarito","gatito"].includes(personaje.value)) {
+
+        mostrarMensajeFormulario(
+            mensaje,
+            "Selecciona un personaje válido.",
+            true
+        );
+
+        return;
+    }
+
+
+    const horas =
+        Number(
+            objetivo.value
+        );
+
+
+    if (
+        !Number.isFinite(
+            horas
+        ) ||
+        horas < 0 ||
+        horas > 200
+    ) {
+
+        mostrarMensajeFormulario(
+            mensaje,
+            "Introduce un objetivo entre 0 y 200 horas.",
+            true
+        );
+
+        return;
+    }
+
+
+    const preferenciasAnteriores = {
+        ...estado.preferencias
+    };
+
+
+    const mostrarLDC = document.getElementById("mostrarLDC");
+    const mostrarAsambleas = document.getElementById("mostrarAsambleas");
+    const mostrarOtras = document.getElementById("mostrarOtras");
+
+    estado.preferencias = {
+
+        ...estado.preferencias,
+
+        tipoPublicador:
+            tipo.value,
+
+        personajeProgreso:
+            personaje.value,
+
+        objetivoMensualMinutos:
+            Math.round(
+                horas * 60
+            ),
+
+        mostrarLDC: mostrarLDC ? mostrarLDC.checked : true,
+        mostrarAsambleas: mostrarAsambleas ? mostrarAsambleas.checked : true,
+        mostrarOtras: mostrarOtras ? mostrarOtras.checked : true,
+        nombreOtras: normalizarNombreOtrasV260(document.getElementById("nombreOtrasV260")?.value ?? estado.preferencias.nombreOtras)
+    };
+
+
+    if (
+        !guardarPreferencias()
+    ) {
+
+        estado.preferencias =
+            preferenciasAnteriores;
+
+
+        mostrarMensajeFormulario(
+            mensaje,
+            "No se pudieron guardar los ajustes.",
+            true
+        );
+
+        return;
+    }
+
+
+    mostrarMensajeFormulario(
+        mensaje,
+        "Ajustes guardados ✓",
+        false
+    );
+
+
+    aplicarVisibilidadActividades();
+    actualizarTodaLaInterfaz();
+
+
+    // V118: aplicar inmediatamente las preferencias guardadas al resto de vistas.
+    if (typeof actualizarInicio === "function") actualizarInicio();
+}
+
+/* V263 · Eliminado el paquete de sincronización web→iOS (v3): ninguna pantalla lo usaba. */
+
+
+// =========================================================
+// CREAR COPIA DE SEGURIDAD
+// =========================================================
+
+/* V263 · Datos que antes quedaban fuera de la copia: eventos del calendario y ajustes visuales.
+   Se guardan en un campo OPCIONAL ("ajustesLocales"); las copias antiguas siguen siendo válidas
+   y las versiones antiguas de la app simplemente ignoran este campo.
+   Quedan fuera a propósito: borrador, estado de sincronización y la dirección del proxy del calendario. */
+const AJUSTES_CALENDARIO_V263 = [
+    "miServicio.eventosCalendarioV172",
+    "miServicio.calendarioAppleImportV173"
+];
+const AJUSTES_APARIENCIA_V263 = [
+    "miServicio.ambienteVisual",
+    "miServicio.firmaColor",
+    "miServicio.acabadoMetal",
+    "miServicio.acabadoGrafico",
+    "miServicio.intensidadLuz",
+    "miServicio.estiloGraficoInicio",
+    "miServicio.estiloCaminoInicio",
+    "miServicio.fondoClimaInicio",
+    "miServicio.inicioCompactoV191",
+    "miServicio.escenaRegistrar",
+    "miServicio.aparienciaEstacionalV201",
+    "miServicio.nombreSaludo",
+    "miServicio.frasePersonal",
+    "miServicio.salidaHabitual",
+    "miServicio.localidadTiempo",
+    "miServicio.estiloSuperficiesV264",
+    "miServicio.fondoOledV264",
+    "miServicio.globoLiquidoV267",
+    "miServicio.globoInclinaV267",
+    "miServicio.firmaPersonalV269",
+    "miServicio.tipografiaV269",
+    "miServicio.anillosInicioV269"
+];
+const AJUSTES_LOCALES_V263 = AJUSTES_CALENDARIO_V263.concat(AJUSTES_APARIENCIA_V263);
+const LIMITE_VALOR_AJUSTE_V263 = 2000000;
+
+function recogerAjustesLocalesV263() {
+    const salida = {};
+    AJUSTES_LOCALES_V263.forEach(clave => {
+        try {
+            const v = localStorage.getItem(clave);
+            if (typeof v === "string" && v !== "") salida[clave] = v;
+        } catch (e) {}
+    });
+    return salida;
+}
+
+function ajustesLocalesValidosV263(obj) {
+    if (!obj || typeof obj !== "object" || Array.isArray(obj)) return {};
+    const limpio = {};
+    Object.keys(obj).forEach(clave => {
+        if (!AJUSTES_LOCALES_V263.includes(clave)) return;
+        const v = obj[clave];
+        if (typeof v !== "string" || v.length > LIMITE_VALOR_AJUSTE_V263) return;
+        if (AJUSTES_CALENDARIO_V263.includes(clave)) {
+            try { JSON.parse(v); } catch (e) { return; }
+        }
+        limpio[clave] = v;
+    });
+    return limpio;
+}
+
+/* Aplica los ajustes; si algo falla, devuelve todo a como estaba.
+   opciones.conservarApariencia: no toca la apariencia (se usa en OneDrive cuando el dispositivo ya tiene datos). */
+function aplicarAjustesLocalesV263(obj, opciones = {}) {
+    const datos = ajustesLocalesValidosV263(obj);
+    let claves = Object.keys(datos);
+    if (opciones.conservarApariencia) {
+        claves = claves.filter(k => !AJUSTES_APARIENCIA_V263.includes(k));
+    }
+    const anteriores = {};
+    let cambiados = 0;
+    try {
+        claves.forEach(clave => {
+            anteriores[clave] = localStorage.getItem(clave);
+            if (anteriores[clave] !== datos[clave]) {
+                localStorage.setItem(clave, datos[clave]);
+                cambiados++;
+            }
+        });
+    } catch (e) {
+        Object.keys(anteriores).forEach(clave => {
+            try {
+                if (anteriores[clave] === null) localStorage.removeItem(clave);
+                else localStorage.setItem(clave, anteriores[clave]);
+            } catch (e2) {}
+        });
+        return { ok: false, cambiados: 0 };
+    }
+    return { ok: true, cambiados };
+}
+
+function recargarTrasAjustesV263() {
+    window.setTimeout(() => { try { window.location.reload(); } catch (e) {} }, 1600);
+}
+
+function crearDatosCopiaSeguridad() {
+
+    return {
+
+        formato:
+            "mi-servicio-backup",
+
+        version:
+            3,
+
+        exportadoEn:
+            new Date().toISOString(),
+
+        registros:
+            estado.registros,
+
+        preferencias:
+            estado.preferencias,
+
+        agendaSalidas:
+            estado.agendaSalidas,
+
+        ajustesLocales:
+            recogerAjustesLocalesV263()
+    };
+}
+
+
+// =========================================================
+// EXPORTAR COPIA DE SEGURIDAD
+// =========================================================
+
+function exportarCopiaSeguridad() {
+
+    const mensaje =
+        document.getElementById(
+            "mensajeDatos"
+        );
+
+
+    limpiarMensajeFormulario(
+        mensaje
+    );
+
+
+    try {
+
+        const datos =
+            crearDatosCopiaSeguridad();
+
+
+        const contenido =
+            JSON.stringify(
+                datos,
+                null,
+                2
+            );
+
+
+        const blob =
+            new Blob(
+                [contenido],
+                {
+                    type:
+                        "application/json;charset=utf-8"
+                }
+            );
+
+
+        const url =
+            URL.createObjectURL(
+                blob
+            );
+
+
+        const enlace =
+            document.createElement(
+                "a"
+            );
+
+
+        const fecha =
+            fechaLocalISO(
+                new Date()
+            );
+
+
+        enlace.href =
+            url;
+
+
+        enlace.download =
+            `Mi-Servicio-${fecha}.json`;
+
+
+        enlace.style.display =
+            "none";
+
+
+        document.body.appendChild(
+            enlace
+        );
+
+
+        enlace.click();
+
+
+        // Dejamos un pequeño margen antes
+        // de destruir la URL.
+        // Es más fiable en Safari/iPhone.
+
+        window.setTimeout(
+            () => {
+
+                URL.revokeObjectURL(
+                    url
+                );
+
+
+                enlace.remove();
+
+            },
+            1500
+        );
+
+
+        guardarUltimaCopiaSeguridad(
+            new Date()
+        );
+
+        actualizarRecordatorioCopiaSeguridad();
+
+        mostrarMensajeFormulario(
+            mensaje,
+            "Copia de seguridad preparada ✓",
+            false
+        );
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            "Error al exportar:",
+            error
+        );
+
+
+        mostrarMensajeFormulario(
+            mensaje,
+            "No se pudo crear la copia de seguridad.",
+            true
+        );
+        return false;
+    }
+}
+
+
+// =========================================================
+// IMPORTAR COPIA DE SEGURIDAD
+// =========================================================
+
+async function importarCopiaSeguridad(
+    archivo
+) {
+
+    const mensaje =
+        document.getElementById(
+            "mensajeDatos"
+        );
+
+    limpiarMensajeFormulario(
+        mensaje
+    );
+
+    try {
+
+        const contenido =
+            await archivo.text();
+
+        const datos =
+            JSON.parse(
+                contenido
+            );
+
+        if (
+            !validarCopiaSeguridad(
+                datos
+            )
+        ) {
+
+            mostrarMensajeFormulario(
+                mensaje,
+                "El archivo no es una copia válida de Mi Servicio.",
+                true
+            );
+
+            return;
+        }
+
+        const registrosImportados =
+            normalizarRegistrosImportados(
+                datos.registros
+            );
+
+        const preferenciasImportadas =
+            normalizarPreferenciasImportadas(
+                datos.preferencias
+            );
+
+        const agendaImportada =
+            (
+                datos.agendaSalidas &&
+                typeof datos.agendaSalidas === "object" &&
+                !Array.isArray(datos.agendaSalidas)
+            )
+                ? Object.fromEntries(
+                    Object.entries(datos.agendaSalidas)
+                        .map(([fecha, valor]) => [
+                            String(fecha),
+                            normalizarAgendaDia(valor)
+                        ])
+                        .filter(([, valor]) => Boolean(valor.companero))
+                )
+                : {};
+
+        const fechaCopia =
+            datos.exportadoEn
+                ? new Date(datos.exportadoEn)
+                : null;
+
+        const fechaTexto =
+            fechaCopia && !Number.isNaN(fechaCopia.getTime())
+                ? formatearFechaCopia(fechaCopia)
+                : "fecha desconocida";
+
+        // V266 · Vista previa: qué cambia exactamente al restaurar.
+        const idsActuales = new Set((estado.registros || []).map(r => r && r.id));
+        const idsCopia = new Set(registrosImportados.map(r => r && r.id));
+        const nuevosEnCopia = registrosImportados.filter(r => !idsActuales.has(r.id)).length;
+        const soloAqui = (estado.registros || []).filter(r => !idsCopia.has(r && r.id)).length;
+        const fechasCopia = registrosImportados.map(r => String(r.fecha || "")).filter(Boolean).sort();
+        const rangoCopia = fechasCopia.length ? `${fechasCopia[0]} → ${fechasCopia[fechasCopia.length - 1]}` : "sin fechas";
+        const avisoPerdida = soloAqui > 0
+            ? `\n⚠️ ${soloAqui} registro(s) que tienes ahora NO están en esta copia y dejarán de estar en la app (quedan en la copia que se descarga antes).\n`
+            : "";
+
+        const aceptar = window.confirm(
+            `Vas a restaurar una copia de Mi Servicio.\n\n` +
+            `Fecha de la copia: ${fechaTexto}\n` +
+            `Registros en la copia: ${registrosImportados.length} (${rangoCopia})\n` +
+            `Registros actuales: ${(estado.registros || []).length}\n` +
+            `Nuevos respecto a lo actual: ${nuevosEnCopia}\n` +
+            `Ya existentes: ${registrosImportados.length - nuevosEnCopia}\n` +
+            avisoPerdida + `\n` +
+            `Antes de restaurarla se descargará automáticamente una copia de seguridad de tus datos actuales.\n\n` +
+            `¿Quieres continuar?`
+        );
+
+        if (!aceptar) {
+            mostrarMensajeFormulario(
+                mensaje,
+                "Restauración cancelada. No se ha cambiado ningún dato.",
+                false
+            );
+            return;
+        }
+
+        // Antes de sustituir nada, descargamos una copia de los datos actuales.
+        // Esta copia no modifica la fecha del recordatorio mensual.
+        descargarCopiaSeguridadActual(
+            "Antes-de-restaurar"
+        );
+
+        // Además conservamos los valores en memoria por si localStorage falla.
+        const registrosAnteriores =
+            estado.registros;
+
+        const preferenciasAnteriores =
+            estado.preferencias;
+
+        const agendaAnterior =
+            estado.agendaSalidas;
+
+        estado.registros =
+            registrosImportados;
+
+        estado.preferencias =
+            preferenciasImportadas;
+
+        estado.agendaSalidas =
+            agendaImportada;
+
+        const registrosGuardados =
+            guardarRegistros();
+
+        const preferenciasGuardadas =
+            guardarPreferencias();
+
+        const agendaGuardada =
+            guardarAgendaSalidas();
+
+        if (
+            !registrosGuardados ||
+            !preferenciasGuardadas ||
+            !agendaGuardada
+        ) {
+
+            estado.registros =
+                registrosAnteriores;
+
+            estado.preferencias =
+                preferenciasAnteriores;
+
+            estado.agendaSalidas =
+                agendaAnterior;
+
+            guardarRegistros();
+            guardarPreferencias();
+            guardarAgendaSalidas();
+
+            mostrarMensajeFormulario(
+                mensaje,
+                "No se pudieron guardar los datos importados. Se han conservado los datos anteriores.",
+                true
+            );
+
+            return;
+        }
+
+        // V263 · Calendario y ajustes visuales (solo si la copia los incluye).
+        const resultadoAjustes = aplicarAjustesLocalesV263(datos.ajustesLocales);
+
+        cargarFormularioAjustes();
+        actualizarTodaLaInterfaz();
+
+        let textoAjustes = "";
+        if (!resultadoAjustes.ok) {
+            textoAjustes = " Los eventos del calendario y los ajustes visuales no se pudieron restaurar.";
+        } else if (resultadoAjustes.cambiados > 0) {
+            textoAjustes = " Se restauraron también el calendario y los ajustes; la app se recargará.";
+            recargarTrasAjustesV263();
+        }
+
+        mostrarMensajeFormulario(
+            mensaje,
+            `Copia restaurada correctamente: ${textoCantidadRegistros(registrosImportados.length)} ✓${textoAjustes}`,
+            !resultadoAjustes.ok
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Error al importar:",
+            error
+        );
+
+        mostrarMensajeFormulario(
+            mensaje,
+            "No se pudo leer la copia de seguridad. Tus datos actuales no se han modificado.",
+            true
+        );
+    }
+}
+
+
+// =========================================================
+// DESCARGAR COPIA PREVIA A UNA RESTAURACIÓN
+// =========================================================
+
+function descargarCopiaSeguridadActual(
+    etiqueta = "Copia"
+) {
+
+    const datos =
+        crearDatosCopiaSeguridad();
+
+    const contenido =
+        JSON.stringify(
+            datos,
+            null,
+            2
+        );
+
+    const blob =
+        new Blob(
+            [contenido],
+            {
+                type:
+                    "application/json;charset=utf-8"
+            }
+        );
+
+    const url =
+        URL.createObjectURL(
+            blob
+        );
+
+    const enlace =
+        document.createElement(
+            "a"
+        );
+
+    enlace.href = url;
+    enlace.download =
+        `Mi-Servicio-${etiqueta}-${fechaLocalISO(new Date())}.json`;
+    enlace.style.display = "none";
+
+    document.body.appendChild(
+        enlace
+    );
+
+    enlace.click();
+
+    window.setTimeout(
+        () => {
+            URL.revokeObjectURL(url);
+            enlace.remove();
+        },
+        1500
+    );
+}
+
+
+// =========================================================
+// VALIDAR COPIA DE SEGURIDAD
+// =========================================================
+
+function validarCopiaSeguridad(
+    datos
+) {
+
+    if (
+        !datos ||
+        typeof datos !==
+            "object"
+    ) {
+
+        return false;
+    }
+
+
+    if (
+        !Array.isArray(
+            datos.registros
+        )
+    ) {
+
+        return false;
+    }
+
+
+    if (
+        !datos.preferencias ||
+        typeof datos.preferencias !==
+            "object" || Array.isArray(datos.preferencias)
+    ) {
+
+        return false;
+    }
+
+
+    // Si es una copia nueva comprobamos
+    // también el identificador del formato.
+    //
+    // Si no existe, permitimos copias antiguas.
+
+    if (
+        datos.formato &&
+        datos.formato !==
+            "mi-servicio-backup"
+    ) {
+
+        return false;
+    }
+
+
+    return true;
+}
+
+
+// =========================================================
+// NORMALIZAR REGISTROS IMPORTADOS
+// =========================================================
+
+/* V109: normalizarRegistrosImportados → registrar.js */
+
+
+
+// =========================================================
+// NORMALIZAR PREFERENCIAS IMPORTADAS
+// =========================================================
+
+function normalizarPreferenciasImportadas(
+    preferencias
+) {
+
+    const tiposValidos = [
+        "publicador",
+        "precursorAuxiliar",
+        "precursorRegular"
+    ];
+
+
+    const tipo =
+        tiposValidos.includes(
+            preferencias
+                ?.tipoPublicador
+        )
+            ? preferencias
+                .tipoPublicador
+            : "publicador";
+
+
+    const objetivo =
+        Math.max(
+            Math.round(
+                Number(
+                    preferencias
+                        ?.objetivoMensualMinutos
+                ) || 0
+            ),
+            0
+        );
+
+
+    return {
+
+        tipoPublicador:
+            tipo,
+
+        personajeProgreso:
+            ["hombre","mujer","koala","mariposa","pantera","tortuga","liebre","corazon","pajarito","gatito"].includes(preferencias?.personajeProgreso)
+                ? preferencias.personajeProgreso
+                : "hombre",
+
+        objetivoMensualMinutos:
+            objetivo,
+
+        mostrarLDC:
+            preferencias?.mostrarLDC !== false,
+
+        mostrarAsambleas:
+            preferencias?.mostrarAsambleas !== false,
+
+        mostrarOtras:
+            preferencias?.mostrarOtras !== false,
+
+        nombreOtras: normalizarNombreOtrasV260(preferencias?.nombreOtras)
+    };
+}
+
+
+// =========================================================
+// VALIDAR FECHA ISO LOCAL
+// YYYY-MM-DD
+// =========================================================
+
+function fechaISOValida(
+    texto
+) {
+
+    if (
+        !/^\d{4}-\d{2}-\d{2}$/
+            .test(
+                texto
+            )
+    ) {
+
+        return false;
+    }
+
+
+    const fecha =
+        fechaDesdeISO(
+            texto
+        );
+
+
+    if (
+        Number.isNaN(
+            fecha.getTime()
+        )
+    ) {
+
+        return false;
+    }
+
+
+    return (
+        fechaLocalISO(
+            fecha
+        ) === texto
+    );
+}
+
+
+// =========================================================
+// VISIBILIDAD DE ACTIVIDADES
+// =========================================================
+
+function actividadVisible(tipo) {
+    switch (tipo) {
+        case "ldc": return estado.preferencias.mostrarLDC !== false;
+        case "asambleas": return estado.preferencias.mostrarAsambleas !== false;
+        case "otras": return estado.preferencias.mostrarOtras !== false;
+        default: return true;
+    }
+}
+
+/* V109: filtrarRegistrosVisibles → registrar.js */
+
+
+function aplicarVisibilidadActividades() {
+    ["ldc", "asambleas", "otras"].forEach(tipo => {
+        const visible = actividadVisible(tipo);
+
+        document.querySelectorAll(`.actividad-boton[data-tipo="${tipo}"]`).forEach(el =>
+            el.classList.toggle("oculto", !visible)
+        );
+
+        document.querySelectorAll(`.filtro-historial[data-filtro="${tipo}"]`).forEach(el =>
+            el.classList.toggle("oculto", !visible)
+        );
+    });
+
+    const pares = [
+        ["totalLDC", "ldc"],
+        ["totalAsambleas", "asambleas"],
+        ["totalOtras", "otras"],
+        ["estadisticasLDC", "ldc"],
+        ["estadisticasAsambleas", "asambleas"],
+        ["estadisticasOtras", "otras"]
+    ];
+
+    pares.forEach(([id, tipo]) => {
+        const el = document.getElementById(id);
+        const fila = el?.closest(".fila-dato");
+        if (fila) fila.classList.toggle("oculto", !actividadVisible(tipo));
+    });
+
+    if (!actividadVisible(estado.filtroHistorial) && estado.filtroHistorial !== "todos") {
+        estado.filtroHistorial = "todos";
+        document.querySelectorAll(".filtro-historial").forEach(boton =>
+            boton.classList.toggle("activo", boton.dataset.filtro === "todos")
+        );
+    }
+
+    const tipoActual = document.getElementById("tipoRegistro")?.value;
+    if (tipoActual && !actividadVisible(tipoActual)) {
+        seleccionarActividad("ministerio");
+    }
+}
+
+// =========================================================
+// ACTUALIZACIÓN GENERAL
+// =========================================================
+
+function actualizarTodaLaInterfaz() {
+    aplicarNombreOtrasV260();
+
+    aplicarVisibilidadActividades();
+    actualizarInicio();
+
+    /* V262 · Historial solo se repinta si está a la vista; al entrar en él, seleccionarVista lo pinta. */
+    if(estado.vistaActual==="historial")renderizarHistorial();
+
+    actualizarEstadisticas();
+    actualizarMeta();
+    refrescarResumenMensualV198();
+    actualizarSemanaVisualV193();
+    if(typeof actualizarComparacionMesesV202==="function")actualizarComparacionMesesV202();
+    if(typeof actualizarRegistrarV203==="function")actualizarRegistrarV203();
+    if(typeof actualizarInicioSimpleV260==="function")actualizarInicioSimpleV260();
+    window.dispatchEvent(new Event("miServicio:interfazListaV201"));
+}
+
+
+// =========================================================
+// FIN BLOQUE 5
+// =========================================================
+
+// =========================================================
+// BLOQUE 6
+// UTILIDADES GENERALES
+// =========================================================
+
+
+// =========================================================
+// CONVERTIR HORAS + MINUTOS A MINUTOS
+// =========================================================
+
+function minutosTotales(
+    horas,
+    minutos
+) {
+
+    const horasValidas =
+        Math.max(
+            Number(horas) || 0,
+            0
+        );
+
+
+    const minutosValidos =
+        Math.max(
+            Number(minutos) || 0,
+            0
+        );
+
+
+    return Math.round(
+        horasValidas * 60 +
+        minutosValidos
+    );
+}
+
+
+// =========================================================
+// SUMAR MINUTOS DE REGISTROS
+// =========================================================
+
+function sumarMinutos(
+    registros
+) {
+
+    if (
+        !Array.isArray(
+            registros
+        )
+    ) {
+
+        return 0;
+    }
+
+
+    return registros.reduce(
+        (
+            acumulado,
+            registro
+        ) => {
+
+            const minutos =
+                Math.max(
+                    Number(
+                        registro?.minutos
+                    ) || 0,
+                    0
+                );
+
+
+            return (
+                acumulado +
+                minutos
+            );
+        },
+        0
+    );
+}
+
+
+// =========================================================
+// FORMATEAR TIEMPO
+//
+// 0       → 0 min
+// 45      → 45 min
+// 60      → 1 h
+// 135     → 2 h 15 min
+// =========================================================
+
+function formatearTiempo(
+    totalMinutos
+) {
+
+    const total =
+        Math.max(
+            Math.round(
+                Number(
+                    totalMinutos
+                ) || 0
+            ),
+            0
+        );
+
+
+    const horas =
+        Math.floor(
+            total / 60
+        );
+
+
+    const minutos =
+        total % 60;
+
+
+    if (
+        horas === 0
+    ) {
+
+        return `${minutos} min`;
+    }
+
+
+    if (
+        minutos === 0
+    ) {
+
+        return `${horas} h`;
+    }
+
+
+    return (
+        `${horas} h ${minutos} min`
+    );
+}
+
+
+// =========================================================
+// FORMATEAR FECHA
+// =========================================================
+
+function formatearFecha(
+    fechaISO
+) {
+
+    const fecha =
+        fechaDesdeISO(
+            fechaISO
+        );
+
+
+    if (
+        Number.isNaN(
+            fecha.getTime()
+        )
+    ) {
+
+        return fechaISO || "";
+    }
+
+
+    return capitalizar(
+        new Intl.DateTimeFormat(
+            "es-ES",
+            {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+            }
+        ).format(
+            fecha
+        )
+    );
+}
+
+
+// =========================================================
+// CONVERTIR YYYY-MM-DD A DATE
+//
+// Usamos las 12:00 para evitar problemas de zona horaria
+// y cambios de horario de verano.
+// =========================================================
+
+function fechaDesdeISO(
+    fechaISO
+) {
+
+    const partes =
+        String(
+            fechaISO || ""
+        )
+            .split("-")
+            .map(
+                Number
+            );
+
+
+    if (
+        partes.length !== 3 ||
+        partes.some(
+            numero =>
+                !Number.isFinite(
+                    numero
+                )
+        )
+    ) {
+
+        return new Date(
+            fechaISO
+        );
+    }
+
+
+    const [
+        anio,
+        mes,
+        dia
+    ] = partes;
+
+
+    return new Date(
+        anio,
+        mes - 1,
+        dia,
+        12,
+        0,
+        0,
+        0
+    );
+}
+
+
+// =========================================================
+// CONVERTIR DATE A YYYY-MM-DD
+// EN HORA LOCAL
+// =========================================================
+
+function fechaLocalISO(
+    fecha
+) {
+
+    if (
+        !(fecha instanceof Date) ||
+        Number.isNaN(
+            fecha.getTime()
+        )
+    ) {
+
+        return "";
+    }
+
+
+    const anio =
+        fecha.getFullYear();
+
+
+    const mes =
+        String(
+            fecha.getMonth() + 1
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    const dia =
+        String(
+            fecha.getDate()
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    return (
+        `${anio}-${mes}-${dia}`
+    );
+}
+
+
+// =========================================================
+// COPIAR FECHA
+// =========================================================
+
+function copiarFecha(
+    fecha
+) {
+
+    return new Date(
+        fecha.getTime()
+    );
+}
+
+
+// =========================================================
+// NOMBRE DE ACTIVIDAD
+// =========================================================
+
+function nombreActividad(
+    tipo
+) {
+
+    switch (
+        tipo
+    ) {
+
+        case "ministerio":
+
+            return "Ministerio";
+
+
+        case "ldc":
+
+            return "LDC";
+
+
+        case "asambleas":
+
+            return "Asambleas";
+
+
+        case "otras":
+
+            return normalizarNombreOtrasV260(estado.preferencias?.nombreOtras) || "Otras";
+
+
+        case "todos":
+
+            return "actividad";
+
+
+        default:
+
+            return "Actividad";
+    }
+}
+
+
+// =========================================================
+// ICONO DE ACTIVIDAD
+// =========================================================
+
+function iconoActividad(
+    tipo
+) {
+
+    switch (
+        tipo
+    ) {
+
+        case "ministerio":
+
+            return "✦";
+
+
+        case "ldc":
+
+            return "⌂";
+
+
+        case "asambleas":
+
+            return "◆";
+
+
+        case "otras":
+
+            return "＋";
+
+
+        default:
+
+            return "•";
+    }
+}
+
+
+// =========================================================
+// TEXTO NÚMERO DE REGISTROS
+// =========================================================
+
+/* V109: textoCantidadRegistros → registrar.js */
+
+
+
+// =========================================================
+// PONER TEXTO DE FORMA SEGURA
+// =========================================================
+
+function ponerTexto(
+    id,
+    texto
+) {
+
+    const elemento =
+        document.getElementById(
+            id
+        );
+
+
+    if (!elemento) {
+        return;
+    }
+
+
+    elemento.textContent=String(texto ?? "");
+}
+
+
+// =========================================================
+// CAPITALIZAR PRIMERA LETRA
+// =========================================================
+
+function capitalizar(
+    texto
+) {
+
+    const valor =
+        String(
+            texto || ""
+        );
+
+
+    if (!valor) {
+        return "";
+    }
+
+
+    return (
+        valor.charAt(0)
+            .toUpperCase()
+        +
+        valor.slice(1)
+    );
+}
+
+
+// =========================================================
+// CREAR IDENTIFICADOR ÚNICO
+// =========================================================
+
+function crearID() {
+
+    if (
+        window.crypto &&
+        typeof window.crypto.randomUUID ===
+            "function"
+    ) {
+
+        return (
+            window.crypto.randomUUID()
+        );
+    }
+
+
+    return (
+        Date.now()
+            .toString(36)
+        +
+        "-"
+        +
+        Math.random()
+            .toString(36)
+            .slice(2)
+        +
+        "-"
+        +
+        Math.random()
+            .toString(36)
+            .slice(2)
+    );
+}
+
+
+// =========================================================
+// COMPROBAR DISPONIBILIDAD DE LOCALSTORAGE
+// =========================================================
+
+function almacenamientoDisponible() {
+
+    const clavePrueba =
+        "__miServicioPrueba__";
+
+
+    try {
+
+        localStorage.setItem(
+            clavePrueba,
+            "1"
+        );
+
+
+        localStorage.removeItem(
+            clavePrueba
+        );
+
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            "localStorage no está disponible:",
+            error
+        );
+
+
+        return false;
+    }
+}
+
+
+// =========================================================
+// INFORMACIÓN DE DIAGNÓSTICO
+// =========================================================
+
+function diagnosticoMiServicio() {
+
+    const resultado = {
+
+        almacenamiento:
+            almacenamientoDisponible(),
+
+        registros:
+            estado.registros.length,
+
+        vista:
+            estado.vistaActual,
+
+        periodoEstadisticas:
+            estado.estadisticas.periodo,
+
+        objetivoMensualMinutos:
+            estado.preferencias
+                .objetivoMensualMinutos,
+
+        version:
+            "1.0"
+    };
+
+
+    console.table(
+        resultado
+    );
+
+
+    return resultado;
+}
+
+
+// =========================================================
+// FIN BLOQUE 6
+// =========================================================
+// =========================================================
+// V19 · TRANSFERENCIA SAFARI → PANTALLA DE INICIO
+//
+// iOS puede aislar el almacenamiento de una web abierta en
+// Safari y el de esa misma web instalada en la pantalla de
+// inicio. Para no perder los datos, los transportamos UNA VEZ
+// dentro del fragmento (#) de la URL. El fragmento no se envía
+// al servidor. Al primer arranque desde el icono se importa y
+// se limpia de la dirección.
+// =========================================================
+
+function configurarTransferenciaPantallaInicio() {
+
+    const boton =
+        document.getElementById(
+            "prepararAccesoInicio"
+        );
+
+    if (!boton) {
+        return;
+    }
+
+    boton.addEventListener(
+        "click",
+        prepararTransferenciaPantallaInicio
+    );
+}
+
+
+function prepararTransferenciaPantallaInicio() {
+
+    const mensaje =
+        document.getElementById(
+            "mensajeDatos"
+        );
+
+    try {
+
+        const datos =
+            crearDatosCopiaSeguridad();
+
+        const json =
+            JSON.stringify(datos);
+
+        const codigo =
+            textoABase64URL(json);
+
+        // Evitamos crear una dirección desmesuradamente larga.
+        // Si algún día hay muchísimos registros, la copia JSON
+        // normal sigue siendo el método seguro de transferencia.
+        if (codigo.length > 120000) {
+
+            if (mensaje) {
+                mensaje.textContent =
+                    "Hay demasiados datos para transferirlos en el acceso. Usa Exportar copia de seguridad y después impórtala desde el icono.";
+            }
+
+            return;
+        }
+
+        const url =
+            new URL(window.location.href);
+
+        url.hash =
+            `mi-servicio-transfer=${codigo}`;
+
+        history.replaceState(
+            null,
+            "",
+            url.toString()
+        );
+
+        if (mensaje) {
+            mensaje.textContent =
+                "✓ Datos preparados. Ahora pulsa Compartir → Añadir a pantalla de inicio. No cierres ni recargues esta página antes de añadirlo.";
+        }
+
+        window.alert(
+            "Datos preparados ✓\n\nAhora pulsa Compartir → Añadir a pantalla de inicio.\n\nLa primera vez que abras Mi Servicio desde el nuevo icono, los datos se copiarán automáticamente."
+        );
+
+    } catch (error) {
+
+        console.error(
+            "No se pudo preparar la transferencia:",
+            error
+        );
+
+        if (mensaje) {
+            mensaje.textContent =
+                "No se pudo preparar la transferencia. Haz una copia de seguridad antes de continuar.";
+        }
+    }
+}
+
+
+function importarTransferenciaDesdeURL() {
+
+    try {
+
+        const prefijo =
+            "#mi-servicio-transfer=";
+
+        if (
+            !window.location.hash ||
+            !window.location.hash.startsWith(prefijo)
+        ) {
+            return false;
+        }
+
+        const codigo =
+            window.location.hash.slice(
+                prefijo.length
+            );
+
+        const json =
+            base64URLATexto(codigo);
+
+        const datos =
+            JSON.parse(json);
+
+        validarCopiaSeguridad(datos);
+
+        const registros =
+            normalizarRegistrosImportados(
+                datos.registros
+            );
+
+        const preferencias =
+            normalizarPreferenciasImportadas(
+                datos.preferencias
+            );
+
+        msStorageGuardar(STORAGE_KEYS.registros, registros);
+
+        msStorageGuardar(STORAGE_KEYS.preferencias, preferencias);
+
+        // Una vez importados, retiramos los datos de la URL.
+        history.replaceState(
+            null,
+            "",
+            window.location.pathname +
+                window.location.search
+        );
+
+        sessionStorage.setItem(
+            "miServicio.transferenciaRecibida",
+            String(registros.length)
+        );
+
+        window.setTimeout(
+            () => {
+
+                const cantidad =
+                    sessionStorage.getItem(
+                        "miServicio.transferenciaRecibida"
+                    );
+
+                if (!cantidad) {
+                    return;
+                }
+
+                sessionStorage.removeItem(
+                    "miServicio.transferenciaRecibida"
+                );
+
+                window.alert(
+                    `Datos recuperados ✓\n\nMi Servicio ha recibido ${cantidad} registros desde Safari.`
+                );
+            },
+            450
+        );
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            "No se pudo importar la transferencia desde Safari:",
+            error
+        );
+
+        return false;
+    }
+}
+
+
+function textoABase64URL(texto) {
+
+    const bytes =
+        new TextEncoder()
+            .encode(texto);
+
+    let binario = "";
+
+    for (const byte of bytes) {
+        binario += String.fromCharCode(byte);
+    }
+
+    return btoa(binario)
+        .replace(/\+/g, "-")
+        .replace(/\//g, "_")
+        .replace(/=+$/g, "");
+}
+
+
+function base64URLATexto(codigo) {
+
+    let base64 =
+        codigo
+            .replace(/-/g, "+")
+            .replace(/_/g, "/");
+
+    while (base64.length % 4) {
+        base64 += "=";
+    }
+
+    const binario =
+        atob(base64);
+
+    const bytes =
+        Uint8Array.from(
+            binario,
+            caracter =>
+                caracter.charCodeAt(0)
+        );
+
+    return new TextDecoder()
+        .decode(bytes);
+}
+
+
+// =========================================================
+// BLOQUE 7
+// SINCRONIZACIÓN CON IPHONE
+// =========================================================
+
+
+// =========================================================
+// CONFIGURAR SINCRONIZACIÓN IPHONE
+// =========================================================
+
+function configurarSincronizacionIPhone() {
+
+    const boton =
+        document.getElementById(
+            "exportarIPhone"
+        );
+
+
+    if (!boton) {
+
+        console.warn(
+            "No se encontró el botón exportarIPhone."
+        );
+
+        return;
+    }
+
+
+    boton.addEventListener(
+        "click",
+        exportarSincronizacionIPhone
+    );
+
+
+    console.log(
+        "Exportación para iPhone preparada."
+    );
+}
+
+
+// =========================================================
+// EXPORTAR PARA IPHONE
+// =========================================================
+
+function exportarSincronizacionIPhone() {
+
+    const mensaje =
+        document.getElementById(
+            "mensajeDatos"
+        );
+
+
+    limpiarMensajeFormulario(
+        mensaje
+    );
+
+
+    try {
+
+        const registros =
+            estado.registros
+                .filter(
+                    registro => {
+
+                        return (
+                            Number(
+                                registro.minutos
+                            ) > 0
+                        );
+                    }
+                )
+                .map(
+                    registro => {
+
+                        const ahora =
+                            new Date()
+                                .toISOString();
+
+
+                        const registroSync = {
+
+                            id:
+                                String(
+                                    registro.id ||
+                                    crearID()
+                                ),
+
+                            fecha:
+                                convertirFechaWebAISO8601(
+                                    registro.fecha
+                                ),
+
+                            minutos:
+                                Math.max(
+                                    Math.round(
+                                        Number(
+                                            registro.minutos
+                                        ) || 0
+                                    ),
+                                    0
+                                ),
+
+                            tipo:
+                                normalizarTipoSincronizacion(
+                                    registro.tipo
+                                ),
+
+                            notas:
+                                String(
+                                    registro.notas ||
+                                    ""
+                                ),
+
+                            actividadPersonalizadaID:
+                                null,
+
+                            nombreActividadPersonalizada:
+                                null,
+
+                            creadoEn:
+                                normalizarFechaSincronizacion(
+                                    registro.creadoEn
+                                ) ||
+                                ahora,
+
+                            modificadoEn:
+                                normalizarFechaSincronizacion(
+                                    registro.modificadoEn
+                                ) ||
+                                normalizarFechaSincronizacion(
+                                    registro.creadoEn
+                                ) ||
+                                ahora,
+
+                            estado:
+                                "pendiente"
+                        };
+
+
+                        // -----------------------------------------
+                        // OTRAS ACTIVIDADES
+                        // -----------------------------------------
+
+                        if (
+                            registro.tipo ===
+                            "otras"
+                        ) {
+
+                            registroSync
+                                .actividadPersonalizadaID =
+                                    registro
+                                        .actividadPersonalizadaID
+                                    || null;
+
+
+                            const nombre =
+                                String(
+                                    registro
+                                        .nombreActividadPersonalizada
+                                    ||
+                                    registro
+                                        .nombreActividad
+                                    ||
+                                    "Otra actividad"
+                                )
+                                .trim();
+
+
+                            registroSync
+                                .nombreActividadPersonalizada =
+                                    nombre ||
+                                    "Otra actividad";
+                        }
+
+
+                        return registroSync;
+                    }
+                )
+                .filter(
+                    registro => {
+
+                        return Boolean(
+                            registro.fecha
+                        );
+                    }
+                );
+
+
+        // =====================================================
+        // PAQUETE COMPATIBLE CON SyncPackage DE SWIFT
+        // =====================================================
+
+        const paquete = {
+
+            version:
+                2,
+
+            generadoEn:
+                new Date()
+                    .toISOString(),
+
+            registros:
+                registros
+        };
+
+
+        // =====================================================
+        // CONVERTIR A JSON
+        // =====================================================
+
+        const contenido =
+            JSON.stringify(
+                paquete,
+                null,
+                2
+            );
+
+
+        // =====================================================
+        // CREAR ARCHIVO
+        // =====================================================
+
+        const blob =
+            new Blob(
+                [
+                    contenido
+                ],
+                {
+                    type:
+                        "application/json;charset=utf-8"
+                }
+            );
+
+
+        const url =
+            URL.createObjectURL(
+                blob
+            );
+
+
+        const enlace =
+            document.createElement(
+                "a"
+            );
+
+
+        enlace.href =
+            url;
+
+
+        enlace.download =
+            `Mi-Servicio-iPhone-${fechaLocalISO(new Date())}.json`;
+
+
+        enlace.style.display =
+            "none";
+
+
+        document.body.appendChild(
+            enlace
+        );
+
+
+        // =====================================================
+        // DESCARGAR
+        // =====================================================
+
+        enlace.click();
+
+
+        // =====================================================
+        // LIMPIAR
+        // =====================================================
+
+        window.setTimeout(
+            () => {
+
+                URL.revokeObjectURL(
+                    url
+                );
+
+
+                enlace.remove();
+
+            },
+            1500
+        );
+
+
+        // =====================================================
+        // CONFIRMACIÓN
+        // =====================================================
+
+        mostrarMensajeFormulario(
+            mensaje,
+            `Archivo para iPhone preparado: ${textoCantidadRegistros(registros.length)} ✓`,
+            false
+        );
+
+
+        console.log(
+            "Archivo de sincronización creado:",
+            paquete
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Error al exportar para iPhone:",
+            error
+        );
+
+
+        mostrarMensajeFormulario(
+            mensaje,
+            "No se pudo preparar el archivo para iPhone.",
+            true
+        );
+    }
+}
+
+
+// =========================================================
+// CONVERTIR FECHA WEB A ISO 8601
+//
+// Web:
+// 2026-08-21
+//
+// iPhone:
+// 2026-08-21T12:00:00.000Z
+// =========================================================
+
+function convertirFechaWebAISO8601(
+    fechaTexto
+) {
+
+    if (
+        !fechaISOValida(
+            fechaTexto
+        )
+    ) {
+
+        return null;
+    }
+
+
+    const partes =
+        fechaTexto
+            .split("-")
+            .map(
+                Number
+            );
+
+
+    const anio =
+        partes[0];
+
+
+    const mes =
+        partes[1];
+
+
+    const dia =
+        partes[2];
+
+
+    return new Date(
+        Date.UTC(
+            anio,
+            mes - 1,
+            dia,
+            12,
+            0,
+            0,
+            0
+        )
+    )
+    .toISOString();
+}
+
+
+// =========================================================
+// NORMALIZAR FECHAS DE SINCRONIZACIÓN
+// =========================================================
+
+function normalizarFechaSincronizacion(
+    valor
+) {
+
+    if (!valor) {
+
+        return null;
+    }
+
+
+    const fecha =
+        new Date(
+            valor
+        );
+
+
+    if (
+        Number.isNaN(
+            fecha.getTime()
+        )
+    ) {
+
+        return null;
+    }
+
+
+    return fecha
+        .toISOString();
+}
+
+
+// =========================================================
+// NORMALIZAR TIPO
+// =========================================================
+
+function normalizarTipoSincronizacion(
+    tipo
+) {
+
+    switch (
+        tipo
+    ) {
+
+        case "ministerio":
+
+            return "ministerio";
+
+
+        case "ldc":
+
+            return "ldc";
+
+
+        case "asambleas":
+
+            return "asambleas";
+
+
+        case "otras":
+
+            return "otras";
+
+
+        default:
+
+            return "ministerio";
+    }
+}
+
+
+// =========================================================
+// FIN BLOQUE 7
+// =========================================================
+
+
+// =========================================================
+// V20 · SINCRONIZACIÓN CON ONEDRIVE
+// =========================================================
+
+const ONEDRIVE_CONFIG = {
+    clientId: "ec18d1ba-8036-4acf-bf6e-2cb940acf34b",
+    authority: "https://login.microsoftonline.com/common",
+    redirectUri: "https://jositomb.github.io/mi-servicio/",
+    scopes: ["User.Read", "Files.ReadWrite.AppFolder"],
+    archivo: "mi-servicio.json"
+};
+
+let clienteMSALOneDrive = null;
+let aplicandoDatosOneDrive = false;
+let temporizadorSyncOneDrive = null;
+let sincronizandoOneDrive = false;
+
+function configurarOneDrive() {
+    const conectar = document.getElementById("conectarOneDrive");
+    const sincronizar = document.getElementById("sincronizarOneDrive");
+    const desconectar = document.getElementById("desconectarOneDrive");
+
+    if (conectar) conectar.addEventListener("click", conectarConOneDrive);
+    if (sincronizar) sincronizar.addEventListener("click", () => sincronizarConOneDrive(true));
+    if (desconectar) desconectar.addEventListener("click", desconectarOneDrive);
+
+    iniciarOneDrive();
+}
+
+async function iniciarOneDrive() {
+    if (typeof msal === "undefined") {
+        actualizarEstadoOneDrive("No se pudo cargar el acceso a Microsoft", false);
+        return;
+    }
+
+    try {
+        clienteMSALOneDrive = new msal.PublicClientApplication({
+            auth: {
+                clientId: ONEDRIVE_CONFIG.clientId,
+                authority: ONEDRIVE_CONFIG.authority,
+                redirectUri: ONEDRIVE_CONFIG.redirectUri,
+                navigateToLoginRequestUrl: false
+            },
+            cache: {
+                cacheLocation: "localStorage",
+                storeAuthStateInCookie: false
+            }
+        });
+
+        const respuesta = await clienteMSALOneDrive.handleRedirectPromise();
+        const cuentas = clienteMSALOneDrive.getAllAccounts();
+        const cuenta = respuesta?.account || cuentas[0] || null;
+
+        if (cuenta) clienteMSALOneDrive.setActiveAccount(cuenta);
+
+        if (respuesta?.account) {
+            almacenamiento.guardar(STORAGE_KEYS.onedriveConectado, true);
+        }
+
+        const conectado = almacenamiento.leer(STORAGE_KEYS.onedriveConectado, false) && !!cuenta;
+        actualizarInterfazOneDrive(conectado, cuenta);
+
+        // V133: compara local y nube al arrancar.
+        if (conectado) setTimeout(() => sincronizarConOneDrive(false), 650);
+    } catch (error) {
+        console.error("Error iniciando OneDrive:", error);
+        actualizarEstadoOneDrive("No se pudo iniciar OneDrive", false);
+    }
+}
+
+async function conectarConOneDrive() {
+    if (!clienteMSALOneDrive) {
+        await iniciarOneDrive();
+        if (!clienteMSALOneDrive) return;
+    }
+
+    try {
+        await clienteMSALOneDrive.loginRedirect({
+            scopes: ONEDRIVE_CONFIG.scopes,
+            prompt: "select_account"
+        });
+    } catch (error) {
+        console.error("Error conectando OneDrive:", error);
+        mostrarMensajeOneDrive("No se pudo abrir el inicio de sesión de Microsoft.", true);
+    }
+}
+
+function desconectarOneDrive() {
+    almacenamiento.guardar(STORAGE_KEYS.onedriveConectado, false);
+    actualizarInterfazOneDrive(false, null);
+    mostrarMensajeOneDrive("OneDrive se ha desconectado de Mi Servicio en este dispositivo.", false);
+}
+
+function actualizarInterfazOneDrive(conectado, cuenta) {
+    const conectar = document.getElementById("conectarOneDrive");
+    const sincronizar = document.getElementById("sincronizarOneDrive");
+    const desconectar = document.getElementById("desconectarOneDrive");
+    const estadoEl = document.getElementById("estadoOneDrive");
+    const indicador = document.getElementById("indicadorOneDrive");
+    const ultima = document.getElementById("ultimaSyncOneDrive");
+
+    if (conectar) conectar.hidden = conectado;
+    if (sincronizar) sincronizar.hidden = !conectado;
+    if (desconectar) desconectar.hidden = !conectado;
+
+    if (estadoEl) {
+        estadoEl.textContent = conectado
+            ? `Conectado${cuenta?.username ? ` · ${cuenta.username}` : ""}`
+            : "No conectado";
+    }
+
+    if (indicador) indicador.classList.toggle("conectado", conectado);
+
+    const fecha = almacenamiento.leer(STORAGE_KEYS.ultimaSyncOneDrive, null);
+    if (ultima) {
+        ultima.hidden = !conectado || !fecha;
+        if (fecha) ultima.textContent = `Última sincronización: ${formatearFechaHoraOneDrive(fecha)}`;
+    }
+    if(typeof actualizarSyncV260==="function")actualizarSyncV260();
+}
+
+/* V108: actualizarEstadoOneDrive → estadisticas-render.js */
+
+
+function mostrarMensajeOneDrive(texto, error = false) {
+    const mensaje = document.getElementById("mensajeDatos");
+    if (!mensaje) return;
+    mensaje.textContent = texto;
+    mensaje.classList.toggle("error", error);
+    mensaje.classList.toggle("exito", !error);
+    mensaje.classList.add("visible");
+}
+
+function marcarModificacionLocalOneDrive() {
+    almacenamiento.guardar(STORAGE_KEYS.ultimaModificacionLocal, new Date().toISOString());
+}
+
+function programarSincronizacionOneDrive() {
+    if (aplicandoDatosOneDrive) return;
+    if (!almacenamiento.leer(STORAGE_KEYS.onedriveConectado, false)) return;
+
+    clearTimeout(temporizadorSyncOneDrive);
+    temporizadorSyncOneDrive = setTimeout(() => sincronizarConOneDrive(false), 350);
+}
+
+async function obtenerTokenOneDrive() {
+    if (!clienteMSALOneDrive) throw new Error("MSAL no iniciado");
+
+    const cuenta = clienteMSALOneDrive.getActiveAccount() || clienteMSALOneDrive.getAllAccounts()[0];
+    if (!cuenta) throw new Error("No hay cuenta Microsoft conectada");
+
+    try {
+        const respuesta = await clienteMSALOneDrive.acquireTokenSilent({
+            scopes: ONEDRIVE_CONFIG.scopes,
+            account: cuenta
+        });
+        return respuesta.accessToken;
+    } catch (error) {
+        if (error instanceof msal.InteractionRequiredAuthError) {
+            await clienteMSALOneDrive.acquireTokenRedirect({
+                scopes: ONEDRIVE_CONFIG.scopes,
+                account: cuenta
+            });
+            return null;
+        }
+        throw error;
+    }
+}
+
+async function sincronizarConOneDrive(mostrarResultado = false) {
+    if (
+        sincronizandoOneDrive ||
+        !almacenamiento.leer(STORAGE_KEYS.onedriveConectado,false) ||
+        !clienteMSALOneDrive
+    ) return;
+
+    sincronizandoOneDrive=true;
+
+    const indicador=document.getElementById("indicadorOneDrive");
+    if(indicador) indicador.classList.add("sincronizando");
+
+    try {
+        if(!navigator.onLine){
+            estadoSyncV134("Sin conexión · cambios pendientes","pendiente");
+            return;
+        }
+
+        estadoSyncV134("Comprobando cuál es la copia más reciente…","subiendo");
+
+        const token=await obtenerTokenOneDrive();
+        if(!token) return;
+
+        const remoto=await descargarDatosOneDrive(token);
+        const pendiente=
+            almacenamiento.leer("miServicio.onedriveCambioLocalPendiente",false)===true;
+
+        const ultimaBase=
+            almacenamiento.leer(STORAGE_KEYS.ultimaSyncOneDrive,null);
+
+        const ultimaBaseMs=
+            ultimaBase ? (Date.parse(ultimaBase)||0) : 0;
+
+        const remotoMs=
+            remoto?.updatedAt ? (Date.parse(remoto.updatedAt)||0) : 0;
+
+        const localMs=
+            obtenerFechaModificacionLocalOneDrive();
+
+        const remotoCambioDesdeBase=
+            !!remoto && (
+                ultimaBaseMs===0
+                    ? remotoMs>0
+                    : remotoMs>ultimaBaseMs+1000
+            );
+
+        const localCambioDesdeBase=
+            pendiente && (
+                ultimaBaseMs===0
+                    ? localMs>0
+                    : localMs>ultimaBaseMs+1000
+            );
+
+        let accion="al día";
+
+        // No existe copia remota: se crea desde este dispositivo.
+        if(!remoto){
+            let rev=obtenerRevisionLocalV133();
+            if(rev===0){
+                establecerRevisionLocalV133(1);
+            }
+
+            estadoSyncV134("Guardando la primera copia en OneDrive…","subiendo");
+            await subirDatosOneDrive(token,null);
+            accion="subidos";
+
+        // Remoto cambió y local NO: OneDrive gana siempre.
+        }else if(remotoCambioDesdeBase && !localCambioDesdeBase){
+            estadoSyncV134("OneDrive tiene datos más recientes · actualizando este dispositivo…","bajando");
+            aplicarDatosDesdeOneDrive(remoto);
+            accion="descargados";
+
+        // Local cambió y remoto NO: podemos subir con seguridad.
+        }else if(localCambioDesdeBase && !remotoCambioDesdeBase){
+            // La revisión remota es solo informativa; nunca autoriza por sí sola
+            // a sobrescribir una copia más reciente.
+            const siguiente=Math.max(
+                obtenerRevisionLocalV133(),
+                Number(remoto?.revision)||0
+            )+1;
+            establecerRevisionLocalV133(siguiente);
+
+            estadoSyncV134("Guardando tus cambios más recientes en OneDrive…","subiendo");
+            await subirDatosOneDrive(token,remoto);
+            accion="subidos";
+
+        // Ambos cambiaron desde la última sincronización: no elegimos a ciegas.
+        }else if(localCambioDesdeBase && remotoCambioDesdeBase){
+            guardarSnapshotLocalV134();
+
+            throw new Error(
+                "Hay cambios nuevos en este dispositivo y también en OneDrive. " +
+                "Por seguridad no se ha sobrescrito ninguna copia."
+            );
+
+        // Sin base conocida en este dispositivo:
+        // una copia remota existente se considera la fuente segura.
+        }else if(ultimaBaseMs===0 && remoto){
+            if(pendiente){
+                guardarSnapshotLocalV134();
+
+                throw new Error(
+                    "Este dispositivo no tiene una base de sincronización conocida y OneDrive ya contiene datos. " +
+                    "Por seguridad no se ha sobrescrito la copia de OneDrive."
+                );
+            }
+
+            estadoSyncV134("Recibiendo la copia más reciente de OneDrive…","bajando");
+            aplicarDatosDesdeOneDrive(remoto);
+            accion="descargados";
+
+        // Nada cambió realmente.
+        }else{
+            // Si la revisión remota es mayor pero el timestamp no cambió de base,
+            // actualizamos local sin usarla para forzar una subida.
+            if((Number(remoto?.revision)||0)>obtenerRevisionLocalV133()){
+                establecerRevisionLocalV133(Number(remoto.revision)||0);
+            }
+            registrarSincronizacionOneDrive(
+                remoto.updatedAt || ultimaBase || new Date().toISOString()
+            );
+        }
+
+        const cuenta=
+            clienteMSALOneDrive.getActiveAccount() ||
+            clienteMSALOneDrive.getAllAccounts()[0] ||
+            null;
+
+        almacenamiento.guardar("miServicio.ultimaComprobacionOneDrive",new Date().toISOString());
+        actualizarInterfazOneDrive(true,cuenta);
+
+        estadoSyncV134(
+            accion==="descargados"
+                ? "Sincronizado · se conserva la copia más reciente de OneDrive"
+                : accion==="subidos"
+                    ? "Sincronizado · OneDrive contiene tus últimos cambios"
+                    : "Sincronizado · todo al día",
+            "ok"
+        );
+
+        if(mostrarResultado){
+            mostrarMensajeOneDrive(
+                accion==="descargados"
+                    ? "✓ Este dispositivo se ha actualizado con la copia más reciente de OneDrive."
+                    : accion==="subidos"
+                        ? "✓ Tus cambios más recientes están guardados en OneDrive."
+                        : "✓ OneDrive está al día.",
+                false
+            );
+        }
+
+    } catch(error){
+        console.error("Error sincronizando OneDrive:",error);
+
+        const conflicto=
+            /por seguridad|cambios nuevos|base de sincronización|412|precondition/i
+            .test(String(error?.message||""));
+
+        estadoSyncV134(
+            conflicto
+                ? "Protección activa · OneDrive no se ha sobrescrito"
+                : navigator.onLine
+                    ? "No se pudo sincronizar · se conserva la copia local"
+                    : "Sin conexión · cambios pendientes",
+            "pendiente"
+        );
+
+        if(mostrarResultado){
+            mostrarMensajeOneDrive(
+                error?.message || "No se pudo sincronizar con OneDrive.",
+                true
+            );
+        }
+
+    } finally {
+        sincronizandoOneDrive=false;
+        if(indicador) indicador.classList.remove("sincronizando");
+    }
+}
+
+function obtenerFechaModificacionLocalOneDrive() {
+    const guardada = almacenamiento.leer(STORAGE_KEYS.ultimaModificacionLocal, null);
+    if (guardada) return Date.parse(guardada) || 0;
+
+    let maximo = 0;
+    for (const registro of estado.registros || []) {
+        const candidata = registro.modificadoEn || registro.creadoEn || registro.fecha;
+        const ms = Date.parse(candidata) || 0;
+        if (ms > maximo) maximo = ms;
+    }
+    return maximo;
+}
+
+async function descargarDatosOneDrive(token) {
+    const url = `https://graph.microsoft.com/v1.0/me/drive/special/approot:/${encodeURIComponent(ONEDRIVE_CONFIG.archivo)}:/content`;
+    const respuesta = await fetch(url, {
+        headers: { Authorization: `Bearer ${token}` },
+        cache: "no-store"
+    });
+
+    if (respuesta.status === 404) return null;
+    if (!respuesta.ok) throw new Error(`Graph download ${respuesta.status}`);
+
+    const datos = await respuesta.json();
+    if (!datos || datos.formato !== "mi-servicio-onedrive" || !datos.copia) {
+        throw new Error("Formato de OneDrive no reconocido");
+    }
+
+    // V192: se usa como candado optimista al subir.
+    // Si otro dispositivo modifica el archivo después de esta lectura,
+    // la subida condicional falla en vez de sobrescribirlo.
+    datos._etagV192 =
+        respuesta.headers.get("ETag") ||
+        respuesta.headers.get("etag") ||
+        null;
+
+    return datos;
+}
+
+async function subirDatosOneDrive(token, remotoBase = null) {
+    const ahora = new Date().toISOString();
+    const paquete = {
+        formato: "mi-servicio-onedrive",
+        version: 4,
+        revision: obtenerRevisionLocalV133(),
+        updatedAt: ahora,
+        copia: crearDatosCopiaSeguridad()
+    };
+    const headers={
+        Authorization:`Bearer ${token}`,
+        "Content-Type":"application/json"
+    };
+
+    // Candado de concurrencia: solo se sustituye exactamente la versión
+    // remota que acabamos de comparar.
+    if(remotoBase?._etagV192){
+        headers["If-Match"]=remotoBase._etagV192;
+    }
+
+    const respuesta = await fetch(
+        `https://graph.microsoft.com/v1.0/me/drive/special/approot:/${encodeURIComponent(ONEDRIVE_CONFIG.archivo)}:/content`,
+        {
+            method:"PUT",
+            headers,
+            body:JSON.stringify(paquete)
+        }
+    );
+
+    if (respuesta.status===409 || respuesta.status===412){
+        throw new Error(
+            "OneDrive cambió mientras se estaba sincronizando. " +
+            "No se ha sobrescrito la copia más reciente (412)."
+        );
+    }
+
+    if (!respuesta.ok){
+        throw new Error(`No se pudo subir la copia a OneDrive (${respuesta.status})`);
+    }
+    almacenamiento.guardar(STORAGE_KEYS.ultimaModificacionLocal, ahora);
+    almacenamiento.guardar("miServicio.onedriveCambioLocalPendiente", false);
+    registrarSincronizacionOneDrive(ahora);
+}
+
+function aplicarDatosDesdeOneDrive(remoto) {
+    const copia = remoto.copia;
+    if (!validarCopiaSeguridad(copia)) throw new Error("La copia de OneDrive no es válida");
+    const registros = normalizarRegistrosImportados(copia.registros);
+    const preferencias = normalizarPreferenciasImportadas(copia.preferencias);
+    const agendaSalidas = copia.agendaSalidas && typeof copia.agendaSalidas === "object" &&
+        !Array.isArray(copia.agendaSalidas) ? copia.agendaSalidas : {};
+    guardarSnapshotLocalV134();
+    const anteriores={registros:estado.registros,preferencias:estado.preferencias,agendaSalidas:estado.agendaSalidas};
+    aplicandoDatosOneDrive = true;
+    try {
+        estado.registros=registros; estado.preferencias=preferencias; estado.agendaSalidas=agendaSalidas;
+        if(!guardarJSON(STORAGE_KEYS.registros, estado.registros)||!guardarJSON(STORAGE_KEYS.preferencias, estado.preferencias)||!guardarJSON(STORAGE_KEYS.agendaSalidas, estado.agendaSalidas)){
+            estado.registros=anteriores.registros;estado.preferencias=anteriores.preferencias;estado.agendaSalidas=anteriores.agendaSalidas;
+            const r=guardarJSON(STORAGE_KEYS.registros,estado.registros),p=guardarJSON(STORAGE_KEYS.preferencias,estado.preferencias),a=guardarJSON(STORAGE_KEYS.agendaSalidas,estado.agendaSalidas);
+            throw new Error(r&&p&&a?"No se pudo guardar la copia de OneDrive. Se mantienen los datos anteriores.":"No se pudo completar el guardado local. Revisa el espacio del dispositivo y conserva la copia previa antes de continuar.");
+        }
+        // V263 · Calendario (siempre) y apariencia (solo si este dispositivo aún no tiene una propia).
+        // Dispositivo nuevo = sin registros. La app escribe valores por defecto al arrancar, así que
+        // no sirve mirar si ya hay claves de apariencia.
+        const dispositivoNuevoV263 = !Array.isArray(anteriores.registros) || anteriores.registros.length === 0;
+        const resultadoAjustesOD = aplicarAjustesLocalesV263(copia.ajustesLocales, { conservarApariencia: !dispositivoNuevoV263 });
+        if (resultadoAjustesOD.ok && resultadoAjustesOD.cambiados > 0) recargarTrasAjustesV263();
+        establecerRevisionLocalV133(Number(remoto.revision)||0);
+        almacenamiento.guardar("miServicio.onedriveCambioLocalPendiente", false);
+        almacenamiento.guardar(STORAGE_KEYS.ultimaModificacionLocal, remoto.updatedAt||new Date().toISOString());
+        registrarSincronizacionOneDrive(remoto.updatedAt||new Date().toISOString());
+    } finally { aplicandoDatosOneDrive=false; }
+    cargarFormularioAjustes(); actualizarTodaLaInterfaz(); actualizarRecordatorioCopiaSeguridad();
+}
+
+/* V109: registrarSincronizacionOneDrive → registrar.js */
+
+
+function formatearFechaHoraOneDrive(fechaISO) {
+    const fecha = new Date(fechaISO);
+    if (Number.isNaN(fecha.getTime())) return "ahora";
+    return new Intl.DateTimeFormat("es-ES", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+    }).format(fecha);
+}
+
+
+
+
+// =========================================================
+// CÓMPUTO PARA LA META ANUAL
+// =========================================================
+// Regla mensual:
+// - Si en el mes solo hay Ministerio, cuenta todo el Ministerio.
+// - Si hay LDC, Asambleas u Otras, cuenta la suma total del mes
+//   con un máximo de 55 h para la meta anual.
+// - La actividad real nunca se pierde: se conserva por separado.
+
+const LIMITE_MENSUAL_META_MINUTOS = 55 * 60;
+
+function calcularComputoMesMeta(registrosMes) {
+    const registros = Array.isArray(registrosMes) ? registrosMes : [];
+
+    const ministerio = sumarMinutos(
+        registros.filter(registro => registro.tipo === "ministerio")
+    );
+
+    const actividadAdicional = sumarMinutos(
+        registros.filter(registro => registro.tipo !== "ministerio")
+    );
+
+    const actividadTotal = ministerio + actividadAdicional;
+
+    const computable = actividadAdicional > 0
+        ? Math.min(actividadTotal, LIMITE_MENSUAL_META_MINUTOS)
+        : ministerio;
+
+    return {
+        ministerio,
+        actividadAdicional,
+        actividadTotal,
+        computable,
+        excedente: Math.max(actividadTotal-computable,0)
+    };
+}
+
+function calcularComputoAnualMeta(registrosAnio, inicioAnio) {
+    const registros = Array.isArray(registrosAnio) ? registrosAnio : [];
+    let actividadTotal = 0;
+    let computable = 0;
+
+    for (let desplazamiento = 0; desplazamiento < 12; desplazamiento += 1) {
+        const inicioMes = new Date(
+            inicioAnio.getFullYear(),
+            inicioAnio.getMonth() + desplazamiento,
+            1, 0, 0, 0, 0
+        );
+
+        const finMes = new Date(
+            inicioAnio.getFullYear(),
+            inicioAnio.getMonth() + desplazamiento + 1,
+            0, 23, 59, 59, 999
+        );
+
+        const registrosMes = registros.filter(registro => {
+            const fecha = fechaDesdeISO(registro.fecha);
+            return fecha >= inicioMes && fecha <= finMes;
+        });
+
+        const resumenMes = calcularComputoMesMeta(registrosMes);
+        actividadTotal += resumenMes.actividadTotal;
+        computable += resumenMes.computable;
+    }
+
+    return { actividadTotal, computable };
+}
+
+
+// =========================================================
+// META DEL AÑO DE SERVICIO
+// =========================================================
+
+function actualizarMeta() {
+    const contenedor = document.getElementById("vista-meta");
+    if (!contenedor) return;
+
+    const esPrecursorRegular =
+        estado.preferencias?.tipoPublicador === "precursorRegular";
+
+    const principal = contenedor.querySelector(".meta-principal");
+    const bloques = contenedor.querySelectorAll(".meta-dos-columnas, .meta-ritmo, .meta-restante");
+    const sinObjetivo = document.getElementById("metaSinObjetivo");
+
+    if (!esPrecursorRegular) {
+        principal?.classList.add("oculto");
+        bloques.forEach(elemento => elemento.classList.add("oculto"));
+        sinObjetivo?.classList.remove("oculto");
+        return;
+    }
+
+    principal?.classList.remove("oculto");
+    bloques.forEach(elemento => elemento.classList.remove("oculto"));
+    sinObjetivo?.classList.add("oculto");
+
+    const ahora = new Date();
+    const rango = rangoAnio(ahora);
+    const registrosAnio = obtenerRegistrosEntreFechas(rango.inicio, rango.fin);
+    const resumenComputo = calcularComputoAnualMeta(registrosAnio, rango.inicio);
+    const totalActividad = resumenComputo.actividadTotal;
+    const totalComputable = resumenComputo.computable;
+    const totalExcedente = Math.max(totalActividad - totalComputable, 0);
+
+    // Resumen específico del mes actual para que quede claro qué
+    // parte entra en la meta y qué parte queda como excedente.
+    const inicioMesActual = new Date(ahora.getFullYear(), ahora.getMonth(), 1, 0, 0, 0, 0);
+    const finMesActual = new Date(ahora.getFullYear(), ahora.getMonth() + 1, 0, 23, 59, 59, 999);
+    const registrosMesActual = obtenerRegistrosEntreFechas(inicioMesActual, finMesActual);
+    const computoMesActual = calcularComputoMesMeta(registrosMesActual);
+    const excedenteMesActual = Math.max(
+        computoMesActual.actividadTotal - computoMesActual.computable,
+        0
+    );
+    const objetivo = 600 * 60;
+    const pendiente = Math.max(objetivo - totalComputable, 0);
+    const progreso = objetivo > 0 ? totalComputable / objetivo : 0;
+    const progresoLimitado = Math.min(Math.max(progreso, 0), 1);
+    const porcentaje = Math.round(progreso * 100);
+
+    const duracionAnio = rango.fin.getTime() - rango.inicio.getTime();
+    const transcurrido = Math.min(
+        Math.max(ahora.getTime() - rango.inicio.getTime(), 0),
+        duracionAnio
+    );
+    const progresoTiempo = duracionAnio > 0 ? transcurrido / duracionAnio : 0;
+    const esperado = Math.round(objetivo * progresoTiempo);
+    const diferencia = totalComputable - esperado;
+
+    const finExclusivo = new Date(
+        rango.fin.getFullYear(),
+        rango.fin.getMonth(),
+        rango.fin.getDate() + 1
+    );
+    const diasRestantes = Math.max(
+        Math.ceil((finExclusivo.getTime() - ahora.getTime()) / 86400000),
+        0
+    );
+    const mesesEquivalentes = Math.max(diasRestantes / 30.4375, 1 / 30.4375);
+    const ritmoMensual = pendiente > 0
+        ? Math.round(pendiente / mesesEquivalentes)
+        : 0;
+
+    // V140 · previsión usando exclusivamente horas COMPUTABLES.
+    // Respeta por tanto la regla de 55 h cuando hay actividad adicional.
+    const diasTranscurridosMeta = Math.max(
+        (ahora.getTime() - rango.inicio.getTime()) / 86400000,
+        1
+    );
+    const ritmoDiarioReal = totalComputable / diasTranscurridosMeta;
+    let previsionTexto = "Aún no hay datos suficientes";
+    let previsionDetalle = "Registra actividad para calcular una previsión.";
+    let previsionEstado = "neutral";
+
+    if (pendiente === 0) {
+        previsionTexto = "Meta alcanzada ✓";
+        previsionDetalle = "Ya has llegado a las 600 h computables.";
+        previsionEstado = "positivo";
+    } else if (ritmoDiarioReal > 0) {
+        const diasNecesarios = Math.ceil(pendiente / ritmoDiarioReal);
+        const fechaPrevista = new Date(ahora);
+        fechaPrevista.setDate(fechaPrevista.getDate() + diasNecesarios);
+        const dentroDelAnio = fechaPrevista <= finExclusivo;
+        previsionTexto = fechaPrevista.toLocaleDateString("es-ES", {
+            day:"numeric", month:"long", year:"numeric"
+        });
+        previsionDetalle = dentroDelAnio
+            ? `Manteniendo tu ritmo computable actual, alcanzarías las 600 h aproximadamente en esa fecha.`
+            : `A tu ritmo computable actual, la previsión queda después del final del año de servicio.`;
+        previsionEstado = dentroDelAnio ? "positivo" : "atencion";
+    }
+
+    ponerTexto("metaPrevisionFecha", previsionTexto);
+    ponerTexto("metaPrevisionDetalle", previsionDetalle);
+    const previsionCard = document.getElementById("metaPrevisionV140");
+    previsionCard?.classList.toggle("meta-prevision-positiva", previsionEstado === "positivo");
+    previsionCard?.classList.toggle("meta-prevision-atencion", previsionEstado === "atencion");
+
+    const anioServicio = rango.fin.getFullYear();
+    ponerTexto("metaAnioServicio", `Año de servicio ${anioServicio}`);
+    ponerTexto(
+        "metaPeriodo",
+        `sep ${rango.inicio.getFullYear()} – ago ${anioServicio}`
+    );
+    ponerTexto("metaPorcentaje", `${porcentaje}%`);
+    ponerTexto("metaTotal", formatearTiempo(totalComputable));
+    ponerTexto("metaObjetivoTexto", `de ${formatearTiempo(objetivo)}`);
+    ponerTexto("metaActividadTotal", formatearTiempo(totalActividad));
+    ponerTexto("metaComputableClaro", formatearTiempo(totalComputable));
+    ponerTexto("metaExcedente", formatearTiempo(totalExcedente));
+
+    ponerTexto(
+        "metaMesActividad",
+        `${formatearTiempo(computoMesActual.actividadTotal)} de actividad`
+    );
+    ponerTexto("metaMesComputable", formatearTiempo(computoMesActual.computable));
+    ponerTexto("metaMesExcedente", formatearTiempo(excedenteMesActual));
+
+    const tieneAdicionalMes = computoMesActual.actividadAdicional > 0;
+    const metaMesEstado = document.getElementById("metaMesEstado");
+    if (metaMesEstado) {
+        metaMesEstado.textContent = tieneAdicionalMes ? "Límite 55 h" : "Computa todo";
+        metaMesEstado.classList.toggle("con-limite", tieneAdicionalMes);
+    }
+
+    ponerTexto(
+        "metaMesExplicacion",
+        tieneAdicionalMes
+            ? (excedenteMesActual > 0
+                ? `${formatearTiempo(computoMesActual.computable)} suman a las 600 h y ${formatearTiempo(excedenteMesActual)} quedan como actividad adicional sin computar.`
+                : `Este mes hay actividad adicional. Hasta 55 h del total pueden computar para la meta anual.`)
+            : `Este mes solo hay Ministerio: todas las horas registradas computan para las 600 h.`
+    );
+
+    ponerTexto("metaLlevas", formatearTiempo(totalComputable));
+    ponerTexto("metaQueda", formatearTiempo(pendiente));
+    ponerTexto("metaEsperado", formatearTiempo(esperado));
+
+    const anillo = document.getElementById("metaAnillo");
+    if (anillo) {
+        anillo.style.setProperty(
+            "--meta-progreso",
+            `${progresoLimitado * 360}deg`
+        );
+    }
+
+    const barra = document.getElementById("metaBarraRelleno");
+    if (barra) barra.style.width = `${progresoLimitado * 100}%`;
+
+    const vaPorDelante = diferencia >= 0;
+    ponerTexto(
+        "metaDiferenciaTitulo",
+        vaPorDelante ? "Vas por delante" : "Vas por detrás"
+    );
+    ponerTexto("metaDiferencia", formatearTiempo(Math.abs(diferencia)));
+
+    const diferenciaElemento = document.getElementById("metaDiferencia");
+    diferenciaElemento?.classList.toggle("meta-positivo", vaPorDelante);
+    diferenciaElemento?.classList.toggle("meta-atencion", !vaPorDelante);
+
+    let mensaje;
+    if (pendiente === 0) {
+        mensaje = "Ya has alcanzado la meta del año de servicio.";
+    } else if (diferencia > 0) {
+        mensaje = `Llevas ${formatearTiempo(diferencia)} más de lo necesario para el ritmo de hoy.`;
+    } else if (diferencia < 0) {
+        mensaje = `Con ${formatearTiempo(Math.abs(diferencia))} recuperarías el ritmo esperado para hoy.`;
+    } else {
+        mensaje = "Estás exactamente en el ritmo previsto para alcanzar la meta.";
+    }
+    ponerTexto("metaMensaje", mensaje);
+
+    ponerTexto(
+        "metaTiempoRestante",
+        textoTiempoRestanteMeta(ahora, finExclusivo)
+    );
+    ponerTexto(
+        "metaRitmoNecesario",
+        pendiente === 0 ? "Meta ✓" : `${formatearTiempo(ritmoMensual)}/mes`
+    );
+}
+
+function textoTiempoRestanteMeta(desde, hasta) {
+    if (hasta <= desde) return "0 días";
+
+    let meses =
+        (hasta.getFullYear() - desde.getFullYear()) * 12 +
+        (hasta.getMonth() - desde.getMonth());
+
+    let ancla = new Date(
+        desde.getFullYear(),
+        desde.getMonth() + meses,
+        desde.getDate()
+    );
+
+    if (ancla > hasta) {
+        meses -= 1;
+        ancla = new Date(
+            desde.getFullYear(),
+            desde.getMonth() + meses,
+            desde.getDate()
+        );
+    }
+
+    const dias = Math.max(
+        Math.round((hasta.getTime() - ancla.getTime()) / 86400000),
+        0
+    );
+
+    if (meses > 0 && dias > 0) return `${meses} meses y ${dias} días`;
+    if (meses > 0) return meses === 1 ? "1 mes" : `${meses} meses`;
+    return dias === 1 ? "1 día" : `${dias} días`;
+}
+
+function configurarInteraccionAnillosProgreso() {
+    const grafico=document.getElementById("graficoInicio");
+    const info=document.getElementById("infoAnilloActivo");
+    if(!grafico||!info)return;
+    const circulos=Array.from(grafico.querySelectorAll("svg circle"));
+    circulos.forEach(circulo=>{
+        const dash=circulo.getAttribute("stroke-dasharray")||circulo.style.strokeDasharray||"";
+        if(dash&&dash!=="none")circulo.classList.add("anillo-con-progreso");
+        circulo.onclick=event=>{
+            event.stopPropagation();
+            circulos.forEach(c=>c.classList.remove("anillo-activo"));
+            circulo.classList.add("anillo-activo");
+            grafico.classList.add("anillo-enfocado");
+            const titulo=circulo.querySelector("title")?.textContent||circulo.getAttribute("aria-label")||"Progreso de actividad";
+            info.textContent=titulo;
+            info.classList.add("visible");
+            clearTimeout(grafico._temporizadorAnillo);
+            grafico._temporizadorAnillo=setTimeout(()=>{
+                grafico.classList.remove("anillo-enfocado");
+                circulos.forEach(c=>c.classList.remove("anillo-activo"));
+                info.classList.remove("visible");
+            },2600);
+        };
+    });
+}
+document.addEventListener("DOMContentLoaded",()=>{
+    const grafico=document.getElementById("graficoInicio");
+    if(!grafico)return;
+    configurarInteraccionAnillosProgreso();
+    new MutationObserver(()=>configurarInteraccionAnillosProgreso()).observe(grafico,{childList:true,subtree:true});
+});
+
+const CLAVE_LOCALIDAD_TIEMPO="miServicio.localidadTiempo";
+function descripcionTiempo(c){if(c===0)return["☀️","Despejado"];if([1,2].includes(c))return["🌤️","Poco nuboso"];if(c===3)return["☁️","Nublado"];if([45,48].includes(c))return["🌫️","Niebla"];if([51,53,55,61,63,65,80,81,82].includes(c))return["🌧️","Lluvia"];if([71,73,75,85,86].includes(c))return["🌨️","Nieve"];if([95,96,99].includes(c))return["⛈️","Tormenta"];return["🌤️","Variable"]}
+function consejoRopa(t,l,v){if(l>=55)return t<=12?"🧥☂️ Abrígate y lleva paraguas.":"☂️ Lleva paraguas o impermeable.";if(t<=7)return"🧥 Abrigo y ropa cálida.";if(t<=14)return"🧥 Chaqueta ligera.";if(t>=27)return"👕 Ropa fresca y agua.";if(v>=30)return"💨 Chaqueta ligera para el viento.";return"👕 Ropa cómoda; temperatura agradable."}
+async function actualizarTiempoInicio(){
+ const lugar=document.getElementById("tiempoLugar"),tempE=document.getElementById("tiempoTemperatura"),desc=document.getElementById("tiempoDescripcion"),ico=document.getElementById("tiempoIcono"),llu=document.getElementById("tiempoLluvia"),vie=document.getElementById("tiempoViento"),con=document.getElementById("tiempoConsejo");if(!lugar)return;
+ const ciudad=localStorage.getItem(CLAVE_LOCALIDAD_TIEMPO)||"Arteixo";lugar.textContent=ciudad;desc.textContent="Consultando…";
+ try{const g=await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(ciudad)}&count=1&language=es&format=json`).then(r=>r.json()),s=g.results?.[0];if(!s)throw 0;
+ const d=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${s.latitude}&longitude=${s.longitude}&current=temperature_2m,weather_code,is_day,wind_speed_10m&hourly=precipitation_probability&forecast_days=1&timezone=auto`).then(r=>r.json());
+ const t=Math.round(d.current?.temperature_2m??0),v=Math.round(d.current?.wind_speed_10m??0),hour=new Date().getHours(),l=Math.round(d.hourly?.precipitation_probability?.[hour]??0),x=descripcionTiempo(d.current?.weather_code);aplicarAmbienteClima(d.current?.weather_code,d.current?.is_day);
+ lugar.textContent=s.name;ico.textContent=x[0];tempE.textContent=`${t}°`;desc.textContent=x[1];llu.textContent=`💧 ${l}%`;vie.textContent=`💨 ${v} km/h`;con.textContent=consejoRopa(t,l,v)
+ }catch(e){aplicarAmbienteClima(null);desc.textContent="No disponible";con.textContent="Comprueba la conexión."}
+}
+document.addEventListener("DOMContentLoaded",()=>{document.getElementById("actualizarTiempoInicio")?.addEventListener("click",actualizarTiempoInicio)});/* V262 · La primera consulta del tiempo la hace tareasRedDiferidasV168 (una sola vez). */
+
+function actualizarPlanInteligenteMes(){
+ const hoy=new Date(),fin=new Date(hoy.getFullYear(),hoy.getMonth()+1,0);
+ const objetivo=Number(estado.preferencias?.objetivoMensualMinutos)||3300;
+ const regs=(estado.registros||[]).filter(r=>{const d=new Date(r.fecha+"T12:00:00");return d.getFullYear()===hoy.getFullYear()&&d.getMonth()===hoy.getMonth()});
+ const hecho=calcularComputoMesMeta(regs).computable,resta=Math.max(objetivo-hecho,0),dias=Math.max(fin.getDate()-hoy.getDate()+1,1);
+ let salidas=0;Object.keys(estado.agendaSalidas||{}).forEach(f=>{const d=new Date(f+"T12:00:00");if(d>=new Date(hoy.getFullYear(),hoy.getMonth(),hoy.getDate())&&d<=fin)salidas++});
+ const planMin=minutosPlanificadosMesActual();
+ const base=Math.max(salidas,Math.ceil(dias/3),1),ritmo=Math.ceil(Math.max(resta-planMin,0)/base/15)*15;
+ const fmt=n=>{const a=Math.floor(n/60),b=n%60;return b?`${a} h ${b} min`:`${a} h`};
+ const a=document.getElementById("planHorasRestantes"),b=document.getElementById("planRitmoSugerido"),m=document.getElementById("planMensajeMes");
+ if(a)a.textContent=fmt(resta);if(b)b.textContent=resta?`${fmt(ritmo)} / salida`:"Meta conseguida";
+ if(m)m.textContent=resta===0?"🎉 Has alcanzado tu objetivo mensual.":planMin>0?`Tienes ${fmt(planMin)} previstas este mes. Si las completas, quedarían ${fmt(Math.max(resta-planMin,0))} para alcanzar la meta.`:salidas?`Tienes ${salidas} salida${salidas===1?"":"s"} planificada${salidas===1?"":"s"}. Añade el tiempo previsto para calcular mejor tu avance.`:`Te quedan ${dias} días. Si planificas unas ${base} salidas, con aproximadamente ${fmt(ritmo)} cada una mantendrías un ritmo cómodo.`;
+}
+document.addEventListener("DOMContentLoaded",()=>setTimeout(actualizarPlanInteligenteMes,120));
+/* V262 · Antes se recalculaba tras CADA clic. Ahora solo en Estadísticas y agrupado. */
+var temporizadorPlanV262=0;
+document.addEventListener("click",()=>{if(estado.vistaActual!=="estadisticas")return;clearTimeout(temporizadorPlanV262);temporizadorPlanV262=setTimeout(actualizarPlanInteligenteMes,150);});
+
+function aplicarAmbienteClima(codigo,esDia){
+    datosClimaVisualV260={codigo,esDia};
+    const t=document.querySelector("#vista-inicio .tarjeta-grafico-inicio");if(!t)return;
+    t.classList.remove("clima-sol","clima-nubes","clima-lluvia");
+    const ambiente=tipoFondoClimaV260(codigo,esDia);
+    if(ambiente==="sol")t.classList.add("clima-sol");
+    else if(ambiente==="lluvia")t.classList.add("clima-lluvia");
+    else if(["nubes","parcial","niebla","nieve"].includes(ambiente))t.classList.add("clima-nubes");
+    pintarFondoClimaV260(t,ambiente);
+}
+
+
+function configurarGaleriaPersonajes(){
+    const galeria=document.getElementById("galeriaPersonajes");
+    const select=document.getElementById("personajeProgreso");
+    if(!galeria||!select)return;
+    const pintar=()=>{
+        galeria.querySelectorAll("[data-personaje]").forEach(b=>{
+            b.classList.toggle("seleccionado",b.dataset.personaje===select.value);
+        });
+        if(typeof actualizarResumenPersonaje==="function") actualizarResumenPersonaje();
+    };
+    galeria.onclick=e=>{
+        const b=e.target.closest("button[data-personaje]");
+        if(!b)return;
+        e.preventDefault();
+        const valor=b.dataset.personaje;
+        if(!["hombre","mujer","koala","mariposa","pantera","tortuga","liebre","corazon","pajarito","gatito"].includes(valor))return;
+        select.value=valor;
+        select.dispatchEvent(new Event("change",{bubbles:true}));
+        pintar();
+        const anterior=estado.preferencias.personajeProgreso;
+        estado.preferencias.personajeProgreso=valor;
+        const objetivo=Number(estado.preferencias.objetivoMensualMinutos)||1;
+        const hoy=new Date();
+        const regs=(estado.registros||[]).filter(r=>{
+            const d=new Date(r.fecha+"T12:00:00");
+            return d.getFullYear()===hoy.getFullYear()&&d.getMonth()===hoy.getMonth();
+        });
+        actualizarPersonajeProgreso(Math.min(100,(calcularComputoMesMeta(regs).computable/objetivo)*100));
+        estado.preferencias.personajeProgreso=anterior;
+    };
+    select.addEventListener("change",pintar);
+    pintar();
+}
+document.addEventListener("DOMContentLoaded",()=>setTimeout(configurarGaleriaPersonajes,100));
+
+
+const PERSONAJES_UI={
+  hombre:{nombre:"Hombre",icono:"🚶‍♂️"},
+  mujer:{nombre:"Mujer",icono:"🚶‍♀️"},
+  koala:{nombre:"Koala",icono:"🐨"},
+  mariposa:{nombre:"Mariposa",icono:"🦋"},
+  pantera:{nombre:"Pantera rosa",icono:"🐈"},
+  tortuga:{nombre:"Tortuga",icono:"🐢"},
+  liebre:{nombre:"Liebre",icono:"🐇"},
+  corazon:{nombre:"Corazón",icono:"❤️"},
+  pajarito:{nombre:"Pajarito",icono:"🐥"},
+  gatito:{nombre:"Gatito",icono:"🐱"}
+};
+function actualizarResumenPersonaje(){
+  const select=document.getElementById("personajeProgreso");
+  const nombre=document.getElementById("personajeSeleccionadoResumen");
+  const icono=document.getElementById("personajeSeleccionadoIcono");
+  if(!select||!nombre||!icono)return;
+  const p=PERSONAJES_UI[select.value]||PERSONAJES_UI.hombre;
+  nombre.textContent=p.nombre;
+  const img=document.querySelector(`#galeriaPersonajes [data-personaje="${select.value}"] img`);
+  icono.innerHTML=img?`<img src="${img.src}" alt="">`:p.icono;
+  icono.classList.add("es-personaje-imagen");
+}
+function configurarDesplegablePersonaje(){
+  const boton=document.getElementById("abrirSelectorPersonaje");
+  const panel=document.getElementById("selectorPersonajeDesplegable");
+  const select=document.getElementById("personajeProgreso");
+  const galeria=document.getElementById("galeriaPersonajes");
+  if(!boton||!panel||!select||!galeria)return;
+  boton.onclick=()=>{
+    const abrir=panel.hidden;
+    panel.hidden=!abrir;
+    boton.setAttribute("aria-expanded",String(abrir));
+  };
+  galeria.addEventListener("click",e=>{
+    const item=e.target.closest("[data-personaje]");
+    if(!item)return;
+    setTimeout(()=>{
+      actualizarResumenPersonaje();
+      panel.hidden=true;
+      boton.setAttribute("aria-expanded","false");
+    },40);
+  });
+  select.addEventListener("change",actualizarResumenPersonaje);
+  actualizarResumenPersonaje();
+}
+document.addEventListener("DOMContentLoaded",()=>setTimeout(configurarDesplegablePersonaje,130));
+
+
+/* V104 · Registro del renderizador estable en el módulo Historial.
+   No modifica el renderizado actual; únicamente crea el punto de desacoplamiento. */
+function conectarRenderizadorHistorialModular(){
+    if (window.MiServicioHistorial &&
+        typeof window.MiServicioHistorial.registrarRenderizador === "function" &&
+        typeof renderizarHistorial === "function") {
+        window.MiServicioHistorial.registrarRenderizador(renderizarHistorial);
+    }
+}
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", conectarRenderizadorHistorialModular, { once:true });
+} else {
+    conectarRenderizadorHistorialModular();
+}
+
+
+// V120 · Aplicar la separación después de cada render del gráfico.
+document.addEventListener("DOMContentLoaded", () => {
+    const grafico = document.querySelector("#vista-inicio .orbita-grafico");
+    if (!grafico) return;
+
+    let pendiente = false;
+    const aplicar = () => {
+        if (pendiente) return;
+        pendiente = true;
+        requestAnimationFrame(() => {
+            pendiente = false;
+            resolverColisionesOrbitasV120();
+        });
+    };
+
+    new MutationObserver(aplicar).observe(grafico, {
+        childList: true,
+        subtree: true
+    });
+
+    aplicar();
+});
+
+
+// =========================================================
+// V121 · AJUSTE RESPONSIVE FINAL DE INICIO
+// Recalcula las órbitas al rotar/cambiar tamaño y al volver
+// a Inicio, sin cambiar datos ni preferencias.
+// =========================================================
+(function configurarInicioResponsiveV121(){
+    let temporizador = 0;
+
+    function reajustar(){
+        clearTimeout(temporizador);
+        temporizador = setTimeout(() => {
+            if (typeof resolverColisionesOrbitasV120 === "function") {
+                resolverColisionesOrbitasV120();
+            }
+        }, 90);
+    }
+
+    window.addEventListener("resize", reajustar, {passive:true});
+    window.addEventListener("orientationchange", reajustar, {passive:true});
+
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", reajustar, {passive:true});
+    }
+
+    document.addEventListener("click", evento => {
+        const boton = evento.target.closest?.("[data-vista='inicio'], [data-view='inicio'], [data-target='inicio']");
+        if (boton) {
+            setTimeout(() => {
+                reajustar();
+                if (typeof refrescarFraseAlVolverAInicio === "function") {
+                    refrescarFraseAlVolverAInicio();
+                }
+            }, 60);
+        }
+    });
+})();
+
+
+function mostrarVersionPublicadaV156() {
+    const destino =
+        document.getElementById("estadoOneDrive") ||
+        document.getElementById("mensajeOneDrive") ||
+        document.querySelector("[data-onedrive]");
+
+    if (!destino || document.getElementById("versionPublicadaV156")) return;
+
+    const etiqueta = document.createElement("div");
+    etiqueta.id = "versionPublicadaV156";
+    etiqueta.textContent = "Versión instalada: V269";
+    etiqueta.style.cssText =
+        "font-size:11px;opacity:.55;text-align:center;margin-top:8px;";
+    destino.insertAdjacentElement("afterend", etiqueta);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(() => { mostrarVersionPublicadaV156(); configurarEstadoSyncV134(); }, 500);
+});
+
+
+
+function organizarCopiasV135() {
+    const textos = [...document.querySelectorAll("h1,h2,h3,h4,p,div,span")];
+    const titulo = textos.find(el =>
+        (el.textContent || "").trim().toLowerCase() === "datos y copias de seguridad"
+    );
+    if (!titulo) return;
+
+    const card =
+        titulo.closest(".card, .ajustes-card, section") ||
+        titulo.parentElement?.parentElement ||
+        titulo.parentElement;
+    if (!card || card.dataset.v135Organizado === "1") return;
+    card.dataset.v135Organizado = "1";
+    card.classList.add("v135-backup-card");
+
+    const botones = [...card.querySelectorAll("button,a")];
+
+    // Con OneDrive activo, "Exportar para iPhone" duplica la finalidad
+    // de la copia/exportación general y se oculta visualmente.
+    const exportarIphone = botones.find(b =>
+        /exportar para iphone/i.test((b.textContent || "").trim())
+    );
+    if (exportarIphone) exportarIphone.classList.add("v135-hide-redundant");
+
+    // Etiqueta "Otras opciones" antes de acceso a inicio.
+    const acceso = botones.find(b =>
+        /preparar acceso a pantalla de inicio/i.test((b.textContent || "").trim())
+    );
+    if (acceso && !card.querySelector(".v135-section-label")) {
+        const label=document.createElement("div");
+        label.className="v135-section-label";
+        label.textContent="Otras opciones";
+        acceso.insertAdjacentElement("beforebegin",label);
+    }
+
+    // Los botones secundarios quedan uniformes.
+    const secundarios = botones.filter(b =>
+        /preparar acceso a pantalla de inicio|importar copia de seguridad/i
+        .test((b.textContent || "").trim())
+    );
+    secundarios.forEach(b => b.style.width="100%");
+
+    // Estado visual compacto usando la información real existente.
+    const estado=document.getElementById("estadoSyncV134");
+    if (estado) {
+        estado.style.padding="10px 12px";
+        estado.style.borderRadius="14px";
+        estado.style.background="rgba(52,199,89,.08)";
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(organizarCopiasV135, 650);
+});
+
+
+function montarHistorialCopiasV136(){
+ if(document.getElementById("historialCopiasV136"))return;
+ const t=[...document.querySelectorAll("h1,h2,h3,h4,p,div,span")].find(e=>(e.textContent||"").trim().toLowerCase()==="datos y copias de seguridad");if(!t)return;
+ const card=t.closest(".card,.ajustes-card,section")||t.parentElement?.parentElement||t.parentElement;if(!card)return;
+ const b=document.createElement("div");b.className="v136-history";b.innerHTML='<div class="v135-section-label">Copias recuperables</div><div id="historialCopiasV136"></div>';card.appendChild(b);renderHistorialCopiasV136();
+}
+
+document.addEventListener("DOMContentLoaded",()=>setTimeout(()=>{montarHistorialCopiasV136();},850));
+
+function resumenComparacionSemanaV260(registros, referencia=new Date()) {
+ const inicio=inicioSemanaV193(referencia),anterior=new Date(inicio),siguiente=new Date(inicio);
+ anterior.setDate(anterior.getDate()-7);siguiente.setDate(siguiente.getDate()+7);
+ const a=fechaLocalISO(anterior),b=fechaLocalISO(inicio),c=fechaLocalISO(siguiente);
+ let actual=0,previa=0;
+ (Array.isArray(registros)?registros:[]).forEach(r=>{
+  const dia=String(r?.fecha||"").slice(0,10),min=Math.max(0,minutosRegistroV143(r));
+  if(dia>=b&&dia<c)actual+=min;else if(dia>=a&&dia<b)previa+=min;
+ });
+ return {actual,previa,diferencia:actual-previa};
+}
+function actualizarComparacionSemanalV139(){
+ const el=document.getElementById("comparacionSemanalV139");if(!el)return;
+ const r=resumenComparacionSemanaV260(estado.registros);
+ const cambio=r.diferencia>0?`↑ +${formatearTiempo(r.diferencia)}`:r.diferencia<0?`↓ −${formatearTiempo(-r.diferencia)}`:"Igual";
+ el.textContent=r.actual===0&&r.previa===0?"Sin actividad registrada en ambas semanas":`${cambio} respecto a la semana anterior · Antes: ${formatearTiempo(r.previa)}`;
+}
+document.addEventListener("DOMContentLoaded",()=>setTimeout(actualizarComparacionSemanalV139,700));
+
+// V141 · agenda inteligente. Estado realizado se deriva de registros: no altera almacenamiento ni OneDrive.
+function minutosPlanificadosV141(p){return p&&typeof p==="object"?(Number(p.minutosTotales)||((Number(p.horas)||0)*60+(Number(p.minutos)||0))):0}
+function planRealizadoV141(fecha,p){
+ const tipo=String(p?.tipo||p?.actividad||"").toLowerCase();
+ return (Array.isArray(estado.registros)?estado.registros:[]).some(r=>{
+  if(String(r.fecha||"").slice(0,10)!==fecha)return false;
+  if(!tipo)return true;
+  const rt=String(r.tipo||r.actividad||"").toLowerCase();return rt===tipo||rt.includes(tipo)||tipo.includes(rt);
+ });
+}
+function resumenAgendaMesV141(ref=new Date()){
+ const a=estado.agendaSalidas&&typeof estado.agendaSalidas==="object"?estado.agendaSalidas:{};
+ let previstos=0,realizados=0,pendientes=0,planes=0;
+ Object.entries(a).forEach(([fecha,v])=>{
+  const f=new Date(`${String(fecha).slice(0,10)}T12:00:00`);
+  if(Number.isNaN(f.getTime())||f.getFullYear()!==ref.getFullYear()||f.getMonth()!==ref.getMonth())return;
+  (Array.isArray(v)?v:[v]).filter(Boolean).forEach(p=>{planes++;const m=minutosPlanificadosV141(p);previstos+=m;if(planRealizadoV141(String(fecha).slice(0,10),p))realizados+=m;else pendientes+=m;});
+ });
+ return{previstos,realizados,pendientes,planes};
+}
+function actualizarAgendaInteligenteV141(){
+ const host=document.getElementById("resumenAgendaV141");if(!host)return;
+ const r=resumenAgendaMesV141(),fmt=m=>`${Math.floor(m/60)} h${m%60?` ${m%60} min`:""}`;
+ host.querySelector("[data-v141-previstas]").textContent=fmt(r.previstos);
+ host.querySelector("[data-v141-realizadas]").textContent=fmt(r.realizados);
+ host.querySelector("[data-v141-pendientes]").textContent=fmt(r.pendientes);
+ host.querySelector("[data-v141-planes]").textContent=`${r.planes} ${r.planes===1?"plan":"planes"}`;
+}
+function actualizarProyeccionPlanificadaV141(){
+ const el=document.getElementById("metaPlanificadoV141");if(!el)return;
+ const ahora=new Date(),r=resumenAgendaMesV141(ahora),ini=new Date(ahora.getFullYear(),ahora.getMonth(),1),fin=new Date(ahora.getFullYear(),ahora.getMonth()+1,1);
+ let hecho=0;(Array.isArray(estado.registros)?estado.registros:[]).forEach(x=>{const f=new Date(`${String(x.fecha||"").slice(0,10)}T12:00:00`);if(!Number.isNaN(f.getTime())&&f>=ini&&f<fin)hecho+=Number(x.minutosTotales)||((Number(x.horas)||0)*60+(Number(x.minutos)||0));});
+ const total=hecho+r.pendientes,fmt=m=>`${Math.floor(m/60)} h${m%60?` ${m%60} min`:""}`;
+ el.querySelector("[data-v141-proyectado]").textContent=fmt(total);
+ el.querySelector("[data-v141-detalle]").textContent=r.pendientes?`Incluye ${fmt(r.pendientes)} que todavía tienes planificadas este mes.`:"No tienes horas pendientes planificadas este mes.";
+}
+document.addEventListener("DOMContentLoaded",()=>setTimeout(()=>{actualizarAgendaInteligenteV141();actualizarProyeccionPlanificadaV141();},800));
+
+
+// =========================================================
+// V143 · RESUMEN MENSUAL AUTOMÁTICO
+// Solo calcula a partir de los registros existentes.
+// =========================================================
+function claveMesV143(fecha){
+ const d=new Date(fecha); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
+}
+function nombreMesV143(fecha){
+ return fecha.toLocaleDateString("es-ES",{month:"long",year:"numeric"}).replace(/^./,c=>c.toUpperCase());
+}
+function minutosRegistroV143(r){
+ return Number(r?.minutosTotales)||((Number(r?.horas)||0)*60+(Number(r?.minutos)||0));
+}
+function resumenMesV143(ref){
+ const ini=new Date(ref.getFullYear(),ref.getMonth(),1),fin=new Date(ref.getFullYear(),ref.getMonth()+1,1);
+ const regs=(Array.isArray(estado.registros)?estado.registros:[]).filter(r=>{
+  const f=new Date(`${String(r.fecha||"").slice(0,10)}T12:00:00`);
+  return !Number.isNaN(f.getTime())&&f>=ini&&f<fin;
+ });
+ let total=0; const dias=new Set(),tipos={},semanas={};
+ regs.forEach(r=>{
+  const mins=minutosRegistroV143(r); total+=mins;
+  const fecha=String(r.fecha||"").slice(0,10); if(fecha)dias.add(fecha);
+  const raw=String(r.tipo||r.actividad||"ministerio").toLowerCase();
+  const tipo=({ministerio:"Ministerio",ldc:"LDC",asamblea:"Asambleas",asambleas:"Asambleas",otras:"Otras"})[raw]||"Otras";
+  tipos[tipo]=(tipos[tipo]||0)+mins;
+  const f=new Date(`${fecha}T12:00:00`);
+  if(!Number.isNaN(f.getTime())){
+   const lun=new Date(f); lun.setDate(lun.getDate()-((lun.getDay()+6)%7));
+   const k=fechaLocalISO(lun); semanas[k]=(semanas[k]||0)+mins;
+  }
+ });
+ const mejor=Math.max(0,...Object.values(semanas));
+ const computo=calcularComputoMesMeta(regs);
+ return {total,dias:dias.size,tipos,mejor,registros:regs.length,computable:computo.computable,excedente:computo.excedente};
+}
+function pintarResumenMensualV143(ref){
+ const host=document.getElementById("resumenMensualV143");if(!host)return;
+ const actual=resumenMesV143(ref),anterior=resumenMesV143(new Date(ref.getFullYear(),ref.getMonth()-1,1));
+ const fmt=m=>`${Math.floor(m/60)} h${m%60?` ${m%60} min`:""}`;
+ const dif=actual.total-anterior.total;
+ const difTxt=dif>0?`↑ +${fmt(dif)}`:dif<0?`↓ −${fmt(Math.abs(dif))}`:"=";
+ host.querySelector("[data-v143-mes]").textContent=nombreMesV143(ref);
+ host.querySelector("[data-v143-total]").textContent=fmt(actual.total);
+ pintarComputoMesV260(document.getElementById("computoResumenMesV260"),{actividadTotal:actual.total,computable:actual.computable,excedente:actual.excedente});
+ host.querySelector("[data-v143-dias]").textContent=actual.dias;
+ host.querySelector("[data-v143-semana]").textContent=fmt(actual.mejor);
+ host.querySelector("[data-v143-compara]").textContent=anterior.total?`${difTxt} frente al mes anterior`:"Sin comparación anterior";
+ const dist=host.querySelector("[data-v143-dist]");
+ const actividades=[["Ministerio","📖","ministerio"],["LDC","🛠️","ldc"],["Asambleas","🎤","asambleas"],["Otras","✨","otras"]];
+ dist.replaceChildren();
+ dist.hidden=!actividades.some(([nombre])=>(actual.tipos[nombre]||0)>0);
+ actividades.filter(([nombre])=>(actual.tipos[nombre]||0)>0).forEach(([nombre,icono,tipo])=>{
+  const fila=document.createElement("div");fila.className="resumen-actividad-v198";fila.dataset.tipo=tipo;
+  const etiqueta=document.createElement("span");etiqueta.textContent=icono+" "+(tipo==="otras"?nombreActividad("otras"):nombre);
+  const valor=document.createElement("b");valor.textContent=fmt(actual.tipos[nombre]||0);
+  fila.append(etiqueta,valor);dist.appendChild(fila);
+ });
+ const msg=host.querySelector("[data-v143-mensaje]");
+ msg.textContent=actual.total===0?"Un nuevo mes es una nueva oportunidad para avanzar paso a paso.":
+   dif>0?"Este mes has avanzado más que el anterior. ¡Sigue así!":
+   actual.dias>=8?"La constancia también se construye paso a paso.":
+   "Cada registro cuenta. Sigue avanzando a tu ritmo.";
+ const cierre=cierreMesV260(ref,estado.registros);if(cierre)msg.textContent=cierre;
+}
+function cambiarMesResumenV143(delta){
+ const input=document.getElementById("mesResumenV143");if(!input)return;
+ const [y,m]=input.value.split("-").map(Number);
+ const d=new Date(y,m-1+delta,1); input.value=claveMesV143(d); pintarResumenMensualV143(d);
+}
+function iniciarResumenMensualV143(){
+ const input=document.getElementById("mesResumenV143");if(!input)return;
+ const hoy=new Date(); if(!fechaMesV202(input.value))input.value=claveMesV143(hoy);
+ input.addEventListener("change",()=>{const [y,m]=input.value.split("-").map(Number);pintarResumenMensualV143(new Date(y,m-1,1));});
+ pintarResumenMensualV143(fechaMesV202(input.value)||hoy);
+}
+document.addEventListener("DOMContentLoaded",()=>setTimeout(iniciarResumenMensualV143,850));
+
+
+
+// V144 · Tendencia de los últimos 6 meses. Solo lectura de registros.
+function actualizarTendenciaV144(){
+ const host=document.getElementById("tendenciaV144");if(!host)return;
+ const hoy=new Date(), meses=[];
+ for(let i=5;i>=0;i--){
+  const d=new Date(hoy.getFullYear(),hoy.getMonth()-i,1),r=resumenMesV143(d);
+  meses.push({d,total:r.total});
+ }
+ const max=Math.max(60,...meses.map(x=>x.total));
+ const fmt=m=>`${Math.floor(m/60)}h${m%60?` ${m%60}m`:""}`;
+ const nom=d=>d.toLocaleDateString("es-ES",{month:"short"}).replace(".","");
+ host.querySelector("[data-v144-barras]").innerHTML=meses.map((x,i)=>{
+   const alto=x.total?Math.max(8,Math.round(x.total/max*100)):3;
+   return `<div class="v144-col ${i===meses.length-1?"actual":""}">
+     <div class="v144-valor">${fmt(x.total)}</div>
+     <div class="v144-bar-wrap"><div class="v144-bar" style="height:${alto}%"></div></div>
+     <small>${nom(x.d)}</small>
+   </div>`;
+ }).join("");
+ const primero=meses[0].total,ultimo=meses[meses.length-1].total;
+ const msg=host.querySelector("[data-v144-mensaje]");
+ if(!meses.some(x=>x.total)) msg.textContent="La tendencia aparecerá cuando haya actividad registrada.";
+ else if(ultimo>primero) msg.textContent="Tu actividad reciente está por encima de la de hace cinco meses.";
+ else if(ultimo<primero) msg.textContent="Este mes está por debajo de hace cinco meses; todavía puedes seguir sumando.";
+ else msg.textContent="Tu actividad se mantiene estable respecto a hace cinco meses.";
+}
+document.addEventListener("DOMContentLoaded",()=>setTimeout(actualizarTendenciaV144,900));
+
+
+
+
+
+
+
+// V152 · sincroniza el nuevo diseño de Meta sin tocar los cálculos existentes.
+function sincronizarMetaVisualV152(){
+  try{
+    const pct=document.getElementById("metaPorcentaje")?.textContent||"0%";
+    const rp=document.querySelector("[data-v152-ringpct]"); if(rp) rp.textContent=pct;
+    const mes=document.getElementById("metaMesActividad")?.textContent||"0 h";
+    const total=(mes.match(/[\d.,]+\s*h/)||["0 h"])[0];
+    const mt=document.querySelector("[data-v152-mes-total]"); if(mt) mt.textContent=total;
+    const n=parseFloat((total.match(/[\d.,]+/)||["0"])[0].replace(",","."))||0;
+    const fill=document.querySelector("[data-v152-mes-fill]"); if(fill) fill.style.width=Math.max(0,Math.min(100,n/55*100))+"%";
+    const ring=document.querySelector(".meta-v152-mini-ring"); if(ring){
+      const p=Math.max(0,Math.min(100,n/55*100));
+      ring.style.background=`conic-gradient(#ff4f9a 0 ${p}%, #253044 ${p}% 100%)`;
+    }
+    const dst=document.querySelector(".meta-v152-personaje");
+    const src=document.querySelector("#animalProgreso img, #animalProgreso .personaje-cuerpo-img, #animalProgreso .pantera-personaje-img");
+    if(dst && src && !dst.querySelector("img")){
+      const img=src.cloneNode(true); img.removeAttribute("id"); img.removeAttribute("style"); dst.appendChild(img);
+    }
+  }catch(e){console.warn("V152 visual",e)}
+}
+document.addEventListener("DOMContentLoaded",()=>{setTimeout(sincronizarMetaVisualV152,900);setTimeout(sincronizarMetaVisualV152,1800)});
+document.addEventListener("click",e=>{if(e.target.closest?.('[data-vista="meta"],[data-tab="meta"],[href="#meta"]')) setTimeout(sincronizarMetaVisualV152,250)});
+
+// V157 corregida · fecha local del día en la cabecera del calendario
+function actualizarFechaCalendarioInicioV157(){
+  const el=document.getElementById("fechaCalendarioInicioV157");
+  if(!el) return;
+  const d=new Date();
+  const dd=String(d.getDate()).padStart(2,"0");
+  const mm=String(d.getMonth()+1).padStart(2,"0");
+  el.textContent=`${dd}/${mm}/${d.getFullYear()}`;
+}
+document.addEventListener("DOMContentLoaded", actualizarFechaCalendarioInicioV157);
+
+// V167 · microanimaciones puramente visuales.
+function animarInicioV167(){
+  const vista=document.getElementById("vista-inicio");
+  if(!vista)return;
+  vista.classList.remove("v167-animar");
+  void vista.offsetWidth;
+  vista.classList.add("v167-animar");
+  setTimeout(()=>vista.classList.remove("v167-animar"),800);
+}
+document.addEventListener("DOMContentLoaded",()=>setTimeout(animarInicioV167,120));
+document.addEventListener("click",e=>{
+  const destino=e.target.closest?.('[data-vista="inicio"],[data-tab="inicio"],a[href="#inicio"]');
+  if(destino)setTimeout(animarInicioV167,40);
+});
+
+// =========================================================
+// V168 · ARRANQUE RÁPIDO / OFFLINE-FIRST
+// La interfaz y localStorage mandan al abrir.
+// Red, clima y sincronización se despiertan después.
+// =========================================================
+window.miServicioArranqueRapidoV168 = true;
+
+function tareasRedDiferidasV168(){
+  if(document.visibilityState==="hidden"){document.addEventListener("visibilitychange",tareasRedDiferidasV168,{once:true});return;}
+  // Clima: si la función existe, refresca después de mostrar ya la app.
+  try{
+    if(typeof actualizarTiempoInicio==="function"){
+      setTimeout(()=>{ try{ actualizarTiempoInicio(); }catch(e){} },350);
+    }
+  }catch(e){}
+  // Sincronización: solo si existe y sin bloquear la primera pintura.
+  try{
+    const sync =
+      (typeof sincronizarConOneDrive==="function" && sincronizarConOneDrive) ||
+      (typeof sincronizarOneDrive==="function" && sincronizarOneDrive) ||
+      null;
+    if(sync) setTimeout(()=>{ try{ sync(); }catch(e){} },900);
+  }catch(e){}
+}
+
+window.addEventListener("load",()=>{
+  if("requestIdleCallback" in window){
+    requestIdleCallback(tareasRedDiferidasV168,{timeout:2200});
+  }else{
+    setTimeout(tareasRedDiferidasV168,1400);
+  }
+},{once:true});
+
+
+
+
+// =========================================================
+// V181 · CONTEXTO DEL CALENDARIO EN EL PROGRESO
+// - No modifica horas ni el objetivo mensual.
+// - Vacaciones / viajes de día completo ajustan únicamente
+//   la interpretación del ritmo.
+// - Los eventos se muestran como contexto visual.
+// =========================================================
+
+const EVENTOS_CALENDARIO_KEY_V181 = "miServicio.eventosCalendarioV172";
+
+function leerEventosCalendarioV181(){
+    try{
+        const raw = JSON.parse(localStorage.getItem(EVENTOS_CALENDARIO_KEY_V181) || "[]");
+        return Array.isArray(raw) ? raw.filter(Boolean) : [];
+    }catch(e){
+        return [];
+    }
+}
+
+function fechaLocalV181(d){
+    const y=d.getFullYear();
+    const m=String(d.getMonth()+1).padStart(2,"0");
+    const dia=String(d.getDate()).padStart(2,"0");
+    return `${y}-${m}-${dia}`;
+}
+
+function tipoContextoV181(e){
+    const tipo=String(e?.tipo||"").toLowerCase();
+    const titulo=String(e?.titulo||e?.title||"").toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+    const tiene=(re)=>re.test(titulo);
+
+    if(tipo==="vacaciones" || tiene(/\b(vacacion|vacaciones|holiday|descanso|libre|dias libres|dia libre)\b/)){
+        return {tipo:"vacaciones",icono:"🌴",nombre:"Vacaciones",tituloHoy:"Vacaciones hoy",bloquea:true};
+    }
+    if(tipo==="viaje" || tiene(/\b(viaje|vuelo|avion|tren|hotel|aeropuerto|ferry|barco|maleta)\b/)){
+        return {tipo:"viaje",icono:"🧳",nombre:"Viaje",tituloHoy:"Viaje hoy",bloquea:Boolean(e?.todoElDia)};
+    }
+    if(tiene(/\b(cumple|cumpleanos|aniversario|fiesta|celebracion|boda)\b/)){
+        return {tipo:"celebracion",icono:"🎉",nombre:"Celebración",tituloHoy:"Celebración hoy",bloquea:false};
+    }
+    if(tipo==="cita" || tiene(/\b(medico|medica|dentista|hospital|consulta|revision|analisis|cita)\b/)){
+        return {tipo:"cita",icono:"🩺",nombre:"Cita",tituloHoy:"Cita hoy",bloquea:false};
+    }
+    if(tipo==="trabajo" || tiene(/\b(trabajo|oficina|reunion|curso|formacion)\b/)){
+        return {tipo:"trabajo",icono:"💼",nombre:"Compromiso",tituloHoy:"Compromiso hoy",bloquea:false};
+    }
+    if(tipo==="asamblea" || tiene(/\b(asamblea|congreso)\b/)){
+        return {tipo:"asamblea",icono:"🎤",nombre:"Asamblea",tituloHoy:"Asamblea hoy",bloquea:false};
+    }
+    if(tipo==="ldc" || tiene(/\b(ldc|construccion|mantenimiento|obra)\b/)){
+        return {tipo:"ldc",icono:"🛠️",nombre:"LDC",tituloHoy:"LDC hoy",bloquea:false};
+    }
+    if(tipo==="ministerio" || tiene(/\b(predicacion|servicio|ministerio|revisita|curso biblico)\b/)){
+        return {tipo:"servicio",icono:"📖",nombre:"Servicio",tituloHoy:"Servicio hoy",bloquea:false};
+    }
+    if(tiene(/\b(familia|comida|cena|almuerzo|visita|merienda)\b/)){
+        return {tipo:"familia",icono:"🍽️",nombre:"Plan familiar",tituloHoy:"Plan familiar hoy",bloquea:false};
+    }
+    return {tipo:"personal",icono:"✨",nombre:"Evento",tituloHoy:"Evento hoy",bloquea:false};
+}
+
+function eventosMesV181(ref=new Date()){
+    const y=ref.getFullYear();
+    const m=ref.getMonth()+1;
+    const pref=`${y}-${String(m).padStart(2,"0")}-`;
+
+    return leerEventosCalendarioV181()
+        .filter(e=>String(e?.fecha||"").startsWith(pref))
+        .map(e=>({...e,_ctx:tipoContextoV181(e)}))
+        .sort((a,b)=>String(a.fecha).localeCompare(String(b.fecha)) || String(a.hora||"").localeCompare(String(b.hora||"")));
+}
+
+function resumenDisponibilidadV181(ref=new Date()){
+    const eventos=eventosMesV181(ref);
+    const diasMes=new Date(ref.getFullYear(),ref.getMonth()+1,0).getDate();
+    const hoy=Math.min(ref.getDate(),diasMes);
+
+    const bloqueados=new Set(
+        eventos
+            .filter(e=>e._ctx.bloquea)
+            .map(e=>String(e.fecha))
+    );
+
+    let disponiblesTotales=0;
+    let disponiblesTranscurridos=0;
+    let disponiblesRestantes=0;
+
+    for(let dia=1;dia<=diasMes;dia++){
+        const d=new Date(ref.getFullYear(),ref.getMonth(),dia,12,0,0);
+        const iso=fechaLocalV181(d);
+        if(bloqueados.has(iso)) continue;
+
+        disponiblesTotales++;
+        if(dia<=hoy) disponiblesTranscurridos++;
+        if(dia>=hoy) disponiblesRestantes++;
+    }
+
+    const esperado=disponiblesTotales>0
+        ? (disponiblesTranscurridos/disponiblesTotales)*100
+        : (hoy/diasMes)*100;
+
+    const hoyISO=fechaLocalV181(ref);
+    const hoyEventos=eventos.filter(e=>e.fecha===hoyISO);
+    const hoyBloqueado=hoyEventos.some(e=>e._ctx.bloquea);
+
+    return {
+        eventos,
+        bloqueados,
+        diasMes,
+        esperado,
+        disponiblesTotales,
+        disponiblesTranscurridos,
+        disponiblesRestantes,
+        hoyEventos,
+        hoyBloqueado
+    };
+}
+
+function asegurarMarcadoresV181(contenedor){
+    let host=contenedor?.querySelector(".progreso-eventos-v181");
+    if(!host && contenedor){
+        host=document.createElement("div");
+        host.className="progreso-eventos-v181";
+        host.setAttribute("aria-hidden","true");
+        contenedor.appendChild(host);
+    }
+    return host;
+}
+
+function renderMarcadoresV181(contenedor,resumen){
+    const host=asegurarMarcadoresV181(contenedor);
+    if(!host) return;
+
+    host.innerHTML="";
+    const porFecha=new Map();
+
+    resumen.eventos.forEach(e=>{
+        // Los eventos genéricos siguen en el calendario; no decoran el camino.
+        if(e._ctx.tipo === "personal") return;
+        if(!porFecha.has(e.fecha)) porFecha.set(e.fecha,e);
+        else if(e._ctx.bloquea && !porFecha.get(e.fecha)._ctx.bloquea) porFecha.set(e.fecha,e);
+    });
+
+    [...porFecha.values()].forEach(e=>{
+        const dia=Number(String(e.fecha).slice(8,10));
+        if(!dia) return;
+
+        const marker=document.createElement("span");
+        marker.className=`progreso-evento-marca-v181 tipo-${e._ctx.tipo}`;
+        marker.textContent=e._ctx.icono;
+        marker.style.left=`${((dia-.5)/resumen.diasMes)*100}%`;
+        marker.title=`${dia} · ${e.titulo || e._ctx.nombre}`;
+        host.appendChild(marker);
+    });
+}
+
+function textoContextoV181(resumen){
+    const vacas=[...resumen.bloqueados].length;
+    const hoyEvt=resumen.hoyEventos[0];
+
+    if(resumen.hoyBloqueado && hoyEvt){
+        return {
+            icono:hoyEvt._ctx.icono,
+            fuerte:"Pausa planificada",
+            detalle:`${hoyEvt._ctx.nombre} hoy · el objetivo no cambia`
+        };
+    }
+
+    if(vacas>0){
+        const palabra=vacas===1?"día":"días";
+        return {
+            icono:"🏖️",
+            fuerte:`${vacas} ${palabra} no disponible${vacas===1?"":"s"} este mes`,
+            detalle:`${resumen.disponiblesRestantes} días disponibles desde hoy · ritmo ajustado`
+        };
+    }
+
+    if(hoyEvt){
+        return {
+            icono:hoyEvt._ctx.icono,
+            fuerte:hoyEvt._ctx.tituloHoy || `${hoyEvt._ctx.nombre} hoy`,
+            detalle:"Se muestra como contexto; tus horas y objetivo siguen iguales",
+            tipo:hoyEvt._ctx.tipo
+        };
+    }
+
+    const futuro=resumen.eventos.find(e=>e.fecha>fechaLocalV181(new Date()));
+    if(futuro){
+        const dia=Number(String(futuro.fecha).slice(8,10));
+        return {
+            icono:futuro._ctx.icono,
+            fuerte:`${futuro._ctx.nombre} el ${dia}`,
+            detalle:futuro._ctx.tipo === "personal" ? "Consulta los detalles en el calendario" : "Evento próximo reflejado en la línea de progreso"
+        };
+    }
+
+    return null;
+}
+
+function aplicarContextoCalendarioProgresoV181(progreso, estadoPersonaje, contenedor){
+    const box=document.getElementById("contextoCalendarioProgresoV181");
+    if(!box || !contenedor) return;
+
+    const resumen=resumenDisponibilidadV181(new Date());
+    renderMarcadoresV181(contenedor,resumen);
+
+    const contexto=textoContextoV181(resumen);
+    if(contexto){
+        box.className="contexto-calendario-progreso-v181";
+        box.classList.add(`tipo-${contexto.tipo||"personal"}`);
+        box.innerHTML=
+            `<span class="contexto-icono-v181">${contexto.icono}</span>`+
+            `<span><strong>${contexto.fuerte}</strong><small>${contexto.detalle}</small></span>`;
+    }else{
+        box.innerHTML="";
+        box.className="contexto-calendario-progreso-v181 oculto";
+    }
+
+    // Si no hay días que afecten al ritmo, respetamos exactamente el cálculo anterior.
+    if(!resumen.bloqueados.size) return;
+
+    const valor=Math.max(0,Math.min(100,Number(progreso)||0));
+    const diferencia=valor-resumen.esperado;
+    const margen=5;
+
+    contenedor.classList.remove(
+        "ritmo-atrasado",
+        "ritmo-en-ritmo",
+        "ritmo-adelantado",
+        "ritmo-pausa"
+    );
+
+    if(resumen.hoyBloqueado){
+        contenedor.classList.add("ritmo-pausa");
+        if(estadoPersonaje){
+            estadoPersonaje.textContent="🏖️ Pausa planificada. Tu objetivo sigue igual.";
+        }
+        return;
+    }
+
+    if(valor>=100){
+        return;
+    }
+
+    if(diferencia>=margen){
+        contenedor.classList.add("ritmo-adelantado");
+        if(estadoPersonaje) estadoPersonaje.textContent="Ritmo ajustado: vas por delante ✨";
+    }else if(diferencia<=-margen){
+        contenedor.classList.add("ritmo-atrasado");
+        if(estadoPersonaje) estadoPersonaje.textContent="Ritmo ajustado: aún puedes recuperar el ritmo.";
+    }else{
+        contenedor.classList.add("ritmo-en-ritmo");
+        if(estadoPersonaje) estadoPersonaje.textContent="Ritmo ajustado: vas bien ✨";
+    }
+}
+
+function refrescarContextoProgresoV181(){
+    try{
+        const objetivo=Number(estado?.preferencias?.objetivoMensualMinutos)||0;
+        const regs=(typeof obtenerRegistrosMesActual==="function")
+            ? obtenerRegistrosMesActual()
+            : (Array.isArray(estado?.registros)?estado.registros:[]);
+        const total=calcularComputoMesMeta(regs).computable;
+        const pct=objetivo>0?Math.min(100,Math.max(0,(total/objetivo)*100)):0;
+        const cont=document.getElementById("progresoPersonaje");
+        const est=document.getElementById("estadoAnimal");
+        if(typeof actualizarPersonajeProgreso === "function") actualizarPersonajeProgreso(pct);
+        else aplicarContextoCalendarioProgresoV181(pct,est,cont);
+    }catch(e){
+        console.warn("Contexto progreso V181",e);
+    }
+}
+
+window.addEventListener("miServicio:eventosCalendarioActualizados",()=>{
+    setTimeout(refrescarContextoProgresoV181,80);
+});
+
+document.addEventListener("DOMContentLoaded",()=>{
+    setTimeout(refrescarContextoProgresoV181,1100);
+});
+
+document.addEventListener("visibilitychange",()=>{
+    if(!document.hidden) setTimeout(refrescarContextoProgresoV181,120);
+});
+
+
+// V186 · contexto visual del personaje en Inicio
+function obtenerContextoVisualPersonajeV186(){
+    try{
+        if(typeof resumenDisponibilidadV181 !== "function") return null;
+        const resumen = resumenDisponibilidadV181(new Date());
+        const hoyEvt = Array.isArray(resumen?.hoyEventos) ? resumen.hoyEventos[0] : null;
+        const tipo = hoyEvt?._ctx?.tipo || "";
+        if(tipo === "vacaciones"){
+            return {
+                tipo:"vacaciones",
+                accesorio:"😎",
+                descripcion:"Contexto del día: vacaciones",
+                tono:"relajado"
+            };
+        }
+        if(tipo === "viaje"){
+            return {
+                tipo:"viaje",
+                accesorio:"🧳",
+                descripcion:"Contexto del día: viaje",
+                tono:"desplazamiento"
+            };
+        }
+        return null;
+    }catch(e){
+        return null;
+    }
+}
+
+
+// =========================================================
+// V188 · MICROANIMACIONES DISCRETAS
+// =========================================================
+
+function pulsoVisualV188(elemento,clase="micro-pulso-v188"){
+    if(!elemento) return;
+    elemento.classList.remove(clase);
+    void elemento.offsetWidth;
+    elemento.classList.add(clase);
+    setTimeout(()=>elemento.classList.remove(clase),760);
+}
+
+function destelloV188(icono,texto){
+    let toast=document.getElementById("microToastV188");
+    if(!toast){
+        toast=document.createElement("div");
+        toast.id="microToastV188";
+        toast.className="micro-toast-v188";
+        toast.setAttribute("aria-live","polite");
+        document.body.appendChild(toast);
+    }
+
+    toast.innerHTML=
+        `<span class="micro-toast-icono-v188">${icono}</span>`+
+        `<span>${texto}</span>`;
+
+    toast.classList.remove("visible");
+    void toast.offsetWidth;
+    toast.classList.add("visible");
+
+    clearTimeout(destelloV188._t);
+    destelloV188._t=setTimeout(()=>{
+        toast.classList.remove("visible");
+    },1350);
+}
+
+function celebrarObjetivoV188(mensaje){
+    const tarjeta=mensaje?.closest(".tarjeta");
+    if(!tarjeta) return;
+
+    if(tarjeta.dataset.v188ObjetivoAlcanzado==="1") return;
+    tarjeta.dataset.v188ObjetivoAlcanzado="1";
+
+    pulsoVisualV188(tarjeta,"micro-objetivo-v188");
+    destelloV188("✨","Objetivo conseguido");
+
+    const personaje=document.getElementById("animalProgreso");
+    if(personaje) pulsoVisualV188(personaje,"micro-personaje-meta-v188");
+}
+
+function reiniciarObjetivoV188(mensaje){
+    const tarjeta=mensaje?.closest(".tarjeta");
+    if(tarjeta) tarjeta.dataset.v188ObjetivoAlcanzado="0";
+}
+
+window.addEventListener("miServicio:registroGuardadoV188",()=>{
+    mostrarGuardadoV260();
+});
+
+window.addEventListener("miServicio:calendarioSincronizadoV188",(e)=>{
+    const boton=document.getElementById("sincronizarCalendarioV176");
+    const estado=document.getElementById("estadoCalendarioAppleV173");
+
+    pulsoVisualV188(boton,"micro-sync-v188");
+    if(estado) pulsoVisualV188(estado,"micro-mensaje-v188");
+
+    const total=Number(e?.detail?.total||0);
+    destelloV188("↻",total===1?"1 evento sincronizado":`${total} eventos sincronizados`);
+});
+
+
+// =========================================================
+// V190 · ESTADO DE CONEXIÓN VISIBLE EN CABECERA
+// =========================================================
+function pintarEstadoConexionV190(texto,tipo){
+    const box=document.getElementById("estadoConexionV190");
+    const label=document.getElementById("estadoConexionTextoV190");
+    if(!box||!label)return;
+
+    let clase="estado-online-v190";
+    let corto="Al día";
+
+    if(!navigator.onLine){
+        clase="estado-offline-v190";
+        corto="Local · sin conexión";
+    }else if(tipo==="subiendo" || tipo==="bajando"){
+        clase="estado-sync-v190";
+        corto="Sincronizando…";
+    }else if(tipo==="pendiente"){
+        clase="estado-pendiente-v190";
+        corto=/protección activa/i.test(String(texto||""))
+            ? "Protegido"
+            : "Pendiente";
+    }else if(/no se pudo|error|fall/i.test(String(texto||""))){
+        clase="estado-pendiente-v190";
+        corto="Solo local";
+    }
+
+    box.className=`estado-conexion-v190 ${clase}`;
+    label.textContent=corto;
+    box.title=String(texto||corto);
+}
+
+window.addEventListener("miServicio:estadoSyncV190",e=>{
+    pintarEstadoConexionV190(e?.detail?.texto,e?.detail?.tipo);
+});
+window.addEventListener("offline",()=>pintarEstadoConexionV190("Sin conexión · trabajando localmente","pendiente"));
+window.addEventListener("online",()=>{
+    pintarEstadoConexionV190("Conexión recuperada · sincronizando…","subiendo");
+});
+
+document.addEventListener("DOMContentLoaded",()=>{
+    let guardado=null;
+    try{ guardado=almacenamiento.leer("miServicio.estadoSyncV134",null); }catch(e){}
+    pintarEstadoConexionV190(guardado?.texto,guardado?.tipo||"ok");
+    document.body.classList.add("v190-shell-listo");
+});
+
+
+// =========================================================
+// V191 · INICIO COMPACTO QUE RECUERDA ESTADO
+// =========================================================
+const KEY_INICIO_COMPACTO_V191="miServicio.inicioCompactoV191";
+
+function leerInicioCompactoV191(){
+    try{
+        return JSON.parse(localStorage.getItem(KEY_INICIO_COMPACTO_V191)||"{}")||{};
+    }catch(e){ return {}; }
+}
+function guardarInicioCompactoV191(parcial){
+    const actual=leerInicioCompactoV191();
+    localStorage.setItem(KEY_INICIO_COMPACTO_V191,JSON.stringify({...actual,...parcial}));
+}
+
+function aplicarEstadoCompactoV191(){
+    const pref=leerInicioCompactoV191();
+
+    const panel=document.getElementById("panelCalendarioInicio");
+    const botonCal=document.getElementById("botonCalendarioInicio");
+    const icono=document.getElementById("iconoCalendarioInicio");
+    const calAbierto=pref.calendario===true;
+
+    if(panel && botonCal){
+        panel.classList.toggle("oculto",!calAbierto);
+        botonCal.setAttribute("aria-expanded",String(calAbierto));
+        if(icono) icono.textContent=calAbierto?"⌃":"⌄";
+        if(calAbierto && typeof actualizarCalendarioInicio==="function"){
+            setTimeout(actualizarCalendarioInicio,30);
+        }
+    }
+
+}
+
+function instalarPersistenciaCompactaV191(){
+    const botonCal=document.getElementById("botonCalendarioInicio");
+    const panel=document.getElementById("panelCalendarioInicio");
+    botonCal?.addEventListener("click",()=>{
+        setTimeout(()=>{
+            guardarInicioCompactoV191({calendario:!panel?.classList.contains("oculto")});
+            hapticoV191(5);
+        },0);
+    });
+
+}
+
+// =========================================================
+// V191 · HÁPTICO PROGRESIVO
+// Safari/iPhone puede ignorar navigator.vibrate.
+// =========================================================
+function hapticoV191(ms=6){
+    try{
+        if(typeof navigator.vibrate==="function"){
+            navigator.vibrate(Math.max(1,Math.min(12,Number(ms)||6)));
+            return true;
+        }
+    }catch(e){}
+    return false;
+}
+
+window.addEventListener("miServicio:registroGuardadoV188",()=>hapticoV191(8));
+
+document.addEventListener("click",e=>{
+    if(e.target.closest?.("[data-personaje]")){
+        hapticoV191(5);
+    }
+});
+
+// =========================================================
+// V191 · REGISTRO RÁPIDO DESDE INICIO
+// =========================================================
+function abrirRegistroRapidoV191(){
+    seleccionarVista("registrar");
+}
+
+function instalarRegistroRapidoV191(){
+    document.getElementById("abrirRegistroRapidoV191")?.addEventListener("click",abrirRegistroRapidoV191);
+}
+
+// Haptic al llegar a objetivo, usando la celebración ya existente.
+const celebrarObjetivoV188Original=typeof celebrarObjetivoV188==="function" ? celebrarObjetivoV188 : null;
+if(celebrarObjetivoV188Original){
+    celebrarObjetivoV188=function(mensaje){
+        const tarjeta=mensaje?.closest(".tarjeta");
+        const ya=tarjeta?.dataset?.v188ObjetivoAlcanzado==="1";
+        celebrarObjetivoV188Original(mensaje);
+        if(!ya && tarjeta?.dataset?.v188ObjetivoAlcanzado==="1") hapticoV191(10);
+    };
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+    setTimeout(()=>{
+        aplicarEstadoCompactoV191();
+        instalarPersistenciaCompactaV191();
+        instalarRegistroRapidoV191();
+    },120);
+});
+
+
+// =========================================================
+// V193 · SEMANA VISUAL
+// =========================================================
+function inicioSemanaV193(fecha=new Date()){
+    const d=new Date(fecha);
+    d.setHours(12,0,0,0);
+    const dia=(d.getDay()+6)%7;
+    d.setDate(d.getDate()-dia);
+    return d;
+}
+
+function minutosDiaV193(fechaISOTexto){
+    return (Array.isArray(estado?.registros)?estado.registros:[])
+        .filter(r=>String(r?.fecha||"").slice(0,10)===fechaISOTexto)
+        .reduce((s,r)=>s+(Number(r?.minutos)||Number(r?.minutosTotales)||0),0);
+}
+
+function actualizarSemanaVisualV193(){
+    const host=document.getElementById("semanaVisualDiasV193");
+    const totalEl=document.getElementById("semanaVisualTotalV193");
+    if(!host||!totalEl)return;
+
+    const inicio=inicioSemanaV193(new Date());
+    const hoy=fechaLocalISO(new Date());
+    const letras=["L","M","X","J","V","S","D"];
+    let total=0;
+    host.innerHTML="";
+
+    for(let i=0;i<7;i++){
+        const d=new Date(inicio);
+        d.setDate(inicio.getDate()+i);
+        const iso=fechaLocalISO(d);
+        const min=minutosDiaV193(iso);
+        total+=min;
+
+        const item=document.createElement("div");
+        item.className="v193-dia";
+        if(min>0)item.classList.add("con-actividad");
+        if(iso===hoy)item.classList.add("hoy");
+
+        const letra=document.createElement("small");
+        letra.textContent=letras[i];
+
+        const punto=document.createElement("span");
+        punto.className="v193-dia-punto";
+        punto.title=min>0?`${letras[i]} · ${formatearTiempo(min)}`:`${letras[i]} · sin actividad`;
+
+        const valor=document.createElement("strong");
+        valor.textContent=min>0?formatearTiempo(min):"—";
+
+        item.append(letra,punto,valor);
+        host.appendChild(item);
+    }
+
+    totalEl.textContent=formatearTiempo(total);
+    actualizarComparacionSemanalV139();
+}
+
+// =========================================================
+// V193 · TRANSICIONES SUAVES ENTRE PESTAÑAS
+// =========================================================
+function animarVistaActivaV193(){
+    const activa=document.querySelector(".vista.activa");
+    if(!activa)return;
+    activa.classList.remove("v193-entrada");
+    void activa.offsetWidth;
+    activa.classList.add("v193-entrada");
+    setTimeout(()=>activa.classList.remove("v193-entrada"),320);
+}
+
+document.addEventListener("click",e=>{
+    const nav=e.target.closest?.("[data-vista],[data-tab],.barra-navegacion button,nav.barra-navegacion button");
+    if(!nav)return;
+    setTimeout(()=>{
+        animarVistaActivaV193();
+        actualizarSemanaVisualV193();
+    },40);
+});
+
+window.addEventListener("miServicio:registroGuardadoV188",()=>{
+    setTimeout(actualizarSemanaVisualV193,80);
+});
+
+document.addEventListener("DOMContentLoaded",()=>{
+    setTimeout(()=>{
+        actualizarSemanaVisualV193();
+        animarVistaActivaV193();
+    },160);
+});
+
+
+// =========================================================
+// V195 · CABECERA DINÁMICA + ÚLTIMA ACTUALIZACIÓN
+// =========================================================
+function saludoDinamicoV195(){
+    const el=document.getElementById("saludoDinamicoV195");
+    if(!el)return;
+
+    const hora=new Date().getHours();
+    let saludo=hora<12?"Buenos días":hora<20?"Buenas tardes":"Buenas noches";
+    const nombre=nombreSaludoV260();if(nombre)saludo+=`, ${nombre}`;
+
+    try{
+        if(typeof resumenDisponibilidadV181==="function"){
+            const resumen=resumenDisponibilidadV181(new Date());
+            const tipo=resumen?.hoyEventos?.[0]?._ctx?.tipo||"";
+            if(tipo==="vacaciones") saludo+=" · modo descanso 🌴";
+            else if(tipo==="viaje") saludo+=" · día de viaje 🧳";
+            else if(tipo==="asamblea") saludo+=" · día especial 🎤";
+            else if(tipo==="ldc") saludo+=" · día de LDC 🛠️";
+        }
+    }catch(e){}
+
+    el.textContent=saludo;
+    el.dataset.periodo=hora<12?"manana":hora<20?"tarde":"noche";
+    el.dataset.contexto=saludo.includes(" · ")?"especial":"normal";
+}
+
+function textoHaceV195(fecha){
+    const ms=Math.max(0,Date.now()-fecha.getTime());
+    if(ms<60000)return "Actualizado ahora";
+
+    const min=Math.floor(ms/60000);
+    if(min<60)return `Actualizado hace ${min} min`;
+
+    const horas=Math.floor(min/60);
+    if(horas<24)return `Actualizado hace ${horas} h`;
+
+    return `Actualizado ${fecha.toLocaleDateString("es-ES",{day:"numeric",month:"short"})}`;
+}
+
+function ultimaActualizacionV195(){
+    const el=document.getElementById("ultimaActualizacionV195");
+    if(!el)return;
+
+    let fecha=new Date();
+
+    try{
+        const sync=almacenamiento.leer(STORAGE_KEYS.ultimaSyncOneDrive,null);
+
+        if(sync){
+            const d=new Date(sync);
+            if(!Number.isNaN(d.getTime())) fecha=d;
+        }else{
+            const regs=Array.isArray(estado?.registros)?estado.registros:[];
+            const ultima=regs
+                .map(r=>new Date(r?.modificadoEn||r?.creadoEn||r?.fecha||0))
+                .filter(d=>!Number.isNaN(d.getTime()))
+                .sort((a,b)=>b-a)[0];
+
+            if(ultima) fecha=ultima;
+        }
+    }catch(e){}
+
+    el.textContent=textoHaceV195(fecha);
+}
+
+window.addEventListener("miServicio:estadoSyncV190",()=>{
+    setTimeout(ultimaActualizacionV195,120);
+});
+
+window.addEventListener("miServicio:registroGuardadoV188",()=>{
+    setTimeout(ultimaActualizacionV195,100);
+});
+
+// =========================================================
+// V195 · ESTADOS VACÍOS MÁS AMABLES
+// =========================================================
+function aplicarEstadosVaciosV195(){
+    const registros=Array.isArray(estado?.registros)?estado.registros:[];
+
+    const historial=document.getElementById("vista-historial");
+    if(historial){
+        let vacio=historial.querySelector(".estado-vacio-v195");
+
+        if(!registros.length){
+            if(!vacio){
+                vacio=document.createElement("div");
+                vacio.className="estado-vacio-v195";
+                vacio.innerHTML=
+                    `<span class="estado-vacio-icono-v195">📝</span>`+
+                    `<strong>Aún no hay actividad</strong>`+
+                    `<small>Cuando registres tiempo, aparecerá aquí.</small>`;
+                historial.appendChild(vacio);
+            }
+        }else{
+            vacio?.remove();
+        }
+    }
+
+    const stats=document.getElementById("vista-estadisticas");
+    if(stats){
+        let vacio=stats.querySelector(".estado-vacio-v195");
+
+        if(!registros.length){
+            if(!vacio){
+                vacio=document.createElement("div");
+                vacio.className="estado-vacio-v195";
+                vacio.innerHTML=
+                    `<span class="estado-vacio-icono-v195">📊</span>`+
+                    `<strong>Todavía no hay estadísticas</strong>`+
+                    `<small>Se irán formando a medida que registres actividad.</small>`;
+                stats.appendChild(vacio);
+            }
+        }else{
+            vacio?.remove();
+        }
+    }
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+    setTimeout(()=>{
+        saludoDinamicoV195();
+        ultimaActualizacionV195();
+        aplicarEstadosVaciosV195();
+    },180);
+
+    setInterval(ultimaActualizacionV195,60000);
+});
+
+window.addEventListener("miServicio:registroGuardadoV188",()=>{
+    setTimeout(aplicarEstadosVaciosV195,100);
+});
+
+// V197 · Resumen compacto y color por actividad, sin cambiar registros.
+function datosHoyCompactoV197(registros=[],planes=[],eventos=[]){
+ const activos=registros.length?registros:planes;
+ const minutosRegistro=r=>r.minutosTotales!=null?Number(r.minutosTotales)||0:Number(r.minutos)||0;
+ const minutos=registros.length?registros.reduce((s,r)=>s+minutosRegistro(r),0):planes.reduce((s,p)=>s+minutosPlanificadosV141(p),0);
+ const tipos=[...new Set(activos.map(r=>String(r.tipo||r.actividad||"ministerio").toLowerCase()))];
+ const mapa={ministerio:["Ministerio","📖"],ldc:["LDC","🛠️"],asambleas:["Asamblea","🎤"],asamblea:["Asamblea","🎤"],otras:[nombreActividad("otras"),"✨"]};
+ const tipo=tipos.length===1?tipos[0]:tipos.length>1?"mixto":"";
+ const companeros=[...new Set(activos.map(r=>String(r.companero||r.acompanante||"").trim()).filter(Boolean))];
+ const partes=[];
+ if(activos.length){
+  if(minutos>0)partes.push(formatearTiempo(minutos)+(registros.length?"":" previstas"));
+  partes.push(tipos.map(t=>mapa[t]?.[0]||t).join(" + "));
+  if(companeros.length===1)partes.push("con "+companeros[0]);
+  else if(companeros.length>1)partes.push("con "+companeros.length+" acompañantes");
+ }else if(eventos.length){partes.push(eventos[0].titulo||"Evento de hoy");}
+ else partes.push("Sin actividad planificada");
+ return {texto:"Hoy: "+partes.join(" · "),tipo,icono:mapa[tipo]?.[1]||"📅"};
+}
+
+function estadoVacioV197(icono,texto){
+ const box=document.createElement("div");box.className="estado-vacio-compacto-v197";
+ const imagen=document.createElement("span");imagen.setAttribute("aria-hidden","true");imagen.textContent=icono;
+ const mensaje=document.createElement("span");mensaje.textContent=texto;
+ box.append(imagen,mensaje);return box;
+}
+
+function refrescarResumenMensualV198(){
+ const input=document.getElementById("mesResumenV143");
+ if(!input)return;
+ if(!/^\d{4}-\d{2}$/.test(input.value))input.value=claveMesV143(new Date());
+ const [y,m]=input.value.split("-").map(Number);
+ pintarResumenMensualV143(new Date(y,m-1,1));
+}
+document.addEventListener("click",e=>{
+ if(e.target.closest?.('[data-vista="estadisticas"]'))setTimeout(refrescarResumenMensualV198,40);
+});
+window.addEventListener("miServicio:estadoSyncV190",()=>setTimeout(refrescarResumenMensualV198,100));
+
+// V200 · Mantener el saludo al día al regresar a la app.
+document.addEventListener("visibilitychange",()=>{
+ if(document.visibilityState==="visible")saludoDinamicoV195();
+});
+setInterval(saludoDinamicoV195,60000);
+
+// V260 · Preferencia visual local: no cambia registros, objetivos ni cómputos.
+var datosGraficoPersonalV260=null;
+const ESTILOS_GRAFICO_V260=["burbujas","anillos","donut","barras","corazones","arcos","quesitos"];
+function leerEstiloGraficoV260(){
+    try{const estilo=localStorage.getItem("miServicio.estiloGraficoInicio");return ESTILOS_GRAFICO_V260.includes(estilo)?estilo:"burbujas";}catch(e){return "burbujas";}
+}
+function crearGraficoPersonalV260(estilo,actividades){
+    if(estilo==="quesitos")return crearGraficoQuesitosV260(actividades);
+    if(estilo==="arcos")return crearGraficoArcosV260(actividades);
+    const colores={ministerio:"#3478f6",ldc:"#ed8abb",asambleas:"#f5a623",otras:"#9a80e8"};
+    const total=actividades.reduce((s,a)=>s+a.minutos,0);
+    if(!total&&estilo==="corazones")return `<div class="grafico-personal-v260 corazones-vacios-v260"><div class="corazon-globo-v260" style="--corazon:#c9d2df;--corazon-texto:var(--text-primary)">${svgCorazonV260()}<div class="corazon-datos-v260"><span>este mes</span><strong>0 min</strong></div></div><p>Tu actividad aparecerá aquí</p></div>`;
+    if(!total)return '<div class="grafico-personal-v260 grafico-vacio-v260"><div class="grafico-total-v260"><strong>0 min</strong><span>este mes</span></div><p>Tu actividad aparecerá aquí</p></div>';
+    const leyenda=actividades.map(a=>`<li style="--actividad:${colores[a.tipo]}"><i aria-hidden="true"></i><span>${textoArcosV260(a.nombre)}</span><strong>${formatearTiempo(a.minutos)}</strong><small>${Math.round(a.minutos/total*100)}%</small></li>`).join("");
+    let dibujo="";
+    if(estilo==="corazones"){
+        const posiciones={1:[[50,17]],2:[[17,50],[83,50]],3:[[50,16],[18,78],[82,78]],4:[[50,16],[83,50],[50,84],[17,50]]}[actividades.length];
+        dibujo=`<div class="corazones-orbita-v260"><div class="corazones-orbita-trazo-v260" aria-hidden="true"></div><div class="corazones-total-centro-v260"><strong>${formatearTiempo(total)}</strong><span>este mes</span></div>${actividades.map((a,i)=>`<div class="corazon-posicion-v260" style="--corazon-x:${posiciones[i][0]}%;--corazon-y:${posiciones[i][1]}%;--corazon-diametro:${(tamanoCorazonV260(a.minutos,actividades)*.34).toFixed(2)}%"><div class="corazon-globo-v260" role="button" tabindex="0" data-actividad-inicio="${a.tipo}" title="Ver registros del mes" aria-label="Ver registros de ${textoArcosV260(a.nombre)}: ${formatearTiempo(a.minutos)}" style="--corazon:${colores[a.tipo]};--corazon-texto:${a.tipo==="ministerio"?"#fff":"#182238"};--corazon-duracion:${4.8+i*.55}s;--corazon-retraso:${-i*1.2}s">${svgCorazonV260()}<div class="corazon-datos-v260"><span>${textoArcosV260(a.nombre)}</span><strong>${formatearTiempoCortoCalendario(a.minutos)}</strong><small>${Math.round(a.minutos/total*100)}%</small></div></div></div>`).join("")}</div>`;
+    }else if(estilo==="barras"){
+        dibujo=`<div class="grafico-total-barras-v260"><strong>${formatearTiempo(total)}</strong><span>este mes</span></div><div class="grafico-barras-v260">${actividades.map(a=>`<div style="--actividad:${colores[a.tipo]}"><div class="grafico-barra-titulo-v260"><span>${textoArcosV260(a.nombre)}</span><strong>${formatearTiempo(a.minutos)}</strong><small>${Math.round(a.minutos/total*100)}%</small></div><div class="grafico-barra-pista-v260"><span style="width:${a.minutos/total*100}%"></span></div></div>`).join("")}</div>`;
+    }else{
+        let acumulado=0;
+        const prefijoTubo=idVolumenV260("tubo");let defsTubo="";
+        const circulos=actividades.map((a,i)=>{
+            const radio=estilo==="anillos"?100-i*17:92,c=2*Math.PI*radio,parte=a.minutos/total*c;
+            const idTubo=prefijoTubo+"-"+i;
+            defsTubo+=gradienteTuboV260(idTubo,colores[a.tipo],radio,estilo==="anillos"?12:30,120,120);
+            const pista=estilo==="anillos"?`<circle cx="120" cy="120" r="${radio}" class="grafico-pista-v260"/>`:"";
+            const offset=estilo==="donut"?-acumulado:0;acumulado+=parte;
+            return `${pista}<circle class="acabado-anillo-canto-v260" cx="120" cy="120" r="${radio}" stroke="${colores[a.tipo]}" stroke-dasharray="${parte} ${c-parte}" stroke-dashoffset="${offset}" stroke-linecap="${estilo==="anillos"?"round":"butt"}"/><circle class="volumen-tubo-cara-v260" style="--tubo-material:url(#${idTubo})" cx="120" cy="120" r="${radio}" stroke="${colores[a.tipo]}" stroke-dasharray="${parte} ${c-parte}" stroke-dashoffset="${offset}" stroke-linecap="${estilo==="anillos"?"round":"butt"}"/><circle class="acabado-anillo-brillo-v260" cx="120" cy="120" r="${radio}" stroke="#fff" stroke-dasharray="${parte} ${c-parte}" stroke-dashoffset="${offset}" stroke-linecap="${estilo==="anillos"?"round":"butt"}"/>`;
+        }).join("");
+        dibujo=`<div class="grafico-rueda-v260"><svg viewBox="0 0 240 240" aria-hidden="true" class="grafico-svg-v260 ${estilo}"><defs>${defsTubo}</defs>${estilo==="donut"?'<circle cx="120" cy="120" r="92" class="grafico-pista-v260"/>':""}${circulos}</svg><div class="grafico-total-v260"><strong>${formatearTiempo(total)}</strong><span>este mes</span></div></div>`;
+    }
+    return `<div class="grafico-personal-v260" role="group" aria-label="Actividad del mes: ${formatearTiempo(total)}">${dibujo}${!["barras","corazones"].includes(estilo)?`<ul class="grafico-leyenda-v260">${leyenda}</ul>`:""}</div>`;
+}
+function instalarEstilosGraficoV260(){
+    const host=document.getElementById("estilosGraficoInicioV260");if(!host)return;
+    const nombres={burbujas:"Burbujas 3D",anillos:"Anillos",donut:"Donut",barras:"Barras",corazones:"Corazones",arcos:"Arcos 3D",quesitos:"Quesitos 3D"};
+    const ejemplos=[{tipo:"ministerio",nombre:"Ministerio",minutos:180},{tipo:"ldc",nombre:"LDC",minutos:120},{tipo:"asambleas",nombre:"Asambleas",minutos:60}];
+    ESTILOS_GRAFICO_V260.forEach(estilo=>{
+        const boton=document.createElement("button");boton.type="button";boton.dataset.estilo=estilo;
+        boton.setAttribute("aria-label",`Elegir ${nombres[estilo]}`);boton.setAttribute("aria-pressed",String(estilo===leerEstiloGraficoV260()));
+        const mini=document.createElement("div");mini.className="grafico-preview-v260";mini.setAttribute("aria-hidden","true");
+        mini.innerHTML=estilo==="corazones"?`<div class="preview-corazon-v260" style="--corazon:#ed8abb">${svgCorazonV260()}</div>`:estilo==="burbujas"?'<div class="preview-burbujas-v260"><i></i><i></i><i></i><i></i></div>':crearGraficoPersonalV260(estilo,ejemplos);
+        mini.querySelectorAll("[tabindex]").forEach(n=>{n.removeAttribute("tabindex");n.removeAttribute("role");n.removeAttribute("data-actividad-inicio");});
+        const texto=document.createElement("span");texto.textContent=nombres[estilo];boton.append(mini,texto);
+        boton.addEventListener("click",()=>{
+            const estado=document.getElementById("estadoEstiloGraficoV260");
+            try{localStorage.setItem("miServicio.estiloGraficoInicio",estilo);}catch(e){estado.textContent="No se pudo guardar. Inténtalo de nuevo.";return;}
+            host.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b===boton)));
+            if(datosGraficoPersonalV260)actualizarGraficoInicio(datosGraficoPersonalV260);
+            estado.textContent=`${nombres[estilo]} seleccionado`;
+        });host.appendChild(boton);
+    });
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",instalarEstilosGraficoV260,{once:true});else instalarEstilosGraficoV260();
+
+function svgCorazonV260(){
+    const id=idVolumenV260("corazon");
+    return `<svg class="corazon-svg-v260" viewBox="0 0 160 148" aria-hidden="true" focusable="false"><defs><radialGradient id="${id}" cx="28%" cy="23%" r="78%"><stop offset="0" stop-color="#fff" stop-opacity=".65"/><stop offset=".20" stop-color="#fff" stop-opacity=".18"/><stop offset=".47" stop-color="#fff" stop-opacity="0"/><stop offset=".78" stop-color="#10223c" stop-opacity=".19"/><stop offset="1" stop-color="#08162d" stop-opacity=".48"/></radialGradient></defs><path class="corazon-cuerda-v260" d="M80 125Q74 137 81 145"/><path class="corazon-forma-v260" d="M80 29C50-5 2 9 8 47C12 70 54 96 80 119C106 96 148 70 152 47C158 9 110-5 80 29Z"/><path class="volumen-corazon-v260" fill="url(#${id})" d="M80 29C50-5 2 9 8 47C12 70 54 96 80 119C106 96 148 70 152 47C158 9 110-5 80 29Z"/><path class="acabado-corazon-autor-v260" fill="none" stroke="#fff" stroke-opacity=".65" stroke-width="3" d="M91 30C116 12 142 23 145 44"/><path class="acabado-corazon-v260" fill="none" stroke="#fff" stroke-width="3" opacity=".52" d="M16 46C10 16 49 5 77 33M88 29C113 10 143 21 145 43"/><path fill="#fff" opacity=".23" d="M18 40C17 16 47 12 63 27C44 18 28 27 24 45C22 51 18 47 18 40Z"/><path fill="#000" opacity=".08" d="M80 119C106 96 148 70 152 47C143 65 118 90 80 110C48 89 25 71 8 47C12 70 54 96 80 119Z"/><path fill="var(--corazon)" d="M80 119l-4 7h8z"/></svg>`;
+}
+
+// Misma escala acotada de las burbujas: más horas, más tamaño sin ocultar las cifras.
+function tamanoCorazonV260(minutos,actividades){
+    const valores=actividades.map(a=>a.minutos);
+    const min=Math.min(...valores),max=Math.max(...valores);
+    const proporcion=max===min?.5:(minutos-min)/(max-min);
+    return Math.round(78+proporcion*22);
+}
+
+// V260 · Estilos de camino, siempre horizontal; preferencia local independiente.
+const ESTILOS_CAMINO_V260={sendero:"Sendero suave",luz:"Camino de luz",pasarela:"Pasarela 3D",natural:"Sendero natural"};
+function leerEstiloCaminoV260(){
+    try{const estilo=localStorage.getItem("miServicio.estiloCaminoInicio");return Object.hasOwn(ESTILOS_CAMINO_V260,estilo)?estilo:"sendero";}catch(e){return "sendero";}
+}
+function aplicarEstiloCaminoV260(estilo){
+    if(!Object.hasOwn(ESTILOS_CAMINO_V260,estilo))estilo="sendero";
+    const inicio=document.getElementById("vista-inicio");if(inicio)inicio.dataset.camino=estilo;
+}
+function instalarEstilosCaminoV260(){
+    aplicarEstiloCaminoV260(leerEstiloCaminoV260());
+    const host=document.getElementById("estilosCaminoInicioV260");if(!host)return;
+    Object.entries(ESTILOS_CAMINO_V260).forEach(([estilo,nombre])=>{
+        const boton=document.createElement("button");boton.type="button";boton.dataset.camino=estilo;
+        boton.setAttribute("aria-label",`Elegir ${nombre}`);boton.setAttribute("aria-pressed",String(estilo===leerEstiloCaminoV260()));
+        const preview=document.createElement("span");preview.className="camino-preview-v260";preview.dataset.camino=estilo;preview.setAttribute("aria-hidden","true");
+        const pista=document.createElement("i");pista.className="camino-muestra-v260";preview.appendChild(pista);
+        const etiqueta=document.createElement("span");etiqueta.textContent=nombre;boton.append(preview,etiqueta);
+        boton.addEventListener("click",()=>{
+            const mensaje=document.getElementById("estadoEstiloCaminoV260");
+            try{localStorage.setItem("miServicio.estiloCaminoInicio",estilo);}catch(e){mensaje.textContent="No se pudo guardar. Inténtalo de nuevo.";return;}
+            aplicarEstiloCaminoV260(estilo);host.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b===boton)));
+            mensaje.textContent=`${nombre} seleccionado`;
+        });host.appendChild(boton);
+    });
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",instalarEstilosCaminoV260,{once:true});else instalarEstilosCaminoV260();
+
+/* V260 · Volver al registro editado sin perder la posición. */
+var retornoEdicionV260=null;
+function tarjetaRegistroV260(id){
+    return Array.from(document.querySelectorAll("#vista-historial .registro-card")).find(n=>n.dataset.registroId===String(id))||null;
+}
+function capturarRetornoEdicionV260(id){
+    const tarjeta=tarjetaRegistroV260(id);
+    retornoEdicionV260=estado.vistaActual==="historial"?{id,y:window.scrollY,arriba:tarjeta?.getBoundingClientRect().top??null,guardado:false}:null;
+}
+function restaurarRetornoEdicionV260(){
+    const retorno=retornoEdicionV260;retornoEdicionV260=null;
+    if(!retorno||estado.vistaActual!=="historial")return;
+    const tarjeta=tarjetaRegistroV260(retorno.id);
+    if(tarjeta){
+        const mes=tarjeta.closest("details");if(mes)mes.open=true;
+        const top=retorno.arriba===null?retorno.y:window.scrollY+tarjeta.getBoundingClientRect().top-retorno.arriba;
+        window.scrollTo({top:Math.max(0,top),behavior:"instant"});
+        tarjeta.querySelector(".boton-editar-registro")?.focus({preventScroll:true});
+        if(retorno.guardado){tarjeta.classList.add("registro-recien-editado-v260");setTimeout(()=>tarjeta.classList.remove("registro-recien-editado-v260"),2200);}
+    }else{window.scrollTo({top:retorno.y,behavior:"instant"});}
+    if(retorno.guardado&&typeof avisoV202==="function")avisoV202("✓ Cambios guardados");
+}
+function limpiarCampoV260(campo){
+    if(!campo?.id)return;
+    const id=campo.id+"-ayuda-v260";
+    document.getElementById(id)?.remove();campo.removeAttribute("aria-invalid");
+    const descripciones=(campo.getAttribute("aria-describedby")||"").split(/\s+/).filter(x=>x&&x!==id);
+    if(descripciones.length)campo.setAttribute("aria-describedby",descripciones.join(" "));else campo.removeAttribute("aria-describedby");
+}
+function indicarCampoV260(campo,texto){
+    if(!campo?.id)return;
+    limpiarCampoV260(campo);
+    const ayuda=document.createElement("small");ayuda.id=campo.id+"-ayuda-v260";ayuda.className="error-campo-v260";ayuda.textContent=texto;
+    campo.insertAdjacentElement("afterend",ayuda);campo.setAttribute("aria-invalid","true");
+    campo.setAttribute("aria-describedby",[campo.getAttribute("aria-describedby"),ayuda.id].filter(Boolean).join(" "));
+    campo.focus();
+}
+function instalarPulidoV260(){
+    for(const id of ["formRegistro","formEditarRegistro"]){
+        const form=document.getElementById(id);if(!form)continue;
+        form.addEventListener("submit",()=>form.querySelectorAll('[aria-invalid="true"]').forEach(limpiarCampoV260),true);
+        form.addEventListener("input",e=>{if(e.target.matches("input,select,textarea"))limpiarCampoV260(e.target);});
+        form.addEventListener("change",e=>{if(e.target.matches("input,select,textarea"))limpiarCampoV260(e.target);});
+        form.addEventListener("invalid",e=>indicarCampoV260(e.target,e.target.validationMessage),true);
+    }
+    document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden"&&typeof guardarBorradorV260==="function")guardarBorradorV260();});
+    window.addEventListener("pagehide",()=>{if(typeof guardarBorradorV260==="function")guardarBorradorV260();});
+    // Expose actual sync busy state, without creating another sync operation.
+    const sync=document.getElementById("sincronizarCalendarioV176");
+    if(sync){const estado=()=>sync.setAttribute("aria-busy",String(sync.disabled));new MutationObserver(estado).observe(sync,{attributes:true,attributeFilter:["disabled"]});estado();}
+    let resize;
+    window.addEventListener("resize",()=>{clearTimeout(resize);resize=setTimeout(resolverColisionesOrbitasV120,120);});
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",instalarPulidoV260,{once:true});else instalarPulidoV260();
+
+/* V260 · El tiempo real detrás del gráfico, sin tocar sus cifras. */
+var datosClimaVisualV260=null;
+function tipoFondoClimaV260(codigo,esDia){
+    if(codigo===null||codigo===undefined||codigo==="")return "neutro";
+    const c=Number(codigo);if(!Number.isInteger(c))return "neutro";
+    if([0,1].includes(c))return (esDia===0||esDia==="0")?"noche":"sol";
+    if(c===2)return (esDia===0||esDia==="0")?"nubes":"parcial";
+    if(c===3)return "nubes";
+    if([45,48].includes(c))return "niebla";
+    if([51,53,55,56,57,61,63,65,66,67,80,81,82,95,96,99].includes(c))return "lluvia";
+    if([71,73,75,77,85,86].includes(c))return "nieve";
+    return "neutro";
+}
+function fondoClimaActivoV260(){try{return localStorage.getItem("miServicio.fondoClimaInicio")!=="no";}catch(e){return true;}}
+function pintarFondoClimaV260(t,tipo){
+    let capa=t.querySelector(".clima-escena-v260");
+    if(!capa){
+        capa=document.createElement("div");capa.className="clima-escena-v260";capa.setAttribute("aria-hidden","true");
+        const rayos=Array.from({length:12},(_,i)=>{const a=i*Math.PI/6;return `<line x1="${60+35*Math.cos(a)}" y1="${60+35*Math.sin(a)}" x2="${60+49*Math.cos(a)}" y2="${60+49*Math.sin(a)}"/>`;}).join("");
+        capa.innerHTML=`<div class="clima-sol-visual-v260"><svg viewBox="0 0 120 120" focusable="false"><g>${rayos}</g><circle cx="60" cy="60" r="24"/></svg></div><div class="clima-luna-v260"></div><i class="clima-nube-v260 nube-a-v260"></i><i class="clima-nube-v260 nube-b-v260"></i><i class="clima-nube-v260 nube-c-v260"></i><div class="clima-gotas-v260">${Array.from({length:20},(_,i)=>`<i style="--x:${(i*37)%100}%;--y:${(i*53)%93}%;--retraso:${-(i%7)*.29}s;--duracion:${1.3+(i%4)*.28}s"></i>`).join("")}</div>`;
+        t.insertBefore(capa,t.firstChild);
+    }
+    capa.dataset.tiempo=tipo;capa.hidden=!fondoClimaActivoV260()||tipo==="neutro";
+}
+function instalarFondoClimaV260(){
+    const control=document.getElementById("fondoClimaInicioV260");if(!control)return;
+    control.checked=fondoClimaActivoV260();
+    control.addEventListener("change",()=>{
+        try{localStorage.setItem("miServicio.fondoClimaInicio",control.checked?"si":"no");}catch(e){control.checked=fondoClimaActivoV260();return;}
+        if(datosClimaVisualV260)aplicarAmbienteClima(datosClimaVisualV260.codigo,datosClimaVisualV260.esDia);
+    });
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",instalarFondoClimaV260,{once:true});else instalarFondoClimaV260();
+
+/* V260 · Accesos desde Inicio, calendario y planificación. */
+var mesFiltroHistorialV260="";
+function abrirActividadInicioV260(tipo){
+    if(!["ministerio","ldc","asambleas","otras"].includes(tipo)||!actividadVisible(tipo))return;
+    mesFiltroHistorialV260=claveMesV143(new Date());
+    const buscar=document.getElementById("buscarHistorialV260");if(buscar)buscar.value="";
+    seleccionarFiltroHistorial(tipo);seleccionarVista("historial");pintarContextoHistorialV260();
+    animarOrigenActividadV260(tipo);
+}
+function pintarContextoHistorialV260(){
+    const host=document.getElementById("contextoHistorialV260");if(!host)return;
+    host.hidden=!mesFiltroHistorialV260;
+    const texto=document.getElementById("textoContextoHistorialV260");
+    if(mesFiltroHistorialV260)texto.textContent=`${estado.filtroHistorial==="todos"?"Todas las actividades":nombreActividad(estado.filtroHistorial)} · ${fechaDesdeISO(mesFiltroHistorialV260+"-01").toLocaleDateString("es-ES",{month:"long",year:"numeric"})}`;
+}
+function volverHistorialRecienteV260(){
+    mesFiltroHistorialV260="";document.getElementById("buscarHistorialV260").value="";
+    seleccionarFiltroHistorial("todos");pintarContextoHistorialV260();
+    requestAnimationFrame(()=>{
+        const hoy=fechaLocalISO(new Date());
+        const tarjetas=Array.from(document.querySelectorAll("#vista-historial .registro-card"));
+        const tarjeta=tarjetas.find(t=>t.dataset.registroFecha===hoy)||tarjetas[0];
+        if(!tarjeta){avisoV202("Todavía no hay registros");return;}
+        const mes=tarjeta.closest("details");if(mes)mes.open=true;
+        tarjeta.scrollIntoView({block:"center",behavior:window.matchMedia("(prefers-reduced-motion:reduce)").matches?"instant":"smooth"});
+        if(tarjeta.dataset.registroFecha!==hoy)avisoV202("Hoy no hay registros · Te mostramos el más reciente");
+    });
+}
+function actualizarSugerenciaPlanV260(){
+    const boton=document.getElementById("sugerenciaCompaneroV260");if(!boton)return;
+    const fecha=document.getElementById("fechaRegistro").value;
+    const raw=estado.agendaSalidas?.[fecha],plan=raw?normalizarAgendaDia(raw):null;
+    const escrito=document.getElementById("companeroRegistro").value.trim();
+    const nombre=String(plan?.companero||"").trim().slice(0,80);
+    const visible=Boolean(nombre&&!escrito&&plan.tipo===document.getElementById("tipoRegistro").value&&actividadVisible(plan.tipo));
+    boton.hidden=!visible;boton.textContent=visible?`Usar acompañante previsto: ${nombre}`:"";
+    boton.dataset.nombre=visible?nombre:"";
+}
+function textoCalendarioV260(texto){return String(texto||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();}
+function buscarCalendarioV260(consulta){
+    const q=textoCalendarioV260(consulta);if(!q)return [];
+    const fechas=new Set();
+    (estado.registros||[]).filter(r=>actividadVisible(r.tipo)).forEach(r=>fechas.add(String(r.fecha).slice(0,10)));
+    Object.keys(estado.agendaSalidas||{}).forEach(f=>fechas.add(f));
+    (window.MiServicioEventosCalendario?.listar()||[]).forEach(e=>fechas.add(e.fecha));
+    const resultados=[];
+    [...fechas].filter(f=>/^\d{4}-\d{2}-\d{2}$/.test(f)).sort().forEach(fecha=>{
+        const etiqueta=fechaDesdeISO(fecha).toLocaleDateString("es-ES",{day:"numeric",month:"long",year:"numeric"});
+        const filas=entradasAgendaV260(fecha).filter(f=>(f.tipo==="evento"||actividadVisible(f.tipo))&&textoCalendarioV260([fecha,etiqueta,f.titulo,f.detalle,f.hora].join(" ")).includes(q));
+        if(filas.length)resultados.push({fecha,etiqueta,filas});
+    });return resultados;
+}
+var limiteBusquedaCalendarioV260=20;
+function pintarBusquedaCalendarioV260(){
+    const input=document.getElementById("buscarCalendarioV260"),host=document.getElementById("resultadosCalendarioV260");if(!input||!host)return;
+    const consulta=input.value.trim();host.replaceChildren();host.hidden=!consulta;if(!consulta)return;
+    const resultados=buscarCalendarioV260(consulta);
+    const estadoBusqueda=document.createElement("p");estadoBusqueda.className="busqueda-calendario-estado-v260";
+    estadoBusqueda.setAttribute("role","status");estadoBusqueda.textContent=resultados.length?`${resultados.length} día${resultados.length===1?"":"s"} con coincidencias`:"No hay coincidencias";host.appendChild(estadoBusqueda);
+    resultados.slice(0,limiteBusquedaCalendarioV260).forEach(r=>{
+        const boton=document.createElement("button");boton.type="button";boton.className="resultado-calendario-v260";
+        const fecha=document.createElement("strong");fecha.textContent=r.etiqueta;
+        const detalle=document.createElement("span");detalle.textContent=r.filas.map(f=>[f.hora,f.titulo,f.detalle].filter(Boolean).join(" · ")).join(" / ");boton.append(fecha,detalle);
+        boton.addEventListener("click",()=>{
+            const d=fechaDesdeISO(r.fecha);referenciaCalendarioV260=new Date(d.getFullYear(),d.getMonth(),1,12);diaSeleccionadoV260=r.fecha;
+            actualizarCalendarioInicio();abrirDetalleDiaV260(d.getDate(),d.getMonth(),d.getFullYear(),(estado.registros||[]).filter(reg=>String(reg.fecha).slice(0,10)===r.fecha));
+        });host.appendChild(boton);
+    });
+    if(resultados.length>limiteBusquedaCalendarioV260){const mas=document.createElement("button");mas.type="button";mas.className="boton-secundario";mas.textContent="Ver más resultados";mas.onclick=()=>{limiteBusquedaCalendarioV260+=20;pintarBusquedaCalendarioV260();};host.appendChild(mas);}
+}
+function instalarAccesosV260(){
+    const grafico=document.getElementById("graficoInicio");
+    const abrir=e=>{const objetivo=e.target.closest("[data-actividad-inicio]");if(!objetivo)return;if(e.type==="keydown"&&!["Enter"," "].includes(e.key))return;e.preventDefault();abrirActividadInicioV260(objetivo.dataset.actividadInicio);};
+    grafico?.addEventListener("click",abrir);grafico?.addEventListener("keydown",abrir);
+    document.getElementById("historialHoyV260")?.addEventListener("click",volverHistorialRecienteV260);
+    document.getElementById("quitarContextoHistorialV260")?.addEventListener("click",()=>{mesFiltroHistorialV260="";seleccionarFiltroHistorial("todos");pintarContextoHistorialV260();});
+    const boton=document.createElement("button");boton.type="button";boton.id="sugerenciaCompaneroV260";boton.className="sugerencia-plan-v260";boton.hidden=true;
+    boton.addEventListener("click",()=>{actualizarSugerenciaPlanV260();if(!boton.dataset.nombre)return;document.getElementById("companeroRegistro").value=boton.dataset.nombre;actualizarRegistrarV203();guardarBorradorV260();});
+    document.getElementById("companeroRegistro")?.insertAdjacentElement("afterend",boton);actualizarSugerenciaPlanV260();
+    document.getElementById("buscarCalendarioV260")?.addEventListener("input",()=>{limiteBusquedaCalendarioV260=20;pintarBusquedaCalendarioV260();});
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",instalarAccesosV260,{once:true});else instalarAccesosV260();
+
+/* V260 · Continuidad visual y deshacer una edición concreta. */
+var actividadGuardadaPendienteV260=null;
+function reducirMovimientoV260(){return window.matchMedia("(prefers-reduced-motion:reduce)").matches;}
+function animarOrigenActividadV260(tipo){
+    const colores={ministerio:"#3478f6",ldc:"#ed8abb",asambleas:"#f5a623",otras:"#9a80e8"};
+    const vista=document.getElementById("vista-historial");if(!vista)return;
+    vista.style.setProperty("--actividad-origen",colores[tipo]||"#3478f6");
+    vista.classList.remove("entrada-actividad-v260");void vista.offsetWidth;
+    vista.classList.add("entrada-actividad-v260");
+    setTimeout(()=>vista.classList.remove("entrada-actividad-v260"),650);
+}
+function recordarActividadGuardadaV260(registro){
+    if(!registro||!registro.id||!String(registro.fecha).startsWith(claveMesV143(new Date())+"-"))return;
+    if(!actividadGuardadaPendienteV260)actividadGuardadaPendienteV260={tipos:new Set(),desde:document.getElementById("animalProgreso")?.style.left||""};
+    actividadGuardadaPendienteV260.tipos.add(registro.tipo);
+    if(estado.vistaActual==="inicio")requestAnimationFrame(animarActividadGuardadaV260);
+}
+function animarActividadGuardadaV260(){
+    const pendiente=actividadGuardadaPendienteV260;
+    if(!pendiente||estado.vistaActual!=="inicio")return;
+    actividadGuardadaPendienteV260=null;
+    if(reducirMovimientoV260())return;
+    const grafico=document.getElementById("graficoInicio");if(!grafico)return;
+    let animados=0;
+    grafico.querySelectorAll("[data-actividad-inicio]").forEach(n=>{
+        if(pendiente.tipos.has(n.dataset.actividadInicio)&&typeof n.animate==="function"){
+            n.animate([{scale:".88",filter:"brightness(1.06)"},{scale:"1.035",filter:"brightness(1.02)"},{scale:"1",filter:"brightness(1)"}],{duration:650,easing:"cubic-bezier(.2,.75,.25,1)"});animados++;
+        }
+    });
+    if(!animados&&typeof grafico.animate==="function")grafico.animate([{opacity:.65},{opacity:1}],{duration:500,easing:"ease-out"});
+    const personaje=document.getElementById("animalProgreso");
+    if(personaje&&pendiente.desde&&personaje.style.left!==pendiente.desde&&typeof personaje.animate==="function"){
+        personaje.animate([{left:pendiente.desde},{left:personaje.style.left}],{duration:750,easing:"cubic-bezier(.2,.75,.25,1)"});
+    }
+}
+window.addEventListener("miServicio:registroGuardadoV188",e=>recordarActividadGuardadaV260(e.detail?.registro));
+function firmaEdicionV260(registro){
+    if(!registro)return "";
+    return JSON.stringify(Object.fromEntries(Object.entries(registro).filter(([k])=>k!=="sincronizacion").sort(([a],[b])=>a.localeCompare(b))));
+}
+function deshacerEdicionV260(antes,despues,vence){
+    if(Date.now()>vence){avisoV202("El plazo para deshacer ha terminado");return false;}
+    const indice=estado.registros.findIndex(r=>r.id===despues.id);
+    if(indice<0||firmaEdicionV260(estado.registros[indice])!==firmaEdicionV260(despues)){
+        avisoV202("El registro ha cambiado. Se conservan los cambios más recientes.");return false;
+    }
+    const actual=estado.registros[indice],posicion=window.scrollY;
+    estado.registros[indice]={...antes,modificadoEn:new Date().toISOString(),sincronizacion:{estado:"pendiente",ultimaSincronizacion:actual.sincronizacion?.ultimaSincronizacion||null}};
+    if(!guardarRegistros()){estado.registros[indice]=actual;avisoV202("No se pudo deshacer. Inténtalo de nuevo.");return false;}
+    actualizarTodaLaInterfaz();
+    requestAnimationFrame(()=>{window.scrollTo({top:posicion,behavior:"instant"});avisoV202("✓ Edición deshecha");});return true;
+}
+function ofrecerDeshacerEdicionV260(antes,despues){
+    const original=JSON.parse(JSON.stringify(antes)),guardado=JSON.parse(JSON.stringify(despues)),vence=Date.now()+10000;
+    avisoV202("✓ Cambios guardados",()=>deshacerEdicionV260(original,guardado,vence));
+}
+
+/* V260 · Arcos con relieve y llamadas laterales, como la referencia. */
+var secuenciaArcosV260=0;
+function textoArcosV260(texto){return String(texto).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function puntoArcoV260(radio,grados){const a=grados*Math.PI/180;return {x:112+radio*Math.cos(a),y:155+radio*Math.sin(a)};}
+function rutaArcoV260(radio,inicio,barrido){
+    const a=puntoArcoV260(radio,inicio),b=puntoArcoV260(radio,inicio+barrido);
+    return `M${a.x.toFixed(3)},${a.y.toFixed(3)} A${radio},${radio} 0 ${barrido>180?1:0} 1 ${b.x.toFixed(3)},${b.y.toFixed(3)}`;
+}
+function crearGraficoArcosV260(actividades){
+    const colores={ministerio:"#3478f6",ldc:"#ed8abb",asambleas:"#f5a623",otras:"#9a80e8"};
+    const total=actividades.reduce((s,a)=>s+a.minutos,0);
+    if(!total)return '<div class="grafico-personal-v260 grafico-vacio-v260"><div class="grafico-total-v260"><strong>0 min</strong><span>este mes</span></div><p>Tu actividad aparecerá aquí</p></div>';
+    const prefijo="arcos-v260-"+(++secuenciaArcosV260);
+    let defs=`<radialGradient id="${prefijo}-perla" cx=".25" cy=".15" r=".9"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#edf4fc"/><stop offset="1" stop-color="#cbdff2"/></radialGradient>`,arcos="",llamadas="";
+    actividades.forEach((a,i)=>{
+        const color=colores[a.tipo],radio=64+i*13;
+        const posicion=actividades.length===1?.5:i/(actividades.length-1);
+        const angulo=-65+posicion*130,y=46+posicion*224;
+        const porcentaje=a.minutos/total,barrido=porcentaje*260;
+        const ruta=rutaArcoV260(radio,angulo,barrido),punto=puntoArcoV260(radio,angulo);
+        const id=prefijo+"-"+i;
+        const rgb=[1,3,5].map(n=>parseInt(color.slice(n,n+2),16));
+        const claro="rgb("+rgb.map(v=>Math.round(v+(255-v)*.38)).join(",")+")";
+        defs+=`<linearGradient id="${id}" x1="0" y1="0" x2=".3" y2="1"><stop offset="0" stop-color="${claro}"/><stop offset=".45" stop-color="${color}"/><stop offset="1" stop-color="${color}"/></linearGradient>`;
+        defs+=gradienteTuboV260(id+"-material",color,radio,10,112,155);
+        arcos+=`<path class="arco-pista-v260" d="${rutaArcoV260(radio,angulo,260)}"/><path class="arco-canto-v260" d="${ruta}" stroke="${color}" transform="translate(0 4)"/><path class="arco-superficie-v260" style="--tubo-material:url(#${id}-material)" d="${ruta}" stroke="url(#${id})"/><path class="arco-reflejo-v260" d="${ruta}" transform="translate(0 -2)"/>`;
+        const nombre=textoArcosV260(a.nombre),tiempo=textoArcosV260(formatearTiempo(a.minutos));
+        llamadas+=`<path class="arco-conector-v260" stroke="${color}" d="M${punto.x.toFixed(3)},${punto.y.toFixed(3)} L235,${y} H251"/><g role="button" tabindex="0" data-actividad-inicio="${a.tipo}" aria-label="Ver registros de ${nombre}: ${tiempo}" class="arco-llamada-v260"><rect class="arco-panel-v260" x="241" y="${y-27}" width="135" height="58" rx="12"/><ellipse cx="252" cy="${y}" rx="8" ry="8" fill="${color}"/><text class="arco-nombre-v260" x="267" y="${y-10}">${nombre}</text><text class="arco-horas-v260" x="267" y="${y+9}" fill="${color}">${tiempo}</text><text class="arco-porcentaje-v260" x="267" y="${y+25}">${Math.round(porcentaje*100)}%</text></g>`;
+    });
+    const totalTexto=textoArcosV260(formatearTiempo(total));
+    return `<div class="grafico-arcos-v260"><svg class="arcos-svg-v260" viewBox="0 0 380 320" role="group" aria-label="Actividad mensual: ${totalTexto}"><defs>${defs}</defs><g aria-hidden="true">${arcos}<ellipse class="arcos-total-sombra-v260" cx="112" cy="160" rx="47" ry="47"/><ellipse class="arcos-total-v260" style="--total-perla:url(#${prefijo}-perla)" cx="112" cy="155" rx="47" ry="47"/><text class="arcos-total-etiqueta-v260" x="112" y="137">TOTAL</text><text class="arcos-total-horas-v260" x="112" y="159" style="font-size:${totalTexto.length>7?16:22}px">${totalTexto}</text><text class="arcos-total-etiqueta-v260" x="112" y="179">este mes</text></g>${llamadas}</svg></div>`;
+}
+
+/* V260 · Quesitos escalonados con total delantero, sin porcentajes. */
+var secuenciaQuesitosV260=0;
+function puntoQuesitoV260(r,angulo,cx,cy){const a=angulo*Math.PI/180;return {x:cx+Math.cos(a)*r,y:cy+Math.sin(a)*r*.9};}
+function sectorQuesitoV260(r,inicio,fin,cx,cy){
+    const a=puntoQuesitoV260(r,inicio,cx,cy),b=puntoQuesitoV260(r,fin,cx,cy);
+    return `M${cx.toFixed(3)},${cy.toFixed(3)} L${a.x.toFixed(3)},${a.y.toFixed(3)} A${r},${(r*.9).toFixed(3)} 0 ${fin-inicio>180?1:0} 1 ${b.x.toFixed(3)},${b.y.toFixed(3)} Z`;
+}
+function crearGraficoQuesitosV260(actividades){
+    const total=actividades.reduce((s,a)=>s+a.minutos,0);
+    if(!total)return '<div class="grafico-personal-v260 grafico-vacio-v260"><div class="grafico-total-v260"><strong>0 min</strong><span>este mes</span></div><p>Tu actividad aparecerá aquí</p></div>';
+    const colores={ministerio:"#3478f6",ldc:"#ed8abb",asambleas:"#f5a623",otras:"#9a80e8"};
+    const prefijo="quesitos-v260-"+(++secuenciaQuesitosV260),valores=actividades.map(a=>a.minutos),min=Math.min(...valores),max=Math.max(...valores);
+    let defs="",piezas="";
+    const parte=252/actividades.length;
+    actividades.forEach((a,i)=>{
+        const inicio=110+i*parte,fin=inicio+parte-3,medio=(inicio+fin)/2,rad=medio*Math.PI/180;
+        const radio=Math.round(108+(max===min?.5:(a.minutos-min)/(max-min))*40);
+        const cx=180+Math.cos(rad)*4,cy=165+Math.sin(rad)*4;
+        const d=sectorQuesitoV260(radio,inicio,fin,cx,cy),color=colores[a.tipo],id=prefijo+"-"+i;
+        const rgb=[1,3,5].map(n=>parseInt(color.slice(n,n+2),16));
+        const claro="rgb("+rgb.map(v=>Math.round(v+(255-v)*.3)).join(",")+")";
+        const oscuro="rgb("+rgb.map(v=>Math.round(v*.62)).join(",")+")";
+        defs+=`<linearGradient id="${id}" x1="0" y1="0" x2=".7" y2="1"><stop offset="0" stop-color="${claro}"/><stop offset="1" stop-color="${color}"/></linearGradient>`;
+        defs+=gradienteCaraV260(id+"-material",color);
+        const p=puntoQuesitoV260(radio*.67,medio,cx,cy);
+        piezas+=`<g class="quesito-actividad-v260" role="button" tabindex="0" data-actividad-inicio="${a.tipo}" aria-label="Ver registros de ${textoArcosV260(a.nombre)}: ${textoArcosV260(formatearTiempo(a.minutos))}"><path class="quesito-canto-v260" d="${d}" fill="${oscuro}" transform="translate(0 11)"/><path class="volumen-pared-v260" d="${paredQuesitoV260(radio,inicio,fin,cx,cy,20)}" fill="${oscuro}"/><path class="quesito-cara-v260" style="--cara-material:url(#${id}-material)" d="${d}" fill="url(#${id})"/><path class="acabado-quesito-v260" d="${d}" fill="none" stroke="#fff" stroke-opacity=".48" stroke-width="2"/><g class="quesito-texto-v260" fill="${a.tipo==="ministerio"?"#fff":"#172638"}"><text x="${p.x.toFixed(3)}" y="${(p.y-7).toFixed(3)}" class="quesito-nombre-v260">${textoArcosV260(a.nombre)}</text><text x="${p.x.toFixed(3)}" y="${(p.y+14).toFixed(3)}" class="quesito-horas-v260">${textoArcosV260(formatearTiempoCortoCalendario(a.minutos))}</text></g></g>`;
+    });
+    const medio=64,rad=medio*Math.PI/180,cx=180+Math.cos(rad)*9,cy=165+Math.sin(rad)*9;
+    const d=sectorQuesitoV260(155,20,108,cx,cy),p=puntoQuesitoV260(102,medio,cx,cy);
+    const totalTexto=textoArcosV260(formatearTiempo(total));
+    defs+=`<linearGradient id="${prefijo}-total" x1="0" y1="0" x2=".8" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#d3e7fa"/></linearGradient>`;
+    return `<div class="grafico-quesitos-v260"><svg class="quesitos-svg-v260" viewBox="0 0 360 345" role="group" aria-label="Actividad mensual: ${totalTexto}"><defs>${defs}</defs>${piezas}<g class="quesito-total-v260" aria-label="Total del mes: ${totalTexto}"><path class="quesito-total-canto-v260" d="${d}" fill="#8faecb" transform="translate(0 12)"/><path class="volumen-pared-v260" d="${paredQuesitoV260(155,20,108,cx,cy,22)}" fill="#82a5c9"/><path class="quesito-cara-v260" d="${d}" fill="url(#${prefijo}-total)"/><g class="quesito-texto-v260" fill="#172638"><text x="${p.x.toFixed(3)}" y="${(p.y-12).toFixed(3)}" class="quesito-nombre-v260">Total mes</text><text x="${p.x.toFixed(3)}" y="${(p.y+12).toFixed(3)}" class="quesito-total-horas-v260" style="font-size:${totalTexto.length>7?18:23}px">${totalTexto}</text></g></g></svg></div>`;
+}
+
+/* V260 · Ambientes completos, independientes del gráfico y del camino. */
+const AMBIENTES_VISUALES_V260={esencial:{nombre:"Esencial",detalle:"Fondos limpios, sombras suaves y movimiento mínimo."},cristal:{nombre:"Cristal",detalle:"Tarjetas translúcidas, reflejos suaves y profundidad."},cielo:{nombre:"Cielo vivo",detalle:"Más ambiente en el fondo y protagonismo del tiempo."},escena:{nombre:"Escena 3D",detalle:"Cielo envolvente, base de cristal y luz que cambia con la hora."},autor:{nombre:"Escena de autor",detalle:"Luz coordinada, reflejos de tus actividades y composición equilibrada."},metal:{nombre:"Metal y cristal",detalle:"Todas las pestañas con metal cepillado, tarjetas de cristal y controles con relieve."}};
+function leerAmbienteVisualV260(){
+    try{const a=localStorage.getItem("miServicio.ambienteVisual");return Object.hasOwn(AMBIENTES_VISUALES_V260,a)?a:"cristal";}catch(e){return "cristal";}
+}
+function aplicarAmbienteVisualV260(ambiente){
+    if(!Object.hasOwn(AMBIENTES_VISUALES_V260,ambiente))ambiente="cristal";
+    document.body.dataset.ambiente=ambiente;
+    actualizarEscena3DV260();
+    const host=document.getElementById("ambientesVisualesV260");
+    host?.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.ambiente===ambiente)));
+    const mensaje=document.getElementById("estadoAmbienteVisualV260");
+    if(mensaje)mensaje.textContent=AMBIENTES_VISUALES_V260[ambiente].detalle+" Se guarda en este dispositivo.";
+}
+function guardarAmbienteVisualV260(ambiente){
+    if(!Object.hasOwn(AMBIENTES_VISUALES_V260,ambiente))return false;
+    try{localStorage.setItem("miServicio.ambienteVisual",ambiente);}catch(e){const mensaje=document.getElementById("estadoAmbienteVisualV260");if(mensaje)mensaje.textContent="No se pudo guardar. Inténtalo de nuevo.";return false;}
+    aplicarAmbienteVisualV260(ambiente);return true;
+}
+function instalarAmbientesVisualesV260(){
+    const host=document.getElementById("ambientesVisualesV260");if(!host)return;
+    Object.entries(AMBIENTES_VISUALES_V260).forEach(([id,datos])=>{
+        const boton=document.createElement("button");boton.type="button";boton.dataset.ambiente=id;
+        boton.setAttribute("aria-label",datos.nombre+". "+datos.detalle);boton.title=datos.detalle;
+        const mini=document.createElement("span");mini.className="ambiente-mini-v260 ambiente-mini-"+id+"-v260";mini.setAttribute("aria-hidden","true");
+        mini.innerHTML='<i class="ambiente-mini-sol-v260"></i><i class="ambiente-mini-globo-v260"></i><i class="ambiente-mini-globo-v260"></i><i class="ambiente-mini-tarjeta-v260"></i><i class="ambiente-mini-linea-v260"></i>';
+        const nombre=document.createElement("span");nombre.textContent=datos.nombre;boton.append(mini,nombre);
+        boton.addEventListener("click",()=>guardarAmbienteVisualV260(id));host.appendChild(boton);
+    });
+    aplicarAmbienteVisualV260(leerAmbienteVisualV260());
+}
+window.addEventListener("storage",e=>{if(e.key==="miServicio.ambienteVisual")aplicarAmbienteVisualV260(leerAmbienteVisualV260());});
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",instalarAmbientesVisualesV260,{once:true});else instalarAmbientesVisualesV260();
+
+const FIRMAS_COLOR_V260={"oceano":{"nombre":"Azul océano","base":"#2864d7","luz":"#80b3ff","rgb":"40,100,215"},"salvia":{"nombre":"Verde salvia","base":"#357451","luz":"#8dccaa","rgb":"53,116,81"},"lavanda":{"nombre":"Lavanda","base":"#7752b9","luz":"#c2a8f3","rgb":"119,82,185"},"rosa":{"nombre":"Rosa suave","base":"#b64c79","luz":"#efa7c7","rgb":"182,76,121"},"ambar":{"nombre":"Ámbar","base":"#9a651b","luz":"#f1c47d","rgb":"154,101,27"}};
+
+function leerFirmaColorV260(){
+    try{const id=localStorage.getItem("miServicio.firmaColor");return Object.hasOwn(FIRMAS_COLOR_V260,id)?id:"oceano";}catch(e){return "oceano";}
+}
+function aplicarFirmaColorV260(id){
+    if(!Object.hasOwn(FIRMAS_COLOR_V260,id))id="oceano";
+    const firma=FIRMAS_COLOR_V260[id];document.body.dataset.firma=id;
+    document.body.style.setProperty("--firma-base",firma.base);document.body.style.setProperty("--firma-luz",firma.luz);document.body.style.setProperty("--firma-rgb",firma.rgb);
+    document.getElementById("firmasColorV260")?.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.firma===id)));
+    const estado=document.getElementById("estadoFirmaColorV260");if(estado)estado.textContent=firma.nombre+" seleccionado. Los colores de las actividades se conservan.";
+}
+function guardarFirmaColorV260(id){
+    if(!Object.hasOwn(FIRMAS_COLOR_V260,id))return false;
+    try{localStorage.setItem("miServicio.firmaColor",id);}catch(e){const estado=document.getElementById("estadoFirmaColorV260");if(estado)estado.textContent="No se pudo guardar. Inténtalo de nuevo.";return false;}
+    aplicarFirmaColorV260(id);return true;
+}
+function instalarFirmaColorV260(){
+    const host=document.getElementById("firmasColorV260");if(!host)return;
+    Object.entries(FIRMAS_COLOR_V260).forEach(([id,firma])=>{
+        const boton=document.createElement("button");boton.type="button";boton.dataset.firma=id;boton.style.setProperty("--muestra-color",firma.base);
+        boton.setAttribute("aria-label","Elegir "+firma.nombre);
+        const muestra=document.createElement("i");muestra.setAttribute("aria-hidden","true");
+        const nombre=document.createElement("span");nombre.textContent=firma.nombre;boton.append(muestra,nombre);
+        boton.addEventListener("click",()=>guardarFirmaColorV260(id));host.appendChild(boton);
+    });aplicarFirmaColorV260(leerFirmaColorV260());
+}
+window.addEventListener("storage",e=>{if(e.key==="miServicio.firmaColor")aplicarFirmaColorV260(leerFirmaColorV260());});
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",instalarFirmaColorV260,{once:true});else instalarFirmaColorV260();
+
+/* V260 · Acabado independiente del gráfico, el ambiente y la firma. */
+function leerAcabadoV260(){
+    try{return localStorage.getItem("miServicio.acabadoGrafico")==="cristal"?"cristal":"clasico";}catch(e){return "clasico";}
+}
+function aplicarAcabadoV260(id){
+    id=id==="cristal"?"cristal":"clasico";
+    document.body.dataset.acabado=id;
+    document.getElementById("acabadosGraficoV260")?.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.acabado===id)));
+}
+function guardarAcabadoV260(id){
+    if(!["clasico","cristal"].includes(id))return false;
+    const estado=document.getElementById("estadoAcabadoV260");
+    try{localStorage.setItem("miServicio.acabadoGrafico",id);}catch(e){if(estado)estado.textContent="No se pudo guardar. Inténtalo de nuevo.";return false;}
+    aplicarAcabadoV260(id);
+    if(estado)estado.textContent=id==="cristal"?"Cristal: volumen redondeado, cantos profundos y luz realista.":"Clásico: el aspecto habitual de tus gráficos.";
+    return true;
+}
+function instalarAcabadoV260(){
+    const host=document.getElementById("acabadosGraficoV260");if(!host)return;
+    host.replaceChildren();
+    ["clasico","cristal"].forEach(id=>{
+        const boton=document.createElement("button");boton.type="button";boton.dataset.acabado=id;
+        boton.innerHTML='<span class="acabado-muestra-v260" aria-hidden="true"><i></i><i></i><i></i></span><strong>'+(id==="cristal"?"Cristal":"Clásico")+'</strong><small>'+(id==="cristal"?"Volumen y reflejos":"Aspecto habitual")+'</small>';
+        boton.addEventListener("click",()=>guardarAcabadoV260(id));host.appendChild(boton);
+    });
+    aplicarAcabadoV260(leerAcabadoV260());
+}
+window.addEventListener("storage",e=>{if(e.key==="miServicio.acabadoGrafico"||e.key===null)aplicarAcabadoV260(leerAcabadoV260());});
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",instalarAcabadoV260,{once:true});else instalarAcabadoV260();
+
+/* V260 · Escenario decorativo, sin sensores ni nuevas peticiones de red. */
+function momentoEscenaV260(hora){
+    return hora>=6&&hora<12?"manana":hora>=12&&hora<20?"tarde":"noche";
+}
+function actualizarEscena3DV260(){
+    document.body.dataset.luzEscena=momentoEscenaV260(new Date().getHours());
+    const tarjeta=document.querySelector("#vista-inicio .tarjeta-grafico-inicio");if(!tarjeta)return;
+    let escena=tarjeta.querySelector(".escena-3d-v260");
+    if(!escena){
+        escena=document.createElement("div");escena.className="escena-3d-v260";escena.setAttribute("aria-hidden","true");
+        escena.innerHTML='<i class="escena-luz-v260"></i><i class="escena-horizonte-v260"></i><i class="escena-sombra-v260"></i><i class="escena-base-v260"></i>';
+        tarjeta.insertBefore(escena,tarjeta.firstChild);
+    }
+    escena.hidden=!["escena","autor","metal"].includes(document.body.dataset.ambiente);
+    actualizarReflejosAutorV260();
+    requestAnimationFrame(componerAutorV260);
+}
+function realzarPiezaEscenaV260(evento){
+    if(!["escena","autor","metal"].includes(document.body.dataset.ambiente)||window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+    const pieza=evento.target.closest?.("#graficoInicio [data-actividad-inicio]");
+    if(!pieza||typeof pieza.animate!=="function")return;
+    const autor=document.body.dataset.ambiente==="autor";
+    const fotogramas=autor?[{filter:"brightness(1)",translate:"0 0"},{filter:"brightness(1.12)",translate:"0 -3px"},{filter:"brightness(1)",translate:"0 0"}]:[{filter:"brightness(1)"},{filter:"brightness(1.18)"},{filter:"brightness(1)"}];
+    pieza.animate(fotogramas,{duration:220,easing:"ease-out"});
+}
+function instalarEscena3DV260(){
+    actualizarEscena3DV260();
+    // Pointer feedback starts before the existing click opens the matching records.
+    document.getElementById("graficoInicio")?.addEventListener("pointerdown",realzarPiezaEscenaV260);
+    document.getElementById("graficoInicio")?.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" ")realzarPiezaEscenaV260(e);});
+}
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")actualizarEscena3DV260();});
+setInterval(()=>{if(document.visibilityState==="visible"&&["escena","autor","metal"].includes(document.body.dataset.ambiente))actualizarEscena3DV260();},60000);
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",instalarEscena3DV260,{once:true});else instalarEscena3DV260();
+
+/* V260 · Geometría acotada: todas las piezas caben y el total conserva el centro. */
+function planoAutorV260(ancho,alto,minutos){
+    if(!ancho||!alto||!minutos.length)return null;
+    const n=minutos.length,m=Math.min(ancho,alto),borde=6,gap=8,rc=Math.min(40,m*.11);
+    const mayor=Math.max(...minutos),menor=Math.min(...minutos);
+    const maxR=n===1?Math.min(72,m*.22):n===2?Math.min(66,m*.19):(m/2-rc-gap*2-borde)/2;
+    const radios=minutos.map(v=>maxR*(mayor===menor?.9:.76+.24*(v-menor)/(mayor-menor)));
+    const cx=ancho/2,cy=n===1?alto*.70:alto/2;
+    const R=rc+Math.max(...radios)+gap;
+    const angulos=n===1?[-90]:n===2?[-135,45]:Array.from({length:n},(_,i)=>-90+i*360/n);
+    return {centro:{x:cx,y:cy,r:rc},piezas:radios.map((r,i)=>({x:cx+Math.cos(angulos[i]*Math.PI/180)*R,y:cy+Math.sin(angulos[i]*Math.PI/180)*R,r}))};
+}
+function actualizarReflejosAutorV260(){
+    const tarjeta=document.querySelector("#vista-inicio .tarjeta-grafico-inicio");if(!tarjeta)return;
+    const d=datosGraficoPersonalV260||{},tipos=["ministerio","ldc","asambleas","otras"];
+    const valores=tipos.map(t=>actividadVisible(t)?Math.max(0,Number(d[t])||0):0),total=valores.reduce((a,b)=>a+b,0);
+    tipos.forEach((t,i)=>tarjeta.style.setProperty("--reflejo-"+t,total?String((.10+.27*valores[i]/total)*(valores[i]>0?1:0)):"0"));
+}
+function componerAutorV260(){
+    if(document.body.classList.contains("inicio-encajado-v260")){componerInicioEncajadoV260();return;}
+    const grafico=document.getElementById("graficoInicio");if(!grafico)return;
+    grafico.querySelectorAll('linearGradient').forEach(g=>{
+        if(document.body.dataset.ambiente==="autor"){
+            if(!g.hasAttribute('data-luz-autor')){g.setAttribute('data-luz-autor',JSON.stringify([g.getAttribute('x1'),g.getAttribute('x2')]));}
+            g.setAttribute('x1','1');g.setAttribute('x2','0');
+        }else if(g.hasAttribute('data-luz-autor')){
+            const original=JSON.parse(g.getAttribute('data-luz-autor'));['x1','x2'].forEach((a,i)=>{if(original[i]===null)g.removeAttribute(a);else g.setAttribute(a,original[i]);});g.removeAttribute('data-luz-autor');
+        }
+    });
+    if(document.body.dataset.ambiente!=="autor"){
+        grafico.querySelectorAll('[data-composicion-autor]').forEach(n=>{
+            ["left","top","width","height","min-height","max-width","--autor-horas"].forEach(p=>n.style.removeProperty(p));delete n.dataset.composicionAutor;
+        });return;
+    }
+    const corazones=grafico.dataset.estilo==="corazones";
+    const contenedor=grafico.querySelector(corazones?".corazones-orbita-v260":".orbita-grafico");if(!contenedor)return;
+    const centro=contenedor.querySelector(corazones?".corazones-total-centro-v260":".orbita-centro");
+    const nodos=[...contenedor.querySelectorAll(corazones?".corazon-posicion-v260":".orbita-actividad")];if(!centro||!nodos.length)return;
+    const caja=contenedor.getBoundingClientRect();
+    const minutos=nodos.map(n=>{const tipo=(corazones?n.querySelector('[data-actividad-inicio]'):n)?.dataset.actividadInicio;return Math.max(0,Number(datosGraficoPersonalV260?.[tipo])||0);});
+    const plano=planoAutorV260(caja.width,caja.height,minutos);if(!plano)return;
+    const colocar=(n,p)=>{n.dataset.composicionAutor="si";n.style.setProperty("left",p.x+"px","important");n.style.setProperty("top",p.y+"px","important");n.style.setProperty("width",p.r*2+"px","important");n.style.setProperty("max-width","none","important");};
+    nodos.forEach((n,i)=>{colocar(n,plano.piezas[i]);if(!corazones){n.style.setProperty("height",plano.piezas[i].r*2+"px","important");const texto=n.querySelector(':scope > span:not(.sector-icono)')?.textContent||'';n.style.setProperty('--autor-horas',Math.max(11,Math.min(20,plano.piezas[i].r*1.7/(Math.max(1,texto.length)*.56)))+'px');}});
+    colocar(centro,plano.centro);centro.style.setProperty("height",plano.centro.r*2+"px","important");centro.style.setProperty("min-height","0","important");
+}
+window.addEventListener("resize",()=>{if(document.body.dataset.ambiente==="autor")requestAnimationFrame(componerAutorV260);});
+
+/* V260 · Materiales SVG locales: no imágenes, red ni cambios en los datos. */
+var secuenciaVolumenV260;
+function idVolumenV260(nombre){
+    secuenciaVolumenV260=(Number(secuenciaVolumenV260)||0)+1;
+    return "material-v260-"+nombre+"-"+secuenciaVolumenV260;
+}
+function tonoVolumenV260(hex,cambio){
+    const rgb=[1,3,5].map(n=>parseInt(hex.slice(n,n+2),16));
+    return "rgb("+rgb.map(v=>Math.round(cambio>=0?v+(255-v)*cambio:v*(1+cambio))).join(",")+")";
+}
+function gradienteTuboV260(id,color,radio,ancho,cx,cy){
+    const exterior=radio+ancho/2,interior=(radio-ancho/2)/exterior;
+    const offset=f=>((interior+(1-interior)*f)*100).toFixed(3)+"%";
+    return `<radialGradient id="${id}" gradientUnits="userSpaceOnUse" cx="${cx}" cy="${cy}" r="${exterior}"><stop offset="${offset(0)}" stop-color="${tonoVolumenV260(color,-.40)}"/><stop offset="${offset(.22)}" stop-color="${tonoVolumenV260(color,.42)}"/><stop offset="${offset(.53)}" stop-color="${color}"/><stop offset="${offset(1)}" stop-color="${tonoVolumenV260(color,-.32)}"/></radialGradient>`;
+}
+function gradienteCaraV260(id,color){
+    return `<radialGradient id="${id}" cx="28%" cy="18%" r="96%"><stop offset="0" stop-color="${tonoVolumenV260(color,.47)}"/><stop offset=".42" stop-color="${tonoVolumenV260(color,.12)}"/><stop offset=".76" stop-color="${color}"/><stop offset="1" stop-color="${tonoVolumenV260(color,-.20)}"/></radialGradient>`;
+}
+function paredQuesitoV260(r,inicio,fin,cx,cy,profundidad){
+    const a=puntoQuesitoV260(r,inicio,cx,cy),b=puntoQuesitoV260(r,fin,cx,cy),p=profundidad;
+    const f=v=>Number(v).toFixed(3);
+    let d=`M${f(cx)},${f(cy)} L${f(a.x)},${f(a.y)} L${f(a.x)},${f(a.y+p)} L${f(cx)},${f(cy+p)} Z M${f(cx)},${f(cy)} L${f(b.x)},${f(b.y)} L${f(b.x)},${f(b.y+p)} L${f(cx)},${f(cy+p)} Z`;
+    for(let vuelta=Math.floor(inicio/360);vuelta<=Math.floor(fin/360);vuelta++){
+        const i=Math.max(inicio,360*vuelta),j=Math.min(fin,360*vuelta+180);if(j<=i)continue;
+        const u=puntoQuesitoV260(r,i,cx,cy),v=puntoQuesitoV260(r,j,cx,cy);
+        d+=` M${f(u.x)},${f(u.y)} A${r},${f(r*.9)} 0 0 1 ${f(v.x)},${f(v.y)} L${f(v.x)},${f(v.y+p)} A${r},${f(r*.9)} 0 0 0 ${f(u.x)},${f(u.y+p)} Z`;
+    }
+    return d;
+}
+
+/* V260 · Medir el espacio real, sin recortar contenido ni bloquear el desplazamiento. */
+var rafEncajeV260=0,bloqueoEncajeV260="";
+function planoEncajeV260(ancho,alto,minutos){
+    if(ancho<=0||alto<175||!minutos.length)return null;
+    const n=minutos.length,m=Math.min(ancho,alto),rc=Math.max(22,Math.min(36,m*.11)),gap=6;
+    const maxR=n===1?Math.min(66,m*.21):n===2?Math.min(58,m*.19):(m/2-rc-gap*2-4)/2;
+    const mayor=Math.max(...minutos),menor=Math.min(...minutos),minR=Math.min(maxR,Math.max(22,maxR*.82));
+    const radios=minutos.map(v=>menor===mayor?(minR+maxR)/2:minR+(maxR-minR)*(v-menor)/(mayor-menor));
+    const cx=ancho/2,cy=n===1?alto*.69:alto/2,R=rc+Math.max(...radios)+gap;
+    const angulos=n===1?[-90]:n===2?[-135,45]:Array.from({length:n},(_,i)=>-90+i*360/n);
+    const piezas=radios.map((r,i)=>({x:cx+Math.cos(angulos[i]*Math.PI/180)*R,y:cy+Math.sin(angulos[i]*Math.PI/180)*R,r}));
+    // Escalar y centrar el conjunto completo aprovecha el espacio libre de cada lado.
+    const todos=[{x:cx,y:cy,r:rc},...piezas];
+    const izquierda=Math.min(...todos.map(p=>p.x-p.r)),derecha=Math.max(...todos.map(p=>p.x+p.r));
+    const arriba=Math.min(...todos.map(p=>p.y-p.r)),abajo=Math.max(...todos.map(p=>p.y+p.r));
+    const escala=Math.min(1.42,(ancho-12)/(derecha-izquierda),(alto-12)/(abajo-arriba));
+    const medioX=(izquierda+derecha)/2,medioY=(arriba+abajo)/2;
+    const transformar=p=>({x:ancho/2+(p.x-medioX)*escala,y:alto/2+(p.y-medioY)*escala,r:p.r*escala});
+    return {centro:transformar(todos[0]),piezas:piezas.map(transformar)};
+}
+function limpiarEncajeV260(){
+    document.querySelectorAll('#graficoInicio [data-encaje-inicio]').forEach(n=>{
+        ["left","top","width","height","max-width","min-height","--encaje-horas"].forEach(p=>n.style.removeProperty(p));
+        delete n.dataset.encajeInicio;delete n.dataset.piezaMini;
+    });
+}
+function componerInicioEncajadoV260(){
+    if(!document.body.classList.contains("inicio-encajado-v260"))return;
+    const g=document.getElementById("graficoInicio");if(!g)return;
+    const corazones=g.dataset.estilo==="corazones";
+    const box=g.querySelector(corazones?".corazones-orbita-v260":".orbita-grafico");
+    const centro=box?.querySelector(corazones?".corazones-total-centro-v260":".orbita-centro");
+    if(!box||!centro)return;
+    const nodos=[...box.querySelectorAll(corazones?".corazon-posicion-v260":".orbita-actividad")],caja=box.getBoundingClientRect();
+    const set=(n,p)=>{
+        n.dataset.encajeInicio="si";
+        for(const [k,v] of Object.entries({left:p.x+"px",top:p.y+"px",width:p.r*2+"px","max-width":"none"}))n.style.setProperty(k,v,"important");
+    };
+    if(!nodos.length){set(centro,{x:caja.width/2,y:caja.height/2,r:Math.min(50,caja.height*.3)});centro.style.setProperty("height",Math.min(100,caja.height*.6)+"px","important");return;}
+    const minutos=nodos.map(n=>{const tipo=(corazones?n.querySelector('[data-actividad-inicio]'):n)?.dataset.actividadInicio;return Math.max(0,Number(datosGraficoPersonalV260?.[tipo])||0);});
+    const plano=planoEncajeV260(caja.width,caja.height,minutos);if(!plano)return;
+    nodos.forEach((n,i)=>{
+        const p=plano.piezas[i];set(n,p);n.toggleAttribute("data-pieza-mini",p.r*2<64);
+        if(!corazones){n.style.setProperty("height",p.r*2+"px","important");const texto=n.querySelector(':scope > span:not(.sector-icono)')?.textContent||'';n.style.setProperty('--encaje-horas',Math.max(12,Math.min(20,p.r*1.75/(Math.max(1,texto.length)*.55)))+'px');}
+    });
+    set(centro,plano.centro);centro.style.setProperty("height",plano.centro.r*2+"px","important");centro.style.setProperty("min-height","0","important");
+}
+function ajustarInicioPantallaV260(){
+    rafEncajeV260=0;
+    const body=document.body,inicio=document.getElementById("vista-inicio"),panel=document.getElementById("panelCalendarioInicio"),clima=document.getElementById("climaDetalleV260");
+    const alto=window.visualViewport?.height||window.innerHeight,ancho=window.visualViewport?.width||window.innerWidth,clave=Math.round(ancho)+"x"+Math.round(alto);
+    const editar=document.activeElement?.matches('input,textarea,select,[contenteditable="true"]');
+    const expandido=panel&&!panel.classList.contains("oculto");
+    const apto=inicio?.classList.contains("activa")&&ancho<=600&&alto>=600&&!expandido&&!clima?.open&&!document.getElementById("cierreMesInicioV260")?.open&&!editar;
+    const antes=body.classList.contains("inicio-encajado-v260");
+    if(!apto||bloqueoEncajeV260===clave){
+        body.classList.remove("inicio-encajado-v260");limpiarEncajeV260();if(antes)requestAnimationFrame(resolverColisionesOrbitasV120);return;
+    }
+    document.documentElement?.style.setProperty("--inicio-alto",alto+"px");body.style.setProperty("--inicio-alto",alto+"px");body.classList.add("inicio-encajado-v260");
+    const nav=document.querySelector(".barra-navegacion"),pie=document.querySelector(".inicio-pie-v260");
+    const rectNav=nav?.getBoundingClientRect();
+    const alturaNav=rectNav?.height||60;
+    const bordeNav=Number.isFinite(rectNav?.top)&&rectNav.top>0?Math.min(alto,rectNav.top):alto-alturaNav;
+    body.style.setProperty("--inicio-zona-alto",Math.max(0,bordeNav)+"px");
+    body.style.setProperty("--inicio-nav-alto",alturaNav+"px");
+    body.style.setProperty("--inicio-pie-alto",(pie?.getBoundingClientRect().height||44)+"px");
+    // Si el texto ampliado o un aviso necesita más altura, se conserva el flujo natural.
+    const grafico=document.getElementById("graficoInicio");
+    if((grafico?.getBoundingClientRect().height||0)<175||(pie?.getBoundingClientRect().bottom||0)>bordeNav-2){
+        bloqueoEncajeV260=clave;body.classList.remove("inicio-encajado-v260");limpiarEncajeV260();requestAnimationFrame(resolverColisionesOrbitasV120);return;
+    }
+    componerInicioEncajadoV260();
+}
+function programarEncajeV260(reintentar=false){
+    if(reintentar)bloqueoEncajeV260="";
+    if(!rafEncajeV260)rafEncajeV260=requestAnimationFrame(ajustarInicioPantallaV260);
+}
+function instalarEncajeInicioV260(){
+    const inicio=document.getElementById("vista-inicio");if(!inicio)return;
+    new MutationObserver(()=>programarEncajeV260(true)).observe(inicio,{attributes:true,attributeFilter:["class","hidden","open"],childList:true,subtree:true});
+    document.getElementById("climaDetalleV260")?.addEventListener("toggle",()=>programarEncajeV260(true));
+    if(typeof ResizeObserver!=="undefined"){
+        const ro=new ResizeObserver(()=>programarEncajeV260());
+        document.querySelectorAll('.cabecera,.barra-navegacion,.inicio-pie-v260,#seccionObjetivoInicioV260').forEach(n=>ro.observe(n));
+    }
+    window.addEventListener("resize",()=>programarEncajeV260(true));
+    window.visualViewport?.addEventListener("resize",()=>programarEncajeV260(true));
+    document.addEventListener("focusin",()=>programarEncajeV260(true));document.addEventListener("focusout",()=>programarEncajeV260(true));
+    document.addEventListener("visibilitychange",()=>{if(!document.hidden)programarEncajeV260(true);});
+    programarEncajeV260(true);
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",instalarEncajeInicioV260,{once:true});else instalarEncajeInicioV260();
+
+/* V260 · Material personal local, independiente de la firma y los registros. */
+const METALES_V260={plata:"Plata satinada",titanio:"Titanio",champan:"Champán"};
+function leerMetalV260(){
+    try{const id=localStorage.getItem("miServicio.acabadoMetal");return Object.hasOwn(METALES_V260,id)?id:"plata";}catch(e){return "plata";}
+}
+function aplicarMetalV260(id){
+    if(!Object.hasOwn(METALES_V260,id))id="plata";
+    document.body.dataset.metal=id;
+    document.getElementById("acabadosMetalV260")?.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.metal===id)));
+    const mensaje=document.getElementById("estadoMetalV260");
+    if(mensaje)mensaje.textContent=METALES_V260[id]+" seleccionado. Se aplica al ambiente Metal y cristal; tu firma de color se conserva.";
+}
+function guardarMetalV260(id){
+    if(!Object.hasOwn(METALES_V260,id))return false;
+    try{localStorage.setItem("miServicio.acabadoMetal",id);}catch(e){const mensaje=document.getElementById("estadoMetalV260");if(mensaje)mensaje.textContent="No se pudo guardar. Inténtalo de nuevo.";return false;}
+    aplicarMetalV260(id);return true;
+}
+function instalarMetalesV260(){
+    const host=document.getElementById("acabadosMetalV260");if(!host)return;host.replaceChildren();
+    const descripciones={plata:"Luz suave",titanio:"Gris profundo",champan:"Calidez discreta"};
+    Object.entries(METALES_V260).forEach(([id,nombre])=>{
+        const boton=document.createElement("button");boton.type="button";boton.dataset.metal=id;boton.setAttribute("aria-label","Elegir "+nombre);
+        boton.innerHTML='<span class="metal-muestra-v260" aria-hidden="true"><i></i><i></i><i></i></span><strong>'+nombre+'</strong><small>'+descripciones[id]+'</small>';
+        boton.addEventListener("click",()=>guardarMetalV260(id));host.appendChild(boton);
+    });aplicarMetalV260(leerMetalV260());
+}
+window.addEventListener("storage",e=>{if(e.key==="miServicio.acabadoMetal"||e.key===null)aplicarMetalV260(leerMetalV260());});
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",instalarMetalesV260,{once:true});else instalarMetalesV260();
+
+/* V260 · Iluminación compartida, sin tocar registros ni preferencias de color. */
+const LUCES_V260={suave:"Suave",realzada:"Realzada"};
+function leerLuzV260(){
+    try{const id=localStorage.getItem("miServicio.intensidadLuz");return Object.hasOwn(LUCES_V260,id)?id:"suave";}catch(e){return "suave";}
+}
+function aplicarLuzV260(id){
+    if(!Object.hasOwn(LUCES_V260,id))id="suave";
+    document.body.dataset.luz=id;
+    document.getElementById("intensidadLuzV260")?.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.luz===id)));
+    const estado=document.getElementById("estadoLuzV260");if(estado)estado.textContent="Iluminación "+LUCES_V260[id].toLowerCase()+" seleccionada. Tus colores se conservan.";
+}
+function guardarLuzV260(id){
+    if(!Object.hasOwn(LUCES_V260,id))return false;
+    try{localStorage.setItem("miServicio.intensidadLuz",id);}catch(e){const estado=document.getElementById("estadoLuzV260");if(estado)estado.textContent="No se pudo guardar. Inténtalo de nuevo.";return false;}
+    aplicarLuzV260(id);return true;
+}
+function instalarLuzV260(){
+    const host=document.getElementById("intensidadLuzV260");if(!host)return;host.replaceChildren();
+    Object.entries(LUCES_V260).forEach(([id,nombre])=>{
+        const boton=document.createElement("button");boton.type="button";boton.dataset.luz=id;boton.setAttribute("aria-label","Elegir iluminación "+nombre.toLowerCase());
+        boton.innerHTML='<span class="luz-muestra-v260" aria-hidden="true"></span><strong>'+nombre+'</strong><small>'+(id==="suave"?"Reflejo discreto":"Más relieve")+'</small>';
+        boton.addEventListener("click",()=>guardarLuzV260(id));host.appendChild(boton);
+    });aplicarLuzV260(leerLuzV260());
+}
+window.addEventListener("storage",e=>{if(e.key==="miServicio.intensidadLuz"||e.key===null)aplicarLuzV260(leerLuzV260());});
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",instalarLuzV260,{once:true});else instalarLuzV260();
+
+/* V260 · Alias de Otras: preferencia global, nunca una categoría nueva. */
+function normalizarNombreOtrasV260(valor){
+    if(typeof valor!=="string")return "";
+    const limpio=valor.normalize("NFC").replace(/[\u0000-\u001f\u007f-\u009f\u202a-\u202e\u2066-\u2069]/g," ").replace(/\s+/g," ").trim();
+    return [...limpio].slice(0,24).join("").trim();
+}
+function aplicarNombreOtrasV260(){
+    const nombre=nombreActividad("otras");
+    document.querySelectorAll("[data-nombre-otras-v260]").forEach(n=>{n.textContent=nombre;n.title=nombre;});
+}
+
+/* V260 · El mismo cómputo mensual en Inicio, resumen y meta anual. */
+function pintarComputoMesV260(host,computo){
+    if(!host)return;
+    const excedente=Math.max(0,Number(computo.excedente)||0);
+    host.hidden=excedente<=0;
+    host.querySelector("[data-computo-valor]").textContent=formatearTiempo(computo.computable);
+    host.querySelector("[data-excedente-valor]").textContent=formatearTiempo(excedente);
+    host.title=`${formatearTiempo(computo.actividadTotal)} registradas: ${formatearTiempo(computo.computable)} computan y ${formatearTiempo(excedente)} quedan como excedente.`;
+}

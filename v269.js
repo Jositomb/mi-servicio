@@ -1,1 +1,242 @@
-(function(){"use strict";const s=e=>document.getElementById(e),g="miServicio.firmaPersonalV269",q="miServicio.tipografiaV269",M="miServicio.anillosInicioV269",y="miServicio.papeleraV269",de=["ministerio","ldc","asambleas","otras"];function u(e){try{return localStorage.getItem(e)}catch{return null}}function S(e,t){try{return localStorage.setItem(e,t),!0}catch{return!1}}function V(e){try{localStorage.removeItem(e)}catch{}}function h(e){e=Math.round(Math.max(0,e));const t=Math.floor(e/60),a=e%60;return t&&a?t+" h "+a+" min":t?t+" h":a+" min"}function I(e){return e.getFullYear()+"-"+String(e.getMonth()+1).padStart(2,"0")+"-"+String(e.getDate()).padStart(2,"0")}function K(e){try{return typeof nombreActividad=="function"?nombreActividad(e):e}catch{return e}}function P(){try{return(estado.registros||[]).filter(e=>e&&/^\d{4}-\d{2}-\d{2}/.test(String(e.fecha)))}catch{return[]}}function Y(){try{return Number(estado.preferencias&&estado.preferencias.objetivoMensualMinutos)||0}catch{return 0}}function B(){try{return window.matchMedia("(prefers-reduced-motion:reduce)").matches}catch{return!1}}const j=[{id:"oceano",nombre:"Oc\xE9ano",amb:"metal",firma:"oceano",metal:"plata",oled:!1,cols:["#80b3ff","#2864d7"]},{id:"bosque",nombre:"Bosque",amb:"escena",firma:"salvia",metal:"plata",oled:!1,cols:["#8dccaa","#357451"]},{id:"atardecer",nombre:"Atardecer",amb:"metal",firma:"ambar",metal:"champan",oled:!1,cols:["#f1c47d","#9a651b"]},{id:"lavanda",nombre:"Lavanda",amb:"cielo",firma:"lavanda",metal:"plata",oled:!1,cols:["#c2a8f3","#7752b9"]},{id:"rosa",nombre:"Rosa",amb:"cristal",firma:"rosa",metal:"plata",oled:!1,cols:["#efa7c7","#b64c79"]},{id:"medianoche",nombre:"Medianoche",amb:"metal",firma:"oceano",metal:"titanio",oled:!0,cols:["#5a6a8a","#0b1020"]}];function C(e){return/^#[0-9a-f]{6}$/i.test(String(e||""))}function U(e){return[1,3,5].map(t=>parseInt(e.slice(t,t+2),16))}function N(e){return"#"+e.map(t=>Math.max(0,Math.min(255,Math.round(t))).toString(16).padStart(2,"0")).join("")}function z(e,t,a){return e.map((n,r)=>n+(t[r]-n)*a)}function W(e){const t=a=>(a/=255,a<=.03928?a/12.92:Math.pow((a+.055)/1.055,2.4));return .2126*t(e[0])+.7152*t(e[1])+.0722*t(e[2])}function O(e){let t=U(e);for(;W(t)>.34;)t=z(t,[0,0,0],.12);const a=z(t,[255,255,255],.45);return{base:N(t),luz:N(a),rgb:t.map(Math.round).join(",")}}function L(e){if(!C(e))return!1;const t=O(e),a=document.body.style;a.setProperty("--firma-base",t.base),a.setProperty("--firma-luz",t.luz),a.setProperty("--firma-rgb",t.rgb),document.body.dataset.firma="personal",document.querySelectorAll("#firmasColorV260 button").forEach(r=>r.setAttribute("aria-pressed","false"));const n=s("colorPersonalV269");return n&&n.value.toLowerCase()!==e.toLowerCase()&&(n.value=e),!0}function p(){const e=u(g);return C(e)?e:null}function x(){const e=u(q)==="redondeada";document.body.classList.toggle("tipo-redondeada-v269",e);const t=s("tipografiaV269");t&&(t.checked=e)}function X(){if(p())return null;const e={amb:u("miServicio.ambienteVisual"),firma:u("miServicio.firmaColor")||"oceano",metal:u("miServicio.acabadoMetal")||"plata",oled:u("miServicio.fondoOledV264")==="si"};return(j.find(t=>t.amb===e.amb&&t.firma===e.firma&&t.metal===e.metal&&t.oled===e.oled)||{}).id||null}function b(){const e=X();document.querySelectorAll("#temasV269 [data-tema]").forEach(a=>a.setAttribute("aria-pressed",String(a.dataset.tema===e)));const t=s("personalEstadoV269");t&&(t.textContent=p()?"Usando tu color personalizado.":"")}function F(e){var a;V(g);try{guardarAmbienteVisualV260(e.amb),guardarFirmaColorV260(e.firma),guardarMetalV260(e.metal)}catch(n){console.warn("[V269] tema",n)}(a=document.querySelector('[data-estilo-v264="cristal"]'))==null||a.click();const t=s("fondoOledV264");t&&t.checked!==e.oled&&(t.checked=e.oled,t.dispatchEvent(new Event("change",{bubbles:!0}))),b()}function $(){var c;if(s("temasV269"))return;const e=document.querySelector(".selector-ambiente-v260");if(!e)return;const t=document.createElement("fieldset");t.id="temasV269",t.className="selector-grafico-v260 temas-v269",t.innerHTML='<legend class="titulo-campo">Temas</legend><div class="rejilla-temas-v269" role="group" aria-label="Elegir un tema completo"></div><div class="color-personal-v269"><label for="colorPersonalV269">Tu color</label><input id="colorPersonalV269" type="color" value="#2864d7" aria-label="Elegir un color personalizado"><button type="button" id="usarColorV269" class="boton-secundario">Usar mi color</button></div><p id="personalEstadoV269" class="ayuda-fondo-clima-v260" role="status"></p><label class="fondo-clima-opcion-v260"><input id="tipografiaV269" type="checkbox"><span>Letra redondeada (estilo Apple)</span></label><label class="fondo-clima-opcion-v260"><input id="anillosV269check" type="checkbox"><span>Mostrar los anillos de progreso en Inicio</span></label><p class="ayuda-fondo-clima-v260">Un tema cambia ambiente, color, metal y fondo a la vez. Despu\xE9s puedes ajustar cada cosa por separado.</p>';const a=t.querySelector(".rejilla-temas-v269");j.forEach(o=>{const i=document.createElement("button");i.type="button",i.dataset.tema=o.id,i.setAttribute("aria-pressed","false"),i.style.setProperty("--c1",o.cols[0]),i.style.setProperty("--c2",o.cols[1]),i.innerHTML='<i aria-hidden="true"></i><span></span>',i.querySelector("span").textContent=o.nombre,i.addEventListener("click",()=>F(o)),a.appendChild(i)}),e.insertAdjacentElement("beforebegin",t);const n=p();n&&(s("colorPersonalV269").value=n),s("usarColorV269").addEventListener("click",()=>{const o=s("colorPersonalV269").value;C(o)&&(S(g,o),L(o),b())}),s("tipografiaV269").addEventListener("change",o=>{S(q,o.target.checked?"redondeada":"sistema"),x()});const r=s("anillosV269check");r.checked=u(M)!=="no",r.addEventListener("change",()=>{S(M,r.checked?"si":"no"),v()}),document.addEventListener("click",o=>{o.target.closest&&o.target.closest("#firmasColorV260 button")&&p()&&(V(g),setTimeout(b,0))},!0),["ambientesVisualesV260","acabadosMetalV260"].forEach(o=>{var i;return(i=s(o))==null?void 0:i.addEventListener("click",()=>setTimeout(b,0))}),(c=s("fondoOledV264"))==null||c.addEventListener("change",()=>setTimeout(b,0)),x(),b()}function Q(){const e=window.aplicarFirmaColorV260;if(typeof e!="function"||e.v269)return;const t=function(){const n=e.apply(this,arguments),r=p();return r&&L(r),n};t.v269=!0,window.aplicarFirmaColorV260=t;const a=p();a&&L(a)}function Z(e){try{return calcularComputoMesMeta(e).computable}catch{return e.reduce((a,n)=>a+Math.max(0,Number(n.minutos)||0),0)}}function R(){const e=new Date,t=e.getFullYear()+"-"+String(e.getMonth()+1).padStart(2,"0"),a=P(),n=a.filter(m=>String(m.fecha).startsWith(t+"-")),r=Y(),c=Z(n),o=new Set(n.filter(m=>(Number(m.minutos)||0)>0).map(m=>String(m.fecha).slice(0,10))),i=(e.getDay()+6)%7,d=new Date(e.getFullYear(),e.getMonth(),e.getDate()-i,12),A=I(d),l=I(new Date(d.getFullYear(),d.getMonth(),d.getDate()+6,12)),J=a.filter(m=>{const w=String(m.fecha).slice(0,10);return w>=A&&w<=l}).reduce((m,w)=>m+Math.max(0,Number(w.minutos)||0),0),D=r>0?Math.round(r*7/30.4):0;return{obj:r,comp:c,activos:o.size,trans:e.getDate(),semana:J,objSem:D,p1:r>0?c/r:0,p2:e.getDate()>0?o.size/e.getDate():0,p3:D>0?J/D:0}}const ee=[50,38,26],_=9;function te(e){const t=[["var(--firma-luz,#80b3ff)","var(--firma-base,#2864d7)"],["#7ff0a0","#1f9d55"],["#ffd27a","#e8890c"]],a=[e.p1,e.p2,e.p3];let n="",r="";return ee.forEach((c,o)=>{const i=2*Math.PI*c,d=Math.max(0,Math.min(1,a[o]));n+='<linearGradient id="gAn'+o+'V269" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+t[o][0]+'"/><stop offset="1" stop-color="'+t[o][1]+'"/></linearGradient>',r+='<circle class="pista-an" cx="60" cy="60" r="'+c+'" stroke-width="'+_+'"/><circle class="prog-an" data-i="'+o+'" cx="60" cy="60" r="'+c+'" stroke-width="'+_+'" stroke="url(#gAn'+o+'V269)" stroke-dasharray="'+i.toFixed(2)+'" stroke-dashoffset="'+i.toFixed(2)+'" data-final="'+(i*(1-d)).toFixed(2)+'" '+(d<=0?'style="opacity:0"':"")+"/>"}),'<svg viewBox="0 0 120 120" width="124" height="124" role="img" aria-label="Anillos de progreso"><defs>'+n+"</defs>"+r+"</svg>"}function v(){const e=s("seccionAnillosV269"),t=s("seccionObjetivoInicioV260");if(u(M)==="no"){e&&(e.hidden=!0);return}if(!t)return;const a=R();let n=e;n||(n=document.createElement("section"),n.id="seccionAnillosV269",n.className="seccion anillos-v269",t.insertAdjacentElement("afterend",n)),n.hidden=!1;const r=Math.round(a.p1*100),c=a.obj>0&&a.p1>=1,o=[["Objetivo del mes",a.obj>0?h(a.comp):"Sin objetivo",a.obj>0?" de "+h(a.obj):"","a1"],["Constancia",a.activos+(a.activos===1?" d\xEDa":" d\xEDas")," de "+a.trans,"a2"],["Esta semana",h(a.semana),a.objSem>0?" de "+h(a.objSem):"","a3"]].map(l=>'<li class="'+l[3]+'" title="'+l[0]+": "+l[1]+l[2]+'"><i aria-hidden="true"></i><span><small>'+l[0]+"</small><strong>"+l[1]+'<span class="de-v269">'+l[2]+"</span></strong></span></li>").join(""),i=[a.obj,a.comp,a.activos,a.trans,a.semana].join("|");if(n.dataset.firma===i&&n.querySelector("svg"))return;n.dataset.firma=i,n.innerHTML='<article class="tarjeta anillos-tarjeta-v269"><div class="anillos-svg-v269">'+te(a)+'<b class="centro-anillos">'+(a.obj>0?c?"\u2713":r+"%":"\u2014")+'</b></div><ul class="anillos-leyenda-v269">'+o+"</ul></article>";const d=n.querySelectorAll(".prog-an"),A=()=>d.forEach(l=>{l.style.strokeDashoffset=l.dataset.final});if(B()?(d.forEach(l=>{l.style.transition="none"}),A()):requestAnimationFrame(()=>requestAnimationFrame(A)),a.obj<=0){const l=document.createElement("p");l.className="anillos-nota-v269",l.textContent="Pon un objetivo mensual en Ajustes para llenar los anillos.",n.firstChild.appendChild(l)}}function ae(){v();const e=s("graficoInicio");if(e&&!e.dataset.anillosV269){e.dataset.anillosV269="1";let t=!1;new MutationObserver(()=>{t||(t=!0,requestAnimationFrame(()=>{t=!1,v()}))}).observe(e,{childList:!0})}window.addEventListener("miServicio:registroGuardadoV188",()=>setTimeout(v,200))}const T=30,ne=300,oe=6e5;function re(){try{const e=JSON.parse(u(y)||"[]");return Array.isArray(e)?e.filter(t=>t&&t.r&&t.r.id&&t.b):[]}catch{return[]}}function k(e){for(e=e.slice(0,ne);e.length;){const t=JSON.stringify(e);if(t.length<=oe&&S(y,t))return!0;e=e.slice(0,-1)}return V(y),!1}function E(){const e=new Set(P().map(n=>n.id)),t=Date.now()-T*864e5;return re().filter(n=>!e.has(n.r.id)&&new Date(n.b).getTime()>t)}function H(e){try{if(!Array.isArray(e)||!e.length)return;const t=new Date().toISOString(),a=E(),n=new Set(a.map(r=>r.r.id));e.forEach(r=>{r&&r.id&&!n.has(r.id)&&a.unshift({b:t,r:JSON.parse(JSON.stringify(r))})}),k(a),f()}catch(t){console.warn("[V269] papelera",t)}}function ie(){const e=window.ofrecerDeshacerV202;if(typeof e!="function"||e.v269)return;const t=function(a){return H(a),e.apply(this,arguments)};t.v269=!0,window.ofrecerDeshacerV202=t}function se(e){const t=Math.floor((Date.now()-new Date(e).getTime())/864e5);return t<=0?"hoy":t===1?"ayer":"hace "+t+" d\xEDas"}function f(){const e=s("papeleraV269");if(!e)return;const t=E();e.querySelector("summary").textContent="Papelera"+(t.length?" ("+t.length+")":"");const a=e.querySelector(".lista-papelera-v269");if(a.textContent="",!t.length){const n=document.createElement("p");n.className="nota-v266",n.textContent="La papelera est\xE1 vac\xEDa. Los registros que borres se guardan aqu\xED "+T+" d\xEDas.",a.appendChild(n)}t.forEach((n,r)=>{const c=document.createElement("div");c.className="fila-copia-v266";const o=document.createElement("span"),i=n.r;o.textContent=K(i.tipo)+" \xB7 "+h(Number(i.minutos)||0)+" \xB7 "+String(i.fecha).slice(0,10)+" \xB7 borrado "+se(n.b);const d=document.createElement("button");d.type="button",d.className="boton-secundario",d.textContent="Restaurar",d.dataset.id=i.id,c.append(o,d),a.appendChild(c)}),e.querySelector(".vaciar-papelera-v269").hidden=!t.length}function ce(e){const t=E(),a=t.find(o=>o.r.id===e);if(!a)return;if(P().some(o=>o.id===e)){k(t.filter(o=>o.r.id!==e)),f();return}const n=estado.registros;estado.registros=[...n,{...a.r,modificadoEn:new Date().toISOString(),sincronizacion:{estado:"pendiente",ultimaSincronizacion:a.r.sincronizacion&&a.r.sincronizacion.ultimaSincronizacion||null}}];let r=!1;try{r=guardarRegistros()}catch{}if(!r){estado.registros=n;const o=s("estadoPapeleraV269");o&&(o.textContent="No se pudo restaurar. Int\xE9ntalo de nuevo.");return}k(t.filter(o=>o.r.id!==e)),f();try{actualizarTodaLaInterfaz()}catch{}const c=s("estadoPapeleraV269");c&&(c.textContent="Registro restaurado \u2713")}function le(){if(s("papeleraV269")){f();return}const e=s("atajosV268")||s("copiasInternasV266")||s("ultimaCopiaAjustes");if(!e)return;const t=document.createElement("details");t.id="papeleraV269",t.className="copias-internas-v266 papelera-v269",t.innerHTML='<summary>Papelera</summary><p class="nota-v266">Los registros que borras se guardan aqu\xED '+T+' d\xEDas y se pueden restaurar. Solo existe en este dispositivo y no va en las copias de seguridad.</p><div class="lista-papelera-v269"></div><button type="button" class="boton-secundario vaciar-papelera-v269" hidden>Vaciar papelera</button><p id="estadoPapeleraV269" class="nota-v266" role="status"></p>',e.insertAdjacentElement("afterend",t),t.addEventListener("toggle",()=>{t.open&&f()}),t.addEventListener("click",a=>{const n=a.target.closest("button");n&&(n.dataset.id?ce(n.dataset.id):n.classList.contains("vaciar-papelera-v269")&&window.confirm("Se borrar\xE1n definitivamente los registros de la papelera. \xBFContinuar?")&&(V(y),f(),s("estadoPapeleraV269").textContent="Papelera vaciada."))}),f()}function G(){try{Q(),ie(),$(),ae(),le(),x()}catch(e){console.warn("[V269]",e)}document.addEventListener("click",e=>{e.target.closest&&e.target.closest(".nav-item")&&setTimeout(v,120)}),window.MiServicioV269={datosAnillos:R,aplicarTema:F,TEMAS:j,leerPapelera:E,enviarAPapelera:H,derivarFirma:O}}document.readyState==="complete"?setTimeout(G,0):window.addEventListener("load",()=>setTimeout(G,0),{once:!0})})();
+/* Mi Servicio · V269
+   1. Temas completos + color personalizado + letra redondeada
+   2. Anillos de progreso en Inicio
+   3. Papelera de registros (30 días)
+   No cambia claves ni estructuras existentes.
+   Claves nuevas: miServicio.firmaPersonalV269, miServicio.tipografiaV269, miServicio.anillosInicioV269 (apariencia, van en la copia JSON)
+                  miServicio.papeleraV269 (solo este dispositivo, no va en la copia)
+*/
+(function () {
+  "use strict";
+  const $ = id => document.getElementById(id);
+  const K_PERSONAL = "miServicio.firmaPersonalV269", K_TIPO = "miServicio.tipografiaV269", K_ANILLOS = "miServicio.anillosInicioV269", K_PAPELERA = "miServicio.papeleraV269";
+  const TIPOS = ["ministerio", "ldc", "asambleas", "otras"];
+  function ls(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } }
+  function lsDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
+  function fmt(min) { min = Math.round(Math.max(0, min)); const h = Math.floor(min / 60), m = min % 60; return h && m ? h + " h " + m + " min" : h ? h + " h" : m + " min"; }
+  function fechaISO(d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+  function nombreTipo(t) { try { return typeof nombreActividad === "function" ? nombreActividad(t) : t; } catch (e) { return t; } }
+  function registros() { try { return (estado.registros || []).filter(r => r && /^\d{4}-\d{2}-\d{2}/.test(String(r.fecha))); } catch (e) { return []; } }
+  function objetivo() { try { return Number(estado.preferencias && estado.preferencias.objetivoMensualMinutos) || 0; } catch (e) { return 0; } }
+  function movReducido() { try { return window.matchMedia("(prefers-reduced-motion:reduce)").matches; } catch (e) { return false; } }
+
+  /* ================= 1. TEMAS, COLOR PERSONAL, LETRA ================= */
+  const TEMAS = [
+    { id: "oceano", nombre: "Océano", amb: "metal", firma: "oceano", metal: "plata", oled: false, cols: ["#80b3ff", "#2864d7"] },
+    { id: "bosque", nombre: "Bosque", amb: "escena", firma: "salvia", metal: "plata", oled: false, cols: ["#8dccaa", "#357451"] },
+    { id: "atardecer", nombre: "Atardecer", amb: "metal", firma: "ambar", metal: "champan", oled: false, cols: ["#f1c47d", "#9a651b"] },
+    { id: "lavanda", nombre: "Lavanda", amb: "cielo", firma: "lavanda", metal: "plata", oled: false, cols: ["#c2a8f3", "#7752b9"] },
+    { id: "rosa", nombre: "Rosa", amb: "cristal", firma: "rosa", metal: "plata", oled: false, cols: ["#efa7c7", "#b64c79"] },
+    { id: "medianoche", nombre: "Medianoche", amb: "metal", firma: "oceano", metal: "titanio", oled: true, cols: ["#5a6a8a", "#0b1020"] }
+  ];
+  function hexValido(h) { return /^#[0-9a-f]{6}$/i.test(String(h || "")); }
+  function hexARgb(h) { return [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)); }
+  function aHex(r) { return "#" + r.map(v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, "0")).join(""); }
+  function mezcla(a, b, t) { return a.map((v, i) => v + (b[i] - v) * t); }
+  function luminancia(c) { const f = v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }; return .2126 * f(c[0]) + .7152 * f(c[1]) + .0722 * f(c[2]); }
+  function derivarFirma(hex) {
+    let base = hexARgb(hex);
+    while (luminancia(base) > 0.34) base = mezcla(base, [0, 0, 0], .12); // legible sobre fondos claros
+    const luz = mezcla(base, [255, 255, 255], .45);
+    return { base: aHex(base), luz: aHex(luz), rgb: base.map(Math.round).join(",") };
+  }
+  function aplicarPersonal(hex) {
+    if (!hexValido(hex)) return false;
+    const f = derivarFirma(hex), s = document.body.style;
+    s.setProperty("--firma-base", f.base); s.setProperty("--firma-luz", f.luz); s.setProperty("--firma-rgb", f.rgb);
+    document.body.dataset.firma = "personal";
+    document.querySelectorAll("#firmasColorV260 button").forEach(b => b.setAttribute("aria-pressed", "false"));
+    const sel = $("colorPersonalV269"); if (sel && sel.value.toLowerCase() !== hex.toLowerCase()) sel.value = hex;
+    return true;
+  }
+  function personalActivo() { const h = ls(K_PERSONAL); return hexValido(h) ? h : null; }
+  function aplicarTipografia() {
+    const on = ls(K_TIPO) === "redondeada"; document.body.classList.toggle("tipo-redondeada-v269", on);
+    const c = $("tipografiaV269"); if (c) c.checked = on;
+  }
+  function temaActual() {
+    if (personalActivo()) return null;
+    const t = { amb: ls("miServicio.ambienteVisual"), firma: ls("miServicio.firmaColor") || "oceano", metal: ls("miServicio.acabadoMetal") || "plata", oled: ls("miServicio.fondoOledV264") === "si" };
+    return (TEMAS.find(x => x.amb === t.amb && x.firma === t.firma && x.metal === t.metal && x.oled === t.oled) || {}).id || null;
+  }
+  function marcarTema() {
+    const act = temaActual();
+    document.querySelectorAll("#temasV269 [data-tema]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.tema === act)));
+    const p = $("personalEstadoV269"); if (p) p.textContent = personalActivo() ? "Usando tu color personalizado." : "";
+  }
+  function aplicarTema(t) {
+    lsDel(K_PERSONAL);
+    try { guardarAmbienteVisualV260(t.amb); guardarFirmaColorV260(t.firma); guardarMetalV260(t.metal); } catch (e) { console.warn("[V269] tema", e); }
+    document.querySelector('[data-estilo-v264="cristal"]')?.click();
+    const o = $("fondoOledV264"); if (o && o.checked !== t.oled) { o.checked = t.oled; o.dispatchEvent(new Event("change", { bubbles: true })); }
+    marcarTema();
+  }
+  function instalarTemas() {
+    if ($("temasV269")) return;
+    const ancla = document.querySelector(".selector-ambiente-v260"); if (!ancla) return;
+    const f = document.createElement("fieldset"); f.id = "temasV269"; f.className = "selector-grafico-v260 temas-v269";
+    f.innerHTML = '<legend class="titulo-campo">Temas</legend><div class="rejilla-temas-v269" role="group" aria-label="Elegir un tema completo"></div>' +
+      '<div class="color-personal-v269"><label for="colorPersonalV269">Tu color</label><input id="colorPersonalV269" type="color" value="#2864d7" aria-label="Elegir un color personalizado"><button type="button" id="usarColorV269" class="boton-secundario">Usar mi color</button></div>' +
+      '<p id="personalEstadoV269" class="ayuda-fondo-clima-v260" role="status"></p>' +
+      '<label class="fondo-clima-opcion-v260"><input id="tipografiaV269" type="checkbox"><span>Letra redondeada (estilo Apple)</span></label>' +
+      '<label class="fondo-clima-opcion-v260"><input id="anillosV269check" type="checkbox"><span>Mostrar los anillos de progreso en Inicio</span></label>' +
+      '<p class="ayuda-fondo-clima-v260">Un tema cambia ambiente, color, metal y fondo a la vez. Después puedes ajustar cada cosa por separado.</p>';
+    const rej = f.querySelector(".rejilla-temas-v269");
+    TEMAS.forEach(t => {
+      const b = document.createElement("button"); b.type = "button"; b.dataset.tema = t.id; b.setAttribute("aria-pressed", "false");
+      b.style.setProperty("--c1", t.cols[0]); b.style.setProperty("--c2", t.cols[1]);
+      b.innerHTML = '<i aria-hidden="true"></i><span></span>'; b.querySelector("span").textContent = t.nombre;
+      b.addEventListener("click", () => aplicarTema(t)); rej.appendChild(b);
+    });
+    ancla.insertAdjacentElement("beforebegin", f);
+    const p = personalActivo(); if (p) $("colorPersonalV269").value = p;
+    $("usarColorV269").addEventListener("click", () => { const h = $("colorPersonalV269").value; if (hexValido(h)) { lsSet(K_PERSONAL, h); aplicarPersonal(h); marcarTema(); } });
+    $("tipografiaV269").addEventListener("change", e => { lsSet(K_TIPO, e.target.checked ? "redondeada" : "sistema"); aplicarTipografia(); });
+    const an = $("anillosV269check"); an.checked = ls(K_ANILLOS) !== "no";
+    an.addEventListener("change", () => { lsSet(K_ANILLOS, an.checked ? "si" : "no"); pintarAnillos(); });
+    // Elegir un color de la paleta de siempre quita el color personal
+    document.addEventListener("click", e => { if (e.target.closest && e.target.closest("#firmasColorV260 button") && personalActivo()) { lsDel(K_PERSONAL); setTimeout(marcarTema, 0); } }, true);
+    ["ambientesVisualesV260", "acabadosMetalV260"].forEach(id => $(id)?.addEventListener("click", () => setTimeout(marcarTema, 0)));
+    $("fondoOledV264")?.addEventListener("change", () => setTimeout(marcarTema, 0));
+    aplicarTipografia(); marcarTema();
+  }
+  function envolverFirma() {
+    const orig = window.aplicarFirmaColorV260;
+    if (typeof orig !== "function" || orig.v269) return;
+    const nueva = function () { const r = orig.apply(this, arguments); const h = personalActivo(); if (h) aplicarPersonal(h); return r; };
+    nueva.v269 = true; window.aplicarFirmaColorV260 = nueva;
+    const h = personalActivo(); if (h) aplicarPersonal(h);
+  }
+
+  /* ================= 2. ANILLOS ================= */
+  function computable(rs) { try { return calcularComputoMesMeta(rs).computable; } catch (e) { return rs.reduce((a, r) => a + Math.max(0, Number(r.minutos) || 0), 0); } }
+  function datosAnillos() {
+    const hoy = new Date(), mes = hoy.getFullYear() + "-" + String(hoy.getMonth() + 1).padStart(2, "0"), regs = registros();
+    const delMes = regs.filter(r => String(r.fecha).startsWith(mes + "-")), obj = objetivo();
+    const comp = computable(delMes), dias = new Set(delMes.filter(r => (Number(r.minutos) || 0) > 0).map(r => String(r.fecha).slice(0, 10)));
+    const w = (hoy.getDay() + 6) % 7, lunes = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() - w, 12), l = fechaISO(lunes), hasta = fechaISO(new Date(lunes.getFullYear(), lunes.getMonth(), lunes.getDate() + 6, 12));
+    const semana = regs.filter(r => { const f = String(r.fecha).slice(0, 10); return f >= l && f <= hasta; }).reduce((a, r) => a + Math.max(0, Number(r.minutos) || 0), 0);
+    const objSem = obj > 0 ? Math.round(obj * 7 / 30.4) : 0;
+    return { obj, comp, activos: dias.size, trans: hoy.getDate(), semana, objSem,
+      p1: obj > 0 ? comp / obj : 0, p2: hoy.getDate() > 0 ? dias.size / hoy.getDate() : 0, p3: objSem > 0 ? semana / objSem : 0 };
+  }
+  const R = [50, 38, 26], SW = 9;
+  function anilloSVG(d) {
+    const cols = [["var(--firma-luz,#80b3ff)", "var(--firma-base,#2864d7)"], ["#7ff0a0", "#1f9d55"], ["#ffd27a", "#e8890c"]], ps = [d.p1, d.p2, d.p3];
+    let defs = "", cuerpo = "";
+    R.forEach((r, i) => {
+      const c = 2 * Math.PI * r, p = Math.max(0, Math.min(1, ps[i]));
+      defs += '<linearGradient id="gAn' + i + 'V269" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="' + cols[i][0] + '"/><stop offset="1" stop-color="' + cols[i][1] + '"/></linearGradient>';
+      cuerpo += '<circle class="pista-an" cx="60" cy="60" r="' + r + '" stroke-width="' + SW + '"/>' +
+        '<circle class="prog-an" data-i="' + i + '" cx="60" cy="60" r="' + r + '" stroke-width="' + SW + '" stroke="url(#gAn' + i + 'V269)" stroke-dasharray="' + c.toFixed(2) + '" stroke-dashoffset="' + c.toFixed(2) + '" data-final="' + (c * (1 - p)).toFixed(2) + '" ' + (p <= 0 ? 'style="opacity:0"' : "") + '/>';
+    });
+    return '<svg viewBox="0 0 120 120" width="124" height="124" role="img" aria-label="Anillos de progreso"><defs>' + defs + '</defs>' + cuerpo + '</svg>';
+  }
+  function pintarAnillos() {
+    const ant = $("seccionAnillosV269"), ancla = $("seccionObjetivoInicioV260");
+    if (ls(K_ANILLOS) === "no") { if (ant) ant.hidden = true; return; }
+    if (!ancla) return;
+    const d = datosAnillos(); let s = ant;
+    if (!s) { s = document.createElement("section"); s.id = "seccionAnillosV269"; s.className = "seccion anillos-v269"; ancla.insertAdjacentElement("afterend", s); }
+    s.hidden = false;
+    const pct = Math.round(d.p1 * 100), hecho = d.obj > 0 && d.p1 >= 1;
+    const filas = [
+      ["Objetivo del mes", d.obj > 0 ? fmt(d.comp) : "Sin objetivo", d.obj > 0 ? " de " + fmt(d.obj) : "", "a1"],
+      ["Constancia", d.activos + (d.activos === 1 ? " día" : " días"), " de " + d.trans, "a2"],
+      ["Esta semana", fmt(d.semana), d.objSem > 0 ? " de " + fmt(d.objSem) : "", "a3"]
+    ].map(f => '<li class="' + f[3] + '" title="' + f[0] + ': ' + f[1] + f[2] + '"><i aria-hidden="true"></i><span><small>' + f[0] + '</small><strong>' + f[1] + '<span class="de-v269">' + f[2] + '</span></strong></span></li>').join("");
+    const firma = [d.obj, d.comp, d.activos, d.trans, d.semana].join("|");
+    if (s.dataset.firma === firma && s.querySelector("svg")) return;
+    s.dataset.firma = firma;
+    s.innerHTML = '<article class="tarjeta anillos-tarjeta-v269"><div class="anillos-svg-v269">' + anilloSVG(d) + '<b class="centro-anillos">' + (d.obj > 0 ? (hecho ? "✓" : pct + "%") : "—") + '</b></div><ul class="anillos-leyenda-v269">' + filas + '</ul></article>';
+    const circulos = s.querySelectorAll(".prog-an");
+    const poner = () => circulos.forEach(c => { c.style.strokeDashoffset = c.dataset.final; });
+    if (movReducido()) { circulos.forEach(c => { c.style.transition = "none"; }); poner(); }
+    else requestAnimationFrame(() => requestAnimationFrame(poner));
+    if (d.obj <= 0) { const p = document.createElement("p"); p.className = "anillos-nota-v269"; p.textContent = "Pon un objetivo mensual en Ajustes para llenar los anillos."; s.firstChild.appendChild(p); }
+  }
+  function instalarAnillos() {
+    pintarAnillos();
+    const g = $("graficoInicio");
+    if (g && !g.dataset.anillosV269) { g.dataset.anillosV269 = "1"; let pend = false; new MutationObserver(() => { if (pend) return; pend = true; requestAnimationFrame(() => { pend = false; pintarAnillos(); }); }).observe(g, { childList: true }); }
+    window.addEventListener("miServicio:registroGuardadoV188", () => setTimeout(pintarAnillos, 200));
+  }
+
+  /* ================= 3. PAPELERA ================= */
+  const DIAS_PAPELERA = 30, MAX_ENTRADAS = 300, MAX_CARACTERES = 600000;
+  function leerPapelera() { try { const v = JSON.parse(ls(K_PAPELERA) || "[]"); return Array.isArray(v) ? v.filter(e => e && e.r && e.r.id && e.b) : []; } catch (e) { return []; } }
+  function guardarPapelera(l) {
+    l = l.slice(0, MAX_ENTRADAS);
+    while (l.length) { const t = JSON.stringify(l); if (t.length <= MAX_CARACTERES && lsSet(K_PAPELERA, t)) return true; l = l.slice(0, -1); }
+    lsDel(K_PAPELERA); return false;
+  }
+  function limpiarPapelera() {
+    const ids = new Set(registros().map(r => r.id)), lim = Date.now() - DIAS_PAPELERA * 86400000;
+    const l = leerPapelera().filter(e => !ids.has(e.r.id) && new Date(e.b).getTime() > lim);
+    return l;
+  }
+  function enviarAPapelera(eliminados) {
+    try {
+      if (!Array.isArray(eliminados) || !eliminados.length) return;
+      const ahora = new Date().toISOString(), l = limpiarPapelera(), existentes = new Set(l.map(e => e.r.id));
+      eliminados.forEach(r => { if (r && r.id && !existentes.has(r.id)) l.unshift({ b: ahora, r: JSON.parse(JSON.stringify(r)) }); });
+      guardarPapelera(l); pintarPapelera();
+    } catch (e) { console.warn("[V269] papelera", e); }
+  }
+  function envolverDeshacer() {
+    const orig = window.ofrecerDeshacerV202;
+    if (typeof orig !== "function" || orig.v269) return;
+    const nueva = function (eliminados) { enviarAPapelera(eliminados); return orig.apply(this, arguments); };
+    nueva.v269 = true; window.ofrecerDeshacerV202 = nueva;
+  }
+  function textoHace(iso) { const d = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000); return d <= 0 ? "hoy" : d === 1 ? "ayer" : "hace " + d + " días"; }
+  function pintarPapelera() {
+    const det = $("papeleraV269"); if (!det) return;
+    const l = limpiarPapelera();
+    det.querySelector("summary").textContent = "Papelera" + (l.length ? " (" + l.length + ")" : "");
+    const lista = det.querySelector(".lista-papelera-v269"); lista.textContent = "";
+    if (!l.length) { const p = document.createElement("p"); p.className = "nota-v266"; p.textContent = "La papelera está vacía. Los registros que borres se guardan aquí " + DIAS_PAPELERA + " días."; lista.appendChild(p); }
+    l.forEach((e, i) => {
+      const f = document.createElement("div"); f.className = "fila-copia-v266";
+      const s = document.createElement("span"); const r = e.r;
+      s.textContent = nombreTipo(r.tipo) + " · " + fmt(Number(r.minutos) || 0) + " · " + String(r.fecha).slice(0, 10) + " · borrado " + textoHace(e.b);
+      const b = document.createElement("button"); b.type = "button"; b.className = "boton-secundario"; b.textContent = "Restaurar"; b.dataset.id = r.id;
+      f.append(s, b); lista.appendChild(f);
+    });
+    det.querySelector(".vaciar-papelera-v269").hidden = !l.length;
+  }
+  function restaurar(id) {
+    const l = limpiarPapelera(), e = l.find(x => x.r.id === id); if (!e) return;
+    if (registros().some(r => r.id === id)) { guardarPapelera(l.filter(x => x.r.id !== id)); pintarPapelera(); return; }
+    const anteriores = estado.registros;
+    estado.registros = [...anteriores, { ...e.r, modificadoEn: new Date().toISOString(), sincronizacion: { estado: "pendiente", ultimaSincronizacion: (e.r.sincronizacion && e.r.sincronizacion.ultimaSincronizacion) || null } }];
+    let ok = false; try { ok = guardarRegistros(); } catch (err) {}
+    if (!ok) { estado.registros = anteriores; const m = $("estadoPapeleraV269"); if (m) m.textContent = "No se pudo restaurar. Inténtalo de nuevo."; return; }
+    guardarPapelera(l.filter(x => x.r.id !== id)); pintarPapelera();
+    try { actualizarTodaLaInterfaz(); } catch (err) {}
+    const m = $("estadoPapeleraV269"); if (m) m.textContent = "Registro restaurado ✓";
+  }
+  function instalarPapelera() {
+    if ($("papeleraV269")) { pintarPapelera(); return; }
+    const ancla = $("atajosV268") || $("copiasInternasV266") || $("ultimaCopiaAjustes"); if (!ancla) return;
+    const d = document.createElement("details"); d.id = "papeleraV269"; d.className = "copias-internas-v266 papelera-v269";
+    d.innerHTML = '<summary>Papelera</summary><p class="nota-v266">Los registros que borras se guardan aquí ' + DIAS_PAPELERA + ' días y se pueden restaurar. Solo existe en este dispositivo y no va en las copias de seguridad.</p><div class="lista-papelera-v269"></div><button type="button" class="boton-secundario vaciar-papelera-v269" hidden>Vaciar papelera</button><p id="estadoPapeleraV269" class="nota-v266" role="status"></p>';
+    ancla.insertAdjacentElement("afterend", d);
+    d.addEventListener("toggle", () => { if (d.open) pintarPapelera(); });
+    d.addEventListener("click", e => {
+      const b = e.target.closest("button"); if (!b) return;
+      if (b.dataset.id) restaurar(b.dataset.id);
+      else if (b.classList.contains("vaciar-papelera-v269")) { if (window.confirm("Se borrarán definitivamente los registros de la papelera. ¿Continuar?")) { lsDel(K_PAPELERA); pintarPapelera(); $("estadoPapeleraV269").textContent = "Papelera vaciada."; } }
+    });
+    pintarPapelera();
+  }
+
+  function arrancar() {
+    try { envolverFirma(); envolverDeshacer(); instalarTemas(); instalarAnillos(); instalarPapelera(); aplicarTipografia(); } catch (e) { console.warn("[V269]", e); }
+    document.addEventListener("click", e => { if (e.target.closest && e.target.closest(".nav-item")) setTimeout(pintarAnillos, 120); });
+    window.MiServicioV269 = { datosAnillos, aplicarTema, TEMAS, leerPapelera: limpiarPapelera, enviarAPapelera, derivarFirma };
+  }
+  if (document.readyState === "complete") setTimeout(arrancar, 0);
+  else window.addEventListener("load", () => setTimeout(arrancar, 0), { once: true });
+})();
