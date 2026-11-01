@@ -1,6 +1,0 @@
-MI SERVICIO WEB - V268
-NUEVO
-- Busqueda inteligente en Historial: escribe en lenguaje natural. Ejemplos: "ayer", "octubre con Marta", "mas de 2 horas", "ldc septiembre", "semana pasada", "ultimos 7 dias", "5 de octubre", "al menos 90 min". Debajo se muestra como se ha entendido la busqueda y el total de lo encontrado. Las busquedas de siempre (nombre, nota, fecha) siguen funcionando.
-- Transiciones suaves entre pantallas (segun el sentido de la navegacion) y ventanas emergentes que suben con un pequeno rebote. Se desactivan con "Reducir movimiento" del sistema.
-Datos, claves de almacenamiento y copias JSON: sin cambios.
-Publicacion: borrar los archivos antiguos del repositorio y subir todo el contenido del ZIP.
