@@ -1,8 +1,8 @@
-const BUILD = "V267-26701";
-const CACHE = "mi-servicio-v26701";
+const BUILD = "V268-26801";
+const CACHE = "mi-servicio-v26801";
 const CACHE_PREFIX = "mi-servicio-";
 const CODIGO = {
-  "./app-v267.js": "6fb76ef1bb79d80dec4e0ad4548134c9abcec602862795756de093233ac71593",
+  "./app-v268.js": "8b55058d9a7011463f98497e330b63569b881a8823d46f50837d112fea3d6b0d",
   "./config-v260.js": "2ef83ae552bfdf5e1e998fffe9f39f1cc6f999826b9229396280337ed5612b5d",
   "./estadisticas-render-v260.js": "d4b50491234def73bc1f3636c97c18c7c21fb8fd5e596cd5cbb82b5caa3d62e9",
   "./estadisticas-v260.js": "32989862e03bd33c2f2f0974355b569887283d1f21535995538ecd79912533bc",
@@ -18,8 +18,9 @@ const CODIGO = {
   "./solidez-v266.js": "948674da60283ca67720da1dcef621ecf7b7a2cc6600530f0fde1500b46e1015",
   "./simple-v260.js": "d4de97a738d75a20f26487f59f0011fcb51ed63980b00b53618be4a6629e6820",
   "./storage-v260.js": "c8dc9a3b4b440181b69dabf206319026d8f3057cccf63c57ae8585cd4bdfdca9",
-  "./styles-v267.css": "1136cd81c219ef077ded3170bdd603c3b1f41e1e25728fda461f640dc8856e4a",
+  "./styles-v268.css": "ac1a5d74a1e1b43d528475caae454acc950a598d39cbb1104549c92b711ae498",
   "./tiempo-v262.js": "5e75178e6ba21dc2e3b136144dcaf1b1642193c1236f0ea7730b99581e39ff54",
+  "./v268.js": "03c7881719baa84f0556a1fb5af8aecb4ddb2e176bfc923282a57dad2d19a388",
   "./v267.js": "8dbe1696eb85aa2fa010859da475463b134a345cf9957fa3a59d6eb99cb29ddc",
   "./v264.js": "e89f3846a789b967f30d2006f336e26bceb8db0a2072333b35cb31c2de1acdeb",
   "./visual-v260.js": "5ad2f2082df9360054e0e5b3dafa1f2754d01ea51a3b0f2b91b8bb4bacd83711"
@@ -29,7 +30,7 @@ const APP_SHELL = [
   "./escena-registrar-v260.png",
   "./index.html",
   "./",
-  "./app-v267.js",
+  "./app-v268.js",
   "./solidez-v266.js",
   "./config-v260.js",
   "./estadisticas-render-v260.js",
@@ -46,8 +47,9 @@ const APP_SHELL = [
   "./simple-v260.js",
   "./v264.js",
   "./v267.js",
+  "./v268.js",
   "./storage-v260.js",
-  "./styles-v267.css",
+  "./styles-v268.css",
   "./tiempo-v262.js",
   "./visual-v260.js",
   "./manifest.webmanifest",
