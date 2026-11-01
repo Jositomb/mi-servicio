@@ -297,6 +297,7 @@
     instalarEstilo(); instalarCron(); instalarRegistrar(); instalarCSV();
     instalarPersistencia(); instalarGestos(); instalarSegmentos(); instalarPulso();
   }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => setTimeout(arrancar, 0));
-  else setTimeout(arrancar, 0);
+  // V266: esperar a "load" para que todos los scripts diferidos estén definidos.
+  if (document.readyState === "complete") setTimeout(arrancar, 0);
+  else window.addEventListener("load", () => setTimeout(arrancar, 0), { once: true });
 })();
