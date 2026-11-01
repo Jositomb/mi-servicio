@@ -1,0 +1,11 @@
+MI SERVICIO WEB - V269
+NUEVO
+- Temas completos (Ajustes > Apariencia): Oceano, Bosque, Atardecer, Lavanda, Rosa y Medianoche. Cada tema cambia ambiente, color, metal y fondo de una vez; despues puedes ajustar cada cosa por separado.
+- "Tu color": elige cualquier color y la app lo usa como color de firma (se adapta solo para que se lea bien). Al elegir un color de la paleta de siempre, se quita.
+- Letra redondeada (estilo Apple): opcional, en Ajustes.
+- Anillos de progreso en Inicio (estilo Actividad): objetivo del mes, constancia (dias con actividad) y semana actual. Tarjeta compacta para no quitar sitio al globo. Se pueden ocultar en Ajustes.
+- Papelera: los registros que borras se guardan 30 dias y se pueden restaurar desde Ajustes. Solo en este dispositivo; no va en las copias de seguridad.
+- Resumen de la semana (como el del mes): historia con total, dias, reparto e imagen para compartir. Los lunes y martes se avisa del resumen de la semana anterior.
+- Aligerado: codigo y estilos minificados (JS -42 %, CSS -18 %). Mismo aspecto, comprobado captura a captura.
+Datos, claves de registros y estructura de copias JSON: sin cambios. Se anaden a la copia los ajustes de apariencia: tema/color personal, letra y anillos.
+Publicacion: borrar los archivos antiguos del repositorio y subir todo el contenido del ZIP.
