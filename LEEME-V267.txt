@@ -1,9 +1,0 @@
-MI SERVICIO WEB - V267
-NUEVO
-- Globo de Inicio con liquido: sube con tu progreso mensual (necesita objetivo mensual). Ola animada, brillo y chapoteo al guardar. Se puede desactivar en Ajustes > Estilo de superficies. Opcion de inclinacion con el movimiento (apagada).
-- Logros: 13 medallas 3D en Estadisticas > Mas. Aviso con celebracion al conseguir uno nuevo. Al actualizar no se celebran los ya conseguidos.
-- Calendario de calor: Estadisticas > Ano. Un ano de servicio (sep-ago) con intensidad por dia; toca un dia para ver su detalle.
-- Resumen del mes: Estadisticas > Resumen > "Resumen del mes", y aviso en Inicio los primeros dias de cada mes. 6 pantallas con cifras animadas e imagen 1080x1920 para compartir (solo totales; sin notas ni companeros).
-- El total del globo central ya no se corta con cifras largas.
-Datos, claves de almacenamiento y copias JSON: sin cambios (solo se suman 2 ajustes de apariencia a la copia).
-Publicacion: borrar los archivos antiguos del repositorio y subir todo el contenido del ZIP.
