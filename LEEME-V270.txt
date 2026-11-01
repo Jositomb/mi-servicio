@@ -1,0 +1,8 @@
+MI SERVICIO WEB - V270
+CAMBIOS
+- Los anillos de progreso (objetivo del mes, constancia y semana) pasan de Inicio a Estadisticas > Resumen, en tamano grande y con la leyenda completa. Se animan al entrar en la pestana.
+- Inicio recupera el espacio: el globo vuelve a su tamano grande.
+- Se pueden ocultar en Ajustes > Apariencia.
+INCLUYE TAMBIEN lo de V269: temas, color propio, letra redondeada, papelera de 30 dias y resumen de la semana.
+Codigo SIN minificar. Datos, claves y copias JSON sin cambios.
+Publicacion: borrar los archivos antiguos del repositorio y subir todo el contenido del ZIP.
