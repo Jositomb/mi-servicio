@@ -276,7 +276,6 @@
     function poner(valor) {
       vista.dataset.segV264 = valor;
       seg.querySelectorAll("[data-seg-v264]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.segV264 === valor)));
-      if (valor === "anio") { const d = $("metaDetalleV260"); if (d && !d.open) d.open = true; }
       try { window.scrollTo({ top: 0, behavior: "auto" }); } catch (e) {}
     }
     seg.addEventListener("click", e => { const b = e.target.closest("[data-seg-v264]"); if (b) poner(b.dataset.segV264); });

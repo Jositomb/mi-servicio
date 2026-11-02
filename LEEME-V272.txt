@@ -1,0 +1,9 @@
+MI SERVICIO WEB - V272
+CAMBIOS
+- Estadisticas > Ano: la Meta anual (con "Como vas ahora") ya no se abre sola. Plegada muestra en la cabecera "65 h 15 min de 600 h - 11%". La app recuerda si la dejaste abierta.
+- Meta anual: el anillo de "este mes" mas grande; el texto "42 h 45 min computan" ya no se pisa.
+- Cabecera: el texto bajo el titulo ahora dice "Sincronizado 22 oct" (ultima sincronizacion con OneDrive) o "Guardado ..." (ultimo cambio en este dispositivo), en lugar de "Actualizado", que era ambiguo. Pulsando se ve la explicacion.
+- Boton "Ver calendario": mejor contraste en modo oscuro.
+Incluye V271 (calendario anual plegable), V270 (anillos en Estadisticas) y V269.
+Codigo sin minificar. Datos, claves y copias JSON sin cambios (solo se anade la clave local miServicio.metaAbiertaV272, que no va en la copia).
+Publicacion: borrar los archivos antiguos del repositorio y subir todo el contenido del ZIP.

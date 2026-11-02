@@ -1,8 +1,8 @@
-const BUILD = "V271-27101";
-const CACHE = "mi-servicio-v27101";
+const BUILD = "V272-27201";
+const CACHE = "mi-servicio-v27201";
 const CACHE_PREFIX = "mi-servicio-";
 const CODIGO = {
-  "./app-v271.js": "565dc4a0bbc023859bed7b39f18380e911f43959d7abcb50bc887733441d06af",
+  "./app-v272.js": "063a9ec72f2e940ebe80783345974cf35b8b524838aeac1f2e0486bf96246da4",
   "./config-v260.js": "2ef83ae552bfdf5e1e998fffe9f39f1cc6f999826b9229396280337ed5612b5d",
   "./estadisticas-render-v260.js": "d4b50491234def73bc1f3636c97c18c7c21fb8fd5e596cd5cbb82b5caa3d62e9",
   "./estadisticas-v260.js": "32989862e03bd33c2f2f0974355b569887283d1f21535995538ecd79912533bc",
@@ -18,12 +18,12 @@ const CODIGO = {
   "./solidez-v266.js": "948674da60283ca67720da1dcef621ecf7b7a2cc6600530f0fde1500b46e1015",
   "./simple-v260.js": "d4de97a738d75a20f26487f59f0011fcb51ed63980b00b53618be4a6629e6820",
   "./storage-v260.js": "c8dc9a3b4b440181b69dabf206319026d8f3057cccf63c57ae8585cd4bdfdca9",
-  "./styles-v271.css": "3ef6d93380d014d17636e5963f907cc859a30804ba4a185b739aebb6f1866ba1",
+  "./styles-v272.css": "b681f5919b6b6ac5ea018136678c9d0d468aae0d98c62e7284ea39398f6be357",
   "./tiempo-v262.js": "5e75178e6ba21dc2e3b136144dcaf1b1642193c1236f0ea7730b99581e39ff54",
-  "./v271.js": "dd2d3f41507701549545701c21ae2a66b53261c5f97ec8d455c370a31da42fdb",
+  "./v272.js": "0e88826dc1a228764b30fc3f2139aa75ba9a20875366ee9545d70b9f00fef01e",
   "./v268.js": "03c7881719baa84f0556a1fb5af8aecb4ddb2e176bfc923282a57dad2d19a388",
   "./v267.js": "ad48a19f245758d6a5fb8943b073aa357f78d0613df83dfb329848b47a2d0897",
-  "./v264.js": "e89f3846a789b967f30d2006f336e26bceb8db0a2072333b35cb31c2de1acdeb",
+  "./v264.js": "5850b534a0d5829da0514980d497b54790e1dd8316ab45ddfdd265f8463d5753",
   "./visual-v260.js": "5ad2f2082df9360054e0e5b3dafa1f2754d01ea51a3b0f2b91b8bb4bacd83711"
 };
 const APP_SHELL = [
@@ -31,7 +31,7 @@ const APP_SHELL = [
   "./escena-registrar-v260.png",
   "./index.html",
   "./",
-  "./app-v271.js",
+  "./app-v272.js",
   "./solidez-v266.js",
   "./config-v260.js",
   "./estadisticas-render-v260.js",
@@ -49,9 +49,9 @@ const APP_SHELL = [
   "./v264.js",
   "./v267.js",
   "./v268.js",
-  "./v271.js",
+  "./v272.js",
   "./storage-v260.js",
-  "./styles-v271.css",
+  "./styles-v272.css",
   "./tiempo-v262.js",
   "./visual-v260.js",
   "./manifest.webmanifest",
