@@ -271,10 +271,10 @@
     host.querySelector(".calor-titulo-v267").textContent = "Año de servicio " + anioServicio;
     host.querySelector(".calor-sub-v267").textContent = "septiembre " + (anioServicio - 1) + " – agosto " + anioServicio;
     const cuerpo = host.querySelector(".calor-meses-v267"); cuerpo.textContent = "";
-    let totalMin = 0, activos = 0; const hoy = fechaISO(new Date());
+    let totalMin = 0, activos = 0; const hoy = fechaISO(new Date()), porMes = [];
     for (let i = 0; i < 12; i++) {
       const base = new Date(anioServicio - 1, 8 + i, 1, 12), y = base.getFullYear(), m = base.getMonth();
-      const mes = document.createElement("div"); mes.className = "calor-mes-v267";
+      let minMes = 0; const mes = document.createElement("div"); mes.className = "calor-mes-v267";
       const t = document.createElement("small"); t.textContent = MESES[m].slice(0, 3).toUpperCase(); mes.appendChild(t);
       const rej = document.createElement("div"); rej.className = "calor-rejilla-v267";
       const primero = (new Date(y, m, 1, 12).getDay() + 6) % 7, nd = new Date(y, m + 1, 0).getDate();
@@ -284,11 +284,13 @@
         const c = document.createElement("button"); c.type = "button"; c.className = "calor-dia-v267"; c.dataset.f = f; c.dataset.n = String(nivelCalor(min));
         if (f === hoy) c.classList.add("hoy"); if (f > hoy) c.classList.add("futuro");
         c.setAttribute("aria-label", f + (min ? ": " + fmt(min) : ": sin actividad"));
-        if (min > 0) { totalMin += min; activos++; }
+        if (min > 0) { totalMin += min; activos++; minMes += min; }
         rej.appendChild(c);
       }
-      mes.appendChild(rej); cuerpo.appendChild(mes);
+      mes.appendChild(rej); cuerpo.appendChild(mes); porMes.push({ l: MESES[m].slice(0, 1).toUpperCase(), n: MESES[m].slice(0, 3), min: minMes });
     }
+    const mini = host.querySelector(".calor-mini-v270");
+    if (mini) { const mx = Math.max(1, ...porMes.map(x => x.min)); mini.textContent = ""; porMes.forEach(x => { const c = document.createElement("div"); c.title = x.n + ": " + (x.min ? fmt(x.min) : "sin actividad"); const i = document.createElement("i"); i.style.height = x.min ? Math.max(8, Math.round(x.min / mx * 100)) + "%" : "4%"; if (!x.min) i.className = "vacio"; const l = document.createElement("span"); l.textContent = x.l; c.append(i, l); mini.appendChild(c); }); }
     host.querySelector(".calor-resumen-v267").textContent = activos + (activos === 1 ? " día activo" : " días activos") + " · " + fmt(totalMin);
     host.querySelector(".calor-detalle-v267").textContent = "Toca un día para ver su actividad.";
   }
@@ -297,11 +299,14 @@
     const ancla = $("metaDetalleV260"); if (!ancla) return;
     const s = document.createElement("section"); s.id = "calorAnualV267"; s.className = "tarjeta calor-v267";
     s.innerHTML = '<div class="calor-cab-v267"><button type="button" class="boton-periodo" data-a="-1" aria-label="Año de servicio anterior">‹</button><div><h2 class="calor-titulo-v267"></h2><p class="calor-sub-v267"></p></div><button type="button" class="boton-periodo" data-a="1" aria-label="Año de servicio siguiente">›</button></div>' +
-      '<p class="calor-resumen-v267"></p><div class="calor-meses-v267"></div>' +
+      '<p class="calor-resumen-v267"></p><div class="calor-mini-v270" aria-hidden="true"></div><button type="button" class="calor-toggle-v270" aria-expanded="false"><span>Ver calendario</span><b aria-hidden="true">▾</b></button><div class="calor-cuerpo-v270" hidden><div class="calor-meses-v267"></div>' +
       '<div class="calor-leyenda-v267" aria-hidden="true"><span>Menos</span><i data-n="0"></i><i data-n="1"></i><i data-n="2"></i><i data-n="3"></i><i data-n="4"></i><span>Más</span></div>' +
-      '<p class="calor-detalle-v267" role="status"></p>';
+      '<p class="calor-detalle-v267" role="status"></p></div>';
     ancla.insertAdjacentElement("beforebegin", s);
+    const poner = ab => { s.classList.toggle("abierto-v270", ab); s.querySelector(".calor-cuerpo-v270").hidden = !ab; const t = s.querySelector(".calor-toggle-v270"); t.setAttribute("aria-expanded", String(ab)); t.firstChild.textContent = ab ? "Ocultar calendario" : "Ver calendario"; t.lastChild.textContent = ab ? "▴" : "▾"; };
+    poner(ls("miServicio.calorAbiertoV270") === "si");
     s.addEventListener("click", e => {
+      if (e.target.closest(".calor-toggle-v270")) { const ab = !s.classList.contains("abierto-v270"); poner(ab); lsSet("miServicio.calorAbiertoV270", ab ? "si" : "no"); return; }
       const a = e.target.closest("[data-a]"); if (a) { anioServicio += Number(a.dataset.a); pintarCalor(); return; }
       const d = e.target.closest(".calor-dia-v267"); if (!d) return;
       s.querySelectorAll(".calor-dia-v267.sel").forEach(x => x.classList.remove("sel")); d.classList.add("sel");

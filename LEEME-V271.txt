@@ -1,0 +1,6 @@
+MI SERVICIO WEB - V271
+CAMBIOS
+- Estadisticas > Ano: el calendario del ano de servicio ahora es plegable. Plegado muestra el titulo, el resumen (dias activos y horas) y un mini grafico de 12 barras con las horas de cada mes. Boton "Ver calendario" lo despliega; la app recuerda si lo dejaste abierto.
+- Incluye V270 (anillos grandes en Estadisticas) y V269 (temas, color propio, letra redondeada, papelera, resumen semanal).
+Codigo sin minificar. Datos, claves y copias JSON sin cambios.
+Publicacion: borrar los archivos antiguos del repositorio y subir todo el contenido del ZIP.
