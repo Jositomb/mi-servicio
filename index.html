@@ -15,7 +15,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Mi Servicio">
-    <link rel="stylesheet" href="./styles-v272.css">
+    <link rel="stylesheet" href="./styles-v273.css">
 
 
 <style id="v91-layout-final">
@@ -104,16 +104,17 @@
 }
 </style>
 
-    <meta name="mi-servicio-version" content="V272">
-<meta name="mi-servicio-build" content="V272-27201">
+    <meta name="mi-servicio-version" content="V273">
+<meta name="mi-servicio-build" content="V273-27301">
 </head>
-<body data-luz="suave" data-metal="plata" data-acabado="clasico" data-mi-servicio-version="V272" data-ambiente="cristal" data-firma="oceano">
+<body data-luz="suave" data-metal="plata" data-acabado="clasico" data-mi-servicio-version="V273" data-ambiente="cristal" data-firma="oceano">
 <script>(function(){try{const v=localStorage.getItem("miServicio.intensidadLuz");document.body.dataset.luz=v==="realzada"?v:"suave";}catch(e){}})();</script>
 <script>(function(){try{const b=document.body.classList;if(localStorage.getItem("miServicio.estiloSuperficiesV264")!=="metal")b.add("estilo-cristal-v264");if(localStorage.getItem("miServicio.fondoOledV264")==="si")b.add("oled-v264")}catch(e){}})();</script>
 <script>(function(){try{const m=localStorage.getItem("miServicio.acabadoMetal");document.body.dataset.metal=["plata","titanio","champan"].includes(m)?m:"plata";}catch(e){}})();</script>
 <script>(function(){try{if(localStorage.getItem("miServicio.inicioMetalAplicado")!=="si"){localStorage.setItem("miServicio.ambienteVisual","metal");localStorage.setItem("miServicio.acabadoGrafico","cristal");localStorage.setItem("miServicio.inicioMetalAplicado","si");}}catch(e){document.body.dataset.ambiente="metal";document.body.dataset.acabado="cristal";}})();</script>
 <script>(function(){try{document.body.dataset.acabado=localStorage.getItem("miServicio.acabadoGrafico")==="cristal"?"cristal":"clasico";}catch(e){}})();</script>
 <script>(function(){try{const firmas={"oceano":{"nombre":"Azul océano","base":"#2864d7","luz":"#80b3ff","rgb":"40,100,215"},"salvia":{"nombre":"Verde salvia","base":"#357451","luz":"#8dccaa","rgb":"53,116,81"},"lavanda":{"nombre":"Lavanda","base":"#7752b9","luz":"#c2a8f3","rgb":"119,82,185"},"rosa":{"nombre":"Rosa suave","base":"#b64c79","luz":"#efa7c7","rgb":"182,76,121"},"ambar":{"nombre":"Ámbar","base":"#9a651b","luz":"#f1c47d","rgb":"154,101,27"}};const id=localStorage.getItem("miServicio.firmaColor");const clave=Object.hasOwn(firmas,id)?id:"oceano";const f=firmas[clave];document.body.dataset.firma=clave;document.body.style.setProperty("--firma-base",f.base);document.body.style.setProperty("--firma-luz",f.luz);document.body.style.setProperty("--firma-rgb",f.rgb);}catch(e){}})();</script>
+<script>(function(){try{var K="miServicio.erroresV273";function a(k,m,s){try{var l=[];try{l=JSON.parse(localStorage.getItem(K)||"[]")||[]}catch(e){}if(/ResizeObserver loop/i.test(String(m)))return;l.unshift({t:new Date().toISOString(),k:k,m:String(m||"").slice(0,300),s:String(s||"").slice(0,160)});localStorage.setItem(K,JSON.stringify(l.slice(0,20)))}catch(e){}}window.addEventListener("error",function(e){a("error",e.message,String(e.filename||"").split("/").pop()+":"+e.lineno)});window.addEventListener("unhandledrejection",function(e){a("promesa",e.reason&&e.reason.message||e.reason,"")})}catch(e){}})()</script>
 <script>(function(){try{const b=document.body,p=localStorage.getItem("miServicio.firmaPersonalV269");if(/^#[0-9a-f]{6}$/i.test(p)){const f=v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)};let c=[1,3,5].map(i=>parseInt(p.slice(i,i+2),16));while(.2126*f(c[0])+.7152*f(c[1])+.0722*f(c[2])>.34)c=c.map(v=>v*.88);const l=c.map(v=>v+(255-v)*.45),x=a=>"#"+a.map(v=>Math.round(v).toString(16).padStart(2,"0")).join("");b.dataset.firma="personal";b.style.setProperty("--firma-base",x(c));b.style.setProperty("--firma-luz",x(l));b.style.setProperty("--firma-rgb",c.map(Math.round).join(","))}if(localStorage.getItem("miServicio.tipografiaV269")==="redondeada")b.classList.add("tipo-redondeada-v269")}catch(e){}})();</script>
 <script>(function(){try{const a=localStorage.getItem("miServicio.ambienteVisual");if(["esencial","cristal","cielo","escena","autor","metal"].includes(a))document.body.dataset.ambiente=a;}catch(e){}})();</script>
     <div id="cargaV201" hidden role="status" aria-live="polite">
@@ -991,13 +992,13 @@
 <script src="./registrar-v260.js" defer></script>
 <script src="./planificacion-v260.js" defer></script>
 <script src="./solidez-v266.js" defer></script>
-<script src="./app-v272.js" defer></script>
+<script src="./app-v273.js" defer></script>
 <script src="./eventos-calendario-v263.js" defer></script>
 <script src="./visual-v260.js" defer></script>
 <script src="./mejoras-v260.js" defer></script>
 <script src="./registrar-ui-v260.js" defer></script>
 
-<script src="./simple-v260.js" defer></script><script src="./v264.js" defer></script><script src="./v267.js" defer></script><script src="./v268.js" defer></script><script src="./v272.js" defer></script><script id="swRegistroV189">
+<script src="./simple-v260.js" defer></script><script src="./v264.js" defer></script><script src="./v267.js" defer></script><script src="./v268.js" defer></script><script src="./v273.js" defer></script><script id="swRegistroV189">
 if ("serviceWorker" in navigator) {
   let registroApp;
   const teniaControlador=Boolean(navigator.serviceWorker.controller);

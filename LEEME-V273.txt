@@ -1,0 +1,12 @@
+MI SERVICIO WEB - V273
+NUEVO
+1. Diagnostico (Ajustes): version instalada y publicada, estado del servicio sin conexion, cachés, espacio usado, errores recientes y, con "Comprobar archivos publicados", que cada archivo subido coincide con el esperado (indica cual falla). "Copiar informe" para enviarlo.
+2. Cambios sin sincronizar: una insignia naranja junto a "Local/Al dia" con el numero de cambios que aun no estan en OneDrive (solo si usas OneDrive).
+3. Inicio compacto: en iPhone de poca altura (SE, mini, ~667 px) todo cabe sin desplazarse.
+4. iPad / pantallas anchas (>= 900 px): Inicio y Estadisticas en dos columnas. En vertical (834) sigue una columna.
+5. Mapa del codigo: ARQUITECTURA-V273.txt (orden de carga, claves, como publicar). No se ha minificado ni reordenado el CSS: esta decision esta explicada en ese archivo.
+6. Accesibilidad: etiquetas para VoiceOver en globos, anillos y botones sin nombre.
+7. Restaurar copia: hoja de confirmacion con cifras (nuevos, modificados, iguales, solo aqui), aviso de lo que se quitaria y foco en Cancelar. Escape o tocar fuera cancela.
+Incluye V272 (meta plegada...), V271, V270 y V269.
+Datos, claves y copias JSON sin cambios. Claves locales nuevas (no van en la copia): miServicio.erroresV273.
+Publicacion: borrar los archivos antiguos del repositorio y subir todo el contenido del ZIP.
