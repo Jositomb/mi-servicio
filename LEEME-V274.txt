@@ -1,8 +1,0 @@
-MI SERVICIO WEB - V274
-NUEVO
-- Limpieza automatica de versiones antiguas de la app: tras abrir, se borran las cachés de versiones viejas (se conservan la actual, la anterior y cualquier mas nueva). Solo borra ficheros de la app, nunca tus datos. No actua si la version actual no esta completa en cache.
-- Ajustes > Diagnostico > "Limpiar versiones antiguas": lo hace al momento y dice cuantas borro.
-- Arreglo: el aviso del Diagnostico se sobrescribia al terminar.
-Incluye V273 (diagnostico, cambios sin sincronizar, Inicio compacto, iPad, accesibilidad, hoja de restauracion) y anteriores.
-Datos, claves y copias JSON sin cambios.
-Publicacion: borrar los archivos antiguos del repositorio y subir todo el contenido del ZIP.
