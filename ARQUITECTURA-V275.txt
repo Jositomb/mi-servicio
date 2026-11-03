@@ -1,0 +1,110 @@
+MI SERVICIO WEB - MAPA DEL CODIGO (V275)
+
+Para quien (o que asistente) continue el proyecto. Se genera a partir de los archivos reales.
+
+1. ORDEN DE CARGA (index.html)
+   config-v260.js                         0 KB  module
+   storage-v260.js                        1 KB  module
+   historial-render-v262.js              17 KB  defer
+   historial-edicion-v260.js              5 KB  defer
+   estadisticas-render-v260.js           12 KB  defer
+   registrar-v260.js                     19 KB  defer
+   planificacion-v260.js                 35 KB  defer
+   solidez-v266.js                       12 KB  defer
+   app-v275.js                          299 KB  defer
+   eventos-calendario-v263.js            35 KB  defer
+   visual-v260.js                         3 KB  defer
+   mejoras-v260.js                        4 KB  defer
+   registrar-ui-v260.js                  38 KB  defer
+   simple-v260.js                         1 KB  defer
+   v264.js                               15 KB  defer
+   v267.js                               47 KB  defer
+   v268.js                               11 KB  defer
+   v275.js                               33 KB  defer
+   tiempo-v262.js                         3 KB  module
+   legacy-bridge-v260.js                  0 KB  module
+   historial-v262.js                      3 KB  module
+   estadisticas-v260.js                   1 KB  module
+
+2. ESTILOS: styles-v275.css  528 KB, ~3970 reglas, 3312 usos de !important.
+   El archivo esta en capas historicas: las reglas posteriores (V260 en adelante) pisan a las anteriores con !important y selectores de id.
+   Regla de oro: para cambiar algo visual, anadir una regla al FINAL del archivo con el mismo prefijo de selector; no editar las antiguas.
+   Transformaciones en un contenedor mueven a sus hijos position:fixed (usar solo fundido en esos).
+
+3. ARCHIVOS CLAVE
+   app-v275.js      nucleo historico (registros, ajustes, copias, OneDrive, graficos). Las funciones son globales y se pueden envolver (window.fn = wrapper).
+   v264.js ... v275.js  mejoras por versiones; se cargan al final y esperan al evento load antes de instalarse.
+   v275.js          temas, color propio, letra redondeada, papelera, meta plegada, diagnostico, cambios sin sincronizar, accesibilidad.
+   sw.js            servicio sin conexion: BUILD + CACHE + hash SHA-256 de cada archivo de codigo (CODIGO) + APP_SHELL.
+                    Si un archivo publicado no coincide con su hash, la actualizacion NO se instala y se mantiene la version anterior.
+
+4. PUBLICAR UNA VERSION NUEVA (checklist)
+   a) Renombrar archivos con version (app-vNNN.js, styles-vNNN.css, vNNN.js) y actualizar index.html.
+   b) Cambiar BUILD y CACHE en sw.js, <meta mi-servicio-build> y 'Version instalada' en app.
+   c) Recalcular los hash de CODIGO en sw.js (script rehash).
+   d) Pasar las pruebas y subir TODO el contenido del ZIP, borrando antes los archivos antiguos del repositorio.
+   e) No minificar hasta entender por que la version minificada V269 no se actualizo en el iPhone (usar Ajustes > Diagnostico > Comprobar archivos publicados).
+
+5. CLAVES DE ALMACENAMIENTO (localStorage) detectadas
+   miServicio.acabadoGrafico
+   miServicio.acabadoMetal
+   miServicio.agendaSalidas
+   miServicio.ambienteVisual
+   miServicio.anillosInicioV269
+   miServicio.aparienciaEstacionalV201
+   miServicio.borradorRegistro
+   miServicio.calendarioAppleImportV173
+   miServicio.calorAbiertoV270
+   miServicio.cierreMesOculto
+   miServicio.copiasInternasV266
+   miServicio.cronometroV264
+   miServicio.erroresV275
+   miServicio.escenaRegistrar
+   miServicio.estadoSyncV134
+   miServicio.estiloCaminoInicio
+   miServicio.estiloGraficoInicio
+   miServicio.estiloSuperficiesV264
+   miServicio.eventosCalendarioV172
+   miServicio.firmaColor
+   miServicio.firmaPersonalV269
+   miServicio.firmaUltimaCopiaV266
+   miServicio.fondoClimaInicio
+   miServicio.fondoOledV264
+   miServicio.frasePersonal
+   miServicio.globoInclinaV267
+   miServicio.globoLiquidoV267
+   miServicio.hapticaV266
+   miServicio.historialCopiasV136
+   miServicio.inicioCompactoV191
+   miServicio.inicioMetalAplicado
+   miServicio.intensidadLuz
+   miServicio.localidadTiempo
+   miServicio.logrosVistosV267
+   miServicio.metaAbiertaV272
+   miServicio.nombreSaludo
+   miServicio.onedriveCambioLocalPendiente
+   miServicio.onedriveConectado
+   miServicio.papeleraV269
+   miServicio.preferencias
+   miServicio.proxyCalendarioV176
+   miServicio.registros
+   miServicio.respaldoCorruptoV266
+   miServicio.respaldoPrevioV266
+   miServicio.salidaHabitual
+   miServicio.snapshotAnteriorV134
+   miServicio.syncRevision
+   miServicio.tipografiaV269
+   miServicio.transferenciaRecibida
+   miServicio.ultimaActividad
+   miServicio.ultimaComprobacionOneDrive
+   miServicio.ultimaCopiaSeguridad
+   miServicio.ultimaFraseAnimoInicio
+   miServicio.ultimaModificacionLocal
+   miServicio.ultimaSyncCalendarioV176
+   miServicio.ultimaSyncOneDrive
+   miServicio.wrappedSemanaVistoV269
+   miServicio.wrappedVistoV267
+
+   Datos principales: miServicio.registros, miServicio.preferencias, miServicio.agendaSalidas. NO cambiar su estructura.
+   Copias JSON: formato 'mi-servicio-backup' v3 con campo opcional ajustesLocales (lista blanca AJUSTES_APARIENCIA_V263 en app).
+   Solo en el dispositivo (no van en copias): papelera, errores, logros vistos, resumenes vistos, copias internas, estado del calendario anual y de la meta.

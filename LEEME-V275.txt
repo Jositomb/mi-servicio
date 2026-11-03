@@ -1,0 +1,13 @@
+MI SERVICIO WEB - V275 (pulido, sin elementos nuevos)
+APARIENCIA
+- Contraste (WCAG AA) en modo claro: porcentajes y cifras de Meta anual, porcentajes por actividad en Estadisticas > Mas, total de la semana, hitos alcanzados y boton "Ver calendario".
+- Contraste en modo oscuro: cifras de Meta anual, porcentajes por actividad y tiempos del Historial (colores mas claros, mismo tono).
+- Letra minima: textos de 9-10 px pasan a 10-11.5 px (hitos, fecha del progreso, "El tiempo para salir").
+- Zonas tactiles de 44 px en Historial (filtros, repetir, editar, borrar) y Estadisticas (Resumen/Ano/Mas y periodos). Registrar no se toca para no alterar su encaje en pantalla.
+- Etiquetas de los globos con sombra suave para leerse sobre colores claros.
+- Cuadro de busqueda del Historial: el texto de ejemplo ya no se corta.
+DESARROLLO
+- Medido: carga 0,33 s, 2.500 elementos, 3 MB de memoria. Sin cambios de rendimiento necesarios.
+- Pruebas ampliadas (120 en la suite principal) y comparacion de capturas contra la version anterior.
+Datos, claves y copias JSON sin cambios.
+Publicacion: borrar los archivos antiguos del repositorio y subir todo el contenido del ZIP.

@@ -115,7 +115,7 @@
   function instalarBusqueda() {
     const inp = $("buscarHistorialV260"); if (!inp || inp.dataset.v268) return; inp.dataset.v268 = "1";
     try { window.coincideBusquedaV260 = coincide; } catch (e) { console.warn("[V268] búsqueda", e); }
-    inp.placeholder = "Prueba: ayer · octubre con Marta · más de 2 horas";
+    inp.placeholder = "Ej.: ayer, octubre con Marta";
     const host = document.createElement("div"); host.id = "interpretacionBusquedaV268"; host.className = "interpretacion-busqueda-v268"; host.hidden = true;
     inp.insertAdjacentElement("afterend", host);
     let t = 0; const refrescar = () => { clearTimeout(t); t = setTimeout(pintarInterpretacion, 60); };
