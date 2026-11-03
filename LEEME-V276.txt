@@ -1,0 +1,12 @@
+MI SERVICIO WEB · V276
+======================
+NOVEDAD
+- Próximo evento del calendario en la esquina superior izquierda del cuadro de globos (Inicio):
+  una pastilla de cristal pequeña con icono, "Hoy · 12:00 / Dentista" y "+N" si hay más eventos.
+  Muestra el más cercano de los próximos 14 días (eventos del calendario y salidas planificadas).
+  Los de hoy cuya hora ya pasó no aparecen. Al tocarla se abre el calendario. Se actualiza sola.
+  No añade claves de almacenamiento nuevas ni cambia copias de seguridad.
+- Pulido visual: «Detalles opcionales» de Registrar con el mismo cristal redondeado del resto
+  (solo color/borde, mismo tamaño). En pantallas bajas la pastilla se estrecha para no tapar nada.
+PUBLICAR: borra los archivos antiguos del repositorio y sube TODO el contenido del ZIP (archivos en la raíz).
+Comprueba en Ajustes → Diagnóstico que pone V276-27601.

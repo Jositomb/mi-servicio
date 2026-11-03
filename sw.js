@@ -1,8 +1,8 @@
-const BUILD = "V275-27501";
-const CACHE = "mi-servicio-v27501";
+const BUILD = "V276-27601";
+const CACHE = "mi-servicio-v27601";
 const CACHE_PREFIX = "mi-servicio-";
 const CODIGO = {
-  "./app-v275.js": "7b3bd16a832b6ddcd45f6aaedfd131779fa86fa46708c82ed9fa7b3d1572cb4d",
+  "./app-v276.js": "96af22e8bfe60086ec3e988baa5d2b2147ae6bad053eb90a81610b37db59090f",
   "./config-v260.js": "2ef83ae552bfdf5e1e998fffe9f39f1cc6f999826b9229396280337ed5612b5d",
   "./estadisticas-render-v260.js": "d4b50491234def73bc1f3636c97c18c7c21fb8fd5e596cd5cbb82b5caa3d62e9",
   "./estadisticas-v260.js": "32989862e03bd33c2f2f0974355b569887283d1f21535995538ecd79912533bc",
@@ -18,9 +18,9 @@ const CODIGO = {
   "./solidez-v266.js": "948674da60283ca67720da1dcef621ecf7b7a2cc6600530f0fde1500b46e1015",
   "./simple-v260.js": "d4de97a738d75a20f26487f59f0011fcb51ed63980b00b53618be4a6629e6820",
   "./storage-v260.js": "c8dc9a3b4b440181b69dabf206319026d8f3057cccf63c57ae8585cd4bdfdca9",
-  "./styles-v275.css": "7f3b29e19d98d1fa57aa4fbe2bf5178af9c1b298bea75c4f064e2cb5d8f036cc",
+  "./styles-v276.css": "a7362de8fdec50ab3ad4b8546be158d68a6dd718f9e668b3a47d625c5d3962fd",
   "./tiempo-v262.js": "5e75178e6ba21dc2e3b136144dcaf1b1642193c1236f0ea7730b99581e39ff54",
-  "./v275.js": "4842901acdbfa3d11842858549593318ce8cf65b3fb678fa1aa06077d31b1a4d",
+  "./v276.js": "a368eb9df91066e9ac49c5c2d5b851af2491ad97de9ed925baba2180049bd06d",
   "./v268.js": "e18ce297803cdab21585eb721c15ba131da9fe745430b4d11cd5617149af31c3",
   "./v267.js": "ad48a19f245758d6a5fb8943b073aa357f78d0613df83dfb329848b47a2d0897",
   "./v264.js": "5850b534a0d5829da0514980d497b54790e1dd8316ab45ddfdd265f8463d5753",
@@ -31,7 +31,7 @@ const APP_SHELL = [
   "./escena-registrar-v260.png",
   "./index.html",
   "./",
-  "./app-v275.js",
+  "./app-v276.js",
   "./solidez-v266.js",
   "./config-v260.js",
   "./estadisticas-render-v260.js",
@@ -49,9 +49,9 @@ const APP_SHELL = [
   "./v264.js",
   "./v267.js",
   "./v268.js",
-  "./v275.js",
+  "./v276.js",
   "./storage-v260.js",
-  "./styles-v275.css",
+  "./styles-v276.css",
   "./tiempo-v262.js",
   "./visual-v260.js",
   "./manifest.webmanifest",
