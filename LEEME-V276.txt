@@ -9,4 +9,8 @@ NOVEDAD
 - Pulido visual: «Detalles opcionales» de Registrar con el mismo cristal redondeado del resto
   (solo color/borde, mismo tamaño). En pantallas bajas la pastilla se estrecha para no tapar nada.
 PUBLICAR: borra los archivos antiguos del repositorio y sube TODO el contenido del ZIP (archivos en la raíz).
-Comprueba en Ajustes → Diagnóstico que pone V276-27601.
+Comprueba en Ajustes → Diagnóstico que pone V276-27602.
+
+CORRECCIÓN (build 27602): en iOS 27.3 beta los números de horas y porcentajes dentro de los globos
+dejaban de verse. Se quita la animación de parpadeo que se aplicaba solo a esos textos y se fuerza
+su visibilidad por CSS. (No reproducible en este entorno: pendiente de confirmar en tu iPhone.)

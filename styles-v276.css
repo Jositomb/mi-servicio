@@ -13485,3 +13485,7 @@ html.dark .hoja-restaurar-v273,body.dark .hoja-restaurar-v273{background:#1f2024
 /* V276 · «Detalles opcionales»: mismo cristal redondeado que el resto de controles (mismo tamaño, solo aspecto) */
 html body:has(#vista-registrar.activa) #vista-registrar .detalles-registro-v203>summary{border-radius:12px;background:rgba(255,255,255,.55);box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 1px 3px rgba(0,0,0,.12)}
 @media (prefers-color-scheme:dark){html body:has(#vista-registrar.activa):not([data-x]) #vista-registrar .detalles-registro-v203>summary{background:rgba(255,255,255,.09);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 1px 3px rgba(0,0,0,.4)}}
+/* V276 · Números de los globos: siempre visibles (iOS 27 beta los dejaba sin pintar) */
+#vista-inicio #graficoInicio .orbita-actividad>span:not(.sector-icono){opacity:1!important;visibility:visible!important;animation:none!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#vista-inicio #graficoInicio .orbita-actividad>b{visibility:visible!important;animation:none!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+#vista-inicio #graficoInicio .orbita-actividad>strong,#vista-inicio #graficoInicio .orbita-actividad>span:not(.sector-icono),#vista-inicio #graficoInicio .orbita-actividad>b{position:relative;z-index:2;-webkit-transform:translateZ(0);transform:translateZ(0)}

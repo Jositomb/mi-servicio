@@ -53,7 +53,7 @@ function iniciarVisualV201(){
    const clave=orbita?orbita.className+":"+el.tagName:null;
    const texto=el.textContent.trim(),anterior=clave?orbitas.get(clave):anteriores.get(el);
    if(clave)orbitas.set(clave,texto);else anteriores.set(el,texto);
-   if(anterior!==undefined && anterior!==texto && /\d/.test(texto) && !reducido && typeof el.animate==="function"){
+   if(anterior!==undefined && anterior!==texto && /\d/.test(texto) && !reducido && !el.closest(".orbita-actividad") && typeof el.animate==="function"){
     el.animate([{opacity:.45},{opacity:1}],{duration:220,easing:"ease-out"});
    }
   });
