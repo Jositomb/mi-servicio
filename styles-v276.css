@@ -13505,3 +13505,7 @@ body.globos-seguros-v276 #vista-inicio #graficoInicio .orbita-actividad *{animat
 body.globos-seguros-v276 #vista-inicio #graficoInicio .orbita-actividad>span:not(.sector-icono),
 body.globos-seguros-v276 #vista-inicio #graficoInicio .orbita-actividad>b{opacity:1!important;display:block!important;position:static!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
 body.globos-seguros-v276 #vista-inicio #graficoInicio .orbita-actividad::after,body.globos-seguros-v276 #vista-inicio #graficoInicio .orbita-actividad::before{display:none!important}
+/* V276 · Zona de toque ampliada (≈44 px) sin cambiar tamaño ni posición visibles */
+#cronIniciarV264,#cronTerminarV264,#cronDescartarV264,[data-dia-v203],.atajo-tiempo,.detalles-registro-v203>summary,.boton-repetir-v260,.boton-editar-registro,.boton-borrar{position:relative}
+#cronIniciarV264::after,#cronTerminarV264::after,#cronDescartarV264::after,[data-dia-v203]::after,.atajo-tiempo::after,.detalles-registro-v203>summary::after,.boton-repetir-v260::after,.boton-editar-registro::after,.boton-borrar::after{content:"";position:absolute;left:0;right:0;top:-4px;bottom:-4px;background:transparent;pointer-events:auto}
+.detalles-registro-v203>summary::after{top:-5px;bottom:-5px}
