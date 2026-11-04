@@ -432,6 +432,49 @@
     document.addEventListener("visibilitychange", () => { if (!document.hidden) setTimeout(comprobarGlobos, 900); });
   }
 
+
+  /* ================= 8. PERSONAJE QUE EVOLUCIONA + GLOBOS CON VIDA ================= */
+  /* Todo se calcula con tus registros; no se guarda nada nuevo. */
+  const ACC_RANGO = { h50: "🧢", h100: "🎒", h250: "🌟", h500: "👑" };
+  const NOMBRE_RANGO = { h50: "gorra por 50 horas", h100: "mochila por 100 horas", h250: "estrella por 250 horas", h500: "corona por 500 horas" };
+  let evoCache = { t: 0, v: null };
+  function evolucion() {
+    const ahora = Date.now(); if (evoCache.v && ahora - evoCache.t < 20000) return evoCache.v;
+    let racha = 0, g = {};
+    try { const L = window.MiServicioV267 && window.MiServicioV267.calcularLogros; if (L) { const i = L(); racha = i.rachaActual || 0; g = i.ganados || {}; } } catch (e) {}
+    const rango = g.h500 ? "h500" : g.h250 ? "h250" : g.h100 ? "h100" : g.h50 ? "h50" : "";
+    evoCache = { t: ahora, v: { racha: racha >= 14 ? 14 : racha >= 7 ? 7 : racha >= 3 ? 3 : 0, rango } };
+    return evoCache.v;
+  }
+  function franjaDia() { const h = new Date().getHours(); return (h >= 21 || h < 7) ? "noche" : (h >= 19 ? "tarde" : "dia"); }
+  function estacionAnio() { const m = new Date().getMonth(); return m >= 2 && m <= 4 ? "primavera" : m <= 7 && m >= 5 ? "verano" : m >= 8 && m <= 10 ? "otono" : "invierno"; }
+  function envolverContextoPersonaje() {
+    const orig = window.obtenerContextoVisualPersonajeV186; if (typeof orig !== "function" || orig.__v276) return;
+    const nuevo = function () {
+      let r = null; try { r = orig.apply(this, arguments); } catch (e) {}
+      try {
+        const p = $("animalProgreso"), ev = evolucion();
+        if (p) { p.dataset.rachaV276 = String(ev.racha); p.dataset.rangoV276 = ev.rango; p.dataset.franjaV276 = franjaDia(); p.dataset.estacionV276 = estacionAnio(); }
+        if (!r && ev.rango) r = { tipo: "normal", accesorio: ACC_RANGO[ev.rango], descripcion: "Lleva " + NOMBRE_RANGO[ev.rango] + (ev.racha >= 3 ? " · racha de " + ev.racha + " días" : ""), tono: "normal" };
+      } catch (e) {}
+      return r;
+    };
+    nuevo.__v276 = true; window.obtenerContextoVisualPersonajeV186 = nuevo;
+  }
+  function progresoMes() { const e = $("porcentajeObjetivo"); const n = e ? parseFloat((e.textContent.match(/[\d.,]+/) || ["0"])[0].replace(",", ".")) : 0; return isNaN(n) ? 0 : n; }
+  function marcarMeta() {
+    const g = $("graficoInicio"); if (!g) return;
+    const lograda = progresoMes() >= 100;
+    if (g.classList.contains("meta-lograda-v276") !== lograda) g.classList.toggle("meta-lograda-v276", lograda);
+  }
+  function instalarVida() {
+    envolverContextoPersonaje();
+    marcarMeta(); setInterval(marcarMeta, 5000);
+    document.addEventListener("touchstart", function () {}, { passive: true }); /* activa :active en iOS */
+    window.addEventListener("miServicio:registroGuardadoV188", () => { evoCache.t = 0; setTimeout(marcarMeta, 400); });
+    try { if (typeof window.actualizarPersonajeProgreso === "function") window.actualizarPersonajeProgreso(progresoMes()); } catch (e) {}
+  }
+
   /* ================= 6. CAMBIOS SIN SINCRONIZAR ================= */
   function pendientes() {
     let base = 0; const crudo = ls("miServicio.ultimaSyncOneDrive");
@@ -483,7 +526,7 @@
   }
 
   function arrancar() {
-    try { envolverFirma(); envolverDeshacer(); instalarTemas(); instalarAnillos(); instalarPapelera(); instalarMeta(); instalarDiagnostico(); programarLimpieza(); instalarPendientes(); instalarEventoChip(); instalarComprobacionGlobos(); instalarAccesibilidad(); aplicarTipografia(); } catch (e) { console.warn("[V269]", e); }
+    try { envolverFirma(); envolverDeshacer(); instalarTemas(); instalarAnillos(); instalarPapelera(); instalarMeta(); instalarDiagnostico(); programarLimpieza(); instalarPendientes(); instalarEventoChip(); instalarComprobacionGlobos(); instalarVida(); instalarAccesibilidad(); aplicarTipografia(); } catch (e) { console.warn("[V269]", e); }
     document.addEventListener("click", e => { const n = e.target.closest && e.target.closest(".nav-item"); if (n) setTimeout(() => { pintarAnillos(); if (n.dataset.vista === "estadisticas") animarAnillos(); }, 120); });
     window.MiServicioV269 = { datosAnillos, aplicarTema, TEMAS, leerPapelera: limpiarPapelera, enviarAPapelera, derivarFirma, pendientes, errores, reunirDiagnostico, limpiarCaches, candidatosEventos, comprobarGlobos, globosFallan };
   }

@@ -13509,3 +13509,33 @@ body.globos-seguros-v276 #vista-inicio #graficoInicio .orbita-actividad::after,b
 #cronIniciarV264,#cronTerminarV264,#cronDescartarV264,[data-dia-v203],.atajo-tiempo,.detalles-registro-v203>summary,.boton-repetir-v260,.boton-editar-registro,.boton-borrar{position:relative}
 #cronIniciarV264::after,#cronTerminarV264::after,#cronDescartarV264::after,[data-dia-v203]::after,.atajo-tiempo::after,.detalles-registro-v203>summary::after,.boton-repetir-v260::after,.boton-editar-registro::after,.boton-borrar::after{content:"";position:absolute;left:0;right:0;top:-4px;bottom:-4px;background:transparent;pointer-events:auto}
 .detalles-registro-v203>summary::after{top:-5px;bottom:-5px}
+/* V276 · Personaje más grande; se oculta el aviso «Evento…» del Objetivo (ya está en la pastilla de los globos) */
+#vista-inicio #contextoCalendarioProgresoV181{display:none!important}
+html body #vista-inicio #progresoPersonaje{height:56px!important}
+html body #vista-inicio #animalProgreso{height:48px!important;min-width:66px!important}
+html body #vista-inicio #animalProgreso img.personaje-cuerpo-img{width:48px!important;height:48px!important}
+html body #vista-inicio #animalProgreso .personaje-sombra-suelo-v186{width:32px!important}
+html body #vista-inicio #progresoPersonaje .progreso-meta{font-size:22px!important}
+body.inicio-encajado-v260:has(#vista-inicio.activa) #vista-inicio #progresoPersonaje{height:56px!important}
+body.inicio-encajado-v260:has(#vista-inicio.activa) #vista-inicio #animalProgreso{width:66px!important;min-width:66px!important;height:48px!important;bottom:5px!important}
+body.inicio-encajado-v260:has(#vista-inicio.activa) #vista-inicio #animalProgreso img{max-height:48px!important;max-width:48px!important;width:48px!important;height:48px!important}
+body.inicio-encajado-v260:has(#vista-inicio.activa) #vista-inicio .progreso-meta{font-size:22px!important}
+/* V276 · Personaje que evoluciona: aura por racha, color del suelo por hora y estación */
+#vista-inicio #animalProgreso[data-racha-v276="3"] img.personaje-cuerpo-img{filter:drop-shadow(0 0 5px rgba(255,150,40,.65))}
+#vista-inicio #animalProgreso[data-racha-v276="7"] img.personaje-cuerpo-img{filter:drop-shadow(0 0 6px rgba(255,200,60,.8))}
+#vista-inicio #animalProgreso[data-racha-v276="14"] img.personaje-cuerpo-img{filter:drop-shadow(0 0 7px rgba(255,215,90,.95)) drop-shadow(0 0 2px rgba(255,255,255,.8))}
+#vista-inicio #animalProgreso[data-estacion-v276="otono"] .personaje-sombra-suelo-v186{background:rgba(214,120,40,.34)}
+#vista-inicio #animalProgreso[data-estacion-v276="invierno"] .personaje-sombra-suelo-v186{background:rgba(190,215,255,.55)}
+#vista-inicio #animalProgreso[data-estacion-v276="primavera"] .personaje-sombra-suelo-v186{background:rgba(240,120,170,.30)}
+#vista-inicio #animalProgreso[data-estacion-v276="verano"] .personaje-sombra-suelo-v186{background:rgba(255,200,40,.38)}
+#vista-inicio #animalProgreso[data-franja-v276="noche"] .personaje-sombra-suelo-v186{background:rgba(120,150,255,.5);box-shadow:0 0 10px rgba(120,150,255,.55)}
+#vista-inicio #animalProgreso[data-franja-v276="tarde"] .personaje-sombra-suelo-v186{box-shadow:0 0 9px rgba(255,140,60,.4)}
+#vista-inicio #animalProgreso[data-franja-v276="noche"] img.personaje-cuerpo-img{filter:brightness(.92) saturate(.95)}
+/* Globos con vida: respuesta elástica al tocar y aro dorado al cumplir el objetivo */
+#vista-inicio #graficoInicio .orbita-actividad,#vista-inicio #graficoInicio .orbita-centro{transition:scale .28s cubic-bezier(.3,1.7,.5,1)}
+#vista-inicio #graficoInicio .orbita-actividad:active,#vista-inicio #graficoInicio .orbita-centro:active{scale:.93;transition-duration:.12s}
+#vista-inicio #graficoInicio.meta-lograda-v276 .orbita-actividad,#vista-inicio #graficoInicio.meta-lograda-v276 .orbita-centro{outline:2px solid rgba(255,214,102,.78);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){#vista-inicio #graficoInicio .orbita-actividad,#vista-inicio #graficoInicio .orbita-centro{transition:none}#vista-inicio #graficoInicio .orbita-actividad:active,#vista-inicio #graficoInicio .orbita-centro:active{scale:1}}
+/* V276 · accesorio pegado al personaje más grande */
+html body #vista-inicio #animalProgreso .personaje-accesorio-v186{right:8px!important;top:2px!important;width:20px!important;height:20px!important;font-size:12px!important}
+html body #vista-inicio #animalProgreso.estado-completado::after{left:-4px!important;top:8px!important;font-size:18px!important}
