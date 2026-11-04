@@ -2411,8 +2411,13 @@ function actualizarObjetivo(
         totalComputableMes;
 
 
-    mensaje.textContent =
-        `Te faltan ${formatearTiempo(restante)} para alcanzar tu objetivo.`;
+    // Ritmo diario necesario (días que quedan del mes, contando hoy)
+    const ahoraV276 = new Date();
+    const diasRestantesV276 = new Date(ahoraV276.getFullYear(), ahoraV276.getMonth() + 1, 0).getDate() - ahoraV276.getDate() + 1;
+    const porDiaV276 = diasRestantesV276 > 1 ? Math.ceil(restante / diasRestantesV276) : 0;
+    mensaje.textContent = porDiaV276 > 0 && restante > 0
+        ? `Te faltan ${formatearTiempo(restante)} · unos ${formatearTiempo(porDiaV276)} al día`
+        : `Te faltan ${formatearTiempo(restante)} para alcanzar tu objetivo.`;
 }
 
 
