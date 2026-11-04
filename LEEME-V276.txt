@@ -9,29 +9,34 @@ NOVEDAD
 - Pulido visual: «Detalles opcionales» de Registrar con el mismo cristal redondeado del resto
   (solo color/borde, mismo tamaño). En pantallas bajas la pastilla se estrecha para no tapar nada.
 PUBLICAR: borra los archivos antiguos del repositorio y sube TODO el contenido del ZIP (archivos en la raíz).
-Comprueba en Ajustes → Diagnóstico que pone V276-27607.
+Comprueba en Ajustes → Diagnóstico que pone V276-27608.
 
-CORRECCIÓN (build 27607): en iOS 27.3 beta los números de horas y porcentajes dentro de los globos
+CORRECCIÓN (build 27608): en iOS 27.3 beta los números de horas y porcentajes dentro de los globos
 dejaban de verse. Se quita la animación de parpadeo que se aplicaba solo a esos textos y se fuerza
 su visibilidad por CSS. (No reproducible en este entorno: pendiente de confirmar en tu iPhone.)
 
-RETOQUES DE ASPECTO (build 27607, solo estilo): textos más nítidos, sombra suave en nombres y horas de los globos,
+RETOQUES DE ASPECTO (build 27608, solo estilo): textos más nítidos, sombra suave en nombres y horas de los globos,
 frases equilibradas en dos líneas, y pulsación con ligero efecto de hundido en botones y pestañas
 (se desactiva con «Reducir movimiento»). Sin cambios de tamaño ni de funciones.
 
-COMPROBACIÓN AUTOMÁTICA DE LOS GLOBOS (build 27607): 3,5 s después de abrir (y al volver a Inicio o a la app) se
+COMPROBACIÓN AUTOMÁTICA DE LOS GLOBOS (build 27608): 3,5 s después de abrir (y al volver a Inicio o a la app) se
 verifica en silencio que horas y porcentajes de los globos se ven. Si no, se fuerza un repintado y, si sigue mal,
 se activa un aspecto simplificado (sin animaciones ni sombras) y queda anotado en Ajustes → Diagnóstico → errores.
 No añade pantallas, botones ni claves de copia de seguridad (usa el registro de errores existente).
 
-ZONA DE TOQUE (build 27607): los botones pequeños de Registrar (Iniciar cronómetro, Hoy/Ayer/Otra fecha, +30 min…,
+ZONA DE TOQUE (build 27608): los botones pequeños de Registrar (Iniciar cronómetro, Hoy/Ayer/Otra fecha, +30 min…,
 Detalles opcionales) y de Historial (Repetir, Editar, Borrar) tienen ahora unos 4 px más de zona sensible por
 arriba y por abajo (≈44 px), sin cambiar su tamaño ni posición visibles.
 
-PERSONAJE Y GLOBOS (build 27607):
+PERSONAJE Y GLOBOS (build 27608):
 - Personaje más grande (48 px en vez de 33). Se oculta el bloque «Evento…» bajo el Objetivo (el aviso sigue en la pastilla de los globos).
 - El personaje evoluciona con tus datos, sin guardar nada nuevo: aura según la racha actual (3 / 7 / 14 días);
   accesorio según tus horas totales (🧢 50 h, 🎒 100 h, 🌟 250 h, 👑 500 h; vacaciones y viaje tienen prioridad);
   el suelo cambia de color con la estación y brilla de noche / al atardecer.
 - Globos con vida: al tocarlos se encogen y vuelven con un rebote suave; con el objetivo mensual cumplido
   llevan un aro dorado. Respeta «Reducir movimiento».
+
+CIERRE DE MES Y PERSONAJE (build 27608):
+- «Cierre de mes» (revisar, compartir, crear copia) pasa de Inicio a Estadísticas → pestaña Resumen, arriba del todo.
+  Mientras haya un cierre pendiente, Inicio no muestra además el aviso de copia (igual que antes).
+- Personaje aún más grande (60 px).
