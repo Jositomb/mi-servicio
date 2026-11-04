@@ -1,0 +1,17 @@
+LISTA DE COMPROBACIÓN TRAS PUBLICAR UNA VERSIÓN (2 minutos, en el iPhone)
+=========================================================================
+Haz esto después de subir el ZIP y abrir la app dos veces (la primera instala, la segunda activa).
+
+1. Ajustes → Diagnóstico: la versión instalada y la publicada coinciden, y "Archivos publicados" dice N de N correctos.
+2. Inicio: en cada globo se ven nombre, HORAS y PORCENTAJE; el globo central muestra el total del mes.
+3. Inicio: si hay un evento próximo, aparece la pastilla arriba a la izquierda y al tocarla abre el calendario.
+4. Inicio: no hace falta desplazar la pantalla para ver los globos, el objetivo y la barra inferior.
+5. Registrar: crea un registro de prueba (o edita uno) y comprueba que se guarda; deshaz o bórralo después.
+6. Historial: el registro aparece; el buscador responde.
+7. Estadísticas: se ven los anillos y los gráficos del mes.
+8. Modo oscuro: cambia el aspecto del iPhone y repite 2 y 4.
+9. Ajustes → Crear copia de seguridad: se genera el archivo JSON (guárdalo en Archivos/OneDrive).
+10. Cada mes: crea una copia de seguridad aunque la app no te lo recuerde.
+
+SI ALGO FALLA: haz una captura, apunta la versión de iOS y di si pasa en Safari normal o solo en la app instalada.
+Ajustes → Diagnóstico → Copiar informe y pégamelo.

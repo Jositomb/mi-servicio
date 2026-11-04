@@ -13499,3 +13499,9 @@ html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-r
  button,.nav-item,[role="button"],summary{transition:transform .16s cubic-bezier(.2,.8,.2,1),background-color .22s ease,box-shadow .22s ease,opacity .2s ease}
  .nav-item:active,button:active:not(:disabled),summary:active{transform:scale(.97)}
 }
+/* V276 · Aspecto simplificado de los globos (solo si la comprobación detecta números sin pintar) */
+body.globos-seguros-v276 #vista-inicio #graficoInicio .orbita-actividad,
+body.globos-seguros-v276 #vista-inicio #graficoInicio .orbita-actividad *{animation:none!important;transition:none!important;filter:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;will-change:auto!important;text-shadow:none!important}
+body.globos-seguros-v276 #vista-inicio #graficoInicio .orbita-actividad>span:not(.sector-icono),
+body.globos-seguros-v276 #vista-inicio #graficoInicio .orbita-actividad>b{opacity:1!important;display:block!important;position:static!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+body.globos-seguros-v276 #vista-inicio #graficoInicio .orbita-actividad::after,body.globos-seguros-v276 #vista-inicio #graficoInicio .orbita-actividad::before{display:none!important}

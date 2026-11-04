@@ -9,12 +9,17 @@ NOVEDAD
 - Pulido visual: «Detalles opcionales» de Registrar con el mismo cristal redondeado del resto
   (solo color/borde, mismo tamaño). En pantallas bajas la pastilla se estrecha para no tapar nada.
 PUBLICAR: borra los archivos antiguos del repositorio y sube TODO el contenido del ZIP (archivos en la raíz).
-Comprueba en Ajustes → Diagnóstico que pone V276-27603.
+Comprueba en Ajustes → Diagnóstico que pone V276-27604.
 
-CORRECCIÓN (build 27603): en iOS 27.3 beta los números de horas y porcentajes dentro de los globos
+CORRECCIÓN (build 27604): en iOS 27.3 beta los números de horas y porcentajes dentro de los globos
 dejaban de verse. Se quita la animación de parpadeo que se aplicaba solo a esos textos y se fuerza
 su visibilidad por CSS. (No reproducible en este entorno: pendiente de confirmar en tu iPhone.)
 
-RETOQUES DE ASPECTO (build 27603, solo estilo): textos más nítidos, sombra suave en nombres y horas de los globos,
+RETOQUES DE ASPECTO (build 27604, solo estilo): textos más nítidos, sombra suave en nombres y horas de los globos,
 frases equilibradas en dos líneas, y pulsación con ligero efecto de hundido en botones y pestañas
 (se desactiva con «Reducir movimiento»). Sin cambios de tamaño ni de funciones.
+
+COMPROBACIÓN AUTOMÁTICA DE LOS GLOBOS (build 27604): 3,5 s después de abrir (y al volver a Inicio o a la app) se
+verifica en silencio que horas y porcentajes de los globos se ven. Si no, se fuerza un repintado y, si sigue mal,
+se activa un aspecto simplificado (sin animaciones ni sombras) y queda anotado en Ajustes → Diagnóstico → errores.
+No añade pantallas, botones ni claves de copia de seguridad (usa el registro de errores existente).

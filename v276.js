@@ -394,6 +394,44 @@
     document.addEventListener("click", e => { if (e.target.closest && e.target.closest(".nav-item")) setTimeout(pintarEventoChip, 150); });
   }
 
+
+  /* ================= 5d. COMPROBACIÓN DE LOS NÚMEROS DE LOS GLOBOS ================= */
+  /* Algunas versiones de iOS (p. ej. betas) han dejado sin pintar horas y porcentajes. Se comprueba sin avisar:
+     1) ¿tienen tamaño, color y opacidad visibles y nada los tapa?  2) si no, se fuerza un repintado.
+     3) si sigue mal, se activa un aspecto simplificado (sin animaciones ni sombras) y se anota en el diagnóstico. */
+  function registrarFallo(m) {
+    try { const l = errores(); l.unshift({ t: new Date().toISOString(), k: "globos", m: String(m).slice(0, 300), s: "v276.js" }); localStorage.setItem(K_ERR, JSON.stringify(l.slice(0, 20))); } catch (e) {}
+  }
+  function globosFallan() {
+    const vista = $("vista-inicio"); if (!vista || !vista.classList.contains("activa")) return null;
+    const nodos = [...document.querySelectorAll("#graficoInicio .orbita-actividad")]; if (!nodos.length) return null;
+    const malos = [];
+    nodos.forEach(n => {
+      n.querySelectorAll(":scope>span:not(.sector-icono),:scope>b").forEach(s => {
+        if (!/\d/.test(s.textContent)) return;
+        const c = getComputedStyle(s), r = s.getBoundingClientRect();
+        let ok = r.width > 2 && r.height > 2 && c.visibility === "visible" && c.display !== "none" && parseFloat(c.opacity) > 0.05 && !/rgba?\(\s*\d+,\s*\d+,\s*\d+,\s*0\s*\)|transparent/.test(c.color + c.webkitTextFillColor) && parseFloat(c.fontSize) >= 5;
+        if (ok) { const x = r.left + r.width / 2, y = r.top + r.height / 2, el = document.elementFromPoint(x, y); if (el && !(s === el || s.contains(el) || n.contains(el)) && el.closest("#graficoInicio")) ok = false; }
+        if (!ok) malos.push(s.textContent.trim());
+      });
+    });
+    return malos.length ? malos : false;
+  }
+  function comprobarGlobos() {
+    let m = globosFallan(); if (!m) return;
+    document.querySelectorAll("#graficoInicio .orbita-actividad>span,#graficoInicio .orbita-actividad>b").forEach(s => { const d = s.style.display; s.style.display = "none"; void s.offsetHeight; s.style.display = d; });
+    setTimeout(() => {
+      m = globosFallan(); if (!m) return;
+      document.body.classList.add("globos-seguros-v276");
+      registrarFallo("Números de los globos no visibles (" + m.join(", ") + "): aspecto simplificado activado");
+    }, 400);
+  }
+  function instalarComprobacionGlobos() {
+    setTimeout(comprobarGlobos, 3500);
+    document.addEventListener("click", e => { if (e.target.closest && e.target.closest('.nav-item[data-vista="inicio"]')) setTimeout(comprobarGlobos, 900); });
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) setTimeout(comprobarGlobos, 900); });
+  }
+
   /* ================= 6. CAMBIOS SIN SINCRONIZAR ================= */
   function pendientes() {
     let base = 0; const crudo = ls("miServicio.ultimaSyncOneDrive");
@@ -445,9 +483,9 @@
   }
 
   function arrancar() {
-    try { envolverFirma(); envolverDeshacer(); instalarTemas(); instalarAnillos(); instalarPapelera(); instalarMeta(); instalarDiagnostico(); programarLimpieza(); instalarPendientes(); instalarEventoChip(); instalarAccesibilidad(); aplicarTipografia(); } catch (e) { console.warn("[V269]", e); }
+    try { envolverFirma(); envolverDeshacer(); instalarTemas(); instalarAnillos(); instalarPapelera(); instalarMeta(); instalarDiagnostico(); programarLimpieza(); instalarPendientes(); instalarEventoChip(); instalarComprobacionGlobos(); instalarAccesibilidad(); aplicarTipografia(); } catch (e) { console.warn("[V269]", e); }
     document.addEventListener("click", e => { const n = e.target.closest && e.target.closest(".nav-item"); if (n) setTimeout(() => { pintarAnillos(); if (n.dataset.vista === "estadisticas") animarAnillos(); }, 120); });
-    window.MiServicioV269 = { datosAnillos, aplicarTema, TEMAS, leerPapelera: limpiarPapelera, enviarAPapelera, derivarFirma, pendientes, errores, reunirDiagnostico, limpiarCaches, candidatosEventos };
+    window.MiServicioV269 = { datosAnillos, aplicarTema, TEMAS, leerPapelera: limpiarPapelera, enviarAPapelera, derivarFirma, pendientes, errores, reunirDiagnostico, limpiarCaches, candidatosEventos, comprobarGlobos, globosFallan };
   }
   if (document.readyState === "complete") setTimeout(arrancar, 0);
   else window.addEventListener("load", () => setTimeout(arrancar, 0), { once: true });
