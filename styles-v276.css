@@ -13489,3 +13489,13 @@ html body:has(#vista-registrar.activa) #vista-registrar .detalles-registro-v203>
 #vista-inicio #graficoInicio .orbita-actividad>span:not(.sector-icono){opacity:1!important;visibility:visible!important;animation:none!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
 #vista-inicio #graficoInicio .orbita-actividad>b{visibility:visible!important;animation:none!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
 #vista-inicio #graficoInicio .orbita-actividad>strong,#vista-inicio #graficoInicio .orbita-actividad>span:not(.sector-icono),#vista-inicio #graficoInicio .orbita-actividad>b{position:relative;z-index:2;-webkit-transform:translateZ(0);transform:translateZ(0)}
+/* V276 · Retoques de aspecto (solo estilo, sin cambiar tamaños ni funciones) */
+html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+#vista-inicio h1,#vista-inicio h2,#vista-inicio h3,#vista-inicio .mensaje-motivacion,#vista-inicio [class*="mensaje"],#vista-inicio [class*="frase"]{text-wrap:balance}
+#vista-inicio #graficoInicio .orbita-actividad>strong{text-shadow:0 1px 2px rgba(0,0,0,.35)}
+#vista-inicio #graficoInicio .orbita-actividad>span:not(.sector-icono){text-shadow:0 2px 6px rgba(0,0,0,.38),0 0 1px rgba(0,0,0,.25)}
+#vista-inicio #graficoInicio .orbita-actividad>b{text-shadow:0 1px 2px rgba(0,0,0,.3);font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:no-preference){
+ button,.nav-item,[role="button"],summary{transition:transform .16s cubic-bezier(.2,.8,.2,1),background-color .22s ease,box-shadow .22s ease,opacity .2s ease}
+ .nav-item:active,button:active:not(:disabled),summary:active{transform:scale(.97)}
+}
