@@ -686,10 +686,65 @@
     document.addEventListener("click", e => { if (e.target.closest && e.target.closest(".nav-item")) setTimeout(etiquetarAccesibilidad, 300); });
   }
 
+  /* ================= 10. PERSONAS INTERESADAS (discreto, dentro de "Detalles opcionales" de Registrar) =================
+     Clave nueva: miServicio.interesadosV276 = [{id,nombre,nota,fecha}] · va en la copia JSON (ajustesLocales). */
+  const K_INT = "miServicio.interesadosV276", MAX_INT = 200;
+  function leerInteresados() {
+    try { const a = JSON.parse(ls(K_INT) || "[]"); return Array.isArray(a) ? a.filter(x => x && typeof x.nombre === "string" && x.nombre).slice(0, MAX_INT) : []; } catch (e) { return []; }
+  }
+  function guardarInteresados(a) { return lsSet(K_INT, JSON.stringify(a.slice(0, MAX_INT))); }
+  function pintarInteresados() {
+    const r = $("interesadosV276"); if (!r) return;
+    const lista = r.querySelector(".int-lista-v276"), cont = r.querySelector(".int-cuenta-v276");
+    const a = leerInteresados(); lista.textContent = "";
+    a.forEach(p => {
+      const li = document.createElement("li");
+      const t = document.createElement("span"); t.className = "int-texto-v276";
+      const n = document.createElement("b"); n.textContent = p.nombre; t.appendChild(n);
+      if (p.nota) { const s = document.createElement("small"); s.textContent = p.nota; t.appendChild(s); }
+      const b = document.createElement("button"); b.type = "button"; b.className = "int-borrar-v276"; b.textContent = "✕"; b.setAttribute("aria-label", "Borrar a " + p.nombre);
+      let armado = 0;
+      b.addEventListener("click", () => {
+        if (!armado) { armado = 1; b.textContent = "¿Borrar?"; b.classList.add("armado"); setTimeout(() => { armado = 0; b.textContent = "✕"; b.classList.remove("armado"); }, 3000); return; }
+        guardarInteresados(leerInteresados().filter(x => x.id !== p.id)); pintarInteresados();
+      });
+      li.append(t, b); lista.appendChild(li);
+    });
+    cont.textContent = a.length ? String(a.length) : "";
+  }
+  function apuntarInteresado() {
+    const r = $("interesadosV276"); if (!r) return;
+    const n = r.querySelector(".int-nombre-v276"), no = r.querySelector(".int-nota-v276"), m = r.querySelector(".int-msg-v276");
+    const nombre = n.value.replace(/\s+/g, " ").trim().slice(0, 60);
+    if (!nombre) { m.textContent = "Escribe un nombre"; n.focus(); return; }
+    const a = leerInteresados();
+    if (a.length >= MAX_INT) { m.textContent = "Lista llena (200)"; return; }
+    a.unshift({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), nombre, nota: no.value.replace(/\s+/g, " ").trim().slice(0, 200), fecha: fechaISO(new Date()) });
+    if (!guardarInteresados(a)) { m.textContent = "No se pudo guardar"; return; }
+    n.value = ""; no.value = ""; m.textContent = "Apuntado"; setTimeout(() => { if (m.textContent === "Apuntado") m.textContent = ""; }, 1800);
+    pintarInteresados(); n.focus();
+  }
+  function instalarInteresados() {
+    if ($("interesadosV276")) return;
+    const cont = document.getElementById("detallesRegistroV203"); if (!cont) return;
+    const d = document.createElement("details"); d.id = "interesadosV276"; d.className = "interesados-v276";
+    d.innerHTML = '<summary><span>Interesados</span><span class="int-cuenta-v276"></span></summary>' +
+      '<div class="int-cuerpo-v276"><div class="int-fila-v276"><input class="int-nombre-v276" type="text" maxlength="60" placeholder="Nombre" autocomplete="off" autocapitalize="words" enterkeyhint="done" aria-label="Nombre de la persona interesada">' +
+      '<button type="button" class="int-ok-v276">Apuntar</button></div>' +
+      '<input class="int-nota-v276" type="text" maxlength="200" placeholder="Nota (opcional)" autocomplete="off" aria-label="Nota sobre la persona">' +
+      '<p class="int-msg-v276" role="status" aria-live="polite"></p><ul class="int-lista-v276"></ul></div>';
+    cont.appendChild(d);
+    d.querySelector(".int-ok-v276").addEventListener("click", apuntarInteresado);
+    d.querySelectorAll("input").forEach(i => i.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); e.stopPropagation(); apuntarInteresado(); } }));
+    d.addEventListener("toggle", () => { if (!d.open) d.querySelector(".int-msg-v276").textContent = ""; });
+    document.addEventListener("click", e => { const n = e.target.closest && e.target.closest(".nav-item"); if (n && d.open) d.open = false; });
+    pintarInteresados();
+  }
+
   function arrancar() {
-    try { envolverFirma(); envolverDeshacer(); instalarTemas(); instalarAnillos(); instalarPapelera(); instalarMeta(); instalarDiagnostico(); programarLimpieza(); instalarPendientes(); instalarEventoChip(); instalarComprobacionGlobos(); instalarVida(); instalarEstadisticasNuevas(); instalarAccesibilidad(); aplicarTipografia(); } catch (e) { console.warn("[V269]", e); }
+    try { envolverFirma(); envolverDeshacer(); instalarTemas(); instalarAnillos(); instalarPapelera(); instalarMeta(); instalarDiagnostico(); programarLimpieza(); instalarPendientes(); instalarEventoChip(); instalarComprobacionGlobos(); instalarVida(); instalarEstadisticasNuevas(); instalarInteresados(); instalarAccesibilidad(); aplicarTipografia(); } catch (e) { console.warn("[V269]", e); }
     document.addEventListener("click", e => { const n = e.target.closest && e.target.closest(".nav-item"); if (n) setTimeout(() => { pintarAnillos(); if (n.dataset.vista === "estadisticas") animarAnillos(); }, 120); });
-    window.MiServicioV269 = { datosAnillos, aplicarTema, TEMAS, leerPapelera: limpiarPapelera, enviarAPapelera, derivarFirma, pendientes, errores, reunirDiagnostico, limpiarCaches, candidatosEventos, comprobarGlobos, globosFallan };
+    window.MiServicioV269 = { datosAnillos, aplicarTema, TEMAS, leerPapelera: limpiarPapelera, enviarAPapelera, derivarFirma, pendientes, errores, reunirDiagnostico, limpiarCaches, candidatosEventos, comprobarGlobos, globosFallan, leerInteresados };
   }
   if (document.readyState === "complete") setTimeout(arrancar, 0);
   else window.addEventListener("load", () => setTimeout(arrancar, 0), { once: true });

@@ -13641,3 +13641,27 @@ html body #vista-estadisticas #anioServicioV276 #calorAnualV267 .calor-dia-v267.
 /* Botón de compartir y flechas: más especificidad que el cristal del tema */
 html body #vista-estadisticas #anioServicioV276#anioServicioV276#anioServicioV276 .anio-compartir-v276{background-image:none!important;background-color:rgba(255,255,255,.2)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:1px solid rgba(255,255,255,.34)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.35)!important;text-shadow:0 1px 2px rgba(0,0,0,.3)}
 html body #vista-estadisticas #anioServicioV276#anioServicioV276#anioServicioV276 .anio-cab-v276 .boton-periodo{background-image:none!important;background-color:rgba(255,255,255,.16)!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+
+/* V276 · Interesados: discreto, dentro de Detalles opcionales */
+#interesadosV276{margin:12px 4px 4px;border-top:1px solid rgba(128,128,128,.18);padding-top:6px;opacity:.78}
+#interesadosV276[open]{opacity:1}
+#interesadosV276>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:.78rem;font-weight:600;color:inherit;padding:8px 2px;min-height:36px}
+#interesadosV276>summary::-webkit-details-marker{display:none}
+#interesadosV276>summary::before{content:"＋";font-weight:700;opacity:.7}
+#interesadosV276[open]>summary::before{content:"－"}
+#interesadosV276 .int-cuenta-v276{margin-left:auto;font-size:.72rem;opacity:.7}
+#interesadosV276 .int-cuerpo-v276{display:grid;gap:8px;padding:4px 0 6px}
+#interesadosV276 .int-fila-v276{display:flex;gap:8px}
+#interesadosV276 input{flex:1;min-width:0;font:inherit;font-size:16px;padding:9px 12px;border-radius:12px;border:1px solid rgba(128,128,128,.3);background:rgba(255,255,255,.55);color:inherit}
+@media (prefers-color-scheme:dark){#interesadosV276 input{background:rgba(255,255,255,.08)}}
+#interesadosV276 .int-ok-v276,#interesadosV276 .int-borrar-v276{font:inherit;font-weight:700;font-size:.82rem;border:0;border-radius:12px;padding:0 14px;min-height:40px;background:rgba(10,132,255,.16);color:#0a64d8;cursor:pointer}
+#interesadosV276 .int-borrar-v276{min-height:32px;padding:0 10px;background:rgba(128,128,128,.14);color:inherit}
+#interesadosV276 .int-borrar-v276.armado{background:rgba(255,59,48,.18);color:#c8261c}
+#interesadosV276 .int-msg-v276{margin:0;min-height:1em;font-size:.76rem;opacity:.75}
+#interesadosV276 .int-lista-v276{list-style:none;margin:0;padding:0;display:grid;gap:6px;max-height:40vh;overflow:auto}
+#interesadosV276 .int-lista-v276 li{display:flex;align-items:center;gap:8px;padding:6px 2px}
+#interesadosV276 .int-texto-v276{flex:1;min-width:0;display:grid;gap:1px}
+#interesadosV276 .int-texto-v276 b{font-size:.9rem;overflow-wrap:anywhere}
+#interesadosV276 .int-texto-v276 small{opacity:.7;overflow-wrap:anywhere}
+#interesadosV276 .int-cuerpo-v276,#interesadosV276 .int-fila-v276{min-width:0}
+#interesadosV276 .int-ok-v276{flex:none}

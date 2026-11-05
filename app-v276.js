@@ -4356,7 +4356,9 @@ const AJUSTES_APARIENCIA_V263 = [
     "miServicio.tipografiaV269",
     "miServicio.anillosInicioV269"
 ];
-const AJUSTES_LOCALES_V263 = AJUSTES_CALENDARIO_V263.concat(AJUSTES_APARIENCIA_V263);
+/* V276 · Personas interesadas (datos del usuario; van en la copia). */
+const AJUSTES_DATOS_V276 = ["miServicio.interesadosV276"];
+const AJUSTES_LOCALES_V263 = AJUSTES_CALENDARIO_V263.concat(AJUSTES_APARIENCIA_V263, AJUSTES_DATOS_V276);
 const LIMITE_VALOR_AJUSTE_V263 = 2000000;
 
 function recogerAjustesLocalesV263() {
@@ -4377,8 +4379,8 @@ function ajustesLocalesValidosV263(obj) {
         if (!AJUSTES_LOCALES_V263.includes(clave)) return;
         const v = obj[clave];
         if (typeof v !== "string" || v.length > LIMITE_VALOR_AJUSTE_V263) return;
-        if (AJUSTES_CALENDARIO_V263.includes(clave)) {
-            try { JSON.parse(v); } catch (e) { return; }
+        if (AJUSTES_CALENDARIO_V263.includes(clave) || AJUSTES_DATOS_V276.includes(clave)) {
+            try { const j = JSON.parse(v); if (AJUSTES_DATOS_V276.includes(clave) && !Array.isArray(j)) return; } catch (e) { return; }
         }
         limpio[clave] = v;
     });

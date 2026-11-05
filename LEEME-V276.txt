@@ -8,8 +8,13 @@ NOVEDAD
   No añade claves de almacenamiento nuevas ni cambia copias de seguridad.
 - Pulido visual: «Detalles opcionales» de Registrar con el mismo cristal redondeado del resto
   (solo color/borde, mismo tamaño). En pantallas bajas la pastilla se estrecha para no tapar nada.
+INTERESADOS (build 27612): en Registrar → «Detalles opcionales» hay ahora un apartado plegable, discreto,
+«Interesados». Cerrado no ocupa nada (Registrar queda igual). Dentro: nombre + nota opcional, «Apuntar» (o Enter),
+lista con borrado en dos toques. Clave nueva: miServicio.interesadosV276 (máx. 200). Los nombres VAN en la copia JSON
+y en la sincronización con OneDrive (campo opcional ajustesLocales; las copias antiguas siguen valiendo).
+No aparecen en estadísticas, CSV ni al compartir.
 PUBLICAR: borra los archivos antiguos del repositorio y sube TODO el contenido del ZIP (archivos en la raíz).
-Comprueba en Ajustes → Diagnóstico que pone V276-27611.
+Comprueba en Ajustes → Diagnóstico que pone V276-27612.
 
 CORRECCIÓN (build 27611): en iOS 27.3 beta los números de horas y porcentajes dentro de los globos
 dejaban de verse. Se quita la animación de parpadeo que se aplicaba solo a esos textos y se fuerza
