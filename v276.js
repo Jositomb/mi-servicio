@@ -711,6 +711,7 @@
       li.append(t, b); lista.appendChild(li);
     });
     cont.textContent = a.length ? String(a.length) : "";
+    const lc = document.querySelector("#libretaV276 .libreta-cuenta-v276"); if (lc) lc.textContent = a.length ? String(a.length) : "";
   }
   function apuntarInteresado() {
     const r = $("interesadosV276"); if (!r) return;
@@ -726,19 +727,28 @@
   }
   function instalarInteresados() {
     if ($("interesadosV276")) return;
-    const cont = document.getElementById("detallesRegistroV203"); if (!cont) return;
-    const d = document.createElement("details"); d.id = "interesadosV276"; d.className = "interesados-v276";
-    d.innerHTML = '<summary><span>Interesados</span><span class="int-cuenta-v276"></span></summary>' +
+    const btn = document.createElement("button"); btn.type = "button"; btn.id = "libretaV276"; btn.className = "libreta-v276";
+    btn.setAttribute("aria-label", "Interesados: abrir libreta"); btn.setAttribute("aria-expanded", "false"); btn.hidden = true;
+    btn.innerHTML = '<svg viewBox="0 0 32 32" aria-hidden="true"><rect x="7" y="3.5" width="19" height="25" rx="3" fill="currentColor" opacity=".16"/><rect x="7" y="3.5" width="19" height="25" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M11.5 3.5v25" stroke="currentColor" stroke-width="1.8"/><path d="M15 10h7M15 14h7M15 18h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 8h5M4 13h5M4 18h5M4 23h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span class="libreta-cuenta-v276"></span>';
+    const d = document.createElement("div"); d.id = "interesadosV276"; d.className = "interesados-v276"; d.hidden = true;
+    d.setAttribute("role", "dialog"); d.setAttribute("aria-label", "Personas interesadas");
+    d.innerHTML = '<div class="int-fondo-v276"></div><div class="int-hoja-v276"><div class="int-cab-v276"><b>Interesados</b><span class="int-cuenta-v276"></span><button type="button" class="int-cerrar-v276" aria-label="Cerrar">Listo</button></div>' +
       '<div class="int-cuerpo-v276"><div class="int-fila-v276"><input class="int-nombre-v276" type="text" maxlength="60" placeholder="Nombre" autocomplete="off" autocapitalize="words" enterkeyhint="done" aria-label="Nombre de la persona interesada">' +
       '<button type="button" class="int-ok-v276">Apuntar</button></div>' +
       '<input class="int-nota-v276" type="text" maxlength="200" placeholder="Nota (opcional)" autocomplete="off" aria-label="Nota sobre la persona">' +
-      '<p class="int-msg-v276" role="status" aria-live="polite"></p><ul class="int-lista-v276"></ul></div>';
-    cont.appendChild(d);
+      '<p class="int-msg-v276" role="status" aria-live="polite"></p><ul class="int-lista-v276"></ul></div></div>';
+    document.body.append(btn, d);
+    const abrir = () => { d.hidden = false; btn.setAttribute("aria-expanded", "true"); requestAnimationFrame(() => d.classList.add("abierto")); setTimeout(() => { try { d.querySelector(".int-nombre-v276").focus({ preventScroll: true }); } catch (e) {} }, 120); };
+    const cerrar = () => { d.classList.remove("abierto"); btn.setAttribute("aria-expanded", "false"); d.querySelector(".int-msg-v276").textContent = ""; setTimeout(() => { if (!d.classList.contains("abierto")) d.hidden = true; }, movReducido() ? 0 : 220); try { document.activeElement && document.activeElement.blur(); } catch (e) {} };
+    btn.addEventListener("click", () => (d.hidden ? abrir() : cerrar()));
+    d.querySelector(".int-cerrar-v276").addEventListener("click", cerrar);
+    d.querySelector(".int-fondo-v276").addEventListener("click", cerrar);
+    document.addEventListener("keydown", e => { if (e.key === "Escape" && !d.hidden) cerrar(); });
     d.querySelector(".int-ok-v276").addEventListener("click", apuntarInteresado);
     d.querySelectorAll("input").forEach(i => i.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); e.stopPropagation(); apuntarInteresado(); } }));
-    d.addEventListener("toggle", () => { if (!d.open) d.querySelector(".int-msg-v276").textContent = ""; });
-    document.addEventListener("click", e => { const n = e.target.closest && e.target.closest(".nav-item"); if (n && d.open) d.open = false; });
-    pintarInteresados();
+    const vis = () => { const v = $("vista-registrar"); const on = !!(v && v.classList.contains("activa")); btn.hidden = !on; if (!on && !d.hidden) cerrar(); };
+    const v = $("vista-registrar"); if (v) new MutationObserver(vis).observe(v, { attributes: true, attributeFilter: ["class"] });
+    vis(); pintarInteresados();
   }
 
   function arrancar() {
