@@ -605,8 +605,13 @@
       const url = URL.createObjectURL(blob), a = document.createElement("a"); a.href = url; a.download = nombre; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 4000); msg.textContent = "Imagen descargada ✓";
     } catch (e) { msg.textContent = "No se pudo crear la imagen."; }
   }
+  function fusionarCalor() {
+    const host = $("anioServicioV276"), c = $("calorAnualV267"); if (!host || !c || host.contains(c)) return !!(host && c);
+    host.insertBefore(c, host.querySelector(".anio-compartir-v276")); c.classList.add("calor-fusionado-v276"); return true;
+  }
+  function esperarCalor(n) { if (fusionarCalor() || n <= 0) return; setTimeout(() => esperarCalor(n - 1), 700); }
   function instalarAnio() {
-    if ($("anioServicioV276")) { pintarAnio(false); return; }
+    if ($("anioServicioV276")) { pintarAnio(false); fusionarCalor(); return; }
     const ancla = $("segmentoStatsV264"); if (!ancla) return;
     const s = document.createElement("section"); s.id = "anioServicioV276"; s.className = "tarjeta anio-v276";
     s.innerHTML = '<div class="anio-cab-v276"><button type="button" class="boton-periodo" data-a="-1" aria-label="Año de servicio anterior">‹</button><div><h2 class="anio-titulo-v276"></h2><p class="anio-sub-v276"></p></div><button type="button" class="boton-periodo" data-a="1" aria-label="Año de servicio siguiente">›</button></div>' +
@@ -614,10 +619,12 @@
       '<button type="button" class="boton-secundario anio-compartir-v276">✨ Compartir tarjeta del año</button><p class="anio-estado-v276" role="status"></p>';
     ancla.insertAdjacentElement("afterend", s);
     s.addEventListener("click", e => {
-      const a = e.target.closest("[data-a]"); if (a) { anioV276 += Number(a.dataset.a); pintarAnio(true); return; }
+      if (e.target.closest("#calorAnualV267")) return; /* el calendario gestiona sus propios clics */
+      const a = e.target.closest(".anio-cab-v276 [data-a]");
+      if (a) { anioV276 += Number(a.dataset.a); pintarAnio(true); const c = $("calorAnualV267"), nav = c && c.querySelector('[data-a="' + a.dataset.a + '"]'); if (nav) nav.click(); return; }
       const b = e.target.closest(".anio-compartir-v276"); if (b) compartirAnio(b);
     });
-    pintarAnio(true);
+    pintarAnio(true); esperarCalor(8);
   }
   function instalarEstadisticasNuevas() {
     const todo = () => { try { instalarCompaneros(); instalarAnio(); } catch (e) { console.warn("[V276 estadísticas]", e); } };
