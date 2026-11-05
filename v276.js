@@ -475,6 +475,160 @@
     try { if (typeof window.actualizarPersonajeProgreso === "function") window.actualizarPersonajeProgreso(progresoMes()); } catch (e) {}
   }
 
+
+  /* ================= 9. COMPAÑEROS + AÑO DE SERVICIO (Estadísticas) ================= */
+  /* Todo se calcula con tus registros; no se guarda nada nuevo. */
+  const MESES_L = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+  function sinAcentos(s) { return String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/\s+/g, " ").trim(); }
+  function deISO(s) { const p = String(s).slice(0, 10).split("-").map(Number); return new Date(p[0], p[1] - 1, p[2], 12); }
+  function hoyRelativo(f) {
+    const d = Math.round((new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 12) - deISO(f)) / 86400000);
+    if (d <= 0) return "hoy"; if (d === 1) return "ayer"; if (d < 14) return "hace " + d + " días";
+    if (d < 60) return "hace " + Math.round(d / 7) + " semanas"; return "hace " + Math.round(d / 30.4) + " meses";
+  }
+  function calcularCompaneros() {
+    const mapa = new Map(), limite = fechaISO(new Date(new Date().getFullYear() - 1, new Date().getMonth(), new Date().getDate()));
+    registros().forEach(r => {
+      const f = String(r.fecha).slice(0, 10), min = Math.max(0, Number(r.minutos) || 0), nom = String(r.companero || "").trim();
+      if (!nom || min <= 0 || f < limite) return;
+      nom.split(/\s*(?:,|;|\sy\s|\se\s|&)\s*/i).map(x => x.trim()).filter(Boolean).forEach(n => {
+        const k = sinAcentos(n); if (!k) return;
+        let c = mapa.get(k); if (!c) { c = { nombres: {}, min: 0, n: 0, dias: new Set(), ultima: "" }; mapa.set(k, c); }
+        c.nombres[n] = (c.nombres[n] || 0) + 1; c.min += min; c.dias.add(f); if (f > c.ultima) c.ultima = f;
+      });
+    });
+    return Array.from(mapa.values()).map(c => { const nombre = Object.keys(c.nombres).sort((a, b) => c.nombres[b] - c.nombres[a])[0]; return { nombre, min: c.min, salidas: c.dias.size, ultima: c.ultima }; })
+      .sort((a, b) => b.min - a.min).slice(0, 6);
+  }
+  function tonoNombre(n) { let h = 0; for (let i = 0; i < n.length; i++) h = (h * 31 + n.charCodeAt(i)) % 360; return h; }
+  function pintarCompaneros() {
+    const s = $("companerosV276"); if (!s) return;
+    const lista = calcularCompaneros(), ol = s.querySelector(".comp-lista-v276");
+    s.hidden = !lista.length; if (!lista.length) { ol.textContent = ""; return; }
+    s.querySelector(".comp-sub-v276").textContent = "Últimos 12 meses · con quién más sales";
+    const mx = Math.max(1, ...lista.map(c => c.min)); ol.textContent = "";
+    lista.forEach((c, i) => {
+      const li = document.createElement("li"); li.style.setProperty("--i", String(i)); li.style.setProperty("--h", String(tonoNombre(c.nombre)));
+      const av = document.createElement("span"); av.className = "comp-avatar-v276"; av.setAttribute("aria-hidden", "true"); av.textContent = c.nombre.trim().charAt(0).toUpperCase();
+      if (i < 3) { const m = document.createElement("i"); m.className = "comp-medalla-v276"; m.textContent = ["🥇", "🥈", "🥉"][i]; av.appendChild(m); }
+      const cu = document.createElement("div"); cu.className = "comp-cuerpo-v276";
+      const st = document.createElement("strong"); st.textContent = c.nombre.charAt(0).toUpperCase() + c.nombre.slice(1);
+      const sm = document.createElement("small"); sm.textContent = fmt(c.min) + " · " + c.salidas + (c.salidas === 1 ? " salida" : " salidas") + " · última " + hoyRelativo(c.ultima);
+      const br = document.createElement("span"); br.className = "comp-barra-v276"; br.setAttribute("aria-hidden", "true"); const b = document.createElement("b"); b.style.width = Math.max(6, Math.round(c.min / mx * 100)) + "%"; br.appendChild(b);
+      cu.append(st, sm, br); li.append(av, cu); ol.appendChild(li);
+    });
+  }
+  function instalarCompaneros() {
+    if ($("companerosV276")) { pintarCompaneros(); return; }
+    const ancla = $("segmentoStatsV264"); if (!ancla) return;
+    const s = document.createElement("section"); s.id = "companerosV276"; s.className = "tarjeta companeros-v276"; s.hidden = true;
+    s.innerHTML = '<h2 class="titulo-bloque-v267">Compañeros</h2><p class="comp-sub-v276"></p><ol class="comp-lista-v276"></ol>';
+    ancla.insertAdjacentElement("afterend", s); pintarCompaneros();
+  }
+
+  /* ---- Año de servicio (septiembre – agosto) ---- */
+  let anioV276 = null;
+  function anioServicioHoy() { const h = new Date(); return h.getMonth() >= 8 ? h.getFullYear() + 1 : h.getFullYear(); }
+  function calcularAnio(anio) {
+    const meses = [], porDia = new Map(), tipos = {}; TIPOS.forEach(x => tipos[x] = 0);
+    for (let i = 0; i < 12; i++) { const b = new Date(anio - 1, 8 + i, 1, 12); meses.push({ y: b.getFullYear(), m: b.getMonth(), min: 0 }); }
+    const ini = anio - 1 + "-09-01", fin = anio + "-08-31";
+    registros().forEach(r => {
+      const f = String(r.fecha).slice(0, 10), min = Math.max(0, Number(r.minutos) || 0); if (f < ini || f > fin || min <= 0) return;
+      const y = +f.slice(0, 4), m = +f.slice(5, 7) - 1, mm = meses.find(x => x.y === y && x.m === m); if (mm) mm.min += min;
+      porDia.set(f, (porDia.get(f) || 0) + min); if (tipos[r.tipo] !== undefined) tipos[r.tipo] += min;
+    });
+    const total = meses.reduce((a, x) => a + x.min, 0), dias = Array.from(porDia.keys()).sort();
+    let racha = 0, cur = 0, prev = null; dias.forEach(f => { const d = deISO(f); cur = prev && Math.round((d - prev) / 86400000) === 1 ? cur + 1 : 1; racha = Math.max(racha, cur); prev = d; });
+    const mejor = meses.reduce((a, x) => x.min > a.min ? x : a, meses[0]), activos = meses.filter(x => x.min > 0).length;
+    return { anio, meses, total, diasActivos: dias.length, racha, mejor, tipos, promedio: activos ? Math.round(total / activos) : 0 };
+  }
+  function cuentaArribaV276(el, destino, formateo) {
+    if (movReducido() || destino <= 0) { el.textContent = formateo(destino); return; }
+    const t0 = performance.now(), dur = 900; cancelAnimationFrame(el.__raf || 0);
+    const paso = ahora => { const k = Math.min(1, (ahora - t0) / dur), e = 1 - Math.pow(1 - k, 3); el.textContent = formateo(destino * e); if (k < 1) el.__raf = requestAnimationFrame(paso); else el.textContent = formateo(destino); };
+    el.__raf = requestAnimationFrame(paso);
+  }
+  function pintarAnio(animar) {
+    const s = $("anioServicioV276"); if (!s) return;
+    if (anioV276 === null) anioV276 = anioServicioHoy();
+    const d = calcularAnio(anioV276);
+    s.querySelector(".anio-titulo-v276").textContent = "Tu año en cifras · " + d.anio;
+    s.querySelector(".anio-sub-v276").textContent = "septiembre " + (d.anio - 1) + " – agosto " + d.anio;
+    const mx = Math.max(1, ...d.meses.map(x => x.min)), barras = s.querySelector(".anio-barras-v276"); barras.textContent = "";
+    d.meses.forEach((x, i) => {
+      const c = document.createElement("div"); c.className = "anio-mes-v276" + (x === d.mejor && x.min > 0 ? " mejor" : ""); c.style.setProperty("--i", String(i)); c.title = MESES_L[x.m] + ": " + (x.min ? fmt(x.min) : "sin actividad");
+      const b = document.createElement("i"); b.style.height = Math.max(x.min ? 8 : 3, Math.round(x.min / mx * 100)) + "%"; if (!x.min) b.className = "vacio";
+      const l = document.createElement("small"); l.textContent = MESES_L[x.m].charAt(0).toUpperCase(); c.append(b, l); barras.appendChild(c);
+    });
+    const total = s.querySelector(".anio-total-v276"); total.setAttribute("aria-label", "Total del año de servicio: " + fmt(d.total));
+    if (animar) cuentaArribaV276(total, d.total, fmt); else total.textContent = fmt(d.total);
+    const horasEl = s.querySelector(".anio-datos-v276"); horasEl.textContent = "";
+    [[String(d.diasActivos), d.diasActivos === 1 ? "día activo" : "días activos"], [String(d.racha), "racha máxima"], [d.total ? MESES_L[d.mejor.m].charAt(0).toUpperCase() + MESES_L[d.mejor.m].slice(1) : "—", "mejor mes"], [fmt(d.promedio), "media al mes"]].forEach(p => {
+      const e = document.createElement("div"); const b = document.createElement("strong"); b.textContent = p[0]; const sm = document.createElement("small"); sm.textContent = p[1]; e.append(b, sm); horasEl.appendChild(e);
+    });
+    s.querySelector(".anio-compartir-v276").disabled = !d.total;
+    s.classList.toggle("sin-datos-v276", !d.total);
+  }
+  function rrect(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+  function imagenAnio(d) {
+    const cv = document.createElement("canvas"); cv.width = 1080; cv.height = 1920; const c = cv.getContext("2d"), fam = '-apple-system, "SF Pro Display", "Segoe UI", Roboto, system-ui, sans-serif';
+    const g = c.createLinearGradient(0, 0, 1080, 1920); g.addColorStop(0, "#0a1a44"); g.addColorStop(.5, "#1c47a3"); g.addColorStop(1, "#08102a"); c.fillStyle = g; c.fillRect(0, 0, 1080, 1920);
+    const rg = c.createRadialGradient(880, 240, 20, 880, 240, 640); rg.addColorStop(0, "rgba(140,185,255,.5)"); rg.addColorStop(1, "rgba(140,185,255,0)"); c.fillStyle = rg; c.fillRect(0, 0, 1080, 1100);
+    c.textAlign = "center"; c.fillStyle = "rgba(255,255,255,.72)"; c.font = "600 40px " + fam; c.fillText("MI AÑO DE SERVICIO", 540, 170);
+    c.fillStyle = "#fff"; c.font = "800 150px " + fam; c.fillText(String(d.anio), 540, 330);
+    c.fillStyle = "rgba(255,255,255,.6)"; c.font = "500 42px " + fam; c.fillText("septiembre " + (d.anio - 1) + " – agosto " + d.anio, 540, 400);
+    c.shadowColor = "rgba(0,0,0,.4)"; c.shadowBlur = 24; c.fillStyle = "#fff"; c.font = "800 190px " + fam;
+    const horas = Math.floor(d.total / 60), mins = d.total % 60; c.fillText(String(horas), 540, 700); c.shadowBlur = 0;
+    c.fillStyle = "rgba(255,255,255,.85)"; c.font = "600 54px " + fam; c.fillText("horas" + (mins ? " y " + mins + " min" : ""), 540, 775);
+    const mx = Math.max(1, ...d.meses.map(x => x.min)), x0 = 90, bw = 56, gap = 18, base = 1240, alto = 330;
+    d.meses.forEach((m, i) => {
+      const x = x0 + i * (bw + gap), h = Math.max(m.min ? 18 : 6, m.min / mx * alto), y = base - h, mejor = m === d.mejor && m.min > 0;
+      const gr = c.createLinearGradient(0, y, 0, base); if (mejor) { gr.addColorStop(0, "#ffe08a"); gr.addColorStop(1, "#e79a1d"); } else { gr.addColorStop(0, "#9ec7ff"); gr.addColorStop(1, "#2f6fe0"); }
+      c.fillStyle = m.min ? gr : "rgba(255,255,255,.14)"; rrect(c, x, y, bw, h, Math.min(16, h / 2)); c.fill();
+      c.fillStyle = "rgba(255,255,255,.7)"; c.font = "600 30px " + fam; c.fillText(MESES_L[m.m].charAt(0).toUpperCase(), x + bw / 2, base + 46);
+    });
+    const datos = [[String(d.diasActivos), d.diasActivos === 1 ? "día activo" : "días activos"], [String(d.racha), "racha máxima"], [d.total ? MESES_L[d.mejor.m] : "—", "mejor mes"]];
+    datos.forEach((p, i) => { const x = 210 + i * 330; c.fillStyle = "#fff"; c.font = "800 62px " + fam; c.fillText(p[0], x, 1500); c.fillStyle = "rgba(255,255,255,.65)"; c.font = "500 34px " + fam; c.fillText(p[1], x, 1550); });
+    c.fillStyle = "rgba(255,255,255,.7)"; c.font = "600 38px " + fam; c.fillText("Media: " + fmt(d.promedio) + " al mes", 540, 1650);
+    c.fillStyle = "rgba(255,255,255,.45)"; c.font = "600 34px " + fam; c.fillText("Mi Servicio", 540, 1860);
+    return cv;
+  }
+  async function compartirAnio(btn) {
+    const msg = $("anioServicioV276").querySelector(".anio-estado-v276"); const d = calcularAnio(anioV276 === null ? anioServicioHoy() : anioV276);
+    try {
+      const cv = imagenAnio(d), blob = await new Promise((res, rej) => cv.toBlob(b => b ? res(b) : rej(new Error("sin imagen")), "image/png"));
+      const nombre = "MiServicio-anio-" + d.anio + ".png", file = new File([blob], nombre, { type: "image/png" });
+      if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
+        try { await navigator.share({ files: [file], title: "Mi año de servicio " + d.anio }); msg.textContent = "Imagen compartida ✓"; return; } catch (e) { if (e && e.name === "AbortError") return; }
+      }
+      const url = URL.createObjectURL(blob), a = document.createElement("a"); a.href = url; a.download = nombre; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 4000); msg.textContent = "Imagen descargada ✓";
+    } catch (e) { msg.textContent = "No se pudo crear la imagen."; }
+  }
+  function instalarAnio() {
+    if ($("anioServicioV276")) { pintarAnio(false); return; }
+    const ancla = $("segmentoStatsV264"); if (!ancla) return;
+    const s = document.createElement("section"); s.id = "anioServicioV276"; s.className = "tarjeta anio-v276";
+    s.innerHTML = '<div class="anio-cab-v276"><button type="button" class="boton-periodo" data-a="-1" aria-label="Año de servicio anterior">‹</button><div><h2 class="anio-titulo-v276"></h2><p class="anio-sub-v276"></p></div><button type="button" class="boton-periodo" data-a="1" aria-label="Año de servicio siguiente">›</button></div>' +
+      '<div class="anio-total-v276" role="img"></div><div class="anio-barras-v276" aria-hidden="true"></div><div class="anio-datos-v276"></div>' +
+      '<button type="button" class="boton-secundario anio-compartir-v276">✨ Compartir tarjeta del año</button><p class="anio-estado-v276" role="status"></p>';
+    ancla.insertAdjacentElement("afterend", s);
+    s.addEventListener("click", e => {
+      const a = e.target.closest("[data-a]"); if (a) { anioV276 += Number(a.dataset.a); pintarAnio(true); return; }
+      const b = e.target.closest(".anio-compartir-v276"); if (b) compartirAnio(b);
+    });
+    pintarAnio(true);
+  }
+  function instalarEstadisticasNuevas() {
+    const todo = () => { try { instalarCompaneros(); instalarAnio(); } catch (e) { console.warn("[V276 estadísticas]", e); } };
+    todo();
+    window.addEventListener("miServicio:registroGuardadoV188", () => setTimeout(() => { try { pintarCompaneros(); pintarAnio(false); } catch (e) {} }, 450));
+    document.addEventListener("click", e => {
+      if (e.target.closest && e.target.closest('.nav-item[data-vista="estadisticas"]')) setTimeout(() => { try { pintarCompaneros(); pintarAnio(true); } catch (er) {} }, 150);
+      if (e.target.closest && e.target.closest("[data-seg-v264]")) setTimeout(() => { try { pintarAnio(true); } catch (er) {} }, 60);
+    });
+  }
+
   /* ================= 6. CAMBIOS SIN SINCRONIZAR ================= */
   function pendientes() {
     let base = 0; const crudo = ls("miServicio.ultimaSyncOneDrive");
@@ -526,7 +680,7 @@
   }
 
   function arrancar() {
-    try { envolverFirma(); envolverDeshacer(); instalarTemas(); instalarAnillos(); instalarPapelera(); instalarMeta(); instalarDiagnostico(); programarLimpieza(); instalarPendientes(); instalarEventoChip(); instalarComprobacionGlobos(); instalarVida(); instalarAccesibilidad(); aplicarTipografia(); } catch (e) { console.warn("[V269]", e); }
+    try { envolverFirma(); envolverDeshacer(); instalarTemas(); instalarAnillos(); instalarPapelera(); instalarMeta(); instalarDiagnostico(); programarLimpieza(); instalarPendientes(); instalarEventoChip(); instalarComprobacionGlobos(); instalarVida(); instalarEstadisticasNuevas(); instalarAccesibilidad(); aplicarTipografia(); } catch (e) { console.warn("[V269]", e); }
     document.addEventListener("click", e => { const n = e.target.closest && e.target.closest(".nav-item"); if (n) setTimeout(() => { pintarAnillos(); if (n.dataset.vista === "estadisticas") animarAnillos(); }, 120); });
     window.MiServicioV269 = { datosAnillos, aplicarTema, TEMAS, leerPapelera: limpiarPapelera, enviarAPapelera, derivarFirma, pendientes, errores, reunirDiagnostico, limpiarCaches, candidatosEventos, comprobarGlobos, globosFallan };
   }
