@@ -105,7 +105,7 @@
 </style>
 
     <meta name="mi-servicio-version" content="V276">
-<meta name="mi-servicio-build" content="V276-27615">
+<meta name="mi-servicio-build" content="V276-27616">
 </head>
 <body data-luz="suave" data-metal="plata" data-acabado="clasico" data-mi-servicio-version="V276" data-ambiente="cristal" data-firma="oceano">
 <script>(function(){try{const v=localStorage.getItem("miServicio.intensidadLuz");document.body.dataset.luz=v==="realzada"?v:"suave";}catch(e){}})();</script>
@@ -950,28 +950,36 @@
 <!-- V189: OneDrive se carga en segundo plano; nunca bloquea el arranque de la app -->
 <script id="msalLoaderV189">
 (function(){
+  /* V189 + V276: carga en segundo plano, con reintentos. Si falla (red lenta, cambio de wifi a datos), vuelve a intentarlo solo. */
+  var intentos=0, cargando=false;
+  var ESPERAS=[2000,6000,15000,40000];
+  function listo(){ try{ if(typeof iniciarOneDrive==="function") iniciarOneDrive(); }catch(e){} }
   function cargarMSALV189(){
-    if(window.msal){
-      try{ if(typeof iniciarOneDrive==="function") iniciarOneDrive(); }catch(e){}
-      return;
-    }
-    if(document.getElementById("msalScriptRemotoV189")) return;
-
-    const s=document.createElement("script");
+    if(window.msal){ listo(); return; }
+    if(cargando) return;
+    cargando=true;
+    var viejo=document.getElementById("msalScriptRemotoV189"); if(viejo) viejo.remove();
+    var s=document.createElement("script");
     s.id="msalScriptRemotoV189";
     s.src="https://alcdn.msauth.net/browser/2.35.0/js/msal-browser.min.js";
     s.async=true;
     s.crossOrigin="anonymous";
     s.integrity="sha384-PARf28kmic36Ve+O3DnUerRXFtOQ7ZDqRDGpLcbljly5/N39T2OV3kt3QsWOKeAX";
-    s.onload=()=>{
-      try{ if(typeof iniciarOneDrive==="function") iniciarOneDrive(); }catch(e){}
+    s.onload=function(){ cargando=false; intentos=0; listo(); };
+    s.onerror=function(){
+      cargando=false;
+      console.warn("[Mi Servicio] OneDrive se cargará cuando vuelva la conexión.");
+      if(intentos<ESPERAS.length){ setTimeout(cargarMSALV189,ESPERAS[intentos++]); }
+      else { window.msalFalloV276=true; listo(); }
     };
-    s.onerror=()=>console.warn("[Mi Servicio] OneDrive se cargará cuando vuelva la conexión.");
     document.head.appendChild(s);
   }
+  window.reintentarMSALV276=function(){ if(window.msal){ listo(); return; } intentos=0; window.msalFalloV276=false; cargarMSALV189(); };
+  window.addEventListener("online",function(){ if(!window.msal) window.reintentarMSALV276(); });
+  document.addEventListener("visibilitychange",function(){ if(!document.hidden && !window.msal && !cargando) window.reintentarMSALV276(); });
 
   if(document.readyState==="loading"){
-    document.addEventListener("DOMContentLoaded",()=>setTimeout(cargarMSALV189,450),{once:true});
+    document.addEventListener("DOMContentLoaded",function(){ setTimeout(cargarMSALV189,450); },{once:true});
   }else{
     setTimeout(cargarMSALV189,450);
   }

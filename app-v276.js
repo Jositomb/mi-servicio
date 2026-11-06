@@ -6411,7 +6411,8 @@ function configurarOneDrive() {
 
 async function iniciarOneDrive() {
     if (typeof msal === "undefined") {
-        actualizarEstadoOneDrive("No se pudo cargar el acceso a Microsoft", false);
+        /* V276: mientras se (re)intenta la carga no se muestra un error; solo si se agotan los reintentos. */
+        actualizarEstadoOneDrive(window.msalFalloV276 ? "No se pudo cargar el acceso a Microsoft. Toca Conectar para reintentar." : "Cargando acceso a Microsoft…", false);
         return;
     }
 
@@ -6451,6 +6452,11 @@ async function iniciarOneDrive() {
 }
 
 async function conectarConOneDrive() {
+    if (typeof msal === "undefined" && typeof window.reintentarMSALV276 === "function") {
+        window.reintentarMSALV276();
+        mostrarMensajeOneDrive("Cargando el acceso a Microsoft… vuelve a tocar Conectar en unos segundos.", false);
+        return;
+    }
     if (!clienteMSALOneDrive) {
         await iniciarOneDrive();
         if (!clienteMSALOneDrive) return;

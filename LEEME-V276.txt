@@ -14,7 +14,7 @@ borrado en dos toques, «Listo» para cerrar. No cambia el tamaño de Registrar.
 (máx. 200). Los nombres VAN en la copia JSON y en OneDrive (campo opcional ajustesLocales; las copias antiguas valen).
 No aparecen en estadísticas, CSV ni al compartir.
 PUBLICAR: borra los archivos antiguos del repositorio y sube TODO el contenido del ZIP (archivos en la raíz).
-Comprueba en Ajustes → Diagnóstico que pone V276-27615.
+Comprueba en Ajustes → Diagnóstico que pone V276-27616.
 
 CORRECCIÓN (build 27611): en iOS 27.3 beta los números de horas y porcentajes dentro de los globos
 dejaban de verse. Se quita la animación de parpadeo que se aplicaba solo a esos textos y se fuerza
@@ -61,3 +61,8 @@ NOVEDADES EN ESTADÍSTICAS (build 27611):
 AÑO (build 27611): se retira la tarjeta «Año de servicio» (era un duplicado) y su calendario de calor pasa DENTRO de «Tu año en cifras»
 (botón «Ver calendario», tocar un día para ver su actividad). Las flechas ‹ › cambian a la vez el resumen y el calendario.
 El botón «Compartir tarjeta del año» se ve ahora también con el tema claro/metal.
+
+ONEDRIVE (build 27616): la librería de acceso a Microsoft se descarga de alcdn.msauth.net. Si esa descarga falla
+(red lenta, cambio de wifi a datos) ahora se reintenta sola (2, 6, 15 y 40 s), al volver la conexión y al volver a abrir
+la app. Mientras tanto se ve «Cargando acceso a Microsoft…» en vez del error; el error solo aparece si se agotan los
+reintentos, y entonces «Conectar con OneDrive» vuelve a intentarlo. El resto del código de sincronización no cambia.
