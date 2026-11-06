@@ -13681,3 +13681,11 @@ html body #vista-estadisticas #anioServicioV276#anioServicioV276#anioServicioV27
 /* Libreta sobre el botón Guardar (columna derecha): deja libre la imagen de escena de la izquierda */
 html body #libretaV276{left:auto;right:23px;bottom:calc(var(--registro-nav-alto,84px) + 106px)}
 @media (max-height:700px){html body #libretaV276{left:auto;right:18px;bottom:calc(var(--registro-nav-alto,84px) + 92px)}}
+/* V276 · Evento junto a los globos más sutil: compacto, translúcido y sin invadir los globos */
+html body #vista-inicio .evento-chip-v276{top:30px;left:8px;max-width:min(31%,118px);gap:4px;padding:2px 7px 2px 3px;border-radius:11px;border-color:rgba(255,255,255,.16);
+ background:rgba(14,24,48,.28);box-shadow:0 1px 4px rgba(0,0,0,.16);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);opacity:.82}
+html body #vista-inicio .evento-chip-v276 .ico-ev-v276{width:17px;height:17px;font-size:10px;background:rgba(255,255,255,.14)}
+html body #vista-inicio .evento-chip-v276 .txt-ev-v276 small{font-size:8.5px;font-weight:600;opacity:.8;overflow:hidden;text-overflow:ellipsis}
+html body #vista-inicio .evento-chip-v276 .txt-ev-v276 strong{font-size:10px;font-weight:700}
+html body #vista-inicio .evento-chip-v276 .mas-ev-v276{padding:0 4px;font-size:9px;background:rgba(255,255,255,.18)}
+html body #vista-inicio .evento-chip-v276:active{opacity:1}

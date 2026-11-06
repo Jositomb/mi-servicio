@@ -8,13 +8,13 @@ NOVEDAD
   No añade claves de almacenamiento nuevas ni cambia copias de seguridad.
 - Pulido visual: «Detalles opcionales» de Registrar con el mismo cristal redondeado del resto
   (solo color/borde, mismo tamaño). En pantallas bajas la pastilla se estrecha para no tapar nada.
-INTERESADOS (build 27613): en Registrar hay un botón discreto con una libreta (sobre el botón Guardar, a la derecha, sin tapar la imagen; solo en esa pestaña).
+INTERESADOS (build 27613): en Registrar hay un botón discreto con una libreta (sobre el botón Guardar, a la derecha, sin tapar la imagen; solo en esa pestaña. El aviso del próximo evento junto a los globos es ahora más compacto y translúcido y no invade los globos).
 Al tocarlo se abre una hoja arriba (el teclado no la tapa): nombre + nota opcional, «Apuntar» (o Enter), lista con
 borrado en dos toques, «Listo» para cerrar. No cambia el tamaño de Registrar. Clave nueva: miServicio.interesadosV276
 (máx. 200). Los nombres VAN en la copia JSON y en OneDrive (campo opcional ajustesLocales; las copias antiguas valen).
 No aparecen en estadísticas, CSV ni al compartir.
 PUBLICAR: borra los archivos antiguos del repositorio y sube TODO el contenido del ZIP (archivos en la raíz).
-Comprueba en Ajustes → Diagnóstico que pone V276-27614.
+Comprueba en Ajustes → Diagnóstico que pone V276-27615.
 
 CORRECCIÓN (build 27611): en iOS 27.3 beta los números de horas y porcentajes dentro de los globos
 dejaban de verse. Se quita la animación de parpadeo que se aplicaba solo a esos textos y se fuerza
