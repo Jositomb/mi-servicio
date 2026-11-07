@@ -14,7 +14,7 @@ borrado en dos toques, «Listo» para cerrar. No cambia el tamaño de Registrar.
 (máx. 200). Los nombres VAN en la copia JSON y en OneDrive (campo opcional ajustesLocales; las copias antiguas valen).
 No aparecen en estadísticas, CSV ni al compartir.
 PUBLICAR: borra los archivos antiguos del repositorio y sube TODO el contenido del ZIP (archivos en la raíz).
-Comprueba en Ajustes → Diagnóstico que pone V276-27616.
+Comprueba en Ajustes → Diagnóstico que pone V276-27617.
 
 CORRECCIÓN (build 27611): en iOS 27.3 beta los números de horas y porcentajes dentro de los globos
 dejaban de verse. Se quita la animación de parpadeo que se aplicaba solo a esos textos y se fuerza
@@ -66,3 +66,8 @@ ONEDRIVE (build 27616): la librería de acceso a Microsoft se descarga de alcdn.
 (red lenta, cambio de wifi a datos) ahora se reintenta sola (2, 6, 15 y 40 s), al volver la conexión y al volver a abrir
 la app. Mientras tanto se ve «Cargando acceso a Microsoft…» en vez del error; el error solo aparece si se agotan los
 reintentos, y entonces «Conectar con OneDrive» vuelve a intentarlo. El resto del código de sincronización no cambia.
+
+INICIO AJUSTADO (build 27617): en el iPhone, al tocar la pantalla el ajuste de Inicio podía descolocarse hasta cambiar de
+pestaña. Ahora se vuelve a medir al soltar el dedo, si el documento se desplaza se devuelve a 0, no hay rebote del documento
+en ese modo, y un bloqueo por medición transitoria se reintenta (máx. 2 veces) en vez de quedarse fijo. Causa exacta en
+iOS NO confirmada (solo reproducido en Chromium de forma forzada).

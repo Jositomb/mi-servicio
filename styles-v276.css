@@ -13689,3 +13689,7 @@ html body #vista-inicio .evento-chip-v276 .txt-ev-v276 small{font-size:8.5px;fon
 html body #vista-inicio .evento-chip-v276 .txt-ev-v276 strong{font-size:10px;font-weight:700}
 html body #vista-inicio .evento-chip-v276 .mas-ev-v276{padding:0 4px;font-size:9px;background:rgba(255,255,255,.18)}
 html body #vista-inicio .evento-chip-v276:active{opacity:1}
+
+/* V276 · en el ajuste de Inicio el documento no debe rebotar ni desplazarse */
+html:has(body.inicio-encajado-v260){overscroll-behavior:none}
+body.inicio-encajado-v260:has(#vista-inicio.activa){overscroll-behavior:none}

@@ -751,8 +751,38 @@
     vis(); pintarInteresados();
   }
 
+  /* ================= 11. INICIO ENCAJADO: recuperación tras tocar la pantalla (iOS) =================
+     En el iPhone, tocar/arrastrar puede mover el visor o el documento unos píxeles y dejar el ajuste de Inicio descolocado
+     hasta cambiar de pestaña. Aquí se vuelve a medir al soltar el dedo y se evita que el bloqueo sea permanente. */
+  function instalarRecuperacionEncaje() {
+    if (typeof programarEncajeV260 !== "function") return;
+    let t = 0, tb = 0;
+    const activo = () => { const v = $("vista-inicio"); return !!(v && v.classList.contains("activa")); };
+    const rehacer = () => { if (activo()) programarEncajeV260(true); };
+    const luego = (ms) => { clearTimeout(t); t = setTimeout(rehacer, ms); };
+    document.addEventListener("touchend", () => luego(380), { passive: true });
+    document.addEventListener("touchcancel", () => luego(380), { passive: true });
+    window.addEventListener("orientationchange", () => luego(450));
+    window.addEventListener("pageshow", () => luego(100));
+    window.addEventListener("scroll", () => {
+      if (!document.body.classList.contains("inicio-encajado-v260")) return;
+      if ((window.scrollY || 0) > 0 || (window.scrollX || 0) > 0) { try { window.scrollTo(0, 0); } catch (e) {} luego(250); }
+    }, { passive: true });
+    if (window.visualViewport) window.visualViewport.addEventListener("scroll", () => luego(250), { passive: true });
+    /* El bloqueo por falta de espacio no debe ser eterno: un fallo transitorio se vuelve a medir pasados 1,2 s. */
+    let claveReint = "", reint = 0;
+    setInterval(() => {
+      if (!activo() || document.hidden) return;
+      if (!document.body.classList.contains("inicio-encajado-v260") && typeof bloqueoEncajeV260 !== "undefined" && bloqueoEncajeV260) {
+        if (claveReint !== bloqueoEncajeV260) { claveReint = bloqueoEncajeV260; reint = 0; }
+        if (reint >= 2) return; /* tamaño sin espacio real: no insistir ni repetir mediciones */
+        reint++; clearTimeout(tb); tb = setTimeout(rehacer, 0);
+      }
+    }, 1200);
+  }
+
   function arrancar() {
-    try { envolverFirma(); envolverDeshacer(); instalarTemas(); instalarAnillos(); instalarPapelera(); instalarMeta(); instalarDiagnostico(); programarLimpieza(); instalarPendientes(); instalarEventoChip(); instalarComprobacionGlobos(); instalarVida(); instalarEstadisticasNuevas(); instalarInteresados(); instalarAccesibilidad(); aplicarTipografia(); } catch (e) { console.warn("[V269]", e); }
+    try { envolverFirma(); envolverDeshacer(); instalarTemas(); instalarAnillos(); instalarPapelera(); instalarMeta(); instalarDiagnostico(); programarLimpieza(); instalarPendientes(); instalarEventoChip(); instalarComprobacionGlobos(); instalarVida(); instalarEstadisticasNuevas(); instalarInteresados(); instalarRecuperacionEncaje(); instalarAccesibilidad(); aplicarTipografia(); } catch (e) { console.warn("[V269]", e); }
     document.addEventListener("click", e => { const n = e.target.closest && e.target.closest(".nav-item"); if (n) setTimeout(() => { pintarAnillos(); if (n.dataset.vista === "estadisticas") animarAnillos(); }, 120); });
     window.MiServicioV269 = { datosAnillos, aplicarTema, TEMAS, leerPapelera: limpiarPapelera, enviarAPapelera, derivarFirma, pendientes, errores, reunirDiagnostico, limpiarCaches, candidatosEventos, comprobarGlobos, globosFallan, leerInteresados };
   }
