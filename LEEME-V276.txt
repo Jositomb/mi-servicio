@@ -14,7 +14,7 @@ borrado en dos toques, «Listo» para cerrar. No cambia el tamaño de Registrar.
 (máx. 200). Los nombres VAN en la copia JSON y en OneDrive (campo opcional ajustesLocales; las copias antiguas valen).
 No aparecen en estadísticas, CSV ni al compartir.
 PUBLICAR: borra los archivos antiguos del repositorio y sube TODO el contenido del ZIP (archivos en la raíz).
-Comprueba en Ajustes → Diagnóstico que pone V276-27617.
+Comprueba en Ajustes → Diagnóstico que pone V276-27618.
 
 CORRECCIÓN (build 27611): en iOS 27.3 beta los números de horas y porcentajes dentro de los globos
 dejaban de verse. Se quita la animación de parpadeo que se aplicaba solo a esos textos y se fuerza
@@ -71,3 +71,8 @@ INICIO AJUSTADO (build 27617): en el iPhone, al tocar la pantalla el ajuste de I
 pestaña. Ahora se vuelve a medir al soltar el dedo, si el documento se desplaza se devuelve a 0, no hay rebote del documento
 en ese modo, y un bloqueo por medición transitoria se reintenta (máx. 2 veces) en vez de quedarse fijo. Causa exacta en
 iOS NO confirmada (solo reproducido en Chromium de forma forzada).
+
+AJUSTES SIN FUNCIONES NUEVAS (build 27618):
+ · Aviso «Es hora de hacer una copia»: con Inicio ajustado pasa de una tarjeta de ~140 px a una fila compacta (texto + botón).
+   Antes, cuando salía, Inicio dejaba de ajustarse en iPhone de 375×812 o 390×763 y aparecía scroll.
+ · En pantallas bajas donde Inicio no cabe y se desplaza, vuelve a verse la línea «Te faltan … al día» (estaba oculta sin ganar espacio).
