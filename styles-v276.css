@@ -13705,3 +13705,104 @@ html body.inicio-encajado-v260:has(#vista-inicio.activa) #vista-inicio #recordat
 @media (max-width:600px) and (max-height:720px){
  body:not(.inicio-encajado-v260) #vista-inicio #seccionObjetivoInicioV260 #mensajeObjetivo{display:block!important}
 }
+
+/* V276 · Acciones del resumen mensual: todos los botones con la misma altura en iPad/anchas */
+html body #vista-estadisticas .compartir-mes-v260{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+html body #vista-estadisticas .compartir-mes-v260>button{min-height:44px!important;height:44px!important;padding-top:0!important;padding-bottom:0!important;margin:0!important}
+html body #vista-estadisticas .compartir-mes-v260>p,html body #vista-estadisticas .compartir-mes-v260>textarea{flex:1 1 100%}
+
+/* ======================================================================
+   V276 · APARIENCIA iOS en Registrar, Historial y Ajustes (Inicio y Estadísticas conservan su estilo)
+   Una sola capa, fácil de retirar: bloque «iOS» hasta el final de este archivo.
+   ====================================================================== */
+body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes).activa){
+  --ios-fondo:#f2f2f7;--ios-tarjeta:#ffffff;--ios-relleno:rgba(120,120,128,.12);--ios-boton:#e5e5ea;--ios-boton2:#d1d1d6;--ios-relleno2:rgba(120,120,128,.2);
+  --ios-sep:rgba(60,60,67,.18);--ios-azul:#007aff;--ios-azul-texto:#0062cc;--ios-azul-fuerte:#0066d6;--ios-azul-suave:rgba(0,122,255,.14);--ios-texto:#000;--ios-texto2:rgba(60,60,67,.8);
+  --ios-barra:rgba(249,249,249,.78);--ios-spring:cubic-bezier(.2,.9,.25,1.05);
+}
+@media (prefers-color-scheme:dark){
+ body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes).activa){
+  --ios-fondo:#000;--ios-tarjeta:#1c1c1e;--ios-relleno:rgba(120,120,128,.24);--ios-boton:#3a3a3c;--ios-boton2:#48484a;--ios-relleno2:rgba(120,120,128,.36);
+  --ios-sep:rgba(84,84,88,.6);--ios-azul:#0a84ff;--ios-azul-texto:#78b7ff;--ios-azul-fuerte:#0a6cdc;--ios-azul-suave:rgba(10,132,255,.22);--ios-texto:#fff;--ios-texto2:rgba(235,235,245,.72);--ios-barra:rgba(30,30,30,.78);
+ }
+}
+/* Fondo agrupado iOS (solo mientras esas pantallas están activas) */
+html body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes).activa){background:var(--ios-fondo)!important;background-image:none!important}
+html body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes).activa)::before,
+html body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes).activa)::after{opacity:0!important}
+
+/* Barra inferior translúcida con línea fina */
+html body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes).activa) .barra-navegacion{
+  background:var(--ios-barra)!important;background-image:none!important;-webkit-backdrop-filter:saturate(180%) blur(22px)!important;backdrop-filter:saturate(180%) blur(22px)!important;
+  border:0!important;border-top:.5px solid var(--ios-sep)!important;box-shadow:none!important;border-radius:0!important}
+html body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes).activa) .barra-navegacion .nav-item{background:transparent!important;box-shadow:none!important;border:0!important;color:var(--ios-texto2)!important}
+html body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes).activa) .barra-navegacion .nav-item.activo,
+html body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes).activa) .barra-navegacion .nav-item[aria-current="page"]{color:var(--ios-azul)!important}
+
+/* Tarjetas / grupos: planas, esquinas suaves, sin relieve */
+html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes):is(#vista-registrar,#vista-historial,#vista-ajustes):not(#iosc) :is(.grupo-formulario,.tarjeta,.seccion,.ajustes-acordeon-v179,.historial-mes-desplegable-v260,.recordatorio-copia){
+  background:var(--ios-tarjeta)!important;background-image:none!important;border:0!important;border-radius:16px!important;
+  box-shadow:0 0 0 .5px var(--ios-sep)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;color:var(--ios-texto)}
+html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes):is(#vista-registrar,#vista-historial,#vista-ajustes):not(#iosc) :is(.grupo-formulario,.tarjeta,.seccion) :is(.grupo-formulario,.tarjeta,.seccion){box-shadow:none!important}
+html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes):is(#vista-registrar,#vista-historial,#vista-ajustes):not(#iosc) :is(.titulo-campo,.grupo-historial-cabecera small){color:var(--ios-texto2)!important;text-transform:none;letter-spacing:0;font-weight:600}
+
+/* Botones secundarios, chips y opciones: relleno plano iOS, sin gradiente ni sombra */
+html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes):is(#vista-registrar,#vista-historial,#vista-ajustes):not(#iosc) :is(.boton-secundario,.actividad-boton,.filtro-historial,.fecha-opciones-v203 button,.boton-contador,.boton-repetir-v260,.boton-editar-registro,.atajo-tiempo,.atajos-tiempo button,.volver-ajustes-v260){
+  background:var(--ios-boton)!important;background-image:none!important;border:0!important;box-shadow:none!important;color:var(--ios-azul-texto)!important;border-radius:12px!important;
+  transition:background-color .18s var(--ios-spring),transform .18s var(--ios-spring),opacity .18s}
+html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes):is(#vista-registrar,#vista-historial,#vista-ajustes):not(#iosc) :is(.actividad-boton,.filtro-historial,.fecha-opciones-v203 button){color:var(--ios-texto)!important}
+/* Seleccionado: azul sólido, texto blanco (como un control segmentado) */
+html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes):is(#vista-registrar,#vista-historial,#vista-ajustes):not(#iosc) :is(.actividad-boton.seleccionada,.filtro-historial.activo,.fecha-opciones-v203 button.activo,.fecha-opciones-v203 button.seleccionada,.fecha-opciones-v203 button[aria-pressed="true"]){
+  background:var(--ios-azul-fuerte)!important;color:#fff!important;box-shadow:none!important}
+html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes):is(#vista-registrar,#vista-historial,#vista-ajustes):not(#iosc) :is(.boton-secundario,.actividad-boton,.filtro-historial,.fecha-opciones-v203 button,.boton-contador):active{transform:scale(.96);background:var(--ios-boton2)!important}
+html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes):is(#vista-registrar,#vista-historial,#vista-ajustes):not(#iosc) :is(.actividad-boton.seleccionada,.filtro-historial.activo):active{background:var(--ios-azul-fuerte)!important;opacity:.85}
+/* Botón de acción principal: azul iOS plano */
+html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes):is(#vista-registrar,#vista-historial,#vista-ajustes):not(#iosc) :is(.boton-guardar,.cron-iniciar-v264){
+  background:var(--ios-azul-fuerte)!important;background-image:none!important;color:#fff!important;border:0!important;box-shadow:0 2px 8px rgba(0,122,255,.35)!important;border-radius:14px!important}
+/* Borrar: rojo iOS */
+html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes):is(#vista-registrar,#vista-historial,#vista-ajustes):not(#iosc) .boton-borrar{background:rgba(255,59,48,.14)!important;background-image:none!important;color:#ff3b30!important;border:0!important;box-shadow:none!important;border-radius:12px!important}
+
+/* Campos de texto: relleno plano */
+html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes):is(#vista-registrar,#vista-historial,#vista-ajustes):not(#iosc) :is(input.campo,select.campo,textarea.campo,input.campo-texto,.campo-tiempo){
+  background:var(--ios-relleno)!important;background-image:none!important;border:0!important;box-shadow:none!important;border-radius:12px!important;color:var(--ios-texto)!important}
+html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes):is(#vista-registrar,#vista-historial,#vista-ajustes):not(#iosc) :is(input.campo,textarea.campo,input.campo-texto):focus{outline:0!important;box-shadow:0 0 0 2px var(--ios-azul-suave),0 0 0 .5px var(--ios-azul)!important}
+
+/* Filas tipo lista de Ajustes: acordeones con separador fino y chevrón gris */
+html body #vista-ajustes #vista-ajustes .ajustes-acordeon-v179>summary{background:transparent!important;box-shadow:none!important;border:0!important}
+html body #vista-ajustes #vista-ajustes .ajustes-acordeon-flecha{color:rgba(60,60,67,.3)!important}
+@media (prefers-color-scheme:dark){html body #vista-ajustes #vista-ajustes .ajustes-acordeon-flecha{color:rgba(235,235,245,.3)!important}}
+
+/* Historial: los meses como filas de lista */
+html body #vista-historial #vista-historial .historial-mes-desplegable-v260{box-shadow:0 0 0 .5px var(--ios-sep)!important}
+html body #vista-historial #vista-historial .historial-mes-desplegable-v260>summary{background:transparent!important;box-shadow:none!important}
+
+/* Animación: entrada suave de las pantallas y de las filas, como en iOS (se respeta «reducir movimiento») */
+@media (prefers-reduced-motion:no-preference){
+ html body :is(#vista-registrar,#vista-historial,#vista-ajustes).activa .historial-mes-desplegable-v260[open] .grupo-historial-registros{animation:iosAbre-v276 .28s var(--ios-spring) both}
+}
+@keyframes iosAbre-v276{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+
+/* Libreta: hoja y botón con aspecto iOS */
+body:has(:is(#vista-registrar).activa) #libretaV276{background:var(--ios-barra);border:0;box-shadow:0 0 0 .5px var(--ios-sep),0 4px 14px rgba(0,0,0,.12);color:var(--ios-azul)}
+#interesadosV276 .int-hoja-v276{border-radius:24px;box-shadow:0 24px 60px rgba(0,0,0,.35)}
+#interesadosV276 .int-hoja-v276{transition:transform .38s cubic-bezier(.2,.9,.25,1.05),opacity .25s}
+
+/* iOS · ajustes finos tras revisar capturas */
+html body:not(#iosa):not(#iosb) #vista-registrar:not(#iosc) #guardarRegistroV203{border-radius:50%!important}
+html body:not(#iosa):not(#iosb) #vista-registrar:not(#iosc) :is(.cantidad-tiempo button,.control-tiempo button,.ajuste-tiempo button,#restarTiempo,#sumarTiempo,#menosTiempo,#masTiempo,[id*="Tiempo"] button,.grupo-tiempo>div:first-of-type button){
+  background:var(--ios-boton)!important;background-image:none!important;border:0!important;box-shadow:none!important;color:var(--ios-azul-texto)!important;border-radius:50%!important}
+html body:not(#iosa):not(#iosb) #vista-registrar:not(#iosc) :is(.campo-tiempo input,#horasRegistro,#minutosRegistro){background:transparent!important;background-image:none!important;border:0!important;box-shadow:none!important}
+html body:not(#iosa):not(#iosb) #vista-registrar:not(#iosc) .campo-tiempo{background:var(--ios-relleno)!important;border-radius:12px!important}
+html body:not(#iosa):not(#iosb) #vista-registrar:not(#iosc) .detalles-registro-v203>summary{background:var(--ios-relleno)!important;background-image:none!important;box-shadow:none!important;border-radius:12px!important}
+html body:not(#iosa):not(#iosb) #vista-registrar:not(#iosc) :is(.actividad-boton.seleccionada,.fecha-opciones-v203 button){outline:0!important}
+
+/* iOS · Historial y Ajustes: segunda pasada */
+html body:not(#iosa):not(#iosb) #vista-historial:not(#iosc):not(#iosd):not(#iose):not(#iosf)>.seccion{background:transparent!important;background-image:none!important;box-shadow:none!important;border:0!important;padding-left:0!important;padding-right:0!important}
+html body:not(#iosa):not(#iosb) #vista-historial:not(#iosc):not(#iosd):not(#iose):not(#iosf) .historial-mes-desplegable-v260{overflow:hidden}
+html body:not(#iosa):not(#iosb) #vista-historial:not(#iosc):not(#iosd):not(#iose):not(#iosf) :is(summary.historial-mes-v260,.historial-mes-desplegable-v260>summary){background:transparent!important;background-image:none!important;border:0!important;box-shadow:none!important;border-radius:0!important}
+html body:not(#iosa):not(#iosb) #vista-historial:not(#iosc):not(#iosd):not(#iose):not(#iosf) .grupo-historial-cabecera{background:transparent!important;border-bottom:.5px solid var(--ios-sep)!important;box-shadow:none!important}
+html body:not(#iosa):not(#iosb) #vista-historial:not(#iosc):not(#iosd):not(#iose):not(#iosf) .grupo-historial{background:transparent!important;box-shadow:none!important;border:0!important}
+html body:not(#iosa):not(#iosb) #vista-ajustes:not(#iosc):not(#iosd):not(#iose):not(#iosf) :is(.ajustes-acordeon-icono,.ajuste-icono){background:var(--ios-relleno)!important;background-image:none!important;box-shadow:none!important;border:0!important;border-radius:9px!important}
+html body:not(#iosa):not(#iosb) #vista-ajustes:not(#iosc):not(#iosd):not(#iose):not(#iosf) :is(.ajustes-acordeon-cuerpo){background:transparent!important;box-shadow:none!important}
+html body:not(#iosa):not(#iosb) #vista-ajustes:not(#iosc):not(#iosd):not(#iose):not(#iosf) :is(.ajustes-acordeon-v179>summary,.ajustes-acordeon-cuerpo,.personalizar-grupo-v260>summary){background:transparent!important;background-image:none!important;box-shadow:none!important;border:0!important}
+html body:not(#iosa):not(#iosb) #vista-registrar:not(#iosc):not(#iosd):not(#iose):not(#iosf) #guardarRegistroV203{border-radius:50%!important}
