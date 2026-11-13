@@ -781,8 +781,37 @@
     }, 1200);
   }
 
+  /* ================= 12. COLOR DE LA APP EN TODAS LAS PANTALLAS =================
+     A partir del color elegido (--firma-base) se calculan variantes con contraste suficiente (≥ 4,5:1) para
+     rellenos con texto blanco y para texto sobre botones grises, en claro y en oscuro. Las usa el estilo iOS. */
+  function contraste(a, b) { const x = luminancia(a) + .05, y = luminancia(b) + .05; return Math.max(x, y) / Math.min(x, y); }
+  function ajustarContraste(rgb, fondo, objetivo, haciaOscuro) {
+    let c = rgb.slice(), n = 0;
+    while (contraste(c, fondo) < objetivo && n++ < 40) c = mezcla(c, haciaOscuro ? [0, 0, 0] : [255, 255, 255], .08);
+    return c;
+  }
+  function sincronizarAcento() {
+    try {
+      const raw = (getComputedStyle(document.body).getPropertyValue("--firma-base") || "").trim();
+      if (!hexValido(raw)) return;
+      const base = hexARgb(raw), s = document.body.style;
+      const fuerte = ajustarContraste(base, [255, 255, 255], 4.6, true);       /* relleno con texto blanco */
+      const txtClaro = ajustarContraste(base, [229, 229, 234], 4.8, true);     /* texto sobre botón gris claro */
+      const txtOscuro = ajustarContraste(base, [58, 58, 60], 4.8, false);      /* texto sobre botón gris oscuro */
+      const nuevo = [aHex(fuerte), aHex(txtClaro), aHex(txtOscuro), fuerte.map(Math.round).join(",")];
+      if (s.getPropertyValue("--app-fuerte") === nuevo[0] && s.getPropertyValue("--app-texto-oscuro") === nuevo[2]) return;
+      s.setProperty("--app-fuerte", nuevo[0]); s.setProperty("--app-texto-claro", nuevo[1]);
+      s.setProperty("--app-texto-oscuro", nuevo[2]); s.setProperty("--app-fuerte-rgb", nuevo[3]);
+    } catch (e) { console.warn("[V276] acento", e); }
+  }
+  function instalarAcento() {
+    sincronizarAcento();
+    try { new MutationObserver(sincronizarAcento).observe(document.body, { attributes: true, attributeFilter: ["style", "data-firma"] }); } catch (e) {}
+    window.addEventListener("storage", () => setTimeout(sincronizarAcento, 0));
+  }
+
   function arrancar() {
-    try { envolverFirma(); envolverDeshacer(); instalarTemas(); instalarAnillos(); instalarPapelera(); instalarMeta(); instalarDiagnostico(); programarLimpieza(); instalarPendientes(); instalarEventoChip(); instalarComprobacionGlobos(); instalarVida(); instalarEstadisticasNuevas(); instalarInteresados(); instalarRecuperacionEncaje(); instalarAccesibilidad(); aplicarTipografia(); } catch (e) { console.warn("[V269]", e); }
+    try { envolverFirma(); envolverDeshacer(); instalarTemas(); instalarAnillos(); instalarPapelera(); instalarMeta(); instalarDiagnostico(); programarLimpieza(); instalarPendientes(); instalarEventoChip(); instalarComprobacionGlobos(); instalarVida(); instalarEstadisticasNuevas(); instalarAcento(); instalarInteresados(); instalarRecuperacionEncaje(); instalarAccesibilidad(); aplicarTipografia(); } catch (e) { console.warn("[V269]", e); }
     document.addEventListener("click", e => { const n = e.target.closest && e.target.closest(".nav-item"); if (n) setTimeout(() => { pintarAnillos(); if (n.dataset.vista === "estadisticas") animarAnillos(); }, 120); });
     window.MiServicioV269 = { datosAnillos, aplicarTema, TEMAS, leerPapelera: limpiarPapelera, enviarAPapelera, derivarFirma, pendientes, errores, reunirDiagnostico, limpiarCaches, candidatosEventos, comprobarGlobos, globosFallan, leerInteresados };
   }

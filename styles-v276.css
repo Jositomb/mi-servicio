@@ -13646,7 +13646,7 @@ html body #vista-estadisticas #anioServicioV276#anioServicioV276#anioServicioV27
 #libretaV276{position:fixed;left:14px;bottom:calc(var(--registro-nav-alto,84px) + 18px);z-index:40;width:52px;height:52px;border-radius:50%;border:1px solid rgba(128,128,128,.28);background:rgba(255,255,255,.72);color:#4a5568;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 4px 12px rgba(0,0,0,.14);display:grid;place-items:center;padding:0;cursor:pointer;opacity:.82;-webkit-tap-highlight-color:transparent}
 #libretaV276[hidden]{display:none}
 #libretaV276 svg{width:28px;height:28px}
-#libretaV276 .libreta-cuenta-v276{position:absolute;top:-3px;right:-3px;min-width:18px;height:18px;border-radius:9px;background:#0a84ff;color:#fff;font-size:.68rem;font-weight:700;display:grid;place-items:center;padding:0 4px}
+#libretaV276 .libreta-cuenta-v276{position:absolute;top:-3px;right:-3px;min-width:18px;height:18px;border-radius:9px;background:var(--app-fuerte,#0a84ff);color:#fff;font-size:.68rem;font-weight:700;display:grid;place-items:center;padding:0 4px}
 #libretaV276 .libreta-cuenta-v276:empty{display:none}
 #libretaV276:active{transform:scale(.94)}
 @media (prefers-color-scheme:dark){#libretaV276{background:rgba(40,44,52,.78);color:#cbd5e1;border-color:rgba(255,255,255,.18)}}
@@ -13666,8 +13666,8 @@ html body #vista-estadisticas #anioServicioV276#anioServicioV276#anioServicioV27
 #interesadosV276 .int-fila-v276{display:flex;gap:8px;min-width:0}
 #interesadosV276 input{flex:1;min-width:0;font:inherit;font-size:16px;padding:12px 14px;border-radius:14px;border:1px solid rgba(128,128,128,.32);background:rgba(255,255,255,.7);color:inherit;box-sizing:border-box}
 @media (prefers-color-scheme:dark){#interesadosV276 input{background:rgba(255,255,255,.08)}}
-#interesadosV276 .int-ok-v276,#interesadosV276 .int-borrar-v276,#interesadosV276 .int-cerrar-v276{flex:none;font:inherit;font-weight:700;font-size:.9rem;border:0;border-radius:14px;padding:0 16px;min-height:44px;background:rgba(10,132,255,.16);color:#0a64d8;cursor:pointer}
-#interesadosV276 .int-ok-v276{background:#0a84ff;color:#fff}
+#interesadosV276 .int-ok-v276,#interesadosV276 .int-borrar-v276,#interesadosV276 .int-cerrar-v276{flex:none;font:inherit;font-weight:700;font-size:.9rem;border:0;border-radius:14px;padding:0 16px;min-height:44px;background:rgba(10,132,255,.16);color:var(--app-texto-claro,#0a64d8);cursor:pointer}
+#interesadosV276 .int-ok-v276{background:var(--app-fuerte,#0a84ff);color:#fff}
 #interesadosV276 .int-borrar-v276{min-height:36px;padding:0 12px;background:rgba(128,128,128,.16);color:inherit}
 #interesadosV276 .int-borrar-v276.armado{background:rgba(255,59,48,.2);color:#c8261c}
 #interesadosV276 .int-msg-v276{margin:0;min-height:1em;font-size:.8rem;opacity:.75}
@@ -13677,7 +13677,7 @@ html body #vista-estadisticas #anioServicioV276#anioServicioV276#anioServicioV27
 #interesadosV276 .int-texto-v276 b{font-size:.95rem;overflow-wrap:anywhere}
 #interesadosV276 .int-texto-v276 small{opacity:.7;overflow-wrap:anywhere}
 @media (max-height:700px){#libretaV276{width:44px;height:44px;left:8px;bottom:calc(var(--registro-nav-alto,84px) + 8px)}#libretaV276 svg{width:24px;height:24px}}
-@media (prefers-color-scheme:dark){#interesadosV276 .int-cerrar-v276{color:#7db8ff;background:rgba(10,132,255,.22)}}
+@media (prefers-color-scheme:dark){#interesadosV276 .int-cerrar-v276{color:var(--app-texto-oscuro,#7db8ff);background:rgba(var(--app-fuerte-rgb,10,132,255),.28)}}
 /* Libreta sobre el botón Guardar (columna derecha): deja libre la imagen de escena de la izquierda */
 html body #libretaV276{left:auto;right:23px;bottom:calc(var(--registro-nav-alto,84px) + 106px)}
 @media (max-height:700px){html body #libretaV276{left:auto;right:18px;bottom:calc(var(--registro-nav-alto,84px) + 92px)}}
@@ -13717,13 +13717,13 @@ html body #vista-estadisticas .compartir-mes-v260>p,html body #vista-estadistica
    ====================================================================== */
 body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes).activa){
   --ios-fondo:#f2f2f7;--ios-tarjeta:#ffffff;--ios-relleno:rgba(120,120,128,.12);--ios-boton:#e5e5ea;--ios-boton2:#d1d1d6;--ios-relleno2:rgba(120,120,128,.2);
-  --ios-sep:rgba(60,60,67,.18);--ios-azul:#007aff;--ios-azul-texto:#0062cc;--ios-azul-fuerte:#0066d6;--ios-azul-suave:rgba(0,122,255,.14);--ios-texto:#000;--ios-texto2:rgba(60,60,67,.8);
+  --ios-sep:rgba(60,60,67,.18);--ios-azul:var(--app-fuerte,#0066d6);--ios-azul-texto:var(--app-texto-claro,#0062cc);--ios-azul-fuerte:var(--app-fuerte,#0066d6);--ios-azul-suave:rgba(var(--app-fuerte-rgb,0,102,214),.14);--ios-texto:#000;--ios-texto2:rgba(60,60,67,.8);
   --ios-barra:rgba(249,249,249,.78);--ios-spring:cubic-bezier(.2,.9,.25,1.05);
 }
 @media (prefers-color-scheme:dark){
  body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes).activa){
   --ios-fondo:#000;--ios-tarjeta:#1c1c1e;--ios-relleno:rgba(120,120,128,.24);--ios-boton:#3a3a3c;--ios-boton2:#48484a;--ios-relleno2:rgba(120,120,128,.36);
-  --ios-sep:rgba(84,84,88,.6);--ios-azul:#0a84ff;--ios-azul-texto:#78b7ff;--ios-azul-fuerte:#0a6cdc;--ios-azul-suave:rgba(10,132,255,.22);--ios-texto:#fff;--ios-texto2:rgba(235,235,245,.72);--ios-barra:rgba(30,30,30,.78);
+  --ios-sep:rgba(84,84,88,.6);--ios-azul:var(--app-fuerte,#0a6cdc);--ios-azul-texto:var(--app-texto-oscuro,#78b7ff);--ios-azul-fuerte:var(--app-fuerte,#0a6cdc);--ios-azul-suave:rgba(var(--app-fuerte-rgb,10,108,220),.24);--ios-texto:#fff;--ios-texto2:rgba(235,235,245,.72);--ios-barra:rgba(30,30,30,.78);
  }
 }
 /* Fondo agrupado iOS (solo mientras esas pantallas están activas) */
@@ -13758,7 +13758,7 @@ html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-aju
 html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes):is(#vista-registrar,#vista-historial,#vista-ajustes):not(#iosc) :is(.actividad-boton.seleccionada,.filtro-historial.activo):active{background:var(--ios-azul-fuerte)!important;opacity:.85}
 /* Botón de acción principal: azul iOS plano */
 html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes):is(#vista-registrar,#vista-historial,#vista-ajustes):not(#iosc) :is(.boton-guardar,.cron-iniciar-v264){
-  background:var(--ios-azul-fuerte)!important;background-image:none!important;color:#fff!important;border:0!important;box-shadow:0 2px 8px rgba(0,122,255,.35)!important;border-radius:14px!important}
+  background:var(--ios-azul-fuerte)!important;background-image:none!important;color:#fff!important;border:0!important;box-shadow:0 2px 8px rgba(var(--app-fuerte-rgb,0,102,214),.35)!important;border-radius:14px!important}
 /* Borrar: rojo iOS */
 html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes):is(#vista-registrar,#vista-historial,#vista-ajustes):not(#iosc) .boton-borrar{background:rgba(255,59,48,.14)!important;background-image:none!important;color:#ff3b30!important;border:0!important;box-shadow:none!important;border-radius:12px!important}
 
@@ -13806,3 +13806,8 @@ html body:not(#iosa):not(#iosb) #vista-ajustes:not(#iosc):not(#iosd):not(#iose):
 html body:not(#iosa):not(#iosb) #vista-ajustes:not(#iosc):not(#iosd):not(#iose):not(#iosf) :is(.ajustes-acordeon-cuerpo){background:transparent!important;box-shadow:none!important}
 html body:not(#iosa):not(#iosb) #vista-ajustes:not(#iosc):not(#iosd):not(#iose):not(#iosf) :is(.ajustes-acordeon-v179>summary,.ajustes-acordeon-cuerpo,.personalizar-grupo-v260>summary){background:transparent!important;background-image:none!important;box-shadow:none!important;border:0!important}
 html body:not(#iosa):not(#iosb) #vista-registrar:not(#iosc):not(#iosd):not(#iose):not(#iosf) #guardarRegistroV203{border-radius:50%!important}
+
+/* Color de la app en todas las pantallas: controles nativos, cursor y selección siguen el color elegido */
+body[data-firma]{accent-color:var(--firma-base);caret-color:var(--firma-base)}
+@media (prefers-color-scheme:dark){body[data-firma]{accent-color:var(--firma-luz);caret-color:var(--firma-luz)}}
+body[data-firma] ::selection{background:rgba(var(--firma-rgb),.28)}
