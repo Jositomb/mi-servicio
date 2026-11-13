@@ -13715,57 +13715,57 @@ html body #vista-estadisticas .compartir-mes-v260>p,html body #vista-estadistica
    V276 · APARIENCIA iOS en Registrar, Historial y Ajustes (Inicio y Estadísticas conservan su estilo)
    Una sola capa, fácil de retirar: bloque «iOS» hasta el final de este archivo.
    ====================================================================== */
-body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes).activa){
+body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas).activa){
   --ios-fondo:#f2f2f7;--ios-tarjeta:#ffffff;--ios-relleno:rgba(120,120,128,.12);--ios-boton:#e5e5ea;--ios-boton2:#d1d1d6;--ios-relleno2:rgba(120,120,128,.2);
   --ios-sep:rgba(60,60,67,.18);--ios-azul:var(--app-fuerte,#0066d6);--ios-azul-texto:var(--app-texto-claro,#0062cc);--ios-azul-fuerte:var(--app-fuerte,#0066d6);--ios-azul-suave:rgba(var(--app-fuerte-rgb,0,102,214),.14);--ios-texto:#000;--ios-texto2:rgba(60,60,67,.8);
   --ios-barra:rgba(249,249,249,.78);--ios-spring:cubic-bezier(.2,.9,.25,1.05);
 }
 @media (prefers-color-scheme:dark){
- body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes).activa){
+ body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas).activa){
   --ios-fondo:#000;--ios-tarjeta:#1c1c1e;--ios-relleno:rgba(120,120,128,.24);--ios-boton:#3a3a3c;--ios-boton2:#48484a;--ios-relleno2:rgba(120,120,128,.36);
   --ios-sep:rgba(84,84,88,.6);--ios-azul:var(--app-fuerte,#0a6cdc);--ios-azul-texto:var(--app-texto-oscuro,#78b7ff);--ios-azul-fuerte:var(--app-fuerte,#0a6cdc);--ios-azul-suave:rgba(var(--app-fuerte-rgb,10,108,220),.24);--ios-texto:#fff;--ios-texto2:rgba(235,235,245,.72);--ios-barra:rgba(30,30,30,.78);
  }
 }
 /* Fondo agrupado iOS (solo mientras esas pantallas están activas) */
-html body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes).activa){background:var(--ios-fondo)!important;background-image:none!important}
-html body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes).activa)::before,
-html body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes).activa)::after{opacity:0!important}
+html body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas).activa){background:var(--ios-fondo)!important;background-image:none!important}
+html body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas).activa)::before,
+html body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas).activa)::after{opacity:0!important}
 
 /* Barra inferior translúcida con línea fina */
-html body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes).activa) .barra-navegacion{
+html body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas).activa) .barra-navegacion{
   background:var(--ios-barra)!important;background-image:none!important;-webkit-backdrop-filter:saturate(180%) blur(22px)!important;backdrop-filter:saturate(180%) blur(22px)!important;
   border:0!important;border-top:.5px solid var(--ios-sep)!important;box-shadow:none!important;border-radius:0!important}
-html body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes).activa) .barra-navegacion .nav-item{background:transparent!important;box-shadow:none!important;border:0!important;color:var(--ios-texto2)!important}
-html body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes).activa) .barra-navegacion .nav-item.activo,
-html body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes).activa) .barra-navegacion .nav-item[aria-current="page"]{color:var(--ios-azul)!important}
+html body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas).activa) .barra-navegacion .nav-item{background:transparent!important;box-shadow:none!important;border:0!important;color:var(--ios-texto2)!important}
+html body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas).activa) .barra-navegacion .nav-item.activo,
+html body:has(:is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas).activa) .barra-navegacion .nav-item[aria-current="page"]{color:var(--ios-azul)!important}
 
 /* Tarjetas / grupos: planas, esquinas suaves, sin relieve */
-html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes):is(#vista-registrar,#vista-historial,#vista-ajustes):not(#iosc) :is(.grupo-formulario,.tarjeta,.seccion,.ajustes-acordeon-v179,.historial-mes-desplegable-v260,.recordatorio-copia){
+html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas):is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas):not(#iosc) :is(.grupo-formulario,.tarjeta,.seccion,.ajustes-acordeon-v179,.historial-mes-desplegable-v260,.recordatorio-copia){
   background:var(--ios-tarjeta)!important;background-image:none!important;border:0!important;border-radius:16px!important;
   box-shadow:0 0 0 .5px var(--ios-sep)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;color:var(--ios-texto)}
-html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes):is(#vista-registrar,#vista-historial,#vista-ajustes):not(#iosc) :is(.grupo-formulario,.tarjeta,.seccion) :is(.grupo-formulario,.tarjeta,.seccion){box-shadow:none!important}
-html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes):is(#vista-registrar,#vista-historial,#vista-ajustes):not(#iosc) :is(.titulo-campo,.grupo-historial-cabecera small){color:var(--ios-texto2)!important;text-transform:none;letter-spacing:0;font-weight:600}
+html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas):is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas):not(#iosc) :is(.grupo-formulario,.tarjeta,.seccion) :is(.grupo-formulario,.tarjeta,.seccion){box-shadow:none!important}
+html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas):is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas):not(#iosc) :is(.titulo-campo,.grupo-historial-cabecera small){color:var(--ios-texto2)!important;text-transform:none;letter-spacing:0;font-weight:600}
 
 /* Botones secundarios, chips y opciones: relleno plano iOS, sin gradiente ni sombra */
-html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes):is(#vista-registrar,#vista-historial,#vista-ajustes):not(#iosc) :is(.boton-secundario,.actividad-boton,.filtro-historial,.fecha-opciones-v203 button,.boton-contador,.boton-repetir-v260,.boton-editar-registro,.atajo-tiempo,.atajos-tiempo button,.volver-ajustes-v260){
+html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas):is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas):not(#iosc) :is(.boton-secundario,.actividad-boton,.filtro-historial,.fecha-opciones-v203 button,.boton-contador,.boton-repetir-v260,.boton-editar-registro,.atajo-tiempo,.atajos-tiempo button,.volver-ajustes-v260){
   background:var(--ios-boton)!important;background-image:none!important;border:0!important;box-shadow:none!important;color:var(--ios-azul-texto)!important;border-radius:12px!important;
   transition:background-color .18s var(--ios-spring),transform .18s var(--ios-spring),opacity .18s}
-html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes):is(#vista-registrar,#vista-historial,#vista-ajustes):not(#iosc) :is(.actividad-boton,.filtro-historial,.fecha-opciones-v203 button){color:var(--ios-texto)!important}
+html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas):is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas):not(#iosc) :is(.actividad-boton,.filtro-historial,.fecha-opciones-v203 button){color:var(--ios-texto)!important}
 /* Seleccionado: azul sólido, texto blanco (como un control segmentado) */
-html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes):is(#vista-registrar,#vista-historial,#vista-ajustes):not(#iosc) :is(.actividad-boton.seleccionada,.filtro-historial.activo,.fecha-opciones-v203 button.activo,.fecha-opciones-v203 button.seleccionada,.fecha-opciones-v203 button[aria-pressed="true"]){
+html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas):is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas):not(#iosc) :is(.actividad-boton.seleccionada,.filtro-historial.activo,.fecha-opciones-v203 button.activo,.fecha-opciones-v203 button.seleccionada,.fecha-opciones-v203 button[aria-pressed="true"]){
   background:var(--ios-azul-fuerte)!important;color:#fff!important;box-shadow:none!important}
-html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes):is(#vista-registrar,#vista-historial,#vista-ajustes):not(#iosc) :is(.boton-secundario,.actividad-boton,.filtro-historial,.fecha-opciones-v203 button,.boton-contador):active{transform:scale(.96);background:var(--ios-boton2)!important}
-html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes):is(#vista-registrar,#vista-historial,#vista-ajustes):not(#iosc) :is(.actividad-boton.seleccionada,.filtro-historial.activo):active{background:var(--ios-azul-fuerte)!important;opacity:.85}
+html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas):is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas):not(#iosc) :is(.boton-secundario,.actividad-boton,.filtro-historial,.fecha-opciones-v203 button,.boton-contador):active{transform:scale(.96);background:var(--ios-boton2)!important}
+html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas):is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas):not(#iosc) :is(.actividad-boton.seleccionada,.filtro-historial.activo):active{background:var(--ios-azul-fuerte)!important;opacity:.85}
 /* Botón de acción principal: azul iOS plano */
-html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes):is(#vista-registrar,#vista-historial,#vista-ajustes):not(#iosc) :is(.boton-guardar,.cron-iniciar-v264){
+html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas):is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas):not(#iosc) :is(.boton-guardar,.cron-iniciar-v264){
   background:var(--ios-azul-fuerte)!important;background-image:none!important;color:#fff!important;border:0!important;box-shadow:0 2px 8px rgba(var(--app-fuerte-rgb,0,102,214),.35)!important;border-radius:14px!important}
 /* Borrar: rojo iOS */
-html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes):is(#vista-registrar,#vista-historial,#vista-ajustes):not(#iosc) .boton-borrar{background:rgba(255,59,48,.14)!important;background-image:none!important;color:#ff3b30!important;border:0!important;box-shadow:none!important;border-radius:12px!important}
+html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas):is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas):not(#iosc) .boton-borrar{background:rgba(255,59,48,.14)!important;background-image:none!important;color:#ff3b30!important;border:0!important;box-shadow:none!important;border-radius:12px!important}
 
 /* Campos de texto: relleno plano */
-html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes):is(#vista-registrar,#vista-historial,#vista-ajustes):not(#iosc) :is(input.campo,select.campo,textarea.campo,input.campo-texto,.campo-tiempo){
+html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas):is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas):not(#iosc) :is(input.campo,select.campo,textarea.campo,input.campo-texto,.campo-tiempo){
   background:var(--ios-relleno)!important;background-image:none!important;border:0!important;box-shadow:none!important;border-radius:12px!important;color:var(--ios-texto)!important}
-html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes):is(#vista-registrar,#vista-historial,#vista-ajustes):not(#iosc) :is(input.campo,textarea.campo,input.campo-texto):focus{outline:0!important;box-shadow:0 0 0 2px var(--ios-azul-suave),0 0 0 .5px var(--ios-azul)!important}
+html body:not(#iosa):not(#iosb) :is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas):is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas):not(#iosc) :is(input.campo,textarea.campo,input.campo-texto):focus{outline:0!important;box-shadow:0 0 0 2px var(--ios-azul-suave),0 0 0 .5px var(--ios-azul)!important}
 
 /* Filas tipo lista de Ajustes: acordeones con separador fino y chevrón gris */
 html body #vista-ajustes #vista-ajustes .ajustes-acordeon-v179>summary{background:transparent!important;box-shadow:none!important;border:0!important}
@@ -13778,7 +13778,7 @@ html body #vista-historial #vista-historial .historial-mes-desplegable-v260>summ
 
 /* Animación: entrada suave de las pantallas y de las filas, como en iOS (se respeta «reducir movimiento») */
 @media (prefers-reduced-motion:no-preference){
- html body :is(#vista-registrar,#vista-historial,#vista-ajustes).activa .historial-mes-desplegable-v260[open] .grupo-historial-registros{animation:iosAbre-v276 .28s var(--ios-spring) both}
+ html body :is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas).activa .historial-mes-desplegable-v260[open] .grupo-historial-registros{animation:iosAbre-v276 .28s var(--ios-spring) both}
 }
 @keyframes iosAbre-v276{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 
@@ -13811,3 +13811,47 @@ html body:not(#iosa):not(#iosb) #vista-registrar:not(#iosc):not(#iosd):not(#iose
 body[data-firma]{accent-color:var(--firma-base);caret-color:var(--firma-base)}
 @media (prefers-color-scheme:dark){body[data-firma]{accent-color:var(--firma-luz);caret-color:var(--firma-luz)}}
 body[data-firma] ::selection{background:rgba(var(--firma-rgb),.28)}
+
+/* ======================= iOS · Estadísticas (componentes propios) ======================= */
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) .segmento-v264{background:var(--ios-relleno)!important;background-image:none!important;border:0!important;box-shadow:none!important;border-radius:11px!important;padding:2px!important}
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) .segmento-v264 button{background:transparent!important;background-image:none!important;border:0!important;box-shadow:none!important;color:var(--ios-texto2)!important;border-radius:9px!important;font-weight:600;transition:background-color .22s var(--ios-spring),color .22s}
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) .segmento-v264 button[aria-pressed="true"]{background:var(--ios-tarjeta)!important;color:var(--ios-texto)!important;box-shadow:0 1px 3px rgba(0,0,0,.18),0 0 0 .5px var(--ios-sep)!important}
+@media (prefers-color-scheme:dark){html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) .segmento-v264 button[aria-pressed="true"]{background:#636366!important}}
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) :is(.boton-periodo,#mesAnteriorCalendarioV260,#mesActualCalendarioV260,#mesSiguienteCalendarioV260,#vistaMesCalendarioV260,.calor-toggle-v270,.anio-cab-v276 button,.anio-compartir-v276,.periodo-boton,#revisarCierreMesV260,#ocultarCierreMesV260){
+  background:var(--ios-boton)!important;background-image:none!important;border:0!important;box-shadow:none!important;color:var(--ios-azul-texto)!important;border-radius:12px!important;transition:background-color .18s var(--ios-spring),transform .18s var(--ios-spring)}
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) :is(.boton-periodo,.calor-toggle-v270,.anio-compartir-v276,.periodo-boton,#mesAnteriorCalendarioV260,#mesSiguienteCalendarioV260,#mesActualCalendarioV260):active{transform:scale(.96);background:var(--ios-boton2)!important}
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) .periodo-boton.activo{background:var(--ios-azul-fuerte)!important;color:#fff!important}
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) :is(.v193-dia,.v143-rm-stats>div){background:var(--ios-relleno)!important;background-image:none!important;border:0!important;box-shadow:none!important;border-radius:12px!important}
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) .v193-dia.hoy{box-shadow:0 0 0 2px rgba(var(--app-fuerte-rgb,0,102,214),.55)!important}
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) :is(.v193-semana,.v193-pie,.meta-v152-anio-cuerpo,.cierre-mes-v260>summary,.v143-resumen-mensual){background-image:none!important;box-shadow:none!important}
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) :is(summary,.meta-v152-top){background:transparent!important;background-image:none!important;box-shadow:none!important;border:0!important}
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) :is(.v143-rm-nav button,.v143-rm-nav .mes-selector-v260){background:var(--ios-boton)!important;background-image:none!important;border:0!important;box-shadow:none!important;color:var(--ios-azul-texto)!important;border-radius:12px!important}
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) :is(.v143-rm-nav button,.v143-rm-nav .mes-selector-v260):active{transform:scale(.95);background:var(--ios-boton2)!important}
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) .v143-rm-nav .mes-selector-v260 span{color:var(--ios-azul-texto)!important}
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) #anioServicioV276 .anio-compartir-v276{color:var(--ios-azul-texto)!important}
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) .v143-rm-stats small{color:var(--ios-texto2)!important;opacity:1!important}
+
+/* Barra inferior: el icono activo se «rellena» con un tono suave, como en iOS */
+.barra-navegacion .nav-item .nav-icono svg{transition:fill-opacity .25s ease,stroke-width .25s ease}
+.barra-navegacion .nav-item.activo .nav-icono svg{fill:currentColor;fill-opacity:.2;stroke-width:2.1}
+@media (prefers-reduced-motion:reduce){.barra-navegacion .nav-item .nav-icono svg{transition:none}}
+
+/* Registrar: en pantallas altas se reparte el espacio sobrante con un poco más de aire (no afecta a pantallas bajas) */
+@media (min-height:830px) and (max-width:600px){
+ html body #vista-registrar form#formRegistro.registro-v203{gap:16px!important}
+ html body:not(#iosa):not(#iosb) #vista-registrar:not(#iosc):not(#iosd) :is(.grupo-formulario){padding-top:15px!important;padding-bottom:15px!important}
+}
+@media (min-height:900px) and (max-width:600px){
+ html body #vista-registrar form#formRegistro.registro-v203{gap:20px!important}
+ html body:not(#iosa):not(#iosb) #vista-registrar:not(#iosc):not(#iosd) :is(.grupo-formulario){padding-top:18px!important;padding-bottom:18px!important}
+}
+
+/* Título compacto al desplazar (estilo iOS) */
+#tituloCompactoV276{position:fixed;top:0;left:0;right:0;z-index:35;height:calc(env(safe-area-inset-top,0px) + 42px);padding-top:env(safe-area-inset-top,0px);display:flex;align-items:center;justify-content:center;
+ background:var(--ios-barra,rgba(249,249,249,.78));-webkit-backdrop-filter:saturate(180%) blur(22px);backdrop-filter:saturate(180%) blur(22px);border-bottom:.5px solid var(--ios-sep,rgba(60,60,67,.18));
+ color:var(--ios-texto,#000);font-size:17px;font-weight:650;letter-spacing:-.01em;pointer-events:none;opacity:0;transform:translateY(-8px);transition:opacity .22s ease,transform .22s cubic-bezier(.2,.9,.25,1.05);visibility:hidden}
+#tituloCompactoV276.visible{opacity:1;transform:none;visibility:visible}
+@media (prefers-reduced-motion:reduce){#tituloCompactoV276{transition:none}}
+
+/* Estadísticas: la entrada deslizante no debe ensanchar la página (evita sacudida horizontal en iPhone) */
+html body:not(#iosa) #vista-estadisticas.activa:not(#iosc){overflow-x:clip!important}

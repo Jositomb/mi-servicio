@@ -810,8 +810,35 @@
     window.addEventListener("storage", () => setTimeout(sincronizarAcento, 0));
   }
 
+  /* ================= 13. TÍTULO COMPACTO AL DESPLAZAR (Historial, Ajustes, Estadísticas) =================
+     Cuando el título grande sale de la pantalla, aparece una barra fina translúcida con el título, como en iOS.
+     Solo es visual (no recibe toques) y no cambia el diseño de las pantallas. */
+  function instalarTituloCompacto() {
+    if ($("tituloCompactoV276")) return;
+    const b = document.createElement("div"); b.id = "tituloCompactoV276"; b.setAttribute("aria-hidden", "true");
+    b.innerHTML = "<span></span>"; document.body.appendChild(b);
+    const texto = b.firstChild; let pend = 0, visible = false;
+    const aplica = () => ["vista-historial", "vista-ajustes", "vista-estadisticas"].some(id => { const v = $(id); return v && v.classList.contains("activa"); });
+    function revisar() {
+      pend = 0;
+      let on = false;
+      if (aplica()) {
+        const t = $("tituloVista"); const r = t && t.getBoundingClientRect();
+        on = !!(r && r.height > 0 && r.bottom < 34);
+        if (on) { const s = (t.textContent || "").replace(/\s+/g, " ").trim(); if (texto.textContent !== s) texto.textContent = s; }
+      }
+      if (on !== visible) { visible = on; b.classList.toggle("visible", on); }
+    }
+    const pedir = () => { if (!pend) pend = requestAnimationFrame(revisar); };
+    window.addEventListener("scroll", pedir, { passive: true });
+    window.addEventListener("resize", pedir);
+    document.addEventListener("click", () => setTimeout(pedir, 60), true);
+    new MutationObserver(pedir).observe(document.body, { subtree: true, attributes: true, attributeFilter: ["class"] });
+    revisar();
+  }
+
   function arrancar() {
-    try { envolverFirma(); envolverDeshacer(); instalarTemas(); instalarAnillos(); instalarPapelera(); instalarMeta(); instalarDiagnostico(); programarLimpieza(); instalarPendientes(); instalarEventoChip(); instalarComprobacionGlobos(); instalarVida(); instalarEstadisticasNuevas(); instalarAcento(); instalarInteresados(); instalarRecuperacionEncaje(); instalarAccesibilidad(); aplicarTipografia(); } catch (e) { console.warn("[V269]", e); }
+    try { envolverFirma(); envolverDeshacer(); instalarTemas(); instalarAnillos(); instalarPapelera(); instalarMeta(); instalarDiagnostico(); programarLimpieza(); instalarPendientes(); instalarEventoChip(); instalarComprobacionGlobos(); instalarVida(); instalarEstadisticasNuevas(); instalarAcento(); instalarTituloCompacto(); instalarInteresados(); instalarRecuperacionEncaje(); instalarAccesibilidad(); aplicarTipografia(); } catch (e) { console.warn("[V269]", e); }
     document.addEventListener("click", e => { const n = e.target.closest && e.target.closest(".nav-item"); if (n) setTimeout(() => { pintarAnillos(); if (n.dataset.vista === "estadisticas") animarAnillos(); }, 120); });
     window.MiServicioV269 = { datosAnillos, aplicarTema, TEMAS, leerPapelera: limpiarPapelera, enviarAPapelera, derivarFirma, pendientes, errores, reunirDiagnostico, limpiarCaches, candidatosEventos, comprobarGlobos, globosFallan, leerInteresados };
   }

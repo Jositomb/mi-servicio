@@ -14,7 +14,7 @@ borrado en dos toques, «Listo» para cerrar. No cambia el tamaño de Registrar.
 (máx. 200). Los nombres VAN en la copia JSON y en OneDrive (campo opcional ajustesLocales; las copias antiguas valen).
 No aparecen en estadísticas, CSV ni al compartir.
 PUBLICAR: borra los archivos antiguos del repositorio y sube TODO el contenido del ZIP (archivos en la raíz).
-Comprueba en Ajustes → Diagnóstico que pone V276-27621.
+Comprueba en Ajustes → Diagnóstico que pone V276-27622.
 
 CORRECCIÓN (build 27611): en iOS 27.3 beta los números de horas y porcentajes dentro de los globos
 dejaban de verse. Se quita la animación de parpadeo que se aplicaba solo a esos textos y se fuerza
@@ -87,3 +87,10 @@ styles-v276.css («APARIENCIA iOS…» hasta el final): si no te gusta se puede 
 COLOR EN TODA LA APP (build 27621): el color elegido en Personalizar (paleta, temas o «Tu color») ahora tiñe también Registrar, Historial y Ajustes
 (botones, opciones seleccionadas, barra inferior, cursor, interruptores). Se calculan variantes con contraste ≥ 4,5:1 para que cualquier color
 (incluso amarillo o casi blanco) siga siendo legible. Inicio y Estadísticas ya lo usaban. Sin claves nuevas.
+
+BUILD 27622 - MÁS iOS
+- Estadísticas con el mismo estilo iOS (segmentos, botones, tarjetas, calendario).
+- Título compacto: al bajar en Historial, Ajustes y Estadísticas aparece una barra fina con el título (solo visual).
+- Iconos de la barra inferior rellenos en la pestaña activa.
+- Registrar con algo más de aire en pantallas altas.
+- No cambia datos, claves ni copias de seguridad.
