@@ -14,7 +14,7 @@ borrado en dos toques, «Listo» para cerrar. No cambia el tamaño de Registrar.
 (máx. 200). Los nombres VAN en la copia JSON y en OneDrive (campo opcional ajustesLocales; las copias antiguas valen).
 No aparecen en estadísticas, CSV ni al compartir.
 PUBLICAR: borra los archivos antiguos del repositorio y sube TODO el contenido del ZIP (archivos en la raíz).
-Comprueba en Ajustes → Diagnóstico que pone V276-27624.
+Comprueba en Ajustes → Diagnóstico que pone V276-27625.
 
 CORRECCIÓN (build 27611): en iOS 27.3 beta los números de horas y porcentajes dentro de los globos
 dejaban de verse. Se quita la animación de parpadeo que se aplicaba solo a esos textos y se fuerza
@@ -109,3 +109,7 @@ BUILD 27624 - INICIO MÁS VIVO
 - Escena viva: entrada con pequeño rebote, cifras que cuentan hasta su valor y cielo teñido según la hora (amanecer, atardecer, noche con estrellas). Se desactiva con "reducir movimiento" y en el ambiente Esencial.
 - Detalles: "El tiempo para salir" en dos líneas, el "+" deja ver lo que hay debajo, adorno de temporada con emoji (🌸 ☀️ 🍂 ❄️).
 - No cambia datos, claves, posiciones calculadas ni copias de seguridad.
+
+BUILD 27625 - TOTAL CENTRAL VISIBLE
+- Corregido: en iPhone desaparecía el total de horas de la burbuja central. Causa: el contador de cifras cambiaba su texto muchas veces seguidas y un script antiguo lanza una animación de opacidad en cada cambio; apiladas dejaban el total invisible. Ahora el total central no se anima ni se reescribe.
+- Nueva prueba que vigila que el total central no cambie de texto ni acumule animaciones durante la entrada.

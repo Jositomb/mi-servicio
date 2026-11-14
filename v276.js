@@ -902,10 +902,11 @@
     g.classList.add("iv-sin-trans"); arcos.forEach(a => a.style.setProperty("--p", 0)); void g.offsetWidth; g.classList.remove("iv-sin-trans");
     requestAnimationFrame(() => requestAnimationFrame(() => arcos.forEach(a => a.style.setProperty("--p", a.dataset.p || 0))));
   }
+  /* Solo cuenta las cifras de las burbujas. El total central NO se toca: visual-v260.js lanza una animación de opacidad cada vez que cambia su texto y, apiladas, dejaban el total invisible en iPhone. */
   function ivContar() {
     if (sinMovimiento()) return;
     const g = $("graficoInicio"); if (!g) return;
-    const objetivos = [...g.querySelectorAll(".orbita-actividad>span:not(.sector-icono),.orbita-centro>strong")].filter(e => /\d/.test(e.textContent)).map(e => ({ e, fin: e.textContent, m: minDeTexto(e.textContent) }));
+    const objetivos = [...g.querySelectorAll(".orbita-actividad>span:not(.sector-icono)")].filter(e => /\d/.test(e.textContent)).map(e => ({ e, fin: e.textContent, m: minDeTexto(e.textContent) }));
     if (!objetivos.length) return;
     const t0 = performance.now(), dur = 900;
     const paso = ahora => {
