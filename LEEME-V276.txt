@@ -14,7 +14,7 @@ borrado en dos toques, «Listo» para cerrar. No cambia el tamaño de Registrar.
 (máx. 200). Los nombres VAN en la copia JSON y en OneDrive (campo opcional ajustesLocales; las copias antiguas valen).
 No aparecen en estadísticas, CSV ni al compartir.
 PUBLICAR: borra los archivos antiguos del repositorio y sube TODO el contenido del ZIP (archivos en la raíz).
-Comprueba en Ajustes → Diagnóstico que pone V276-27622.
+Comprueba en Ajustes → Diagnóstico que pone V276-27623.
 
 CORRECCIÓN (build 27611): en iOS 27.3 beta los números de horas y porcentajes dentro de los globos
 dejaban de verse. Se quita la animación de parpadeo que se aplicaba solo a esos textos y se fuerza
@@ -94,3 +94,11 @@ BUILD 27622 - MÁS iOS
 - Iconos de la barra inferior rellenos en la pestaña activa.
 - Registrar con algo más de aire en pantallas altas.
 - No cambia datos, claves ni copias de seguridad.
+
+BUILD 27623 - AÑO LEGIBLE Y ICONOS 3D
+- Estadísticas > Año: corregido el texto blanco sobre fondo blanco (total, meses, calendario, botones). La tarjeta usa ahora el color de aplicación elegido.
+- Botón "+" de Inicio: translúcido, con el color elegido y más discreto.
+- Barra inferior: iconos 3D, cada pestaña con su color y su símbolo (casa, más, reloj, barras) y un pequeño rebote al cambiar de pestaña.
+- Etiqueta activa de la barra y libreta: azul más claro en modo oscuro (mejor lectura).
+- Pastillas de tiempo del Historial algo más claras en modo oscuro.
+- Nueva prueba que revisa el contraste de todo el texto visible de cada pantalla y segmento.

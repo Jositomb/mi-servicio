@@ -13833,7 +13833,6 @@ html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#i
 
 /* Barra inferior: el icono activo se «rellena» con un tono suave, como en iOS */
 .barra-navegacion .nav-item .nav-icono svg{transition:fill-opacity .25s ease,stroke-width .25s ease}
-.barra-navegacion .nav-item.activo .nav-icono svg{fill:currentColor;fill-opacity:.2;stroke-width:2.1}
 @media (prefers-reduced-motion:reduce){.barra-navegacion .nav-item .nav-icono svg{transition:none}}
 
 /* Registrar: en pantallas altas se reparte el espacio sobrante con un poco más de aire (no afecta a pantallas bajas) */
@@ -13855,3 +13854,60 @@ html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#i
 
 /* Estadísticas: la entrada deslizante no debe ensanchar la página (evita sacudida horizontal en iPhone) */
 html body:not(#iosa) #vista-estadisticas.activa:not(#iosc){overflow-x:clip!important}
+
+/* ---- Tarjeta "Tu año en cifras": conserva su diseño azul con texto blanco (la capa iOS la dejaba blanca y el texto no se veía) ---- */
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) #anioServicioV276.tarjeta:not(#iosg){
+ background:radial-gradient(120% 90% at 85% -10%,rgba(255,214,120,.38),transparent 55%),linear-gradient(150deg,#0f2a63 0%,#1d4aa8 55%,#0b1738 100%)!important;
+ color:#fff!important;border:1px solid rgba(255,255,255,.18)!important;border-radius:20px!important;
+ box-shadow:0 14px 34px rgba(12,32,92,.35),inset 0 1px 0 rgba(255,255,255,.28)!important}
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) #anioServicioV276:not(#iosg) :is(.anio-titulo-v276,.anio-total-v276,.anio-datos-v276 strong){color:#fff!important}
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) #anioServicioV276:not(#iosg) :is(.anio-sub-v276,.anio-datos-v276 small,.anio-mes-v276 small,.anio-estado-v276){color:rgba(255,255,255,.82)!important}
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) #anioServicioV276:not(#iosg) :is(.anio-cab-v276 .boton-periodo,.anio-cab-v276 button,.calor-toggle-v270){
+ background:rgba(255,255,255,.18)!important;background-image:none!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:1px solid rgba(255,255,255,.3)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.3)!important;border-radius:50%}
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) #anioServicioV276:not(#iosg) .calor-toggle-v270{border-radius:14px}
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) #anioServicioV276:not(#iosg) .anio-compartir-v276{
+ background:rgba(255,255,255,.2)!important;background-image:none!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border:1px solid rgba(255,255,255,.34)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.35)!important;border-radius:14px}
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) #anioServicioV276:not(#iosg) #calorAnualV267 :is(.calor-mes-v267 small,.calor-leyenda-v267,.calor-detalle-v267,.calor-leyenda-v267 span){color:rgba(255,255,255,.88)!important;opacity:1}
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) #anioServicioV276:not(#iosg) #calorAnualV267.tarjeta{background:transparent!important;background-image:none!important;box-shadow:none!important;border:0!important;border-radius:0!important;color:#fff!important}
+
+/* Tarjeta del Año con el color de aplicación elegido (si el navegador no admite color-mix se queda el azul de arriba) */
+@supports (background:color-mix(in srgb,red,blue)){
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) #anioServicioV276.tarjeta:not(#iosg){
+ background:radial-gradient(120% 90% at 85% -10%,rgba(255,255,255,.22),transparent 55%),
+  linear-gradient(150deg,color-mix(in srgb,var(--app-fuerte,#1d4aa8) 62%,#000) 0%,var(--app-fuerte,#1d4aa8) 55%,color-mix(in srgb,var(--app-fuerte,#1d4aa8) 38%,#000) 100%)!important;
+ box-shadow:0 14px 34px color-mix(in srgb,var(--app-fuerte,#1d4aa8) 45%,transparent),inset 0 1px 0 rgba(255,255,255,.28)!important}
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) #anioServicioV276:not(#iosg) .anio-mes-v276:not(.mejor) i:not(.vacio){
+ background:linear-gradient(180deg,color-mix(in srgb,var(--app-fuerte,#3b79e8) 30%,#fff),color-mix(in srgb,var(--app-fuerte,#3b79e8) 55%,#fff) 70%,color-mix(in srgb,var(--app-fuerte,#3b79e8) 75%,#fff))!important}
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) #anioServicioV276:not(#iosg) #calorAnualV267 :is(.calor-dia-v267,.calor-leyenda-v267 i)[data-n="1"]{background-color:color-mix(in srgb,var(--app-fuerte,#4f7fd0) 45%,#fff)!important}
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) #anioServicioV276:not(#iosg) #calorAnualV267 :is(.calor-dia-v267,.calor-leyenda-v267 i)[data-n="2"]{background-color:color-mix(in srgb,var(--app-fuerte,#7aa6ec) 28%,#fff)!important}
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) #anioServicioV276:not(#iosg) #calorAnualV267 :is(.calor-dia-v267,.calor-leyenda-v267 i)[data-n="3"]{background-color:color-mix(in srgb,var(--app-fuerte,#b3d0ff) 12%,#fff)!important}
+}
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) #anioServicioV276:not(#iosg) :is(.anio-titulo-v276,.anio-total-v276,.anio-datos-v276 strong){color:#fff!important}
+html body:not(#iosa):not(#iosb) #vista-estadisticas:not(#iosc):not(#iosd):not(#iose):not(#iosf) #anioServicioV276:not(#iosg) :is(.anio-sub-v276,.anio-datos-v276 small,.anio-mes-v276 small,.anio-estado-v276){color:rgba(255,255,255,.92)!important}
+@media (prefers-color-scheme:dark){html body:not(#iosa):not(#iosb) #vista-historial:not(#iosc):not(#iosd):not(#iose) .registro-tiempo:not(#iosf){color:#bcd7ff!important}}
+
+/* Botón flotante "+" de Inicio: translúcido y discreto, con el color elegido (se ve pero no destaca) */
+html body:not(#iosa):not(#iosb) #vista-inicio.activa:not(#iosc):not(#iosd) .v191-boton-flotante:not(#iose){
+ background:rgba(var(--app-fuerte-rgb,52,120,246),.2)!important;background-image:none!important;
+ color:var(--app-fuerte,#2f6fe0)!important;border:1px solid rgba(var(--app-fuerte-rgb,52,120,246),.32)!important;
+ -webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%);
+ box-shadow:0 4px 14px rgba(0,0,0,.1),inset 0 1px 0 rgba(255,255,255,.45)!important;font-weight:500;opacity:.92;
+ transition:transform .18s var(--ios-spring,cubic-bezier(.2,.9,.25,1.05)),opacity .2s ease,background .2s ease}
+html body:not(#iosa):not(#iosb) #vista-inicio.activa:not(#iosc):not(#iosd) .v191-boton-flotante:not(#iose):active{background:rgba(var(--app-fuerte-rgb,52,120,246),.34)!important;transform:scale(.92);opacity:1}
+@media (prefers-color-scheme:dark){html body:not(#iosa):not(#iosb) #vista-inicio.activa:not(#iosc):not(#iosd) .v191-boton-flotante:not(#iose){color:var(--app-texto-oscuro,#8db8ff)!important;background:rgba(var(--app-fuerte-rgb,52,120,246),.28)!important;box-shadow:0 4px 14px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.18)!important}}
+
+/* Iconos 3D de la barra inferior: cada pestaña con su color y su símbolo */
+html body .barra-navegacion .nav-item .nav-icono svg.ico3d-v276{width:25px!important;height:25px!important;margin:-1px;overflow:visible;fill:none!important;stroke:none!important;
+ filter:saturate(.78) drop-shadow(0 1.5px 1.5px rgba(0,0,0,.28));transform-origin:50% 60%;transition:transform .28s var(--ios-spring,cubic-bezier(.2,.9,.25,1.05)),filter .25s ease}
+html body .barra-navegacion .nav-item.activo .nav-icono svg.ico3d-v276{filter:saturate(1.08) drop-shadow(0 3px 3px rgba(0,0,0,.34));transform:translateY(-1px) scale(1.1)}
+html body .barra-navegacion .nav-item:active .nav-icono svg.ico3d-v276{transform:scale(.9)}
+@media (prefers-color-scheme:dark){html body .barra-navegacion .nav-item .nav-icono svg.ico3d-v276{filter:saturate(.85) brightness(.95) drop-shadow(0 1.5px 2px rgba(0,0,0,.6))}
+ html body .barra-navegacion .nav-item.activo .nav-icono svg.ico3d-v276{filter:saturate(1.1) drop-shadow(0 3px 4px rgba(0,0,0,.65))}}
+@media (prefers-reduced-motion:reduce){html body .barra-navegacion .nav-item .nav-icono svg.ico3d-v276{transition:none}}
+html body.inicio-encajado-v260:has(#vista-inicio.activa) .nav-icono svg.ico3d-v276{width:25px!important;height:25px!important}
+@keyframes navRebote-v276{0%{transform:translateY(2px) scale(.84)}55%{transform:translateY(-3px) scale(1.19)}100%{transform:translateY(-1px) scale(1.1)}}
+html body .barra-navegacion .nav-item.activo .nav-icono svg.ico3d-v276{animation:navRebote-v276 .46s cubic-bezier(.2,.9,.25,1.05) both}
+@media (prefers-reduced-motion:reduce){html body .barra-navegacion .nav-item.activo .nav-icono svg.ico3d-v276{animation:none}}
+html body:not(#iosa):not(#iosb):has(:is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas).activa) .barra-navegacion .nav-item.activo:not(#iosc),
+html body:not(#iosa):not(#iosb):has(:is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas).activa) .barra-navegacion .nav-item[aria-current="page"]:not(#iosc){color:var(--ios-azul-texto,var(--ios-azul))!important}
+html body:not(#iosa):not(#iosb):has(#vista-registrar.activa) #libretaV276:not(#iosc){color:var(--ios-azul-texto,var(--ios-azul))}
