@@ -1,5 +1,5 @@
-const BUILD = "V276-27625";
-const CACHE = "mi-servicio-v27625";
+const BUILD = "V276-27626";
+const CACHE = "mi-servicio-v27626";
 const CACHE_PREFIX = "mi-servicio-";
 const CODIGO = {
   "./app-v276.js": "5a1c4e0b57721f336c672345d957f8e873f73893b05055ba44acfa8a8604a274",
@@ -18,9 +18,9 @@ const CODIGO = {
   "./solidez-v266.js": "948674da60283ca67720da1dcef621ecf7b7a2cc6600530f0fde1500b46e1015",
   "./simple-v260.js": "d4de97a738d75a20f26487f59f0011fcb51ed63980b00b53618be4a6629e6820",
   "./storage-v260.js": "c8dc9a3b4b440181b69dabf206319026d8f3057cccf63c57ae8585cd4bdfdca9",
-  "./styles-v276.css": "3a6b8bb9b3925286660191e2d10d41a5892e64e6e1dffffb05d1518b71ab1839",
+  "./styles-v276.css": "ad58d3e0f3f55af8afde6adb64ddd2716d0ac267cd0bc9b6463847f80f80ed02",
   "./tiempo-v262.js": "5e75178e6ba21dc2e3b136144dcaf1b1642193c1236f0ea7730b99581e39ff54",
-  "./v276.js": "7f64048b363c641a2ce5e79fb43a2dde7ac9d3899e05d8153d7caff9550c7a10",
+  "./v276.js": "c1f9af16cac7bebfbd78e0244a3ca2353f3fcbebe1e32797dfa138df10a66b2b",
   "./v268.js": "e18ce297803cdab21585eb721c15ba131da9fe745430b4d11cd5617149af31c3",
   "./v267.js": "ad48a19f245758d6a5fb8943b073aa357f78d0613df83dfb329848b47a2d0897",
   "./v264.js": "5850b534a0d5829da0514980d497b54790e1dd8316ab45ddfdd265f8463d5753",

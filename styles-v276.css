@@ -13971,3 +13971,36 @@ html body:not([data-ambiente="metal"])[data-fase-v276="noche"] #vista-inicio #fe
 /* Botón "Hacer copia ahora" y resumen del día: contraste AA */
 html body:not(#iva):not(#ivb) #vista-inicio:not(#ivc) #hacerCopiaDesdeInicio:not(#ivd){background:var(--app-fuerte,#2563d8)!important;color:#fff!important}
 @media (prefers-color-scheme:dark){html body:not(#iva):not(#ivb) #vista-registrar:not(#ivc) #resumenDiaV264:not(#ivd){color:var(--ios-texto2,#c7c7cc)!important}}
+
+/* ===== V27626 · Azulejos 3D en todos los botones, rebote, confeti, medallas ===== */
+html body:not(#bta):not(#btb) .bt-v276{display:inline-flex!important;flex:none!important;width:var(--bt,22px)!important;height:var(--bt,22px)!important;min-width:0!important;min-height:0!important;margin:0 7px 0 0!important;padding:0!important;vertical-align:middle;position:relative!important;background:none!important;border:0!important;box-shadow:none!important;opacity:1!important;filter:drop-shadow(0 1.5px 1.5px rgba(0,0,0,.28));transition:transform .2s var(--ios-spring,cubic-bezier(.2,.9,.25,1.05));pointer-events:none;transform-origin:50% 55%}
+html body:not(#bta):not(#btb) .bt-v276 svg{width:100%!important;height:100%!important;display:block!important;position:static!important;margin:0!important;overflow:visible}
+html body:not(#bta):not(#btb) .bt-host-v276:not(#btc) .bt-sim-v276:not(#btd){position:absolute!important;width:1px!important;height:1px!important;min-width:0!important;min-height:0!important;max-width:1px!important;max-height:1px!important;font-size:1px!important;line-height:1!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important;margin:-1px!important;padding:0!important;border:0!important;background:none!important;box-shadow:none!important;opacity:0!important}
+html body:not(#bta):not(#btb) .bt-solo-v276 .bt-v276{margin:0!important;--bt:34px}
+html body:not(#bta):not(#btb) .actividad-boton .bt-v276{--bt:38px;margin:0 0 3px!important}
+html body:not(#bta):not(#btb) .atajo-tiempo .bt-v276{--bt:15px;margin:0 3px 0 0!important}
+html body:not(#bta):not(#btb) [data-dia-v203] .bt-v276{--bt:16px;margin:0 4px 0 0!important}
+html body:not(#bta):not(#btb) .filtro-historial .bt-v276{--bt:18px;margin:0 4px 0 0!important}
+html body:not(#bta):not(#btb) :is(#restarCurso,#sumarCurso) .bt-v276{--bt:34px;margin:0!important}
+html body:not(#bta):not(#btb) .boton-guardar .bt-v276{--bt:26px;margin:0 8px 0 0!important}
+html body:not(#bta):not(#btb) summary .bt-v276{--bt:26px;margin:0 10px 0 0!important}
+html body:not(#bta):not(#btb) :is(h2,h3).bt-titulo-v276 .bt-v276{--bt:24px;margin:0 8px 0 0!important;transform:translateY(-1px)}
+html body:not(#bta):not(#btb) .boton-secundario .bt-v276{--bt:22px}
+html body:not(#bta):not(#btb) .bt-host-v276:active .bt-v276,html body:not(#bta):not(#btb) .bt-toque-v276 .bt-v276{transform:scale(.86)}
+html body:not(#bta):not(#btb) .bt-v276.bt-rebote-v276{animation:btRebote-v276 .5s cubic-bezier(.2,.9,.25,1.05) both}
+html body:not(#bta):not(#btb) .bt-v276.bt-pop-v276{animation:btPop-v276 .7s cubic-bezier(.2,.9,.25,1.2) both}
+@keyframes btRebote-v276{0%{transform:scale(.78)}55%{transform:scale(1.16)}100%{transform:scale(1)}}
+@keyframes btPop-v276{0%{transform:scale(1) rotate(0)}40%{transform:scale(1.55) rotate(-8deg)}100%{transform:scale(1) rotate(0)}}
+.bt-confeti-v276{position:fixed;inset:0;pointer-events:none;z-index:99999;overflow:hidden}
+.bt-confeti-v276 i{position:absolute;width:7px;height:11px;border-radius:2px;opacity:0;animation:btConf-v276 1.25s cubic-bezier(.15,.7,.3,1) forwards}
+@keyframes btConf-v276{0%{transform:translate(0,0) rotate(0);opacity:1}70%{opacity:1}100%{transform:translate(var(--dx),calc(var(--dy) + 130px)) rotate(var(--r));opacity:0}}
+@media (prefers-color-scheme:dark){html body:not(#bta):not(#btb) .bt-v276{filter:saturate(.9) brightness(.96) drop-shadow(0 1.5px 2px rgba(0,0,0,.6))}}
+@media (prefers-reduced-motion:reduce){html body:not(#bta):not(#btb) .bt-v276,html body:not(#bta):not(#btb) .bt-v276.bt-rebote-v276,html body:not(#bta):not(#btb) .bt-v276.bt-pop-v276{animation:none!important;transition:none!important}.bt-confeti-v276{display:none}}
+/* Medallas de Logros: más relieve y destello al aparecer o tocar */
+html body:not(#bta):not(#btb) .medalla-v267:not(.bloqueada){box-shadow:0 6px 10px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.55)}
+html body:not(#bta):not(#btb) .medalla-v267 .cara{border:1.5px solid rgba(255,255,255,.45)}
+html body:not(#bta):not(#btb) .medalla-v267:not(.bloqueada)::after{content:"";position:absolute;inset:0;border-radius:50%;pointer-events:none;background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.75) 50%,transparent 62%);background-size:260% 100%;background-position:130% 0;animation:btBrillo-v276 2.6s .5s ease-out 1 both}
+html body:not(#bta):not(#btb) .logro-v267:active .medalla-v267:not(.bloqueada){transform:scale(.92) rotate(-4deg)}
+html body:not(#bta):not(#btb) .logro-v267 .medalla-v267{transition:transform .25s var(--ios-spring,cubic-bezier(.2,.9,.25,1.05))}
+@keyframes btBrillo-v276{0%{background-position:130% 0}100%{background-position:-30% 0}}
+@media (prefers-reduced-motion:reduce){html body:not(#bta):not(#btb) .medalla-v267::after{animation:none!important;opacity:0}}

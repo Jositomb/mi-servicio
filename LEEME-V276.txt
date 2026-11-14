@@ -14,7 +14,7 @@ borrado en dos toques, «Listo» para cerrar. No cambia el tamaño de Registrar.
 (máx. 200). Los nombres VAN en la copia JSON y en OneDrive (campo opcional ajustesLocales; las copias antiguas valen).
 No aparecen en estadísticas, CSV ni al compartir.
 PUBLICAR: borra los archivos antiguos del repositorio y sube TODO el contenido del ZIP (archivos en la raíz).
-Comprueba en Ajustes → Diagnóstico que pone V276-27625.
+Comprueba en Ajustes → Diagnóstico que pone V276-27626.
 
 CORRECCIÓN (build 27611): en iOS 27.3 beta los números de horas y porcentajes dentro de los globos
 dejaban de verse. Se quita la animación de parpadeo que se aplicaba solo a esos textos y se fuerza
@@ -113,3 +113,11 @@ BUILD 27624 - INICIO MÁS VIVO
 BUILD 27625 - TOTAL CENTRAL VISIBLE
 - Corregido: en iPhone desaparecía el total de horas de la burbuja central. Causa: el contador de cifras cambiaba su texto muchas veces seguidas y un script antiguo lanza una animación de opacidad en cada cambio; apiladas dejaban el total invisible. Ahora el total central no se anima ni se reescribe.
 - Nueva prueba que vigila que el total central no cambie de texto ni acumule animaciones durante la entrada.
+
+BUILD 27626 - BOTONES CON AZULEJOS 3D
+- Todos los botones principales (Registrar, Historial, Estadísticas, Inicio y Ajustes) tienen el mismo azulejo 3D que las pestañas, con su color y un símbolo propio: Iniciar ▶ verde, Guardar ✓ verde, actividades con el color de sus globos, fechas, atajos de tiempo, − rojo y + verde, Repetir azul, Editar naranja, Eliminar rojo, Compartir, Exportar, Meta, Comparar, Evolución, copias, sincronización, Perfil, Personalizar, Ayuda...
+- No cambia ningún texto, función ni dato: el símbolo antiguo solo se oculta a la vista (los lectores de pantalla siguen leyéndolo) y, si el código antiguo reescribe un botón, el azulejo se repone solo.
+- Los títulos de las tarjetas de Estadísticas llevan su azulejo.
+- Pulsar un azulejo lo hace rebotar (y vibra suavemente donde el navegador lo permite; iPhone/Safari no permite vibración web). Al guardar un registro, el ✓ crece y sale confeti; más grande si con ese registro se llega al 100 % del objetivo.
+- Medallas de Logros con más relieve, borde brillante y destello al aparecer o al tocarlas.
+- Todo se desactiva con "reducir movimiento" (sin animaciones ni confeti).

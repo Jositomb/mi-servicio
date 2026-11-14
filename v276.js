@@ -967,8 +967,196 @@
     ivPintarAnillos(); if (vi && vi.classList.contains("activa")) ivEntrada();
   }
 
+  /* ================= 15. AZULEJOS 3D EN TODOS LOS BOTONES (V27626) =================
+     Mismo aspecto que las pestañas: cuadrado redondeado con degradado, brillo, sombra y símbolo blanco.
+     No cambia ni los textos ni las funciones: añade un <i class="bt-v276"> al principio y oculta (solo a la vista) el símbolo antiguo.
+     Si el código antiguo reescribe un botón, un observador vuelve a colocar el azulejo. */
+  const BT_COLORES = {
+    azul: ["#62a8ff", "#1f5fe6"], verde: ["#63e38c", "#14a047"], naranja: ["#ffc15a", "#ee7508"], violeta: ["#c692ff", "#7a38de"],
+    rosa: ["#ffa6c6", "#e0457e"], rojo: ["#ff8a80", "#d92b20"], turquesa: ["#62e3e0", "#0e98a6"], gris: ["#b9bdc9", "#6c7183"],
+    indigo: ["#98a4ff", "#4a4fe0"], cielo: ["#74d3ff", "#1e8ee0"], dorado: ["#ffd95e", "#e08a00"]
+  };
+  const BT_G = {
+    play: '<path d="M9.2 6.6v10.8c0 .8.9 1.3 1.5.9l8.2-5.4c.6-.4.6-1.3 0-1.8l-8.2-5.4c-.6-.4-1.5.1-1.5.9z" fill="#fff" stroke="none"/>',
+    stop: '<rect x="7.2" y="7.2" width="9.6" height="9.6" rx="2.4" fill="#fff" stroke="none"/>',
+    check: '<path d="M6.6 12.6l3.7 3.7 7.2-8" fill="none" stroke="#fff" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/>',
+    plus: '<path d="M12 6.5v11M6.5 12h11" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/>',
+    minus: '<path d="M6.5 12h11" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/>',
+    calendar: '<rect x="5.5" y="6.5" width="13" height="12" rx="2.6" fill="none" stroke="#fff" stroke-width="1.9"/><path d="M5.5 10.6h13M9 4.8v3M15 4.8v3" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/>',
+    calcheck: '<rect x="5.5" y="6.5" width="13" height="12" rx="2.6" fill="none" stroke="#fff" stroke-width="1.9"/><path d="M9 4.8v3M15 4.8v3M9.4 13.4l2 2 3.3-3.6" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>',
+    undo: '<path d="M9.5 8.2 6 11.7l3.5 3.5M6.4 11.7h7.3a3.9 3.9 0 0 1 0 7.8h-1.6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="translate(0 -2)"/>',
+    clock: '<circle cx="12" cy="12" r="6.3" fill="none" stroke="#fff" stroke-width="2"/><path d="M12 8.7V12l2.4 1.6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+    cloud: '<path d="M8.2 17.6h8.1a3.6 3.6 0 0 0 .6-7.2 5 5 0 0 0-9.6 1.3A3 3 0 0 0 8.2 17.6z" fill="#fff" stroke="none"/>',
+    sun: '<circle cx="12" cy="12" r="3.6" fill="#fff" stroke="none"/><path d="M12 5.2v1.6M12 17.2v1.6M5.2 12h1.6M17.2 12h1.6M7.2 7.2l1.1 1.1M15.7 15.7l1.1 1.1M16.8 7.2l-1.1 1.1M8.3 15.7l-1.1 1.1" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>',
+    refresh: '<path d="M17.4 9.4A6 6 0 1 0 18 13.6M17.6 5.6v4h-4" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>',
+    share: '<path d="M12 14.6V5.6M8.6 8.9 12 5.5l3.4 3.4M7.2 12.2v4.4c0 .8.6 1.4 1.4 1.4h6.8c.8 0 1.4-.6 1.4-1.4v-4.4" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+    down: '<path d="M12 5.4v9.2M8.6 11.3 12 14.7l3.4-3.4M7 18h10" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>',
+    up: '<path d="M12 15.6V6.4M8.6 9.7 12 6.3l3.4 3.4M7 18h10" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>',
+    doc: '<path d="M8.2 5.6h5.4l3.2 3.2v8.8a1 1 0 0 1-1 1H8.2a1 1 0 0 1-1-1V6.6a1 1 0 0 1 1-1zM9.6 12.2h4.8M9.6 15h4.8" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
+    sparkle: '<path d="M11.2 5.4l1.5 4.2 4.2 1.5-4.2 1.5-1.5 4.2-1.5-4.2-4.2-1.5 4.2-1.5z" fill="#fff" stroke="none"/><path d="M17.4 5.2l.6 1.6 1.6.6-1.6.6-.6 1.6-.6-1.6-1.6-.6 1.6-.6z" fill="#fff" stroke="none"/>',
+    target: '<circle cx="12" cy="12" r="6.4" fill="none" stroke="#fff" stroke-width="1.9"/><circle cx="12" cy="12" r="2.5" fill="#fff" stroke="none"/>',
+    compare: '<path d="M6.6 9h10.2M14.3 6.2 17.1 9l-2.8 2.8M17.4 15H7.2M9.7 12.2 6.9 15l2.8 2.8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+    trend: '<path d="M5.6 16.6l4.2-4.5 3 2.8 5.4-6.3M14.6 8.6h3.6v3.6" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>',
+    bars: '<rect x="6.1" y="12" width="3" height="6.2" rx="1" fill="#fff" stroke="none"/><rect x="10.5" y="6.6" width="3" height="11.6" rx="1" fill="#fff" stroke="none"/><rect x="14.9" y="9.6" width="3" height="8.6" rx="1" fill="#fff" stroke="none"/>',
+    user: '<circle cx="12" cy="9.2" r="3.1" fill="#fff" stroke="none"/><path d="M6.3 18.2c.5-3.2 2.9-4.8 5.7-4.8s5.2 1.6 5.7 4.8z" fill="#fff" stroke="none"/>',
+    sliders: '<path d="M6 8.6h12M6 15.4h12" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/><circle cx="9.2" cy="8.6" r="2.3" fill="#fff" stroke="none"/><circle cx="14.8" cy="15.4" r="2.3" fill="#fff" stroke="none"/>',
+    help: '<path d="M9.5 9.5a2.6 2.6 0 1 1 3.8 2.3c-.9.5-1.3 1-1.3 1.9" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round"/><circle cx="12" cy="17" r="1.25" fill="#fff" stroke="none"/>',
+    pencil: '<path d="M7.6 16.4l.7-3 6-6a1.7 1.7 0 0 1 2.4 0 1.7 1.7 0 0 1 0 2.4l-6 6z" fill="#fff" stroke="none"/><path d="M6.8 18.2h10.4" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/>',
+    trash: '<path d="M8 9h8l-.7 7.8c-.1.7-.6 1.2-1.3 1.2h-4c-.7 0-1.2-.5-1.3-1.2z" fill="#fff" stroke="none"/><path d="M6.8 7.2h10.4M10.2 7.2V5.9h3.6v1.3" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
+    repeat: '<path d="M7 11.4v-1.2a2.3 2.3 0 0 1 2.3-2.3H17M14.6 5.4 17.4 8l-2.8 2.6M17 12.6v1.2a2.3 2.3 0 0 1-2.3 2.3H7M9.4 18.6 6.6 16l2.8-2.6" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>',
+    book: '<path d="M5.6 7.3c2.4-.8 4.4-.5 6.4 1 2-1.5 4-1.8 6.4-1v9.4c-2.4-.8-4.4-.5-6.4 1-2-1.5-4-1.8-6.4-1zM12 8.4v9.2" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>',
+    tools: '<path d="M14.8 6a3.5 3.5 0 0 0-3.4 4.5l-4.8 4.8a1.5 1.5 0 0 0 2.1 2.1l4.8-4.8a3.5 3.5 0 0 0 4.5-3.4l-2.1 2.1-1.8-.4-.4-1.8z" fill="#fff" stroke="none"/>',
+    mic: '<rect x="9.6" y="5.4" width="4.8" height="8.2" rx="2.4" fill="#fff" stroke="none"/><path d="M7.6 11.6a4.4 4.4 0 0 0 8.8 0M12 16.2v2.3" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>',
+    restore: '<path d="M6.6 12.4a5.4 5.4 0 1 0 1.7-4M6.4 5.6v3.9h3.9" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+    pulse: '<path d="M5 12.2h3.2l1.7-4 3 8 2-4h5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+    phone: '<rect x="8.2" y="5" width="7.6" height="14" rx="2.2" fill="none" stroke="#fff" stroke-width="1.9"/><circle cx="12" cy="16.7" r=".9" fill="#fff" stroke="none"/>',
+    note: '<path d="M7 8.4h10M7 12h10M7 15.6h6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>',
+    trophy: '<path d="M8.4 6.4h7.2v3.6a3.6 3.6 0 0 1-7.2 0zM8.4 7.6H6.2c0 2 .9 3 2.4 3.3M15.6 7.6h2.2c0 2-.9 3-2.4 3.3M12 13.6v2.6M9.4 18h5.2" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
+    copy: '<rect x="8.6" y="8.6" width="9" height="9" rx="2" fill="none" stroke="#fff" stroke-width="1.9"/><path d="M15.4 8.4V7.6a1.9 1.9 0 0 0-1.9-1.9H7.6a1.9 1.9 0 0 0-1.9 1.9v5.9a1.9 1.9 0 0 0 1.9 1.9h.8" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/>',
+    tag: '<path d="M6.2 6.2h5l7 7-5 5-7-7z" fill="none" stroke="#fff" stroke-width="1.9" stroke-linejoin="round"/><circle cx="9.3" cy="9.3" r="1.2" fill="#fff" stroke="none"/>'
+  };
+  // [selector CSS | null, texto (RegExp) | null, símbolo, color]. La primera regla que coincide, gana.
+  const BT_REGLAS = [
+    ["#cronIniciarV264", null, "play", "verde"], ["#cronTerminarV264", null, "stop", "rojo"], ["#cronDescartarV264", null, "trash", "gris"],
+    ["#guardarRegistroV203", null, "check", "verde"], ["#guardarAjustes", null, "check", "verde"],
+    [".actividad-boton[data-tipo=ministerio]", null, "book", "azul"], [".actividad-boton[data-tipo=ldc]", null, "tools", "rosa"],
+    [".actividad-boton[data-tipo=asambleas]", null, "mic", "naranja"], [".actividad-boton[data-tipo=otras]", null, "sparkle", "violeta"],
+    ["[data-dia-v203=hoy]", null, "calcheck", "verde"], ["[data-dia-v203=ayer]", null, "undo", "naranja"], ["[data-dia-v203=otra]", null, "calendar", "azul"],
+    ["#restarCurso", null, "minus", "rojo"], ["#sumarCurso", null, "plus", "verde"], [".atajo-tiempo", null, "clock", "cielo"],
+    [".detalles-registro-v203>summary", null, "note", "indigo"],
+    ["#historialHoyV260", null, "calcheck", "verde"],
+    [".filtro-historial[data-filtro=ministerio],.filtro-historial[data-tipo=ministerio]", null, "book", "azul"], [".filtro-historial[data-filtro=ldc],.filtro-historial[data-tipo=ldc]", null, "tools", "rosa"],
+    [".filtro-historial[data-filtro=asambleas],.filtro-historial[data-tipo=asambleas]", null, "mic", "naranja"], [".filtro-historial[data-filtro=otras],.filtro-historial[data-tipo=otras]", null, "sparkle", "violeta"],
+    [".filtro-historial", /^todos$/i, "bars", "indigo"],
+    [".boton-repetir-v260", null, "repeat", "azul"], [".boton-editar-registro", null, "pencil", "naranja"], [".boton-borrar", null, "trash", "rojo"],
+    ["#hacerCopiaDesdeInicio", null, "cloud", "azul"], ["#actualizarTiempoInicio", null, "refresh", "turquesa"],
+    ["#climaDetalleV260>summary", null, "sun", "dorado"],
+    ["#wrappedBotonV267,#wrappedSemanaBotonV269", null, "sparkle", "violeta"], ["#compartirMesV260", null, "share", "azul"], ["#csvMesV264,#csvTodoV264", null, "doc", "verde"],
+    [null, /compartir tarjeta/i, "sparkle", "violeta"], [null, /ver calendario/i, "calendar", "azul"], [null, /meta anual/i, "target", "rojo"],
+    [null, /m[aá]s detalle/i, "bars", "indigo"], [null, /comparar/i, "compare", "turquesa"], [null, /evoluci[oó]n/i, "trend", "verde"],
+    ["#copiaRapidaV260,#exportarDatos", null, "cloud", "azul"], ["#conectarOneDrive", null, "cloud", "cielo"], ["#importarDatos", null, "down", "naranja"],
+    ["#prepararAccesoInicio", null, "phone", "indigo"], ["#guardarProxyCalendarioV176", null, "check", "verde"], ["#sincronizarCalendarioV176", null, "refresh", "turquesa"],
+    ["#importarCalendarioAppleV173", null, "down", "naranja"], ["#pegarCalendarioAtajoV174", null, "copy", "gris"], ["#quitarCalendarioAppleV173", null, "trash", "rojo"],
+    [null, /^restaurar/i, "restore", "naranja"], [null, /^comprobar/i, "pulse", "verde"], [null, /copiar informe/i, "copy", "gris"],
+    [null, /^recargar/i, "refresh", "azul"], [null, /^limpiar/i, "trash", "naranja"], [null, /^borrar/i, "trash", "rojo"],
+    [null, /perfil, actividades/i, "user", "violeta"], [null, /^sincronizaci[oó]n y copias/i, "refresh", "turquesa"], [null, /^personalizar/i, "sliders", "indigo"],
+    [null, /ayuda r[aá]pida/i, "help", "azul"], [null, /^papelera/i, "trash", "gris"], [null, /^diagn[oó]stico/i, "pulse", "verde"], [null, /^copias internas/i, "cloud", "cielo"]
+  ];
+  const BT_ALCANCE = "#vista-inicio,#vista-registrar,#vista-historial,#vista-estadisticas,#vista-ajustes";
+  const BT_CANDIDATOS = "button,summary,.ajustes-acordeon-icono";
+  const BT_EXCLUIR = ".nav-item,#segmentoStatsV264 button,.v191-boton-flotante,.orbita-actividad,.logro-v267,.historial-mes-v260,.bt-v276,[data-bt-no]";
+  function btDefs() {
+    if ($("btDefsV276")) return;
+    const s = document.createElementNS(NS_SVG, "svg");
+    s.id = "btDefsV276"; s.setAttribute("width", "0"); s.setAttribute("height", "0"); s.setAttribute("aria-hidden", "true");
+    s.style.cssText = "position:absolute;width:0;height:0;overflow:hidden;pointer-events:none";
+    let d = '<defs><linearGradient id="btgV276" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".62"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>';
+    Object.keys(BT_COLORES).forEach(k => { d += '<linearGradient id="btc' + k + 'V276" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + BT_COLORES[k][0] + '"/><stop offset="1" stop-color="' + BT_COLORES[k][1] + '"/></linearGradient>'; });
+    s.innerHTML = d + "</defs>";
+    document.body.insertBefore(s, document.body.firstChild);
+  }
+  function btSvg(g, c) {
+    return '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="1" y="1.6" width="22" height="22" rx="6.6" fill="#000" opacity=".16"/><rect x="1" y="1" width="22" height="22" rx="6.6" fill="url(#btc' + c + 'V276)"/><rect x="1" y="1" width="22" height="11.5" rx="6.6" fill="url(#btgV276)"/><rect x=".5" y=".5" width="23" height="23" rx="7" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width=".8"/>'
+      + '<g transform="translate(0 .7)" opacity=".22" style="filter:brightness(0)">' + BT_G[g] + '</g>' + BT_G[g] + '</svg>';
+  }
+  function btRegla(el) {
+    const t = (el.textContent || "").replace(/^[^\p{L}\p{N}]+/u, "").replace(/\s+/g, " ").trim();
+    for (let i = 0; i < BT_REGLAS.length; i++) {
+      const r = BT_REGLAS[i];
+      if (r[0]) { let ok = false; try { ok = el.matches(r[0]); } catch (e) {} if (!ok) continue; if (r[1] && !r[1].test(t)) continue; return r; }
+      if (r[1] && r[1].test(t)) return r;
+    }
+    return null;
+  }
+  const BT_SIMBOLO = /^\s*(?:[▶✨↗⇩↻◐◎☀✓−+‹›↔↓↑]|\p{Extended_Pictographic}[️‍\p{Extended_Pictographic}]*)\s*/u;
+  function btDecorar(el, r) {
+    if (el.querySelector(":scope > .bt-v276")) return;
+    el.classList.add("bt-host-v276");
+    // 1) ocultar solo a la vista el símbolo antiguo (el texto queda para lectores de pantalla y para el código antiguo)
+    Array.prototype.forEach.call(el.children, h => {
+      if (h.classList.contains("bt-sim-v276")) return;
+      const esSvg = h.tagName.toLowerCase() === "svg";
+      const esIcono = h.matches && h.matches(".actividad-icono,.ajustes-acordeon-icono,.v191-icono,[class*='icono'],[aria-hidden='true']") && (h.textContent || "").trim().length <= 4;
+      if (esSvg || esIcono) h.classList.add("bt-sim-v276");
+    });
+    const n = el.firstChild;
+    if (n && n.nodeType === 3) {
+      const m = BT_SIMBOLO.exec(n.nodeValue);
+      if (m && m[0].trim()) { const sp = document.createElement("span"); sp.className = "bt-sim-v276"; sp.textContent = m[0]; n.nodeValue = n.nodeValue.slice(m[0].length); el.insertBefore(sp, n); }
+    }
+    const solo = !(el.textContent || "").replace(/[\s−+↻]/g, "") || el.matches(".boton-editar-registro,.boton-borrar");
+    el.classList.toggle("bt-solo-v276", !!solo);
+    const i = document.createElement("i"); i.className = "bt-v276"; i.setAttribute("aria-hidden", "true");
+    i.innerHTML = btSvg(r[2], r[3]);
+    el.insertBefore(i, el.firstChild);
+  }
+  const BT_TITULOS = [
+    [/noviembre|enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|diciembre/i, "calendar", "azul"], [/tu a[nñ]o en cifras/i, "sparkle", "violeta"],
+    [/a[nñ]o de servicio/i, "target", "rojo"], [/c[oó]mo vas/i, "trend", "verde"], [/^logros/i, "trophy", "dorado"], [/^actividad/i, "bars", "indigo"], [/[uú]ltimos 6 meses/i, "trend", "turquesa"]
+  ];
+  let btPend = 0, btEn = false;
+  function btPasar() {
+    btPend = 0; if (btEn) return; btEn = true;
+    try {
+      btDefs();
+      document.querySelectorAll(BT_ALCANCE).forEach(v => {
+        v.querySelectorAll(BT_CANDIDATOS).forEach(el => {
+          if (el.matches(BT_EXCLUIR) || el.closest(".nav-item,.orbita-actividad,.logro-v267") || el.querySelector(":scope > .bt-v276")) return;
+          if (el.matches(".ajustes-acordeon-icono")) { const s = el.closest("summary"); if (s) return; }
+          const r = btRegla(el); if (r) btDecorar(el, r);
+        });
+      });
+      document.querySelectorAll("#vista-estadisticas h2,#vista-estadisticas h3").forEach(h => {
+        if (h.querySelector(":scope > .bt-v276") || h.closest(".logro-v267")) return;
+        const t = (h.textContent || "").trim();
+        for (let i = 0; i < BT_TITULOS.length; i++) if (BT_TITULOS[i][0].test(t)) { h.classList.add("bt-titulo-v276"); const x = document.createElement("i"); x.className = "bt-v276"; x.setAttribute("aria-hidden", "true"); x.innerHTML = btSvg(BT_TITULOS[i][1], BT_TITULOS[i][2]); h.insertBefore(x, h.firstChild); break; }
+      });
+    } catch (e) { console.warn("[V27626 azulejos]", e); }
+    btEn = false;
+  }
+  function btProgramar() { if (btPend) return; btPend = setTimeout(btPasar, 90); }
+  /* Rebote al pulsar + celebración al guardar */
+  function btPulsar(ev) {
+    const b = ev.target.closest && ev.target.closest(".bt-host-v276"); if (!b) return;
+    const t = b.querySelector(":scope > .bt-v276"); if (!t || movReducido()) return;
+    t.classList.remove("bt-rebote-v276"); void t.offsetWidth; t.classList.add("bt-rebote-v276");
+    try { if (navigator.vibrate && (!navigator.userActivation || navigator.userActivation.isActive)) navigator.vibrate(8); } catch (e) {}
+  }
+  function btConfeti(b, grande) {
+    if (movReducido()) return;
+    const r = b.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    const cols = Object.keys(BT_COLORES).map(k => BT_COLORES[k][0]);
+    const caja = document.createElement("div"); caja.className = "bt-confeti-v276"; caja.setAttribute("aria-hidden", "true");
+    const n = grande ? 46 : 20;
+    for (let i = 0; i < n; i++) {
+      const p = document.createElement("i"), a = Math.random() * Math.PI * 2, d = (grande ? 90 : 56) + Math.random() * (grande ? 150 : 70);
+      p.style.cssText = "left:" + cx + "px;top:" + cy + "px;background:" + cols[i % cols.length] + ";--dx:" + Math.cos(a) * d + "px;--dy:" + (Math.sin(a) * d - (grande ? 40 : 18)) + "px;--r:" + Math.round(Math.random() * 540 - 270) + "deg;animation-delay:" + Math.round(Math.random() * 70) + "ms";
+      caja.appendChild(p);
+    }
+    document.body.appendChild(caja); setTimeout(() => caja.remove(), 1700);
+  }
+  function btGuardar(ev) {
+    const b = ev.target.closest && ev.target.closest("#guardarRegistroV203"); if (!b) return;
+    let antes = 0, pct = 0; try { antes = (estado.registros || []).length; } catch (e) {} try { pct = ivPctObjetivo() || 0; } catch (e) {}
+    setTimeout(() => {
+      let ahora = antes; try { ahora = (estado.registros || []).length; } catch (e) {}
+      if (ahora <= antes) return;
+      let p2 = pct; try { p2 = ivPctObjetivo() || pct; } catch (e) {}
+      const t = b.querySelector(":scope > .bt-v276"); if (t && !movReducido()) { t.classList.remove("bt-pop-v276"); void t.offsetWidth; t.classList.add("bt-pop-v276"); }
+      btConfeti(b, pct < 100 && p2 >= 100);
+    }, 450);
+  }
+  function instalarAzulejos() {
+    btPasar();
+    new MutationObserver(m => { for (let i = 0; i < m.length; i++) { const t = m[i].target; if (t && t.closest && t.closest(".orbita-grafico,#btDefsV276,.bt-confeti-v276")) continue; btProgramar(); break; } }).observe(document.body, { childList: true, subtree: true });
+    document.addEventListener("click", btPulsar, true);
+    document.addEventListener("click", btGuardar, true);
+    document.addEventListener("touchstart", e => { const b = e.target.closest && e.target.closest(".bt-host-v276"); if (b) b.classList.add("bt-toque-v276"); }, { passive: true });
+    ["touchend", "touchcancel"].forEach(n => document.addEventListener(n, () => document.querySelectorAll(".bt-toque-v276").forEach(x => x.classList.remove("bt-toque-v276")), { passive: true }));
+  }
+
   function arrancar() {
-    try { envolverFirma(); envolverDeshacer(); instalarTemas(); instalarAnillos(); instalarPapelera(); instalarMeta(); instalarDiagnostico(); programarLimpieza(); instalarPendientes(); instalarEventoChip(); instalarComprobacionGlobos(); instalarVida(); instalarEstadisticasNuevas(); instalarAcento(); instalarTituloCompacto(); instalarInicioVivo(); instalarInteresados(); instalarRecuperacionEncaje(); instalarAccesibilidad(); aplicarTipografia(); } catch (e) { console.warn("[V269]", e); }
+    try { envolverFirma(); envolverDeshacer(); instalarTemas(); instalarAnillos(); instalarPapelera(); instalarMeta(); instalarDiagnostico(); programarLimpieza(); instalarPendientes(); instalarEventoChip(); instalarComprobacionGlobos(); instalarVida(); instalarEstadisticasNuevas(); instalarAcento(); instalarTituloCompacto(); instalarInicioVivo(); instalarInteresados(); instalarRecuperacionEncaje(); instalarAccesibilidad(); aplicarTipografia(); instalarAzulejos(); } catch (e) { console.warn("[V269]", e); }
     document.addEventListener("click", e => { const n = e.target.closest && e.target.closest(".nav-item"); if (n) setTimeout(() => { pintarAnillos(); if (n.dataset.vista === "estadisticas") animarAnillos(); }, 120); });
     window.MiServicioV269 = { faseInicio: ivFase, datosAnillos, aplicarTema, TEMAS, leerPapelera: limpiarPapelera, enviarAPapelera, derivarFirma, pendientes, errores, reunirDiagnostico, limpiarCaches, candidatosEventos, comprobarGlobos, globosFallan, leerInteresados };
   }
