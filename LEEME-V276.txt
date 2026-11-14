@@ -14,7 +14,7 @@ borrado en dos toques, «Listo» para cerrar. No cambia el tamaño de Registrar.
 (máx. 200). Los nombres VAN en la copia JSON y en OneDrive (campo opcional ajustesLocales; las copias antiguas valen).
 No aparecen en estadísticas, CSV ni al compartir.
 PUBLICAR: borra los archivos antiguos del repositorio y sube TODO el contenido del ZIP (archivos en la raíz).
-Comprueba en Ajustes → Diagnóstico que pone V276-27623.
+Comprueba en Ajustes → Diagnóstico que pone V276-27624.
 
 CORRECCIÓN (build 27611): en iOS 27.3 beta los números de horas y porcentajes dentro de los globos
 dejaban de verse. Se quita la animación de parpadeo que se aplicaba solo a esos textos y se fuerza
@@ -102,3 +102,10 @@ BUILD 27623 - AÑO LEGIBLE Y ICONOS 3D
 - Etiqueta activa de la barra y libreta: azul más claro en modo oscuro (mejor lectura).
 - Pastillas de tiempo del Historial algo más claras en modo oscuro.
 - Nueva prueba que revisa el contraste de todo el texto visible de cada pantalla y segmento.
+
+BUILD 27624 - INICIO MÁS VIVO
+- Burbujas: anillo de progreso alrededor de cada una (su % del mes) y en la central el progreso del objetivo; más brillo y volumen de cristal.
+- Texto: porcentaje en pastilla legible, icono mayor, sombra interior que mejora el contraste (medido con píxeles) y "este mes" y fecha más legibles.
+- Escena viva: entrada con pequeño rebote, cifras que cuentan hasta su valor y cielo teñido según la hora (amanecer, atardecer, noche con estrellas). Se desactiva con "reducir movimiento" y en el ambiente Esencial.
+- Detalles: "El tiempo para salir" en dos líneas, el "+" deja ver lo que hay debajo, adorno de temporada con emoji (🌸 ☀️ 🍂 ❄️).
+- No cambia datos, claves, posiciones calculadas ni copias de seguridad.

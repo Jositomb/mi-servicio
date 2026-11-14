@@ -837,10 +837,139 @@
     revisar();
   }
 
+  /* ================= 14. INICIO VIVO: anillos de progreso, cristal, entrada suave y cielo por hora =================
+     Todo es decorativo: se añade al lado de lo que ya existe, no cambia cifras, posiciones ni datos. */
+  const NS_SVG = "http://www.w3.org/2000/svg";
+  const sinMovimiento = () => { try { return matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { return false; } };
+  const minDeTexto = t => { const h = /(\d+)\s*h/.exec(t), m = /(\d+)\s*min/.exec(t); return (h ? +h[1] * 60 : 0) + (m ? +m[1] : 0); };
+  const textoDeMin = n => { n = Math.max(0, Math.round(n)); const h = Math.floor(n / 60), m = n % 60; return h === 0 ? m + " min" : m === 0 ? h + " h" : h + " h " + m + " min"; };
+  let ivUltima = 0;
+  const IV_D1 = 'M50 -4.5A54.5 54.5 0 0 1 50 104.5A54.5 54.5 0 0 1 50 -4.5', IV_D2 = 'M50 -5A55 55 0 0 1 50 105A55 55 0 0 1 50 -5';
+
+  function ivDefs() {
+    if ($("ivDefsV276")) return;
+    const s = document.createElementNS(NS_SVG, "svg");
+    s.id = "ivDefsV276"; s.setAttribute("width", "0"); s.setAttribute("height", "0"); s.setAttribute("aria-hidden", "true");
+    s.style.cssText = "position:absolute;width:0;height:0;overflow:hidden;pointer-events:none";
+    s.innerHTML = '<defs>'
+      + '<radialGradient id="ivSpec" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#fff" stop-opacity=".62"/><stop offset=".55" stop-color="#fff" stop-opacity=".16"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>'
+      + '<radialGradient id="ivScrim" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#0a1432" stop-opacity=".54"/><stop offset=".62" stop-color="#0a1432" stop-opacity=".42"/><stop offset="1" stop-color="#0a1432" stop-opacity="0"/></radialGradient>'
+      + '<radialGradient id="ivCaus" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fff" stop-opacity=".34"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>'
+      + '<linearGradient id="ivRim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset=".45" stop-color="#fff" stop-opacity=".12"/><stop offset="1" stop-color="#fff" stop-opacity=".38"/></linearGradient>'
+      + '</defs>';
+    document.body.appendChild(s);
+  }
+  function ivSvgBurbuja(pct) {
+    return '<svg class="orb-anillo-v276" viewBox="0 0 100 100" aria-hidden="true" focusable="false">'
+      + '<ellipse cx="50" cy="54" rx="43" ry="35" fill="url(#ivScrim)"/>'
+      + '<ellipse cx="35" cy="24" rx="21" ry="11" transform="rotate(-30 35 24)" fill="url(#ivSpec)"/>'
+      + '<ellipse cx="60" cy="85" rx="21" ry="6.5" fill="url(#ivCaus)"/>'
+      + '<circle cx="50" cy="50" r="49.3" fill="none" stroke="url(#ivRim)" stroke-width="1.4" vector-effect="non-scaling-stroke"/>'
+      + '<path class="orb-pista" d="' + IV_D1 + '" pathLength="100" fill="none"/>'
+      + '<path class="orb-base" d="' + IV_D1 + '" pathLength="100" fill="none" style="--p:0" data-p="' + pct + '"/>'
+      + '<path class="orb-arco" d="' + IV_D1 + '" pathLength="100" fill="none" style="--p:0" data-p="' + pct + '"/></svg>';
+  }
+  function ivSvgCentro(pct) {
+    return '<svg class="orb-anillo-v276 orb-anillo-centro" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><title>Objetivo del mes: ' + pct + ' %</title>'
+      + '<path class="orb-pista" d="' + IV_D2 + '" pathLength="100" fill="none"/>'
+      + '<path class="orb-base" d="' + IV_D2 + '" pathLength="100" fill="none" style="--p:0" data-p="' + pct + '"/>'
+      + '<path class="orb-arco" d="' + IV_D2 + '" pathLength="100" fill="none" style="--p:0" data-p="' + pct + '"/></svg>';
+  }
+  function ivPctObjetivo() { const e = $("porcentajeObjetivo"); const n = e ? parseInt((e.textContent || "").replace(/[^\d]/g, ""), 10) : NaN; return Number.isFinite(n) ? Math.max(0, Math.min(100, n)) : 0; }
+
+  function ivPintarAnillos() {
+    const g = $("graficoInicio"); if (!g) return;
+    ivDefs();
+    g.querySelectorAll(".orbita-actividad").forEach(n => {
+      const pct = parseInt(((n.querySelector(":scope>b") || {}).textContent || "").replace(/[^\d]/g, ""), 10) || 0;
+      const v = n.querySelector(":scope>.orb-anillo-v276");
+      if (v) { v.querySelectorAll("[data-p]").forEach(c => c.dataset.p = pct); return; }
+      n.insertAdjacentHTML("afterbegin", ivSvgBurbuja(pct));
+    });
+    const c = g.querySelector(".orbita-centro");
+    if (c) {
+      const pct = ivPctObjetivo(), v = c.querySelector(":scope>.orb-anillo-v276");
+      if (v) { v.querySelectorAll("[data-p]").forEach(x => x.dataset.p = pct); const t = v.querySelector("title"); if (t) t.textContent = "Objetivo del mes: " + pct + " %"; }
+      else c.insertAdjacentHTML("afterbegin", ivSvgCentro(pct));
+    }
+    ivAjustarArcos(false);
+  }
+  /* animar=true: los arcos parten de 0 y se dibujan; false: se colocan sin más (cambios de datos o movimiento reducido). */
+  function ivAjustarArcos(animar) {
+    const g = $("graficoInicio"); if (!g) return;
+    const arcos = [...g.querySelectorAll(".orb-arco,.orb-base")];
+    if (!animar || sinMovimiento()) { arcos.forEach(a => a.style.setProperty("--p", a.dataset.p || 0)); return; }
+    g.classList.add("iv-sin-trans"); arcos.forEach(a => a.style.setProperty("--p", 0)); void g.offsetWidth; g.classList.remove("iv-sin-trans");
+    requestAnimationFrame(() => requestAnimationFrame(() => arcos.forEach(a => a.style.setProperty("--p", a.dataset.p || 0))));
+  }
+  function ivContar() {
+    if (sinMovimiento()) return;
+    const g = $("graficoInicio"); if (!g) return;
+    const objetivos = [...g.querySelectorAll(".orbita-actividad>span:not(.sector-icono),.orbita-centro>strong")].filter(e => /\d/.test(e.textContent)).map(e => ({ e, fin: e.textContent, m: minDeTexto(e.textContent) }));
+    if (!objetivos.length) return;
+    const t0 = performance.now(), dur = 900;
+    const paso = ahora => {
+      const k = Math.min(1, (ahora - t0) / dur), f = 1 - Math.pow(1 - k, 3);
+      objetivos.forEach(o => { o.e.textContent = k >= 1 ? o.fin : textoDeMin(o.m * f); });
+      if (k < 1) requestAnimationFrame(paso);
+    };
+    requestAnimationFrame(paso);
+  }
+  function ivEntrada() {
+    const g = $("graficoInicio"); if (!g || !g.querySelector(".orbita-grafico")) return;
+    const ahora = Date.now(); if (ahora - ivUltima < 1500) return; ivUltima = ahora;
+    ivPintarAnillos();
+    if (sinMovimiento()) return;
+    const og = g.querySelector(".orbita-grafico");
+    og.classList.remove("iv-entrada"); void og.offsetWidth; og.classList.add("iv-entrada");
+    setTimeout(() => og.classList.remove("iv-entrada"), 1200);
+    ivAjustarArcos(true); ivContar();
+  }
+
+  /* Cielo por hora: amanecer, día, atardecer y noche (usa si es de día según el tiempo real cuando se conoce). */
+  /* Salida y puesta de sol aproximadas (España peninsular) con la hora local real del dispositivo, incluido el cambio horario. */
+  function ivSol(d) {
+    const rad = Math.PI / 180, lat = 40.4 * rad, lon = -3.7, off = -d.getTimezoneOffset() / 60;
+    const doy = Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 864e5), B = 2 * Math.PI * (doy - 81) / 364;
+    const eot = 9.87 * Math.sin(2 * B) - 7.53 * Math.cos(B) - 1.5 * Math.sin(B);
+    const dec = 23.44 * rad * Math.sin(2 * Math.PI * (doy - 81) / 365);
+    const c = (Math.sin(-0.833 * rad) - Math.sin(lat) * Math.sin(dec)) / (Math.cos(lat) * Math.cos(dec));
+    const H = Math.acos(Math.max(-1, Math.min(1, c))) / rad / 15, noon = 12 - lon / 15 + off - eot / 60;
+    return [noon - H, noon + H];
+  }
+  function ivFase() {
+    const d = new Date(), h = d.getHours() + d.getMinutes() / 60, [sale, pone] = ivSol(d);
+    let noche = h < sale - 0.5 || h > pone + 0.5;
+    try { const c = window.datosClimaVisualV260; if (c && (c.esDia === 0 || c.esDia === "0")) noche = true; else if (c && (c.esDia === 1 || c.esDia === "1")) noche = false; } catch (e) {}
+    if (noche) return "noche";
+    if (h < sale + 1) return "amanecer";
+    if (h > pone - 1) return "atardecer";
+    return "dia";
+  }
+  function ivCielo() {
+    const f = ivFase(); if (document.body.dataset.faseV276 !== f) document.body.dataset.faseV276 = f;
+    const t = document.querySelector("#vista-inicio .tarjeta-grafico-inicio"); if (!t) return;
+    if (!t.querySelector(":scope>.cielo-hora-v276")) {
+      const i = document.createElement("i"); i.className = "cielo-hora-v276"; i.setAttribute("aria-hidden", "true");
+      const ref = t.querySelector(":scope>.escena-3d-v260"); if (ref && ref.nextSibling) t.insertBefore(i, ref.nextSibling); else t.insertBefore(i, t.firstChild);
+    }
+  }
+  function instalarInicioVivo() {
+    ivDefs(); ivCielo();
+    setInterval(ivCielo, 60000);
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) { ivCielo(); const v = $("vista-inicio"); if (v && v.classList.contains("activa")) { ivUltima = 0; ivEntrada(); } } });
+    const g = $("graficoInicio");
+    if (g) new MutationObserver(() => { ivPintarAnillos(); if (Date.now() - ivUltima > 8000 && $("vista-inicio") && $("vista-inicio").classList.contains("activa")) ivEntrada(); }).observe(g, { childList: true });
+    const pe = $("porcentajeObjetivo"); if (pe) new MutationObserver(() => ivPintarAnillos()).observe(pe, { childList: true, characterData: true, subtree: true });
+    const vi = $("vista-inicio");
+    if (vi) { let activa = vi.classList.contains("activa"); new MutationObserver(() => { const a = vi.classList.contains("activa"); if (a && !activa) { ivCielo(); setTimeout(() => { ivUltima = 0; ivEntrada(); }, 120); } activa = a; }).observe(vi, { attributes: true, attributeFilter: ["class"] }); }
+    ivPintarAnillos(); if (vi && vi.classList.contains("activa")) ivEntrada();
+  }
+
   function arrancar() {
-    try { envolverFirma(); envolverDeshacer(); instalarTemas(); instalarAnillos(); instalarPapelera(); instalarMeta(); instalarDiagnostico(); programarLimpieza(); instalarPendientes(); instalarEventoChip(); instalarComprobacionGlobos(); instalarVida(); instalarEstadisticasNuevas(); instalarAcento(); instalarTituloCompacto(); instalarInteresados(); instalarRecuperacionEncaje(); instalarAccesibilidad(); aplicarTipografia(); } catch (e) { console.warn("[V269]", e); }
+    try { envolverFirma(); envolverDeshacer(); instalarTemas(); instalarAnillos(); instalarPapelera(); instalarMeta(); instalarDiagnostico(); programarLimpieza(); instalarPendientes(); instalarEventoChip(); instalarComprobacionGlobos(); instalarVida(); instalarEstadisticasNuevas(); instalarAcento(); instalarTituloCompacto(); instalarInicioVivo(); instalarInteresados(); instalarRecuperacionEncaje(); instalarAccesibilidad(); aplicarTipografia(); } catch (e) { console.warn("[V269]", e); }
     document.addEventListener("click", e => { const n = e.target.closest && e.target.closest(".nav-item"); if (n) setTimeout(() => { pintarAnillos(); if (n.dataset.vista === "estadisticas") animarAnillos(); }, 120); });
-    window.MiServicioV269 = { datosAnillos, aplicarTema, TEMAS, leerPapelera: limpiarPapelera, enviarAPapelera, derivarFirma, pendientes, errores, reunirDiagnostico, limpiarCaches, candidatosEventos, comprobarGlobos, globosFallan, leerInteresados };
+    window.MiServicioV269 = { faseInicio: ivFase, datosAnillos, aplicarTema, TEMAS, leerPapelera: limpiarPapelera, enviarAPapelera, derivarFirma, pendientes, errores, reunirDiagnostico, limpiarCaches, candidatosEventos, comprobarGlobos, globosFallan, leerInteresados };
   }
   if (document.readyState === "complete") setTimeout(arrancar, 0);
   else window.addEventListener("load", () => setTimeout(arrancar, 0), { once: true });

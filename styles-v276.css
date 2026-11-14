@@ -13911,3 +13911,63 @@ html body .barra-navegacion .nav-item.activo .nav-icono svg.ico3d-v276{animation
 html body:not(#iosa):not(#iosb):has(:is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas).activa) .barra-navegacion .nav-item.activo:not(#iosc),
 html body:not(#iosa):not(#iosb):has(:is(#vista-registrar,#vista-historial,#vista-ajustes,#vista-estadisticas).activa) .barra-navegacion .nav-item[aria-current="page"]:not(#iosc){color:var(--ios-azul-texto,var(--ios-azul))!important}
 html body:not(#iosa):not(#iosb):has(#vista-registrar.activa) #libretaV276:not(#iosc){color:var(--ios-azul-texto,var(--ios-azul))}
+
+/* =====================================================================
+   INICIO VIVO · anillos de progreso, cristal, texto legible, entrada y cielo por hora
+   ===================================================================== */
+/* Anillo + brillo dentro de cada burbuja (detrás del texto, delante del fondo de la burbuja) */
+html body:not(#iva):not(#ivb) #vista-inicio:not(#ivc) #graficoInicio:not(#ivd) .orbita-grafico:not(#ive) :is(.orbita-actividad,.orbita-centro)>.orb-anillo-v276{position:absolute!important;left:0!important;top:0!important;right:auto!important;bottom:auto!important;width:100%!important;height:100%!important;max-width:none!important;min-width:0!important;min-height:0!important;margin:0!important;padding:0!important;overflow:visible;pointer-events:none;z-index:-1!important;display:block!important;transform:none!important;animation:none!important;opacity:1!important;filter:none!important}
+html body #vista-inicio #graficoInicio .orb-pista{stroke:rgba(255,255,255,.34);stroke-width:4;vector-effect:non-scaling-stroke}
+html body #vista-inicio #graficoInicio .orb-base{stroke:rgba(255,255,255,.92);stroke-width:7;stroke-linecap:round;vector-effect:non-scaling-stroke;stroke-dasharray:var(--p,0) 100;transition:stroke-dasharray 1s cubic-bezier(.22,1,.36,1);filter:drop-shadow(0 1px 2px rgba(10,25,60,.35))}
+html body #vista-inicio #graficoInicio .orb-arco{stroke:#4f8dff;stroke-width:4.4;stroke-linecap:round;vector-effect:non-scaling-stroke;stroke-dasharray:var(--p,0) 100;transition:stroke-dasharray 1s cubic-bezier(.22,1,.36,1)}
+html body #vista-inicio #graficoInicio .iv-sin-trans :is(.orb-arco,.orb-base){transition:none!important}
+html body #vista-inicio #graficoInicio .orbita-ministerio .orb-arco{stroke:#2f7bff}
+html body #vista-inicio #graficoInicio .orbita-ldc .orb-arco{stroke:#ff4fa3}
+html body #vista-inicio #graficoInicio .orbita-asambleas .orb-arco{stroke:#ffae1a}
+html body #vista-inicio #graficoInicio .orbita-otras .orb-arco{stroke:#9b6bff}
+html body #vista-inicio #graficoInicio .orb-anillo-centro .orb-arco{stroke:var(--app-fuerte,#2f7bff)}
+html body #vista-inicio #graficoInicio .orb-anillo-centro .orb-pista{stroke:rgba(255,255,255,.5)}
+@media (prefers-reduced-motion:reduce){html body #vista-inicio #graficoInicio :is(.orb-arco,.orb-base){transition:none}}
+/* Texto: porcentaje en pastilla legible, icono mayor y sin el rótulo microscópico */
+html body:not(#iva):not(#ivb) #vista-inicio:not(#ivc) #graficoInicio:not(#ivd) .orbita-grafico:not(#ive) .orbita-actividad>b{
+ display:inline-block!important;background:rgba(8,18,44,.36)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;opacity:1!important;
+ padding:1px 9px!important;border-radius:999px!important;font-weight:800!important;letter-spacing:.02em;line-height:1.35!important;border:1px solid rgba(255,255,255,.24);
+ -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);text-shadow:none!important}
+html body:not(#iva):not(#ivb) #vista-inicio:not(#ivc) #graficoInicio:not(#ivd) .orbita-grafico:not(#ive) .orbita-actividad .sector-libro small{display:none!important}
+html body:not(#iva):not(#ivb) #vista-inicio:not(#ivc) #graficoInicio:not(#ivd) .orbita-grafico:not(#ive) .orbita-actividad>.sector-icono{scale:1.3;transform-origin:50% 60%;filter:drop-shadow(0 2px 3px rgba(0,0,0,.28))}
+/* Entrada: el conjunto aparece con un pequeño rebote (propiedad "scale": no pisa la flotación de cada burbuja) */
+@keyframes ivEntrada-v276{0%{opacity:0;scale:.84}58%{opacity:1;scale:1.035}100%{opacity:1;scale:1}}
+html body #vista-inicio #graficoInicio .orbita-grafico.iv-entrada{animation:ivEntrada-v276 .75s cubic-bezier(.2,.9,.25,1.05) both}
+@media (prefers-reduced-motion:reduce){html body #vista-inicio #graficoInicio .orbita-grafico.iv-entrada{animation:none}}
+/* Cielo por hora (solo en los ambientes con escena) */
+html body #vista-inicio .cielo-hora-v276{display:none;position:absolute;left:0;top:0;right:0;bottom:0;border-radius:inherit;pointer-events:none;z-index:0;opacity:0;transition:opacity 1.2s ease}
+html body:not([data-ambiente="esencial"]) #vista-inicio .cielo-hora-v276{display:block;opacity:1}
+html body[data-fase-v276="amanecer"] #vista-inicio .cielo-hora-v276{background:linear-gradient(180deg,rgba(190,170,255,.10) 0%,rgba(255,196,150,.16) 55%,rgba(255,150,120,.30) 100%)}
+html body[data-fase-v276="atardecer"] #vista-inicio .cielo-hora-v276{background:linear-gradient(180deg,rgba(104,86,196,.18) 0%,rgba(255,150,92,.20) 62%,rgba(255,104,78,.34) 100%)}
+html body[data-fase-v276="noche"] #vista-inicio .cielo-hora-v276{background:linear-gradient(180deg,rgba(6,12,46,.54) 0%,rgba(16,26,78,.40) 100%)}
+html body[data-fase-v276="noche"] #vista-inicio .cielo-hora-v276::after{content:"";position:absolute;inset:0;border-radius:inherit;opacity:.9;
+ background:radial-gradient(circle at 12% 14%,#fff 0 1px,transparent 1.7px),radial-gradient(circle at 30% 8%,#fff 0 .8px,transparent 1.5px),radial-gradient(circle at 52% 16%,#fff 0 1.1px,transparent 1.8px),radial-gradient(circle at 74% 7%,#fff 0 .9px,transparent 1.6px),radial-gradient(circle at 90% 18%,#fff 0 1.2px,transparent 1.9px),radial-gradient(circle at 20% 28%,#fff 0 .7px,transparent 1.4px),radial-gradient(circle at 66% 30%,#fff 0 .8px,transparent 1.5px),radial-gradient(circle at 84% 36%,#fff 0 .7px,transparent 1.4px);
+ animation:ivTitila-v276 4.5s ease-in-out infinite alternate}
+@keyframes ivTitila-v276{from{opacity:.55}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){html body[data-fase-v276="noche"] #vista-inicio .cielo-hora-v276::after{animation:none}}
+/* Detalles: "El tiempo para salir" sin partirse en cuatro líneas */
+html body.inicio-encajado-v260:has(#vista-inicio.activa) .inicio-pie-v260:not(#iva){grid-template-columns:126px minmax(0,1fr)}
+html body:not(#iva):not(#ivb) #vista-inicio:not(#ivc) #climaDetalleV260:not(#ivd)>summary .clima-titulo-v260{font-size:11.5px!important;line-height:1.15!important;white-space:normal}
+/* Detalles: el "+" deja ver lo que hay debajo (sin desenfoque) */
+html body:not(#iosa):not(#iosb) #vista-inicio.activa:not(#iosc):not(#iosd) .v191-boton-flotante:not(#iose){-webkit-backdrop-filter:none;backdrop-filter:none;width:40px;height:40px;background:rgba(var(--app-fuerte-rgb,52,120,246),.14)!important}
+/* Detalles: adorno de temporada con emoji reconocible (el símbolo de otoño se veía como un caracol) */
+#vista-inicio:not([data-estacion="ninguno"]) .inicio-resumen-grid::after{opacity:.7;font-size:19px;color:inherit}
+#vista-inicio[data-estacion="primavera"] .inicio-resumen-grid::after{content:"🌸"}
+#vista-inicio[data-estacion="verano"] .inicio-resumen-grid::after{content:"☀️"}
+#vista-inicio[data-estacion="otono"] .inicio-resumen-grid::after{content:"🍂"}
+#vista-inicio[data-estacion="invierno"] .inicio-resumen-grid::after{content:"❄️"}
+html body:not([data-ambiente="metal"])[data-fase-v276="noche"] #vista-inicio #fechaProgresoMes{color:#eef3ff!important;-webkit-text-fill-color:#eef3ff!important}
+
+/* Legibilidad medida con píxeles reales: "este mes" y fecha de la escena (la fecha lleva su propia pastilla para leerse sobre cualquier cielo) */
+html body:not(#iva):not(#ivb) #vista-inicio:not(#ivc) #graficoInicio:not(#ivd) .orbita-grafico:not(#ive) .orbita-centro>span{color:#1c2a47!important;-webkit-text-fill-color:#1c2a47!important;font-weight:750!important}
+html body:not([data-ambiente="metal"]) #vista-inicio #fechaProgresoMes{color:#1f2b46!important;-webkit-text-fill-color:#1f2b46!important;background:rgba(255,255,255,.88)!important;background-image:none!important;opacity:1!important;width:fit-content!important;max-width:100%;margin-left:auto!important;margin-right:auto!important;padding:1px 12px!important;border-radius:999px!important;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+@media (prefers-color-scheme:dark){html body:not([data-ambiente="metal"]) #vista-inicio #fechaProgresoMes{color:#f2f5ff!important;-webkit-text-fill-color:#f2f5ff!important;background:rgba(10,18,40,.55)!important}}
+html body:not([data-ambiente="metal"])[data-fase-v276="noche"] #vista-inicio #fechaProgresoMes{color:#f2f5ff!important;-webkit-text-fill-color:#f2f5ff!important;background:rgba(10,18,40,.55)!important}
+/* Botón "Hacer copia ahora" y resumen del día: contraste AA */
+html body:not(#iva):not(#ivb) #vista-inicio:not(#ivc) #hacerCopiaDesdeInicio:not(#ivd){background:var(--app-fuerte,#2563d8)!important;color:#fff!important}
+@media (prefers-color-scheme:dark){html body:not(#iva):not(#ivb) #vista-registrar:not(#ivc) #resumenDiaV264:not(#ivd){color:var(--ios-texto2,#c7c7cc)!important}}
