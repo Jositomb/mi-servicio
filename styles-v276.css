@@ -14131,3 +14131,88 @@ html body:not([data-ambiente="esencial"]) #vista-inicio .estacion-v27628{display
 @keyframes esBrilla-v27628{0%,100%{opacity:0;transform:scale(.6)}50%{opacity:.9;transform:scale(1.15)}}
 @media (prefers-reduced-motion:reduce){.estacion-v27628 b{animation:none!important;opacity:.35}}
 html body:not(#bta):not(#btb) #vista-inicio:not(.activa) .estacion-v27628 b{animation-play-state:paused}
+
+/* ======================================================================
+   V27629 · Ajustes estilo iOS, «Hoy llevas…», evolución apilada, rueda de meta y tarjeta del mes
+   ====================================================================== */
+@property --pr{syntax:"<number>";inherits:true;initial-value:0}
+
+/* 1 · Ajustes: cabecera con avatar y resumen bajo cada sección */
+html body:not(#bta):not(#btb) #vista-ajustes>.aj-perfil-v27629:not(#btc){display:flex!important;align-items:center;gap:15px;width:100%;min-height:92px;margin:4px 0 14px!important;padding:14px 16px!important;border:0!important;border-radius:24px!important;text-align:left;cursor:pointer;
+  background:var(--ios-tarjeta,#fff)!important;color:var(--ios-texto,#111)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.65),0 8px 24px rgba(20,30,60,.10)!important;-webkit-tap-highlight-color:transparent}
+html body:not(#bta):not(#btb) #vista-ajustes>.aj-perfil-v27629:not(#btc):active{filter:brightness(.96)}
+.aj-avatar-v27629{position:relative;isolation:isolate;overflow:hidden;flex:0 0 auto;width:66px;height:66px;border-radius:50%;display:grid;place-items:center;font-size:25px;font-weight:800;letter-spacing:.02em;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.28);
+  background:var(--app-fuerte,#2864d7);box-shadow:inset 0 -5px 10px rgba(0,0,0,.2),inset 0 2px 3px rgba(255,255,255,.4),0 8px 16px rgba(var(--app-fuerte-rgb,40,100,215),.35)}
+.aj-avatar-v27629::before{content:"";position:absolute;z-index:-1;inset:0;border-radius:50%;background:radial-gradient(circle at 32% 22%,rgba(255,255,255,.32),rgba(255,255,255,0) 46%);pointer-events:none}
+.aj-textos-v27629{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:3px}
+.aj-textos-v27629 b{font-size:21px;font-weight:760;letter-spacing:-.02em;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.aj-textos-v27629 small{font-size:14px;font-weight:500;color:var(--ios-texto2,rgba(60,60,67,.8));overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.aj-flecha-v27629{flex:0 0 auto;font-size:26px;opacity:.4;line-height:1}
+html body:not(#bta):not(#btb) #vista-ajustes>.ajustes-acordeon-v179:not(#btc)>summary:not(#btd){grid-template-columns:auto 1fr 24px!important;grid-template-rows:auto auto;column-gap:13px!important;row-gap:1px!important;min-height:64px!important;align-items:center}
+html body:not(#bta):not(#btb) #vista-ajustes>.ajustes-acordeon-v179:not(#btc)>summary:not(#btd)>.bt-v276{grid-column:1;grid-row:1/3}
+html body:not(#bta):not(#btb) #vista-ajustes>.ajustes-acordeon-v179:not(#btc)>summary:not(#btd)>.ajustes-acordeon-titulo{grid-column:2;grid-row:1;align-self:end}
+html body:not(#bta):not(#btb) #vista-ajustes>.ajustes-acordeon-v179:not(#btc)>summary:not(#btd)>.aj-resumen-v27629{grid-column:2;grid-row:2;align-self:start;font-size:13px;font-weight:500;line-height:1.25;color:var(--ios-texto2,rgba(60,60,67,.8));overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+html body:not(#bta):not(#btb) #vista-ajustes>.ajustes-acordeon-v179:not(#btc)>summary:not(#btd)>.ajustes-acordeon-flecha{grid-column:3;grid-row:1/3}
+
+/* 2 · «Hoy llevas…» en Registrar (franja compacta sobre el cronómetro; oculta mientras no haya nada hoy) */
+html body:not(#bta):not(#btb) #vista-registrar .hoy-llevas-v27629:not(#btc){display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px;margin:0 0 10px;padding:9px 14px;border-radius:18px;background:var(--ios-tarjeta,#fff);color:var(--ios-texto,#111);box-shadow:inset 0 1px 0 rgba(255,255,255,.65),0 6px 18px rgba(20,30,60,.08)}
+html body:not(#bta):not(#btb) #vista-registrar .hoy-llevas-v27629.hl-vacio:not(#btc){display:none}
+.hoy-llevas-v27629 .hl-cab{display:flex;align-items:baseline;gap:7px;flex:0 0 auto;white-space:nowrap}
+.hoy-llevas-v27629 .hl-tit{font-size:13.5px;font-weight:650;color:var(--ios-texto2,rgba(60,60,67,.8))}
+.hoy-llevas-v27629 .hl-total{font-size:18px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums;display:inline-block}
+.hoy-llevas-v27629 .hl-barra{display:flex;flex:1 1 90px;min-width:90px;height:13px;border-radius:8px;overflow:hidden;background:rgba(120,120,128,.16);box-shadow:inset 0 1px 3px rgba(0,0,0,.16)}
+.hoy-llevas-v27629 .hl-barra i{display:block;height:100%;width:0;flex:0 0 auto;background:linear-gradient(180deg,var(--c1),var(--c2));box-shadow:inset 0 1.5px 0 rgba(255,255,255,.5),inset 0 -2px 3px rgba(0,0,0,.2);border-right:1px solid rgba(255,255,255,.35);transition:width .75s cubic-bezier(.2,.9,.25,1.05)}
+.hoy-llevas-v27629 .hl-chips{display:none;flex:1 0 100%;flex-wrap:wrap;gap:3px 13px;font-size:12px;font-weight:600;color:var(--ios-texto2,rgba(60,60,67,.8))}
+.hoy-llevas-v27629 .hl-chips u{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:-.5px;text-decoration:none;box-shadow:inset 0 1px 1px rgba(255,255,255,.5)}
+@media (min-height:900px){.hoy-llevas-v27629 .hl-chips{display:flex}}
+.hoy-llevas-v27629 .hl-sube{animation:hlSube-v27629 .7s cubic-bezier(.2,.9,.3,1.2);transform-origin:left center}
+@keyframes hlSube-v27629{0%{transform:scale(1)}35%{transform:scale(1.14);color:var(--app-fuerte,#0a6cdc)}100%{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.hoy-llevas-v27629 .hl-barra i{transition:none}.hoy-llevas-v27629 .hl-sube{animation:none}}
+
+/* 3 · Evolución con barras apiladas */
+html body:not(#bta):not(#btb) #tendenciaV144 .v144-col:not(#btc){position:relative}
+html body:not(#bta):not(#btb) #tendenciaV144 .v144-bar.evo-apilada-v27629:not(#btc){display:flex!important;flex-direction:column-reverse;overflow:hidden;position:relative;background:transparent!important;border-radius:9px 9px 4px 4px!important;box-shadow:0 5px 10px rgba(0,0,0,.14),inset 0 0 0 1px rgba(255,255,255,.3)}
+.v144-bar.evo-apilada-v27629::after{content:"";position:absolute;inset:0 auto 0 0;width:34%;background:linear-gradient(90deg,rgba(255,255,255,.42),rgba(255,255,255,0));pointer-events:none}
+.v144-bar .evo-seg-v27629{display:block;flex:1 1 0;min-height:3px;background:linear-gradient(180deg,var(--c1),var(--c2));border-top:1px solid rgba(255,255,255,.55);box-shadow:inset 0 -2px 3px rgba(0,0,0,.14)}
+.v144-bar .evo-seg-v27629:last-of-type{border-top-color:transparent}
+.evo-corona-v27629{position:absolute;top:-16px;left:50%;width:22px;height:22px;margin-left:-11px;pointer-events:none;filter:drop-shadow(0 2px 2px rgba(150,90,0,.35));animation:coronaFlota-v27629 2.6s ease-in-out infinite}
+.evo-corona-v27629 svg{display:block;width:100%;height:100%}
+@keyframes coronaFlota-v27629{0%,100%{translate:0 0}50%{translate:0 -2px}}
+html body:not(#bta):not(#btb) #tendenciaV144 .v144-col.evo-mejor-v27629:not(#btc) .v144-valor{font-weight:800;opacity:1;color:#b36b00}
+@media (prefers-color-scheme:dark){html body:not(#bta):not(#btb) #tendenciaV144 .v144-col.evo-mejor-v27629:not(#btc) .v144-valor{color:#ffc94d}}
+:root[data-modo-v276=oscuro] #tendenciaV144 .v144-col.evo-mejor-v27629 .v144-valor{color:#ffc94d!important}
+.evo-leyenda-v27629{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 14px;margin:10px 0 0;font-size:12px;font-weight:600;opacity:.85}
+.evo-leyenda-v27629 span{display:inline-flex;align-items:center;gap:5px}
+.evo-leyenda-v27629 u{display:inline-block;width:10px;height:10px;border-radius:3px;text-decoration:none;box-shadow:inset 0 1px 1px rgba(255,255,255,.5)}
+.evo-leyenda-v27629 svg{width:15px;height:15px}
+@media (prefers-reduced-motion:reduce){.evo-corona-v27629{animation:none}}
+
+/* 4 · Rueda de la meta al guardar */
+.rueda-v27629{position:fixed;left:50%;top:34vh;z-index:9000;width:min(340px,calc(100vw - 32px));margin-left:calc(min(340px,calc(100vw - 32px))/-2);display:flex;align-items:center;gap:16px;padding:14px 18px;border-radius:26px;color:var(--ios-texto,#111);
+  background:rgba(255,255,255,.86);-webkit-backdrop-filter:saturate(1.8) blur(22px);backdrop-filter:saturate(1.8) blur(22px);box-shadow:0 18px 44px rgba(10,20,50,.28),inset 0 1px 0 rgba(255,255,255,.8);opacity:0;translate:0 24px;transition:opacity .28s ease,translate .45s cubic-bezier(.2,.9,.25,1.15);cursor:pointer}
+@media (prefers-color-scheme:dark){.rueda-v27629{background:rgba(44,44,46,.86);color:#fff;box-shadow:0 18px 44px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.14)}}
+:root[data-modo-v276=oscuro] .rueda-v27629{background:rgba(44,44,46,.86);color:#fff}
+:root[data-modo-v276=claro] .rueda-v27629{background:rgba(255,255,255,.86);color:#111}
+.rueda-v27629.rd-entra{opacity:1;translate:0 0}
+.rueda-v27629.rd-sale{opacity:0;translate:0 16px}
+.rueda-v27629 .rd-anillo{position:relative;flex:0 0 auto;width:78px;height:78px;border-radius:50%;display:grid;place-items:center;
+  background:conic-gradient(from 0deg,var(--firma-luz,#6aa6ff),var(--firma-base,#2864d7) calc(var(--pr,0)*3.6deg),rgba(120,120,128,.2) 0);filter:drop-shadow(0 4px 8px rgba(var(--firma-rgb,40,100,215),.35));transition:--pr 1s cubic-bezier(.22,.8,.25,1)}
+.rueda-v27629 .rd-anillo::before{content:"";position:absolute;inset:9px;border-radius:50%;background:var(--ios-tarjeta,#fff);box-shadow:inset 0 2px 5px rgba(0,0,0,.14)}
+@media (prefers-color-scheme:dark){.rueda-v27629 .rd-anillo::before{background:#2c2c2e}}
+:root[data-modo-v276=oscuro] .rueda-v27629 .rd-anillo::before{background:#2c2c2e}
+:root[data-modo-v276=claro] .rueda-v27629 .rd-anillo::before{background:#fff}
+.rueda-v27629 .rd-pct{position:relative;font-size:19px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.rueda-v27629 .rd-txt{display:flex;flex-direction:column;gap:3px;min-width:0}
+.rueda-v27629 .rd-txt strong{font-size:20px;font-weight:800;letter-spacing:-.02em;color:#1f9d55}
+.rueda-v27629 .rd-txt span{font-size:14px;font-weight:550;line-height:1.3;opacity:.82}
+@media (prefers-reduced-motion:reduce){.rueda-v27629,.rueda-v27629 .rd-anillo{transition:opacity .2s ease}}
+
+/* 5 · Tarjeta del mes (imagen) */
+.tarjeta-mes-v27629{position:fixed;inset:0;z-index:9500;display:grid;place-items:center;padding:20px;background:rgba(5,8,18,.66);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.tarjeta-mes-v27629 .tj-caja{display:flex;flex-direction:column;align-items:center;gap:12px;max-height:100%;width:min(380px,100%)}
+.tarjeta-mes-v27629 img{display:block;width:auto;max-width:100%;max-height:calc(100dvh - 190px);border-radius:22px;box-shadow:0 24px 60px rgba(0,0,0,.6)}
+.tarjeta-mes-v27629 .tj-acc{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.tarjeta-mes-v27629 .tj-acc>*{min-height:44px;padding:0 18px;border:0;border-radius:14px;font:600 15px -apple-system,system-ui,sans-serif;display:inline-flex;align-items:center;text-decoration:none;cursor:pointer;background:rgba(255,255,255,.16);color:#fff}
+.tarjeta-mes-v27629 .tj-comp,.tarjeta-mes-v27629 .tj-guardar{background:var(--app-fuerte,#0a6cdc);color:#fff}
+.tarjeta-mes-v27629 .tj-msg{margin:0;min-height:1em;color:rgba(255,255,255,.8);font-size:13px;text-align:center}
+.compartir-mes-v260>#tarjetaMesV27629{margin-left:8px}

@@ -1033,7 +1033,7 @@
     [".boton-repetir-v260", null, "repeat", "azul"], [".boton-editar-registro", null, "pencil", "naranja"], [".boton-borrar", null, "trash", "rojo"],
     ["#hacerCopiaDesdeInicio", null, "cloud", "azul"], ["#actualizarTiempoInicio", null, "refresh", "turquesa"],
     ["#climaDetalleV260>summary", null, "sun", "dorado"],
-    ["#wrappedBotonV267,#wrappedSemanaBotonV269", null, "sparkle", "violeta"], ["#compartirMesV260", null, "share", "azul"], ["#csvMesV264,#csvTodoV264", null, "doc", "verde"],
+    ["#wrappedBotonV267,#wrappedSemanaBotonV269", null, "sparkle", "violeta"], ["#compartirMesV260", null, "share", "azul"], ["#tarjetaMesV27629", null, "sparkle", "violeta"], ["#csvMesV264,#csvTodoV264", null, "doc", "verde"],
     [null, /compartir tarjeta/i, "sparkle", "violeta"], [null, /ver calendario/i, "calendar", "azul"], [null, /meta anual/i, "target", "rojo"],
     [null, /m[aá]s detalle/i, "bars", "indigo"], [null, /comparar/i, "compare", "turquesa"], [null, /evoluci[oó]n/i, "trend", "verde"],
     ["#copiaRapidaV260,#exportarDatos", null, "cloud", "azul"], ["#conectarOneDrive", null, "cloud", "cielo"], ["#importarDatos", null, "down", "naranja"],
@@ -1046,7 +1046,7 @@
   ];
   const BT_ALCANCE = "#vista-inicio,#vista-registrar,#vista-historial,#vista-estadisticas,#vista-ajustes";
   const BT_CANDIDATOS = "button,summary,.ajustes-acordeon-icono,.registro-icono,.resumen-actividad-v198>span";
-  const BT_EXCLUIR = ".nav-item,#segmentoStatsV264 button,.v191-boton-flotante,.orbita-actividad,.logro-v267,.historial-mes-v260,.bt-v276,[data-bt-no]";
+  const BT_EXCLUIR = ".nav-item,#segmentoStatsV264 button,.v191-boton-flotante,.orbita-actividad,.logro-v267,.historial-mes-v260,.bt-v276,#perfilCabV27629,[data-bt-no]";
   function btDefs() {
     if ($("btDefsV276")) return;
     const s = document.createElementNS(NS_SVG, "svg");
@@ -1103,7 +1103,7 @@
   function btPasar() {
     btPend = 0; if (btEn) return; btEn = true;
     try {
-      btDefs(); btBuscador(); btDias(); btResumenBarras(); anPintar(); calAsegurar(); calPintar(); esAsegurar();
+      btDefs(); btBuscador(); btDias(); btResumenBarras(); anPintar(); calAsegurar(); calPintar(); esAsegurar(); v9Pasar();
       document.querySelectorAll(BT_ALCANCE).forEach(v => {
         v.querySelectorAll(BT_CANDIDATOS).forEach(el => {
           if (el.matches(BT_EXCLUIR) || el.closest(".nav-item,.orbita-actividad,.logro-v267") || el.querySelector(":scope > .bt-v276")) return;
@@ -1143,12 +1143,14 @@
   function btGuardar(ev) {
     const b = ev.target.closest && ev.target.closest("#guardarRegistroV203"); if (!b) return;
     let antes = 0, pct = 0; try { antes = (estado.registros || []).length; } catch (e) {} try { pct = ivPctObjetivo() || 0; } catch (e) {}
+    const mes0 = mesTotalCompu();
     setTimeout(() => {
       let ahora = antes; try { ahora = (estado.registros || []).length; } catch (e) {}
       if (ahora <= antes) return;
       let p2 = pct; try { p2 = ivPctObjetivo() || pct; } catch (e) {}
       const t = b.querySelector(":scope > .bt-v276"); if (t && !movReducido()) { t.classList.remove("bt-pop-v276"); void t.offsetWidth; t.classList.add("bt-pop-v276"); }
       const cruza = pct < 100 && p2 >= 100; btConfeti(b, cruza); if (cruza) setTimeout(celMostrar, 700);
+      try { const mes1 = mesTotalCompu(), delta = mes1.total - mes0.total, ob = objetivo(); if (!cruza && delta > 0 && ob > 0) ruedaMostrar(pct, p2, delta, Math.max(0, ob - mes1.comp)); } catch (e) {}
     }, 450);
   }
 
@@ -1308,6 +1310,199 @@
     esAsegurar();
   }
 
+  /* ================= 22. V27629 · AJUSTES iOS, «HOY LLEVAS», EVOLUCIÓN APILADA, RUEDA AL GUARDAR Y TARJETA ================= */
+  const V9_CLAVES = ["Ministerio", "LDC", "Asambleas", "Otras"];
+  function v9Min(r) { try { return typeof minutosRegistroV143 === "function" ? minutosRegistroV143(r) : (Number(r.minutos) || 0); } catch (e) { return 0; } }
+  function v9Tipo(r) { const raw = String((r && (r.tipo || r.actividad)) || "ministerio").toLowerCase(); return raw === "asamblea" ? "asambleas" : (raw === "ministerio" || raw === "ldc" || raw === "asambleas") ? raw : "otras"; }
+  function v9Pon(el, prop, val) { if (el && el.style.getPropertyValue(prop) !== String(val)) el.style.setProperty(prop, String(val)); }
+  function v9Txt(el, t) { if (el && el.textContent !== t) el.textContent = t; }
+  function v9Corto(min) { min = Math.round(min || 0); const h = Math.floor(min / 60), m = min % 60; return h && m ? h + " h " + m : h ? h + " h" : m + " min"; }
+
+  /* 22a · Ajustes estilo iOS */
+  function ajIniciales(n) { const p = n.split(/\s+/).filter(Boolean); if (!p.length) return "MS"; return ((p[0][0] || "") + (p.length > 1 ? (p[p.length - 1][0] || "") : (p[0][1] || ""))).toUpperCase(); }
+  function ajResumenes() {
+    const s = $("tipoPublicador"), tipo = s && s.selectedOptions && s.selectedOptions[0] ? s.selectedOptions[0].textContent.trim() : "", ob = objetivo();
+    const modo = window.leerModoColorV276 ? window.leerModoColorV276() : "auto";
+    let copia = "Sin copia de seguridad aún";
+    try { const f = typeof leerUltimaCopiaSeguridad === "function" ? leerUltimaCopiaSeguridad() : null; if (f) { const d = new Date(f); if (!isNaN(d)) copia = "Última copia: " + d.toLocaleDateString("es-ES", { day: "numeric", month: "short" }).replace(".", ""); } } catch (e) {}
+    const con = $("estadoConexionTextoV190");
+    return { perfil: [tipo, ob ? "objetivo " + v8Hm(ob) : ""].filter(Boolean).join(" · ") || "Nombre, actividades y objetivo", sync: [con ? (con.textContent || "").trim() : "", copia].filter(Boolean).join(" · "), apar: "Modo " + (modo === "claro" ? "claro" : modo === "oscuro" ? "oscuro" : "automático"), ayuda: "Guía rápida y consejos" };
+  }
+  function ajPonResumen(det, txt) {
+    if (!det || !txt) return; const s = det.querySelector(":scope>summary"); if (!s) return;
+    let c = s.querySelector(":scope>.aj-resumen-v27629");
+    if (!c) { c = document.createElement("small"); c.className = "aj-resumen-v27629"; const t = s.querySelector(".ajustes-acordeon-titulo"); if (t && t.nextSibling) s.insertBefore(c, t.nextSibling); else s.appendChild(c); }
+    v9Txt(c, txt);
+  }
+  function ajPintar() {
+    const vista = $("vista-ajustes"); if (!vista) return;
+    let cab = $("perfilCabV27629");
+    if (!cab) {
+      cab = document.createElement("button"); cab.type = "button"; cab.id = "perfilCabV27629"; cab.className = "aj-perfil-v27629"; cab.setAttribute("aria-label", "Editar perfil");
+      cab.innerHTML = '<span class="aj-avatar-v27629" aria-hidden="true"></span><span class="aj-textos-v27629"><b></b><small></small></span><span class="aj-flecha-v27629" aria-hidden="true">›</span>';
+      vista.insertBefore(cab, vista.firstChild);
+      cab.addEventListener("click", () => {
+        const d = vista.querySelector("details.ajustes-acordeon-v179:not([id])"); if (!d) return;
+        if (!d.open) d.open = true;
+        setTimeout(() => { try { d.scrollIntoView({ behavior: movReducido() ? "auto" : "smooth", block: "start" }); } catch (e) { d.scrollIntoView(); } const i = $("nombreSaludoV260"); if (i) { try { i.focus({ preventScroll: true }); } catch (e) { i.focus(); } } }, 60);
+      });
+    }
+    const i = $("nombreSaludoV260"), nombre = i ? i.value.trim() : "", r = ajResumenes();
+    v9Txt(cab.querySelector(".aj-avatar-v27629"), ajIniciales(nombre));
+    v9Txt(cab.querySelector("b"), nombre || "Mi Servicio");
+    v9Txt(cab.querySelector("small"), (r.perfil.split(" · ")[0] || "Publicador") + " · " + v8Regs().length + " registros");
+    ajPonResumen(vista.querySelector("details.ajustes-acordeon-v179:not([id])"), r.perfil);
+    ajPonResumen($("sincronizacionDetalleV260"), r.sync);
+    ajPonResumen($("aparienciaV201"), r.apar);
+    ajPonResumen($("ayudaBreveV260"), r.ayuda);
+  }
+
+  /* 22b · «Hoy llevas…» en Registrar */
+  let hlFirma = "";
+  function hlPintar() {
+    const vista = $("vista-registrar"), cron = $("cronometroV264"); if (!vista || !cron) return;
+    let s = $("hoyLlevasV27629");
+    if (!s) {
+      s = document.createElement("section"); s.id = "hoyLlevasV27629"; s.className = "hoy-llevas-v27629"; s.setAttribute("aria-live", "polite");
+      s.innerHTML = '<div class="hl-cab"><span class="hl-tit">Hoy llevas</span><b class="hl-total">0 min</b></div><div class="hl-barra" aria-hidden="true"></div><div class="hl-chips"></div>';
+      cron.parentNode.insertBefore(s, cron);
+    }
+    const hoy = fechaISO(new Date()), t = { ministerio: 0, ldc: 0, asambleas: 0, otras: 0 }; let tot = 0;
+    v8Regs().forEach(r => { if (String(r.fecha || "").slice(0, 10) !== hoy) return; const m = v9Min(r); t[v9Tipo(r)] += m; tot += m; });
+    const firma = hoy + "|" + V8_TIPOS.map(x => t[x[0]]).join(",");
+    if (firma === hlFirma && s.dataset.listo === "1") return;
+    const primera = s.dataset.listo !== "1", subio = !primera && firma.split("|")[0] === hlFirma.split("|")[0] && tot > (hlFirma ? hlFirma.split("|")[1].split(",").reduce((a, b) => a + Number(b), 0) : 0);
+    hlFirma = firma; s.dataset.listo = "1"; s.classList.toggle("hl-vacio", tot === 0);
+    v9Txt(s.querySelector(".hl-tit"), tot ? "Hoy llevas" : "Hoy aún no has registrado nada");
+    v9Txt(s.querySelector(".hl-total"), tot ? v8Hm(tot) : "");
+    const barra = s.querySelector(".hl-barra"), ref = Math.max(240, tot);
+    let seg = "", chips = "";
+    V8_TIPOS.forEach(x => { const m = t[x[0]]; if (!m) return; seg += '<i style="--c1:' + x[2] + ";--c2:" + x[1] + ';" data-w="' + (m / ref * 100).toFixed(2) + '"></i>'; chips += '<span><u style="background:' + x[1] + '"></u>' + (V8_NOMBRE[x[0]] || x[0]) + " " + v8Hm(m) + "</span>"; });
+    barra.innerHTML = seg; s.querySelector(".hl-chips").innerHTML = chips;
+    const pon = () => barra.querySelectorAll("i").forEach(e => { e.style.width = e.dataset.w + "%"; });
+    if (movReducido() || !primera && !subio) pon(); else { barra.querySelectorAll("i").forEach(e => { e.style.width = "0%"; }); requestAnimationFrame(() => requestAnimationFrame(pon)); }
+    if (subio && !movReducido()) { const b = s.querySelector(".hl-total"); b.classList.remove("hl-sube"); void b.offsetWidth; b.classList.add("hl-sube"); }
+    s.setAttribute("aria-label", tot ? "Hoy llevas " + v8Hm(tot) : "Hoy aún no has registrado nada");
+  }
+
+  /* 22c · Evolución con barras apiladas por actividad y corona al mejor mes */
+  const V9_CORONA = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 8.2l4.6 4 4.4-7.4 4.4 7.4 4.6-4-1.9 10.6H4.9z" fill="#ffc233" stroke="#c97a00" stroke-width="1.2" stroke-linejoin="round"/><path d="M5.2 16.4h13.6" stroke="#fff" stroke-opacity=".55" stroke-width="1.3" stroke-linecap="round"/><circle cx="3" cy="8" r="1.4" fill="#ffd966" stroke="#c97a00" stroke-width=".8"/><circle cx="12" cy="5" r="1.4" fill="#ffd966" stroke="#c97a00" stroke-width=".8"/><circle cx="21" cy="8" r="1.4" fill="#ffd966" stroke="#c97a00" stroke-width=".8"/></svg>';
+  function evoPintar() {
+    const host = $("tendenciaV144"); if (!host || typeof resumenMesV143 !== "function") return;
+    const cont = host.querySelector("[data-v144-barras]"); if (!cont) return;
+    const cols = cont.querySelectorAll(".v144-col"); if (cols.length !== 6) return;
+    const hoy = new Date(), datos = [];
+    for (let i = 5; i >= 0; i--) { const d = new Date(hoy.getFullYear(), hoy.getMonth() - i, 1); let r = null; try { r = resumenMesV143(d); } catch (e) {} datos.push({ d, total: r ? r.total : 0, tipos: r ? r.tipos : {} }); }
+    const firma = datos.map(x => V9_CLAVES.map(k => x.tipos[k] || 0).join(",")).join("|");
+    if (cont.dataset.evo === firma && cont.querySelector(".evo-seg-v27629")) return;
+    cont.dataset.evo = firma;
+    let mejor = -1, mt = 0; datos.forEach((x, i) => { if (x.total > 0 && x.total >= mt) { mt = x.total; mejor = i; } });
+    cols.forEach((col, i) => {
+      const bar = col.querySelector(".v144-bar"), x = datos[i]; if (!bar) return;
+      bar.querySelectorAll(".evo-seg-v27629").forEach(e => e.remove());
+      const suma = V9_CLAVES.reduce((a, k) => a + (x.tipos[k] || 0), 0);
+      bar.classList.toggle("evo-apilada-v27629", suma > 0);
+      if (suma > 0) V9_CLAVES.forEach((k, j) => { const m = x.tipos[k] || 0; if (!m) return; const e = document.createElement("i"); e.className = "evo-seg-v27629"; e.style.flexGrow = String(m); e.style.setProperty("--c1", V8_TIPOS[j][2]); e.style.setProperty("--c2", V8_TIPOS[j][1]); e.title = k + " " + v8Hm(m); bar.appendChild(e); });
+      col.classList.toggle("evo-mejor-v27629", i === mejor);
+      const vv = col.querySelector(".v144-valor"); let co = col.querySelector(":scope>.evo-corona-v27629");
+      if (i === mejor) { if (!co) { co = document.createElement("span"); co.className = "evo-corona-v27629"; co.setAttribute("aria-hidden", "true"); co.innerHTML = V9_CORONA; col.insertBefore(co, col.firstChild); } } else if (co) co.remove();
+      const nom = x.d.toLocaleDateString("es-ES", { month: "long" });
+      col.setAttribute("aria-label", nom + ": " + (x.total ? v8Hm(x.total) + " (" + V9_CLAVES.filter(k => x.tipos[k]).map(k => k + " " + v8Hm(x.tipos[k])).join(", ") + ")" : "sin actividad") + (i === mejor ? ", mejor mes" : ""));
+    });
+    let lg = host.querySelector(".evo-leyenda-v27629");
+    if (!lg) { lg = document.createElement("div"); lg.className = "evo-leyenda-v27629"; cont.parentNode.insertBefore(lg, cont.nextSibling); }
+    const usados = V9_CLAVES.map((k, j) => datos.some(x => x.tipos[k] > 0) ? '<span><u style="background:linear-gradient(145deg,' + V8_TIPOS[j][2] + "," + V8_TIPOS[j][1] + ')"></u>' + k + "</span>" : "").join("") + (mejor >= 0 ? '<span class="evo-leg-corona">' + V9_CORONA + "Mejor mes</span>" : "");
+    if (lg.innerHTML !== usados) lg.innerHTML = usados;
+  }
+
+  /* 22d · Rueda de la meta al guardar */
+  function mesTotalCompu() { try { const r = resumenMesV143(new Date()); return { total: r.total, comp: typeof r.computable === "number" ? r.computable : r.total }; } catch (e) { return { total: 0, comp: 0 }; } }
+  function ruedaMostrar(antes, despues, delta, falta) {
+    const viejo = $("ruedaV27629"); if (viejo) viejo.remove();
+    const o = document.createElement("div"); o.id = "ruedaV27629"; o.className = "rueda-v27629"; o.setAttribute("role", "status");
+    o.innerHTML = '<div class="rd-anillo" aria-hidden="true"><b class="rd-pct">' + antes + '%</b></div><div class="rd-txt"><strong>+' + v8Hm(delta) + '</strong><span>' + (falta > 0 ? "Te faltan " + v8Hm(falta) + " para tu meta" : "¡Meta del mes cumplida!") + "</span></div>";
+    document.body.appendChild(o);
+    const pct = o.querySelector(".rd-pct"), reducido = movReducido();
+    o.style.setProperty("--pr", String(reducido ? despues : antes));
+    requestAnimationFrame(() => requestAnimationFrame(() => { o.classList.add("rd-entra"); o.style.setProperty("--pr", String(despues)); }));
+    if (reducido) pct.textContent = despues + "%"; else { const t0 = performance.now(), dur = 1000; const paso = t => { const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3); pct.textContent = Math.round(antes + (despues - antes) * e) + "%"; if (k < 1 && o.isConnected) requestAnimationFrame(paso); }; requestAnimationFrame(paso); }
+    const quitar = () => { o.classList.remove("rd-entra"); o.classList.add("rd-sale"); setTimeout(() => { if (o.parentNode) o.remove(); }, 320); };
+    o.addEventListener("click", quitar); setTimeout(quitar, 3400);
+  }
+
+  /* 22e · Tarjeta del mes como imagen para compartir */
+  function tjRect(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+  function tjDibujar(ref) {
+    const W = 1080, H = 1350, cv = document.createElement("canvas"); cv.width = W; cv.height = H; const c = cv.getContext("2d");
+    const css = getComputedStyle(document.documentElement), base = (css.getPropertyValue("--firma-base") || "").trim() || "#2864d7", luz = (css.getPropertyValue("--firma-luz") || "").trim() || "#6aa6ff";
+    const r = resumenMesV143(ref), ob = objetivo(), comp = typeof r.computable === "number" ? r.computable : r.total, pct = ob ? Math.min(100, Math.round(comp / ob * 100)) : 0;
+    const F = '-apple-system,"SF Pro Display","Helvetica Neue",Arial,sans-serif';
+    let g = c.createLinearGradient(0, 0, W * 0.6, H); g.addColorStop(0, "#0d1426"); g.addColorStop(0.55, "#111c3a"); g.addColorStop(1, "#0a0f1f"); c.fillStyle = g; c.fillRect(0, 0, W, H);
+    let rg = c.createRadialGradient(W * 0.85, H * 0.12, 20, W * 0.85, H * 0.12, 620); rg.addColorStop(0, base); rg.addColorStop(1, "rgba(0,0,0,0)"); c.globalAlpha = 0.5; c.fillStyle = rg; c.fillRect(0, 0, W, H); c.globalAlpha = 1;
+    rg = c.createRadialGradient(W * 0.05, H * 0.95, 20, W * 0.05, H * 0.95, 560); rg.addColorStop(0, "#8a5be0"); rg.addColorStop(1, "rgba(0,0,0,0)"); c.globalAlpha = 0.32; c.fillStyle = rg; c.fillRect(0, 0, W, H); c.globalAlpha = 1;
+    c.textBaseline = "alphabetic";
+    g = c.createLinearGradient(80, 80, 160, 160); g.addColorStop(0, luz); g.addColorStop(1, base); c.fillStyle = g; tjRect(c, 80, 78, 78, 78, 22); c.fill();
+    c.strokeStyle = "#fff"; c.lineWidth = 6; c.lineCap = "round"; c.lineJoin = "round"; c.beginPath(); c.moveTo(119, 104); c.lineTo(119, 138); c.moveTo(98, 100); c.quadraticCurveTo(108, 98, 119, 106); c.quadraticCurveTo(130, 98, 140, 100); c.lineTo(140, 134); c.quadraticCurveTo(130, 132, 119, 140); c.quadraticCurveTo(108, 132, 98, 134); c.closePath(); c.stroke();
+    c.fillStyle = "rgba(255,255,255,.72)"; c.font = "700 34px " + F; c.fillText("MI SERVICIO", 180, 112); c.font = "500 30px " + F; c.fillStyle = "rgba(255,255,255,.5)"; c.fillText("Resumen mensual", 180, 150);
+    let mes = ref.toLocaleDateString("es-ES", { month: "long", year: "numeric" }); mes = mes.charAt(0).toUpperCase() + mes.slice(1);
+    c.fillStyle = "#fff"; c.font = "800 96px " + F; c.fillText(mes, 80, 300);
+    const cx = W / 2, cy = 640, R = 205, grosor = 54;
+    c.lineWidth = grosor; c.lineCap = "round"; c.strokeStyle = "rgba(255,255,255,.12)"; c.beginPath(); c.arc(cx, cy, R, 0, Math.PI * 2); c.stroke();
+    if (ob && pct > 0) { g = c.createLinearGradient(cx - R, cy - R, cx + R, cy + R); g.addColorStop(0, luz); g.addColorStop(1, base); c.strokeStyle = g; c.shadowColor = base; c.shadowBlur = 36; c.beginPath(); c.arc(cx, cy, R, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * pct / 100); c.stroke(); c.shadowBlur = 0; }
+    c.textAlign = "center"; c.fillStyle = "#fff";
+    if (ob) { c.font = "800 128px " + F; c.fillText(pct + "%", cx, cy + 34); c.font = "500 34px " + F; c.fillStyle = "rgba(255,255,255,.62)"; c.fillText("de " + v8Hm(ob), cx, cy + 90); }
+    else { c.font = "800 100px " + F; c.fillText(v9Corto(r.total), cx, cy + 30); }
+    c.font = "700 46px " + F; c.fillStyle = "#fff"; c.fillText(v8Hm(r.total) + " registradas", cx, 940);
+    c.textAlign = "left";
+    const filas = V8_TIPOS.map((x, j) => [V9_CLAVES[j], x, r.tipos[V9_CLAVES[j]] || 0]).filter(f => f[2] > 0), max = Math.max.apply(null, filas.map(f => f[2]).concat([1]));
+    let y = 1000; const paso = 62;
+    filas.forEach(f => {
+      c.fillStyle = "rgba(255,255,255,.86)"; c.font = "600 30px " + F; c.fillText(f[0], 80, y + 8);
+      const x0 = 300, ancho = 520; c.fillStyle = "rgba(255,255,255,.1)"; tjRect(c, x0, y - 18, ancho, 30, 15); c.fill();
+      const w = Math.max(30, ancho * f[2] / max); g = c.createLinearGradient(x0, 0, x0 + w, 0); g.addColorStop(0, f[1][2]); g.addColorStop(1, f[1][1]); c.fillStyle = g; tjRect(c, x0, y - 18, w, 30, 15); c.fill();
+      c.textAlign = "right"; c.fillStyle = "#fff"; c.font = "700 30px " + F; c.fillText(v8Hm(f[2]), W - 80, y + 8); c.textAlign = "left"; y += paso;
+    });
+    const yb = 1250; c.fillStyle = "rgba(255,255,255,.08)"; tjRect(c, 80, yb - 60, W - 160, 96, 28); c.fill();
+    c.fillStyle = "rgba(255,255,255,.62)"; c.font = "500 26px " + F; c.fillText("Días activos", 116, yb - 18); c.fillText("Mejor semana", 560, yb - 18);
+    c.fillStyle = "#fff"; c.font = "800 34px " + F; c.fillText(String(r.dias), 300, yb - 14); c.fillText(v8Hm(r.mejor), 800, yb - 14);
+    return cv;
+  }
+  function tjAbrir() {
+    const input = $("mesResumenV143"); let ref = null; try { ref = typeof fechaMesV202 === "function" ? fechaMesV202(input && input.value) : null; } catch (e) {} if (!ref) ref = new Date();
+    let cv; try { cv = tjDibujar(ref); } catch (e) { console.warn("[V27629 tarjeta]", e); return; }
+    const viejo = $("tarjetaV27629"); if (viejo) viejo.remove();
+    cv.toBlob(blob => {
+      if (!blob) return;
+      const url = URL.createObjectURL(blob), nombre = "mi-servicio-" + ref.getFullYear() + "-" + String(ref.getMonth() + 1).padStart(2, "0") + ".png";
+      const o = document.createElement("div"); o.id = "tarjetaV27629"; o.className = "tarjeta-mes-v27629"; o.setAttribute("role", "dialog"); o.setAttribute("aria-modal", "true"); o.setAttribute("aria-label", "Tarjeta del mes");
+      o.innerHTML = '<div class="tj-caja"><img alt="Resumen del mes en imagen" src="' + url + '"><div class="tj-acc"><button type="button" class="tj-comp">Compartir</button><a class="tj-guardar" download="' + nombre + '" href="' + url + '">Guardar imagen</a><button type="button" class="tj-cerrar">Cerrar</button></div><p class="tj-msg" aria-live="polite"></p></div>';
+      document.body.appendChild(o);
+      const msg = o.querySelector(".tj-msg"), cerrar = () => { URL.revokeObjectURL(url); o.remove(); document.removeEventListener("keydown", tecla); }, tecla = e => { if (e.key === "Escape") cerrar(); };
+      document.addEventListener("keydown", tecla);
+      o.querySelector(".tj-cerrar").addEventListener("click", cerrar); o.addEventListener("click", e => { if (e.target === o) cerrar(); });
+      const file = (() => { try { return new File([blob], nombre, { type: "image/png" }); } catch (e) { return null; } })();
+      const puede = !!(file && navigator.share && navigator.canShare && navigator.canShare({ files: [file] }));
+      const bc = o.querySelector(".tj-comp"); if (!puede) bc.hidden = true;
+      bc.addEventListener("click", async () => { try { await navigator.share({ files: [file], title: "Mi Servicio · Resumen mensual" }); } catch (e) { if (!e || e.name !== "AbortError") msg.textContent = "No se pudo abrir Compartir. Usa «Guardar imagen»."; } });
+      o.querySelector(".tj-guardar").addEventListener("click", () => { msg.textContent = "Si no se descarga, mantén pulsada la imagen y elige «Guardar»."; });
+      window.__tarjetaV27629 = { ancho: cv.width, alto: cv.height, bytes: blob.size, nombre };
+    }, "image/png");
+  }
+  function tjInstalar() {
+    const comp = $("compartirMesV260"); if (!comp || $("tarjetaMesV27629")) return;
+    const b = document.createElement("button"); b.type = "button"; b.id = "tarjetaMesV27629"; b.className = "boton-secundario"; b.textContent = "Tarjeta del mes";
+    comp.parentNode.insertBefore(b, comp.nextSibling); b.addEventListener("click", tjAbrir);
+  }
+
+  function v9Pasar() { try { ajPintar(); hlPintar(); evoPintar(); tjInstalar(); } catch (e) { console.warn("[V27629]", e); } }
+  function instalarV9() {
+    v9Pasar();
+    document.addEventListener("input", e => { if (e.target && (e.target.id === "nombreSaludoV260" || e.target.id === "objetivoMensual")) setTimeout(ajPintar, 0); }, true);
+    document.addEventListener("change", e => { if (e.target && /^(tipoPublicador|nombreSaludoV260|objetivoMensual)$/.test(e.target.id)) setTimeout(ajPintar, 0); }, true);
+    document.addEventListener("click", e => { if (e.target.closest && e.target.closest("#abrirAjustesV260,#modoColorV27627")) setTimeout(ajPintar, 80); }, true);
+    window.MiServicioV27629 = { ajPintar, hlPintar, evoPintar, ruedaMostrar, tjDibujar, tjAbrir, ajResumenes };
+  }
+
   function instalarAzulejos() {
     btPasar();
     new MutationObserver(m => { for (let i = 0; i < m.length; i++) { const t = m[i].target; if (t && t.closest && t.closest(".orbita-grafico,#btDefsV276,.bt-confeti-v276")) continue; btProgramar(); break; } }).observe(document.body, { childList: true, subtree: true });
@@ -1349,7 +1544,7 @@
   }
 
   function arrancar() {
-    try { envolverFirma(); envolverDeshacer(); instalarTemas(); instalarAnillos(); instalarPapelera(); instalarMeta(); instalarDiagnostico(); programarLimpieza(); instalarPendientes(); instalarEventoChip(); instalarComprobacionGlobos(); instalarVida(); instalarEstadisticasNuevas(); instalarAcento(); instalarTituloCompacto(); instalarInicioVivo(); instalarInteresados(); instalarRecuperacionEncaje(); instalarAccesibilidad(); aplicarTipografia(); instalarAzulejos(); instalarModoColor(); instalarAnilloCron(); instalarEstacion(); } catch (e) { console.warn("[V269]", e); }
+    try { envolverFirma(); envolverDeshacer(); instalarTemas(); instalarAnillos(); instalarPapelera(); instalarMeta(); instalarDiagnostico(); programarLimpieza(); instalarPendientes(); instalarEventoChip(); instalarComprobacionGlobos(); instalarVida(); instalarEstadisticasNuevas(); instalarAcento(); instalarTituloCompacto(); instalarInicioVivo(); instalarInteresados(); instalarRecuperacionEncaje(); instalarAccesibilidad(); aplicarTipografia(); instalarAzulejos(); instalarModoColor(); instalarAnilloCron(); instalarEstacion(); instalarV9(); } catch (e) { console.warn("[V269]", e); }
     document.addEventListener("click", e => { const n = e.target.closest && e.target.closest(".nav-item"); if (n) setTimeout(() => { pintarAnillos(); if (n.dataset.vista === "estadisticas") animarAnillos(); }, 120); });
     window.MiServicioV269 = { faseInicio: ivFase, datosAnillos, aplicarTema, TEMAS, leerPapelera: limpiarPapelera, enviarAPapelera, derivarFirma, pendientes, errores, reunirDiagnostico, limpiarCaches, candidatosEventos, comprobarGlobos, globosFallan, leerInteresados };
   }

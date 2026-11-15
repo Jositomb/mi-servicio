@@ -14,7 +14,7 @@ borrado en dos toques, «Listo» para cerrar. No cambia el tamaño de Registrar.
 (máx. 200). Los nombres VAN en la copia JSON y en OneDrive (campo opcional ajustesLocales; las copias antiguas valen).
 No aparecen en estadísticas, CSV ni al compartir.
 PUBLICAR: borra los archivos antiguos del repositorio y sube TODO el contenido del ZIP (archivos en la raíz).
-Comprueba en Ajustes → Diagnóstico que pone V276-27628.
+Comprueba en Ajustes → Diagnóstico que pone V276-27629.
 
 CORRECCIÓN (build 27611): en iOS 27.3 beta los números de horas y porcentajes dentro de los globos
 dejaban de verse. Se quita la animación de parpadeo que se aplicaba solo a esos textos y se fuerza
@@ -144,3 +144,11 @@ BUILD 27628 - ANILLOS, CALENDARIO, CELEBRACIÓN Y FONDO DE ESTACIÓN
 - Celebración: al guardar un registro que lleva el mes al 100 % del objetivo, medalla grande con confeti. Solo una vez por mes (clave miServicio.celebracionMesV27628) y solo al guardar, nunca al abrir la app.
 - Inicio: fondo vivo de estación (hojas en otoño, copos en invierno, flores en primavera, destellos en verano) detrás de los globos. Se puede desactivar en Ajustes > Personalizar > Fondo vivo de estación (clave miServicio.estacionVivaV27628). No aparece en el ambiente Esencial.
 - Todo respeta "reducir movimiento" y el modo claro/oscuro.
+
+V276-27629 · Ajustes iOS, «Hoy llevas…», evolución apilada, rueda de meta y tarjeta del mes
+- Ajustes: cabecera con avatar (iniciales del nombre), nombre y tipo de publicador; cada sección muestra una línea de resumen (perfil/objetivo, conexión + última copia, modo de apariencia, ayuda). Pulsar la cabecera abre «Perfil». No cambia ningún ajuste ni dato.
+- Registrar: franja «Hoy llevas…» sobre el cronómetro con el total de hoy y una barra por actividad que crece al guardar. Se oculta mientras no haya nada registrado hoy.
+- Estadísticas > Más > Evolución: barras apiladas por actividad (Ministerio, LDC, Asambleas, Otras) con relieve, leyenda y corona dorada al mejor mes. Usa los mismos cálculos de siempre.
+- Al guardar un registro del mes en curso aparece una rueda con el avance de la meta (de % a %), lo añadido y lo que falta. Si se cruza el 100 % sale la celebración de siempre en lugar de la rueda. Sin objetivo configurado no aparece.
+- Estadísticas > Resumen mensual: botón «Tarjeta del mes» que genera una imagen 1080×1350 (mes, anillo de meta, horas por actividad, días activos y mejor semana) para compartir o guardar. No incluye notas ni nombres. El botón de compartir en texto sigue igual.
+- Sin claves de almacenamiento nuevas ni cambios en datos o copias JSON.
