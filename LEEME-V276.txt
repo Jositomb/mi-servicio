@@ -14,7 +14,7 @@ borrado en dos toques, «Listo» para cerrar. No cambia el tamaño de Registrar.
 (máx. 200). Los nombres VAN en la copia JSON y en OneDrive (campo opcional ajustesLocales; las copias antiguas valen).
 No aparecen en estadísticas, CSV ni al compartir.
 PUBLICAR: borra los archivos antiguos del repositorio y sube TODO el contenido del ZIP (archivos en la raíz).
-Comprueba en Ajustes → Diagnóstico que pone V276-27626.
+Comprueba en Ajustes → Diagnóstico que pone V276-27627.
 
 CORRECCIÓN (build 27611): en iOS 27.3 beta los números de horas y porcentajes dentro de los globos
 dejaban de verse. Se quita la animación de parpadeo que se aplicaba solo a esos textos y se fuerza
@@ -128,3 +128,12 @@ BUILD 27626 (ampliación) - HISTORIAL REDONDEADO
 - Cada registro lleva el azulejo de su actividad en lugar del icono pálido; Repetir, Editar y Eliminar sin fondo gris.
 - Cada día muestra un punto y una cápsula con el color de su actividad dominante.
 - Deslizar para actuar ya existía desde V264 (izquierda = borrar con confirmación, derecha = editar) y se conserva sin cambios.
+
+BUILD 27627 - APARIENCIA, CRONÓMETRO, GRÁFICOS Y ACABADO
+- Ajustes > Personalizar > Apariencia: Automático (sigue al iPhone/iPad), Claro u Oscuro. Se guarda en este dispositivo (clave nueva miServicio.modoColorV27627; no toca ningún dato ni copia). Funciona forzando las reglas de modo oscuro ya existentes, así que el aspecto es idéntico al del modo del sistema.
+- Registrar: el cronómetro tiene un anillo que marca los segundos, el botón Iniciar "respira" y, en marcha, el tiempo va grande con el texto a la derecha y los botones Terminar/Descartar debajo.
+- Estadísticas: las barras por actividad del Resumen mensual tienen relieve y color de su actividad; azulejo en cada fila. Las barras por actividad antiguas también tienen brillo.
+- Icono de la app: recortado a sangrado completo (sin esquinas blancas que iOS volvía a redondear).
+- Transición suave al cambiar de pestaña, ilustración en las pantallas vacías y icono de carga más cuidado.
+- Todo respeta "reducir movimiento".
+- No incluido: pantalla de arranque propia de iOS (requiere imágenes por modelo de dispositivo).

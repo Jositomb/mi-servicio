@@ -1017,6 +1017,7 @@
   };
   // [selector CSS | null, texto (RegExp) | null, símbolo, color]. La primera regla que coincide, gana.
   const BT_REGLAS = [
+    [".resumen-actividad-v198[data-tipo=ministerio]>span", null, "book", "azul"], [".resumen-actividad-v198[data-tipo=ldc]>span", null, "tools", "rosa"], [".resumen-actividad-v198[data-tipo=asambleas]>span", null, "mic", "naranja"], [".resumen-actividad-v198[data-tipo=otras]>span", null, "sparkle", "violeta"],
     [".registro-icono.ministerio", null, "book", "azul"], [".registro-icono.ldc", null, "tools", "rosa"], [".registro-icono.asambleas", null, "mic", "naranja"], [".registro-icono.otras", null, "sparkle", "violeta"],
     ["#cronIniciarV264", null, "play", "verde"], ["#cronTerminarV264", null, "stop", "rojo"], ["#cronDescartarV264", null, "trash", "gris"],
     ["#guardarRegistroV203", null, "check", "verde"], ["#guardarAjustes", null, "check", "verde"],
@@ -1044,7 +1045,7 @@
     [null, /ayuda r[aá]pida/i, "help", "azul"], [null, /^papelera/i, "trash", "gris"], [null, /^diagn[oó]stico/i, "pulse", "verde"], [null, /^copias internas/i, "cloud", "cielo"]
   ];
   const BT_ALCANCE = "#vista-inicio,#vista-registrar,#vista-historial,#vista-estadisticas,#vista-ajustes";
-  const BT_CANDIDATOS = "button,summary,.ajustes-acordeon-icono,.registro-icono";
+  const BT_CANDIDATOS = "button,summary,.ajustes-acordeon-icono,.registro-icono,.resumen-actividad-v198>span";
   const BT_EXCLUIR = ".nav-item,#segmentoStatsV264 button,.v191-boton-flotante,.orbita-actividad,.logro-v267,.historial-mes-v260,.bt-v276,[data-bt-no]";
   function btDefs() {
     if ($("btDefsV276")) return;
@@ -1069,7 +1070,7 @@
     }
     return null;
   }
-  const BT_SIMBOLO = /^\s*(?:[▶✨↗⇩↻◐◎☀✓−+‹›↔↓↑]|\p{Extended_Pictographic}[️‍\p{Extended_Pictographic}]*)\s*/u;
+  const BT_SIMBOLO = /^\s*(?:[■▶✨↗⇩↻◐◎☀✓−+‹›↔↓↑]|\p{Extended_Pictographic}[️‍\p{Extended_Pictographic}]*)\s*/u;
   function btDecorar(el, r) {
     if (el.querySelector(":scope > .bt-v276")) return;
     el.classList.add("bt-host-v276");
@@ -1102,7 +1103,7 @@
   function btPasar() {
     btPend = 0; if (btEn) return; btEn = true;
     try {
-      btDefs(); btBuscador(); btDias();
+      btDefs(); btBuscador(); btDias(); btResumenBarras();
       document.querySelectorAll(BT_ALCANCE).forEach(v => {
         v.querySelectorAll(BT_CANDIDATOS).forEach(el => {
           if (el.matches(BT_EXCLUIR) || el.closest(".nav-item,.orbita-actividad,.logro-v267") || el.querySelector(":scope > .bt-v276")) return;
@@ -1162,6 +1163,14 @@
     const lab = bus.querySelector("label"); if (lab) { lab.classList.add("bt-sim-v276"); bus.insertBefore(fila, lab.nextSibling); } else bus.insertBefore(fila, bus.firstChild);
     const ac = document.querySelector(".accesos-historial-v260"); if (ac) ac.classList.add("hist-accesos-v276");
   }
+  function btMinTxt(t) { const h = /(\d+)\s*h/.exec(t || ""), m = /(\d+)\s*min/.exec(t || ""); return (h ? parseInt(h[1], 10) * 60 : 0) + (m ? parseInt(m[1], 10) : 0); }
+  function btResumenBarras() {
+    document.querySelectorAll(".v143-rm-dist").forEach(d => {
+      const filas = Array.prototype.slice.call(d.querySelectorAll(".resumen-actividad-v198")); if (!filas.length) return;
+      const mins = filas.map(f => btMinTxt((f.querySelector("b") || {}).textContent)), tot = mins.reduce((a, b) => a + b, 0);
+      filas.forEach((f, i) => { const p = tot > 0 ? Math.round(mins[i] / tot * 100) : 0; if (f.style.getPropertyValue("--p") !== String(p)) f.style.setProperty("--p", String(p)); });
+    });
+  }
   function btDias() {
     document.querySelectorAll("#vista-historial .grupo-historial").forEach(g => {
       const c = g.querySelector(".grupo-historial-cabecera"); if (!c) return;
@@ -1179,8 +1188,39 @@
     ["touchend", "touchcancel"].forEach(n => document.addEventListener(n, () => document.querySelectorAll(".bt-toque-v276").forEach(x => x.classList.remove("bt-toque-v276")), { passive: true }));
   }
 
+  /* ================= 16. APARIENCIA CLARA / OSCURA / AUTOMÁTICA (V27627) ================= */
+  function instalarModoColor() {
+    const grupo = $("modoColorV27627"); if (!grupo) return;
+    const K = "miServicio.modoColorV27627";
+    const pintar = () => { const m = window.leerModoColorV276 ? window.leerModoColorV276() : "auto"; grupo.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.modoV27627 === m ? "true" : "false")); };
+    grupo.addEventListener("click", e => {
+      const b = e.target.closest("button[data-modo-v27627]"); if (!b) return;
+      try { localStorage.setItem(K, b.dataset.modoV27627); } catch (er) {}
+      if (window.aplicarModoColorV276) window.aplicarModoColorV276(b.dataset.modoV27627);
+      pintar();
+    });
+    pintar();
+    // hojas de estilo añadidas más tarde por el código antiguo: se les aplica el mismo modo
+    try { new MutationObserver(() => { if (window.aplicarModoColorV276 && window.leerModoColorV276() !== "auto") window.aplicarModoColorV276(window.leerModoColorV276()); }).observe(document.head, { childList: true }); } catch (e) {}
+    if (window.aplicarModoColorV276 && window.leerModoColorV276() !== "auto") window.aplicarModoColorV276(window.leerModoColorV276());
+  }
+
+  /* ================= 17. CRONÓMETRO CON ANILLO (V27627) ================= */
+  function instalarAnilloCron() {
+    const sec = $("cronometroV264"), out = $("cronTiempoV264"); if (!sec || !out) return;
+    const marcar = () => {
+      const m = /^(\d+):(\d\d):(\d\d)$/.exec((out.textContent || "").trim()); const marcha = document.body.classList.contains("cronometro-activo-v264");
+      const s = m ? parseInt(m[3], 10) : 0;
+      sec.style.setProperty("--cron-a", marcha ? (s * 6) + "deg" : "0deg");
+      sec.classList.toggle("cron-anillo-marcha-v27627", marcha);
+    };
+    marcar();
+    new MutationObserver(marcar).observe(out, { childList: true, characterData: true, subtree: true });
+    new MutationObserver(marcar).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+  }
+
   function arrancar() {
-    try { envolverFirma(); envolverDeshacer(); instalarTemas(); instalarAnillos(); instalarPapelera(); instalarMeta(); instalarDiagnostico(); programarLimpieza(); instalarPendientes(); instalarEventoChip(); instalarComprobacionGlobos(); instalarVida(); instalarEstadisticasNuevas(); instalarAcento(); instalarTituloCompacto(); instalarInicioVivo(); instalarInteresados(); instalarRecuperacionEncaje(); instalarAccesibilidad(); aplicarTipografia(); instalarAzulejos(); } catch (e) { console.warn("[V269]", e); }
+    try { envolverFirma(); envolverDeshacer(); instalarTemas(); instalarAnillos(); instalarPapelera(); instalarMeta(); instalarDiagnostico(); programarLimpieza(); instalarPendientes(); instalarEventoChip(); instalarComprobacionGlobos(); instalarVida(); instalarEstadisticasNuevas(); instalarAcento(); instalarTituloCompacto(); instalarInicioVivo(); instalarInteresados(); instalarRecuperacionEncaje(); instalarAccesibilidad(); aplicarTipografia(); instalarAzulejos(); instalarModoColor(); instalarAnilloCron(); } catch (e) { console.warn("[V269]", e); }
     document.addEventListener("click", e => { const n = e.target.closest && e.target.closest(".nav-item"); if (n) setTimeout(() => { pintarAnillos(); if (n.dataset.vista === "estadisticas") animarAnillos(); }, 120); });
     window.MiServicioV269 = { faseInicio: ivFase, datosAnillos, aplicarTema, TEMAS, leerPapelera: limpiarPapelera, enviarAPapelera, derivarFirma, pendientes, errores, reunirDiagnostico, limpiarCaches, candidatosEventos, comprobarGlobos, globosFallan, leerInteresados };
   }
