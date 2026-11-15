@@ -121,3 +121,10 @@ BUILD 27626 - BOTONES CON AZULEJOS 3D
 - Pulsar un azulejo lo hace rebotar (y vibra suavemente donde el navegador lo permite; iPhone/Safari no permite vibración web). Al guardar un registro, el ✓ crece y sale confeti; más grande si con ese registro se llega al 100 % del objetivo.
 - Medallas de Logros con más relieve, borde brillante y destello al aparecer o al tocarlas.
 - Todo se desactiva con "reducir movimiento" (sin animaciones ni confeti).
+
+BUILD 27626 (ampliación) - HISTORIAL REDONDEADO
+- Los cinco filtros (Todos, Ministerio, LDC, Asambleas, Otras) caben a la vez, sin deslizar.
+- "Hoy" va a la derecha del buscador (con lupa); la etiqueta "Buscar en Historial" sigue para lectores de pantalla.
+- Cada registro lleva el azulejo de su actividad en lugar del icono pálido; Repetir, Editar y Eliminar sin fondo gris.
+- Cada día muestra un punto y una cápsula con el color de su actividad dominante.
+- Deslizar para actuar ya existía desde V264 (izquierda = borrar con confirmación, derecha = editar) y se conserva sin cambios.

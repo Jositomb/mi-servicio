@@ -1017,6 +1017,7 @@
   };
   // [selector CSS | null, texto (RegExp) | null, símbolo, color]. La primera regla que coincide, gana.
   const BT_REGLAS = [
+    [".registro-icono.ministerio", null, "book", "azul"], [".registro-icono.ldc", null, "tools", "rosa"], [".registro-icono.asambleas", null, "mic", "naranja"], [".registro-icono.otras", null, "sparkle", "violeta"],
     ["#cronIniciarV264", null, "play", "verde"], ["#cronTerminarV264", null, "stop", "rojo"], ["#cronDescartarV264", null, "trash", "gris"],
     ["#guardarRegistroV203", null, "check", "verde"], ["#guardarAjustes", null, "check", "verde"],
     [".actividad-boton[data-tipo=ministerio]", null, "book", "azul"], [".actividad-boton[data-tipo=ldc]", null, "tools", "rosa"],
@@ -1043,7 +1044,7 @@
     [null, /ayuda r[aá]pida/i, "help", "azul"], [null, /^papelera/i, "trash", "gris"], [null, /^diagn[oó]stico/i, "pulse", "verde"], [null, /^copias internas/i, "cloud", "cielo"]
   ];
   const BT_ALCANCE = "#vista-inicio,#vista-registrar,#vista-historial,#vista-estadisticas,#vista-ajustes";
-  const BT_CANDIDATOS = "button,summary,.ajustes-acordeon-icono";
+  const BT_CANDIDATOS = "button,summary,.ajustes-acordeon-icono,.registro-icono";
   const BT_EXCLUIR = ".nav-item,#segmentoStatsV264 button,.v191-boton-flotante,.orbita-actividad,.logro-v267,.historial-mes-v260,.bt-v276,[data-bt-no]";
   function btDefs() {
     if ($("btDefsV276")) return;
@@ -1079,6 +1080,9 @@
       const esIcono = h.matches && h.matches(".actividad-icono,.ajustes-acordeon-icono,.v191-icono,[class*='icono'],[aria-hidden='true']") && (h.textContent || "").trim().length <= 4;
       if (esSvg || esIcono) h.classList.add("bt-sim-v276");
     });
+    if (el.matches(".registro-icono")) {
+      Array.prototype.slice.call(el.childNodes).forEach(n => { if (n.nodeType === 3 && n.nodeValue.trim()) { const sp = document.createElement("span"); sp.className = "bt-sim-v276"; sp.textContent = n.nodeValue; el.replaceChild(sp, n); } });
+    }
     const n = el.firstChild;
     if (n && n.nodeType === 3) {
       const m = BT_SIMBOLO.exec(n.nodeValue);
@@ -1098,7 +1102,7 @@
   function btPasar() {
     btPend = 0; if (btEn) return; btEn = true;
     try {
-      btDefs();
+      btDefs(); btBuscador(); btDias();
       document.querySelectorAll(BT_ALCANCE).forEach(v => {
         v.querySelectorAll(BT_CANDIDATOS).forEach(el => {
           if (el.matches(BT_EXCLUIR) || el.closest(".nav-item,.orbita-actividad,.logro-v267") || el.querySelector(":scope > .bt-v276")) return;
@@ -1145,6 +1149,26 @@
       const t = b.querySelector(":scope > .bt-v276"); if (t && !movReducido()) { t.classList.remove("bt-pop-v276"); void t.offsetWidth; t.classList.add("bt-pop-v276"); }
       btConfeti(b, pct < 100 && p2 >= 100);
     }, 450);
+  }
+
+  /* Historial: "Hoy" junto al buscador y color del día (el deslizar ya existía desde V264) */
+  const BT_COL_TIPO = { ministerio: "#3478f6", ldc: "#e0457e", asambleas: "#ff9500", otras: "#8a5be0" };
+  function btBuscador() {
+    const bus = document.querySelector(".buscar-historial-v260"), hoy = $("historialHoyV260"), inp = $("buscarHistorialV260");
+    if (!bus || !hoy || !inp || bus.querySelector(":scope > .hist-fila-v276")) return;
+    const fila = document.createElement("div"); fila.className = "hist-fila-v276";
+    const caja = document.createElement("div"); caja.className = "hist-campo-v276";
+    caja.appendChild(inp); fila.appendChild(caja); fila.appendChild(hoy);
+    const lab = bus.querySelector("label"); if (lab) { lab.classList.add("bt-sim-v276"); bus.insertBefore(fila, lab.nextSibling); } else bus.insertBefore(fila, bus.firstChild);
+    const ac = document.querySelector(".accesos-historial-v260"); if (ac) ac.classList.add("hist-accesos-v276");
+  }
+  function btDias() {
+    document.querySelectorAll("#vista-historial .grupo-historial").forEach(g => {
+      const c = g.querySelector(".grupo-historial-cabecera"); if (!c) return;
+      const cuenta = {}; g.querySelectorAll(".registro-card").forEach(r => { const m = /registro-card-(\w+)/.exec(r.className); if (m && BT_COL_TIPO[m[1]]) cuenta[m[1]] = (cuenta[m[1]] || 0) + 1; });
+      let mejor = "", n = 0; Object.keys(cuenta).forEach(k => { if (cuenta[k] > n) { n = cuenta[k]; mejor = k; } });
+      if ((c.dataset.domV276 || "") !== mejor) { if (mejor) { c.dataset.domV276 = mejor; c.style.setProperty("--dia-col", BT_COL_TIPO[mejor]); } else { delete c.dataset.domV276; c.style.removeProperty("--dia-col"); } }
+    });
   }
   function instalarAzulejos() {
     btPasar();
