@@ -14074,3 +14074,60 @@ html body:not(#bta):not(#btb):has(#historialVacio:not([hidden]):not(.oculto)) .e
 @keyframes vacioFlota-v27627{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 html body:not(#bta):not(#btb) #cargaV201:not(#btc) img{width:56px;height:56px;border-radius:14px;box-shadow:0 6px 16px rgba(0,0,0,.22)}
 @media (prefers-reduced-motion:reduce){html body:not(#bta):not(#btb) :is(#vista-inicio,#vista-registrar,#vista-historial,#vista-estadisticas,#vista-ajustes).activa{animation:none!important}html body:not(#bta):not(#btb) :is(#historialVacio,#graficoVacio)::before{animation:none!important}}
+
+/* ===== V27628 · Anillos de actividad, calendario del Historial, celebración, fondo de estación ===== */
+html body:not(#bta):not(#btb) .anillos-act-v27628:not(#btc){position:relative;width:176px;height:176px;margin:6px auto 12px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.16))}
+html body:not(#bta):not(#btb) .anillos-act-v27628 svg{width:100%!important;height:100%!important;display:block;overflow:visible}
+.anillos-act-v27628 .an-pista{stroke:rgba(120,120,128,.18)}
+.anillos-act-v27628 .an-arco{transition:stroke-dasharray 1.2s cubic-bezier(.2,.8,.2,1);filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.25))}
+.anillos-act-v27628 .an-centro{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none}
+html body:not(#bta):not(#btb) .anillos-act-v27628 .an-centro strong{font-size:22px;line-height:1.05;letter-spacing:-.02em;color:var(--ios-texto,#1c1c1e)!important}
+html body:not(#bta):not(#btb) .anillos-act-v27628 .an-centro span{font-size:11.5px;color:var(--ios-texto2,#6b6b70)!important;margin-top:2px}
+@media (prefers-reduced-motion:reduce){.anillos-act-v27628 .an-arco{transition:none}}
+/* Calendario */
+html body:not(#bta):not(#btb) .cal-hist-v27628:not(#btc){margin:0 0 14px!important;border-radius:20px;background:var(--ios-tarjeta,#fff);box-shadow:0 1px 2px rgba(0,0,0,.05);overflow:hidden}
+html body:not(#bta):not(#btb) .cal-hist-v27628>summary{display:flex!important;align-items:center;gap:10px;padding:12px 14px!important;cursor:pointer;list-style:none;font-weight:700;color:var(--ios-texto,#1c1c1e)!important;min-height:48px}
+.cal-hist-v27628>summary::-webkit-details-marker{display:none}
+html body:not(#bta):not(#btb) .cal-hist-v27628>summary .bt-v276{--bt:28px;margin:0!important}
+.cal-hist-v27628 .cal-res{margin-left:auto;font-weight:600;font-size:13px;color:var(--ios-texto2,#6b6b70);display:block}.cal-hist-v27628 .cal-res::first-letter,.cal-hist-v27628 .cal-nav strong::first-letter{text-transform:uppercase}
+.cal-hist-v27628>summary::after{content:"›";font-size:20px;color:var(--ios-texto2,#8e8e93);transition:transform .25s;margin-left:2px}
+.cal-hist-v27628[open]>summary::after{transform:rotate(90deg)}
+.cal-hist-v27628 .cal-cuerpo{padding:0 12px 14px}
+.cal-hist-v27628 .cal-nav{display:flex;align-items:center;justify-content:space-between;padding:2px 0 8px}
+.cal-hist-v27628 .cal-nav strong{display:block;font-size:15px;color:var(--ios-texto,#1c1c1e)}
+html body:not(#bta):not(#btb) .cal-hist-v27628 .cal-flecha{width:36px!important;height:36px!important;min-width:36px!important;padding:0!important;border-radius:12px!important;border:0!important;background:var(--ios-boton,rgba(120,120,128,.14))!important;color:var(--ios-azul-texto,#1f5fe6)!important;font-size:22px!important;line-height:1!important}
+.cal-hist-v27628 .cal-sem,.cal-hist-v27628 .cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.cal-hist-v27628 .cal-sem span{text-align:center;font-size:11px;font-weight:700;color:var(--ios-texto2,#8e8e93);padding-bottom:3px}
+html body:not(#bta):not(#btb) .cal-hist-v27628 .cal-dia{position:relative;min-height:44px!important;height:44px;padding:4px 0 0!important;border:0!important;border-radius:12px!important;display:flex!important;flex-direction:column;align-items:center;justify-content:flex-start;gap:3px;color:var(--ios-texto,#1c1c1e)!important;background:rgba(var(--app-fuerte-rgb,40,100,215),calc(.05 + var(--i,0)*.26))!important;box-shadow:none!important;font-weight:600}
+html body:not(#bta):not(#btb) .cal-hist-v27628 .cal-dia b{font-size:14px;font-weight:700}
+html body:not(#bta):not(#btb) .cal-hist-v27628 .cal-dia:not(.con){background:transparent!important;color:var(--ios-texto2,#8e8e93)!important}
+html body:not(#bta):not(#btb) .cal-hist-v27628 .cal-dia.hoy{box-shadow:inset 0 0 0 2px var(--ios-azul,#2864d7)!important}
+html body:not(#bta):not(#btb) .cal-hist-v27628 .cal-dia.sel{background:var(--ios-azul,#2864d7)!important;color:#fff!important}
+.cal-hist-v27628 .cal-pts{display:flex;gap:3px;height:6px}
+.cal-hist-v27628 .cal-pts i{width:6px;height:6px;border-radius:50%;box-shadow:0 0 0 1px rgba(255,255,255,.55)}
+/* Celebración */
+.celebra-v27628{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(10,14,30,.55);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);animation:celFondo-v27628 .35s ease-out both}
+.celebra-v27628.cel-sale{animation:celSale-v27628 .26s ease-in both}
+.celebra-v27628 .cel-caja{width:min(330px,100%);text-align:center;padding:26px 22px 22px;border-radius:30px;background:var(--ios-tarjeta,#fff);color:var(--ios-texto,#1c1c1e);box-shadow:0 24px 60px rgba(0,0,0,.4);animation:celCaja-v27628 .6s cubic-bezier(.2,.9,.25,1.15) both}
+.celebra-v27628 .cel-medalla{width:132px;height:156px;margin:-8px auto 0;display:block;filter:drop-shadow(0 8px 12px rgba(0,0,0,.28));animation:celGira-v27628 .9s .15s cubic-bezier(.2,.9,.25,1.1) both}
+.celebra-v27628 .cel-brillo{animation:celBrillo-v27628 2.4s 1s ease-in-out infinite}
+.celebra-v27628 h2{margin:6px 0 4px;font-size:26px;letter-spacing:-.02em;color:var(--ios-texto,#1c1c1e)}
+.celebra-v27628 p{margin:0;color:var(--ios-texto2,#5f5f66);font-size:15px;line-height:1.35}
+.celebra-v27628 .cel-tot{margin-top:10px;font-size:15px}.celebra-v27628 .cel-tot strong{font-size:22px;color:var(--ios-texto,#1c1c1e)}
+.celebra-v27628 .cel-ok{margin-top:18px;width:100%;min-height:50px;border:0;border-radius:16px;font-size:17px;font-weight:700;color:#fff;background:linear-gradient(180deg,#63e38c,#14a047);box-shadow:0 6px 14px rgba(20,160,71,.35);cursor:pointer}
+@keyframes celFondo-v27628{from{opacity:0}}@keyframes celSale-v27628{to{opacity:0}}
+@keyframes celCaja-v27628{from{opacity:0;transform:scale(.82) translateY(24px)}}
+@keyframes celGira-v27628{from{opacity:0;transform:scale(.3) rotateY(-180deg)}}
+@keyframes celBrillo-v27628{0%{transform:translateX(0) rotate(20deg)}60%,100%{transform:translateX(230px) rotate(20deg)}}
+@media (prefers-reduced-motion:reduce){.celebra-v27628,.celebra-v27628 *{animation:none!important}}
+@media (prefers-color-scheme:dark){.celebra-v27628{background:rgba(0,0,0,.65)}.celebra-v27628 .cel-caja{background:#1c1c1e}}
+/* Fondo vivo de estación */
+html body #vista-inicio .estacion-v27628{display:none;position:absolute;inset:0;overflow:hidden;border-radius:inherit;pointer-events:none;z-index:0}
+html body:not([data-ambiente="esencial"]) #vista-inicio .estacion-v27628{display:block}
+.estacion-v27628 b{position:absolute;font-weight:400;line-height:1;opacity:0;will-change:transform,opacity;animation:esCae-v27628 18s linear infinite;filter:drop-shadow(0 1px 1px rgba(0,0,0,.18))}
+.estacion-v27628[data-est="invierno"] b{color:#fff;text-shadow:0 0 6px rgba(160,200,255,.8)}
+.estacion-v27628[data-est="verano"] b{color:#ffe38a;text-shadow:0 0 8px rgba(255,214,90,.9);animation-name:esBrilla-v27628}
+@keyframes esCae-v27628{0%{opacity:0;transform:translate3d(0,0,0) rotate(0)}8%{opacity:.9}50%{transform:translate3d(var(--dx),38vh,0) rotate(calc(var(--rot)*.5))}92%{opacity:.85}100%{opacity:0;transform:translate3d(calc(var(--dx)*-.6),78vh,0) rotate(var(--rot))}}
+@keyframes esBrilla-v27628{0%,100%{opacity:0;transform:scale(.6)}50%{opacity:.9;transform:scale(1.15)}}
+@media (prefers-reduced-motion:reduce){.estacion-v27628 b{animation:none!important;opacity:.35}}
+html body:not(#bta):not(#btb) #vista-inicio:not(.activa) .estacion-v27628 b{animation-play-state:paused}

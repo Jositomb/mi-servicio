@@ -14,7 +14,7 @@ borrado en dos toques, «Listo» para cerrar. No cambia el tamaño de Registrar.
 (máx. 200). Los nombres VAN en la copia JSON y en OneDrive (campo opcional ajustesLocales; las copias antiguas valen).
 No aparecen en estadísticas, CSV ni al compartir.
 PUBLICAR: borra los archivos antiguos del repositorio y sube TODO el contenido del ZIP (archivos en la raíz).
-Comprueba en Ajustes → Diagnóstico que pone V276-27627.
+Comprueba en Ajustes → Diagnóstico que pone V276-27628.
 
 CORRECCIÓN (build 27611): en iOS 27.3 beta los números de horas y porcentajes dentro de los globos
 dejaban de verse. Se quita la animación de parpadeo que se aplicaba solo a esos textos y se fuerza
@@ -137,3 +137,10 @@ BUILD 27627 - APARIENCIA, CRONÓMETRO, GRÁFICOS Y ACABADO
 - Transición suave al cambiar de pestaña, ilustración en las pantallas vacías y icono de carga más cuidado.
 - Todo respeta "reducir movimiento".
 - No incluido: pantalla de arranque propia de iOS (requiere imágenes por modelo de dispositivo).
+
+BUILD 27628 - ANILLOS, CALENDARIO, CELEBRACIÓN Y FONDO DE ESTACIÓN
+- Estadísticas > Resumen mensual: anillos de actividad concéntricos (reparto del mes por actividad, con el total al centro) que se llenan al entrar.
+- Historial: "Calendario" desplegable con el mes completo, un punto de color por actividad y más intensidad según las horas del día. Tocar un día filtra el Historial a ese día (usa el mismo buscador de siempre); volver a tocarlo quita el filtro. Recuerda si lo dejaste abierto.
+- Celebración: al guardar un registro que lleva el mes al 100 % del objetivo, medalla grande con confeti. Solo una vez por mes (clave miServicio.celebracionMesV27628) y solo al guardar, nunca al abrir la app.
+- Inicio: fondo vivo de estación (hojas en otoño, copos en invierno, flores en primavera, destellos en verano) detrás de los globos. Se puede desactivar en Ajustes > Personalizar > Fondo vivo de estación (clave miServicio.estacionVivaV27628). No aparece en el ambiente Esencial.
+- Todo respeta "reducir movimiento" y el modo claro/oscuro.

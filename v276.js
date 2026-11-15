@@ -1103,7 +1103,7 @@
   function btPasar() {
     btPend = 0; if (btEn) return; btEn = true;
     try {
-      btDefs(); btBuscador(); btDias(); btResumenBarras();
+      btDefs(); btBuscador(); btDias(); btResumenBarras(); anPintar(); calAsegurar(); calPintar(); esAsegurar();
       document.querySelectorAll(BT_ALCANCE).forEach(v => {
         v.querySelectorAll(BT_CANDIDATOS).forEach(el => {
           if (el.matches(BT_EXCLUIR) || el.closest(".nav-item,.orbita-actividad,.logro-v267") || el.querySelector(":scope > .bt-v276")) return;
@@ -1148,7 +1148,7 @@
       if (ahora <= antes) return;
       let p2 = pct; try { p2 = ivPctObjetivo() || pct; } catch (e) {}
       const t = b.querySelector(":scope > .bt-v276"); if (t && !movReducido()) { t.classList.remove("bt-pop-v276"); void t.offsetWidth; t.classList.add("bt-pop-v276"); }
-      btConfeti(b, pct < 100 && p2 >= 100);
+      const cruza = pct < 100 && p2 >= 100; btConfeti(b, cruza); if (cruza) setTimeout(celMostrar, 700);
     }, 450);
   }
 
@@ -1179,6 +1179,135 @@
       if ((c.dataset.domV276 || "") !== mejor) { if (mejor) { c.dataset.domV276 = mejor; c.style.setProperty("--dia-col", BT_COL_TIPO[mejor]); } else { delete c.dataset.domV276; c.style.removeProperty("--dia-col"); } }
     });
   }
+  /* ================= 18-21. ANILLOS, CALENDARIO, CELEBRACIÓN Y ESTACIÓN (V27628) ================= */
+  const V8_TIPOS = [["ministerio", "#3478f6", "#7ab6ff"], ["ldc", "#e0457e", "#ff9fc2"], ["asambleas", "#ff9500", "#ffc15a"], ["otras", "#8a5be0", "#c692ff"]];
+  const V8_NOMBRE = { ministerio: "Ministerio", ldc: "LDC", asambleas: "Asambleas", otras: "Otras" };
+  const V8_MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+  function v8Hm(min) { min = Math.round(min || 0); const h = Math.floor(min / 60), m = min % 60; return h && m ? h + " h " + m + " min" : h ? h + " h" : m + " min"; }
+  function v8Regs() { try { return Array.isArray(estado.registros) ? estado.registros : []; } catch (e) { return []; } }
+
+  /* 18 · Anillos de actividad en el Resumen mensual */
+  function anPintar() {
+    const d = document.querySelector("#vista-estadisticas .v143-rm-dist"); if (!d || !d.parentElement) return;
+    const filas = Array.prototype.slice.call(d.querySelectorAll(".resumen-actividad-v198")); if (!filas.length) return;
+    const datos = []; let tot = 0;
+    filas.forEach(f => { const t = f.getAttribute("data-tipo"), m = btMinTxt((f.querySelector("b") || {}).textContent); if (m > 0 && V8_NOMBRE[t]) { datos.push({ t: t, m: m }); tot += m; } });
+    let el = d.parentElement.querySelector(":scope>#anillosActV27628");
+    if (!tot) { if (el) el.remove(); return; }
+    const sig = datos.map(x => x.t + x.m).join("|");
+    if (el && el.dataset.sig === sig) return;
+    const nuevo = !el;
+    if (!el) { el = document.createElement("div"); el.id = "anillosActV27628"; el.className = "anillos-act-v27628"; el.setAttribute("role", "img"); d.parentElement.insertBefore(el, d); }
+    el.dataset.sig = sig;
+    el.setAttribute("aria-label", "Reparto del mes: " + datos.map(x => V8_NOMBRE[x.t] + " " + Math.round(x.m / tot * 100) + " %").join(", "));
+    const orden = V8_TIPOS.filter(x => datos.some(d2 => d2.t === x[0]));
+    let s = '<svg viewBox="0 0 120 120" aria-hidden="true" focusable="false"><defs>';
+    orden.forEach((x, i) => { s += '<linearGradient id="anG' + i + 'V27628" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="' + x[2] + '"/><stop offset="1" stop-color="' + x[1] + '"/></linearGradient>'; });
+    s += "</defs>";
+    orden.forEach((x, i) => {
+      const r = 52 - i * 12.5, dd = "M60 " + (60 - r) + "a" + r + " " + r + " 0 1 1 0 " + (2 * r) + "a" + r + " " + r + " 0 1 1 0 " + (-2 * r);
+      const pct = Math.max(1.5, datos.find(q => q.t === x[0]).m / tot * 100);
+      s += '<path d="' + dd + '" class="an-pista" fill="none" stroke-width="9.5" pathLength="100"/><path d="' + dd + '" class="an-arco" fill="none" stroke="url(#anG' + i + 'V27628)" stroke-width="9.5" stroke-linecap="round" pathLength="100" data-pct="' + pct.toFixed(1) + '" style="stroke-dasharray:' + (nuevo ? "0.01" : pct.toFixed(1)) + ' 100"/>';
+    });
+    s += '</svg><div class="an-centro"><strong>' + v8Hm(tot) + "</strong><span>este mes</span></div>";
+    el.innerHTML = s;
+    const arcos = el.querySelectorAll(".an-arco");
+    if (nuevo && !movReducido()) requestAnimationFrame(() => requestAnimationFrame(() => arcos.forEach(a => { a.style.strokeDasharray = a.getAttribute("data-pct") + " 100"; })));
+    else arcos.forEach(a => { a.style.strokeDasharray = a.getAttribute("data-pct") + " 100"; });
+  }
+
+  /* 19 · Calendario del mes en Historial */
+  let calY = 0, calM = -1, calSig = "";
+  function calAsegurar() {
+    if ($("calHistorialV27628")) return;
+    const f = document.querySelector("#vista-historial .filtros-historial"); if (!f) return;
+    const hoy = new Date(); if (calM < 0) { calY = hoy.getFullYear(); calM = hoy.getMonth(); }
+    const d = document.createElement("details"); d.id = "calHistorialV27628"; d.className = "cal-hist-v27628";
+    try { d.open = localStorage.getItem("miServicio.calHistorialV27628") === "1"; } catch (e) {}
+    d.innerHTML = '<summary><i class="bt-v276" aria-hidden="true">' + btSvg("calendar", "azul") + '</i><span class="cal-tit">Calendario</span><span class="cal-res"></span></summary><div class="cal-cuerpo"></div>';
+    f.parentNode.insertBefore(d, f.nextSibling);
+    d.addEventListener("toggle", () => { try { localStorage.setItem("miServicio.calHistorialV27628", d.open ? "1" : "0"); } catch (e) {} });
+    d.addEventListener("click", e => {
+      const n = e.target.closest("[data-cal-nav]"); if (n) { e.preventDefault(); calM += parseInt(n.getAttribute("data-cal-nav"), 10); if (calM < 0) { calM = 11; calY--; } if (calM > 11) { calM = 0; calY++; } calSig = ""; calPintar(); return; }
+      const b = e.target.closest("[data-f]"); if (!b) return;
+      const inp = $("buscarHistorialV260"); if (!inp) return;
+      const ya = inp.value === b.getAttribute("data-f"); inp.value = ya ? "" : b.getAttribute("data-f");
+      inp.dispatchEvent(new Event("input", { bubbles: true }));
+      calSig = ""; calPintar();
+      if (!ya) setTimeout(() => { const g = document.querySelector("#vista-historial .grupo-historial, #vista-historial #historialVacio"); if (g && g.scrollIntoView) g.scrollIntoView({ behavior: movReducido() ? "auto" : "smooth", block: "center" }); }, 160);
+    });
+    const inp = $("buscarHistorialV260"); if (inp) inp.addEventListener("input", () => { calSig = ""; calPintar(); });
+  }
+  function calPintar() {
+    const d = $("calHistorialV27628"); if (!d) return;
+    const regs = v8Regs(), inp = $("buscarHistorialV260"), sel = inp ? inp.value.trim() : "";
+    let h = regs.length | 0; regs.forEach(r => { const f = String(r.fecha || ""); h = (h * 31 + (f.charCodeAt(9) || 0) + (f.charCodeAt(8) || 0) * 7 + (f.charCodeAt(6) || 0) * 3 + (Number(r.minutos) || 0)) | 0; });
+    const sig = calY + "-" + calM + "-" + h + "-" + sel + "-" + new Date().getDate(); if (sig === calSig) return; calSig = sig;
+    const mes = {}, pref = calY + "-" + String(calM + 1).padStart(2, "0") + "-"; let totMes = 0;
+    regs.forEach(r => { const f = String(r.fecha || "").slice(0, 10); if (f.indexOf(pref) !== 0) return; const o = mes[f] || (mes[f] = { m: 0, t: {} }), mi = Number(r.minutos) || 0; o.m += mi; o.t[r.tipo] = (o.t[r.tipo] || 0) + mi; totMes += mi; });
+    d.querySelector(".cal-res").textContent = V8_MESES[calM] + " " + calY + (totMes ? " · " + v8Hm(totMes) : "");
+    const prim = new Date(calY, calM, 1), desp = (prim.getDay() + 6) % 7, dias = new Date(calY, calM + 1, 0).getDate(), hoy = new Date();
+    const esHoy = hoy.getFullYear() === calY && hoy.getMonth() === calM ? hoy.getDate() : -1;
+    let s = '<div class="cal-nav"><button type="button" class="cal-flecha" data-cal-nav="-1" aria-label="Mes anterior">‹</button><strong>' + V8_MESES[calM] + " " + calY + '</strong><button type="button" class="cal-flecha" data-cal-nav="1" aria-label="Mes siguiente">›</button></div>';
+    s += '<div class="cal-sem" aria-hidden="true">' + ["L", "M", "X", "J", "V", "S", "D"].map(x => "<span>" + x + "</span>").join("") + '</div><div class="cal-grid">';
+    for (let i = 0; i < desp; i++) s += '<span class="cal-vacio"></span>';
+    for (let n = 1; n <= dias; n++) {
+      const f = pref + String(n).padStart(2, "0"), o = mes[f];
+      let pts = "", etq = n + " de " + V8_MESES[calM];
+      if (o) { V8_TIPOS.forEach(x => { if (o.t[x[0]]) pts += '<i style="background:' + x[1] + '"></i>'; }); etq += ", " + v8Hm(o.m); }
+      s += '<button type="button" class="cal-dia' + (o ? " con" : "") + (n === esHoy ? " hoy" : "") + (sel === f ? " sel" : "") + '" data-f="' + f + '" style="--i:' + (o ? Math.min(1, o.m / 240).toFixed(2) : 0) + '" aria-label="' + etq + '" aria-pressed="' + (sel === f ? "true" : "false") + '"><b>' + n + '</b><span class="cal-pts">' + pts + "</span></button>";
+    }
+    d.querySelector(".cal-cuerpo").innerHTML = s + "</div>";
+  }
+
+  /* 20 · Celebración de la meta mensual */
+  function celMostrar() {
+    const hoy = new Date(), clave = hoy.getFullYear() + "-" + (hoy.getMonth() + 1);
+    try { if (localStorage.getItem("miServicio.celebracionMesV27628") === clave) return; localStorage.setItem("miServicio.celebracionMesV27628", clave); } catch (e) {}
+    if ($("celebraV27628")) return;
+    const pref = hoy.getFullYear() + "-" + String(hoy.getMonth() + 1).padStart(2, "0") + "-"; let tot = 0;
+    v8Regs().forEach(r => { if (String(r.fecha || "").indexOf(pref) === 0) tot += Number(r.minutos) || 0; });
+    const o = document.createElement("div"); o.id = "celebraV27628"; o.className = "celebra-v27628"; o.setAttribute("role", "dialog"); o.setAttribute("aria-modal", "true"); o.setAttribute("aria-label", "Objetivo del mes cumplido");
+    o.innerHTML = '<div class="cel-caja"><svg class="cel-medalla" viewBox="0 0 160 190" aria-hidden="true"><defs><linearGradient id="celO" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe9a0"/><stop offset=".55" stop-color="#ffc233"/><stop offset="1" stop-color="#d98400"/></linearGradient><linearGradient id="celI" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd25a"/><stop offset="1" stop-color="#f0a014"/></linearGradient><linearGradient id="celR" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff7d70"/><stop offset="1" stop-color="#d92b20"/></linearGradient><linearGradient id="celB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6fb0ff"/><stop offset="1" stop-color="#1f5fe6"/></linearGradient><linearGradient id="celG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs><path d="M52 8h26l16 58-30 12z" fill="url(#celB)"/><path d="M108 8H82L66 66l30 12z" fill="url(#celR)"/><ellipse cx="80" cy="172" rx="46" ry="7" fill="#000" opacity=".16"/><circle cx="80" cy="114" r="56" fill="url(#celO)"/><circle cx="80" cy="114" r="45" fill="url(#celI)" stroke="#fff" stroke-opacity=".55" stroke-width="2"/><path d="M80.0 85.0L87.3 103.9L107.6 105.0L91.9 117.9L97.0 137.5L80.0 126.5L63.0 137.5L68.1 117.9L52.4 105.0L72.7 103.9z" fill="#fff" stroke="#fff" stroke-width="4" stroke-linejoin="round"/><ellipse cx="66" cy="84" rx="30" ry="22" fill="url(#celG)" opacity=".65" transform="rotate(-24 66 84)"/><rect class="cel-brillo" x="-60" y="50" width="26" height="130" fill="#fff" opacity=".55" transform="rotate(20 80 114)"/></svg><h2>¡Objetivo cumplido!</h2><p class="cel-sub">Has llegado al 100 % de tu objetivo de ' + V8_MESES[hoy.getMonth()] + '.</p><p class="cel-tot"><strong>' + v8Hm(tot) + '</strong> este mes</p><button type="button" class="cel-ok">Genial</button></div>';
+    document.body.appendChild(o);
+    const cerrar = () => { o.classList.add("cel-sale"); setTimeout(() => { if (o.parentNode) o.remove(); }, 260); document.removeEventListener("keydown", tecla); };
+    const tecla = e => { if (e.key === "Escape") cerrar(); };
+    o.querySelector(".cel-ok").addEventListener("click", cerrar); o.addEventListener("click", e => { if (e.target === o) cerrar(); }); document.addEventListener("keydown", tecla);
+    const m = o.querySelector(".cel-medalla"); btConfeti({ getBoundingClientRect: () => { const r = m.getBoundingClientRect(); return { left: r.left, top: r.top + 10, width: r.width, height: r.height }; } }, true);
+    setTimeout(() => { if ($("celebraV27628")) btConfeti({ getBoundingClientRect: () => ({ left: innerWidth / 2, top: innerHeight * 0.25, width: 0, height: 0 }) }, true); }, 900);
+  }
+
+  /* 21 · Fondo vivo de estación en Inicio */
+  const ES_K = "miServicio.estacionVivaV27628";
+  function esActiva() { try { return localStorage.getItem(ES_K) !== "0"; } catch (e) { return true; } }
+  function esEstacion() { const m = new Date().getMonth(); return m === 11 || m <= 1 ? "invierno" : m <= 4 ? "primavera" : m <= 7 ? "verano" : "otono"; }
+  const ES_PART = { otono: ["🍂", "🍁", "🍂", "🍁", "🍃"], invierno: ["❄️", "❄️", "✦", "❄️"], primavera: ["🌸", "🌸", "🌼", "🌸", "🍃"], verano: ["✦", "✨", "✦", "☀️"] };
+  function esAsegurar() {
+    const t = document.querySelector("#vista-inicio .tarjeta-grafico-inicio"); if (!t) return;
+    let l = t.querySelector(":scope>.estacion-v27628");
+    if (!esActiva()) { if (l) l.remove(); return; }
+    const est = esEstacion();
+    if (l && l.dataset.est === est) return;
+    if (l) l.remove();
+    l = document.createElement("i"); l.className = "estacion-v27628"; l.dataset.est = est; l.setAttribute("aria-hidden", "true");
+    const lista = ES_PART[est]; let s = "";
+    for (let i = 0; i < 14; i++) {
+      const x = (i * 7.3 + (i % 3) * 5) % 100, dur = est === "verano" ? 4 + (i % 5) * 1.3 : 13 + (i * 1.9) % 12, del = -((i * 2.7) % dur), tam = 16 + (i * 5) % 14, dx = ((i % 2) ? 1 : -1) * (14 + (i * 7) % 34), rot = ((i % 2) ? 1 : -1) * (120 + (i * 37) % 240);
+      s += '<b style="left:' + x.toFixed(1) + "%;top:" + (est === "verano" ? (8 + (i * 13) % 80) + "%" : "-8%") + ";font-size:" + tam + "px;animation-duration:" + dur.toFixed(1) + "s;animation-delay:" + del.toFixed(1) + "s;--dx:" + dx + "px;--rot:" + rot + 'deg">' + lista[i % lista.length] + "</b>";
+    }
+    l.innerHTML = s;
+    const ref = t.querySelector(":scope>.cielo-hora-v276") || t.querySelector(":scope>.escena-3d-v260");
+    if (ref && ref.nextSibling) t.insertBefore(l, ref.nextSibling); else t.insertBefore(l, t.firstChild);
+  }
+  function instalarEstacion() {
+    const g = $("estacionVivaV27628"); if (g) {
+      const pintar = () => g.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", (b.dataset.estV27628 === "si") === esActiva() ? "true" : "false"));
+      g.addEventListener("click", e => { const b = e.target.closest("button[data-est-v27628]"); if (!b) return; try { localStorage.setItem(ES_K, b.dataset.estV27628 === "si" ? "1" : "0"); } catch (er) {} esAsegurar(); pintar(); });
+      pintar();
+    }
+    esAsegurar();
+  }
+
   function instalarAzulejos() {
     btPasar();
     new MutationObserver(m => { for (let i = 0; i < m.length; i++) { const t = m[i].target; if (t && t.closest && t.closest(".orbita-grafico,#btDefsV276,.bt-confeti-v276")) continue; btProgramar(); break; } }).observe(document.body, { childList: true, subtree: true });
@@ -1220,7 +1349,7 @@
   }
 
   function arrancar() {
-    try { envolverFirma(); envolverDeshacer(); instalarTemas(); instalarAnillos(); instalarPapelera(); instalarMeta(); instalarDiagnostico(); programarLimpieza(); instalarPendientes(); instalarEventoChip(); instalarComprobacionGlobos(); instalarVida(); instalarEstadisticasNuevas(); instalarAcento(); instalarTituloCompacto(); instalarInicioVivo(); instalarInteresados(); instalarRecuperacionEncaje(); instalarAccesibilidad(); aplicarTipografia(); instalarAzulejos(); instalarModoColor(); instalarAnilloCron(); } catch (e) { console.warn("[V269]", e); }
+    try { envolverFirma(); envolverDeshacer(); instalarTemas(); instalarAnillos(); instalarPapelera(); instalarMeta(); instalarDiagnostico(); programarLimpieza(); instalarPendientes(); instalarEventoChip(); instalarComprobacionGlobos(); instalarVida(); instalarEstadisticasNuevas(); instalarAcento(); instalarTituloCompacto(); instalarInicioVivo(); instalarInteresados(); instalarRecuperacionEncaje(); instalarAccesibilidad(); aplicarTipografia(); instalarAzulejos(); instalarModoColor(); instalarAnilloCron(); instalarEstacion(); } catch (e) { console.warn("[V269]", e); }
     document.addEventListener("click", e => { const n = e.target.closest && e.target.closest(".nav-item"); if (n) setTimeout(() => { pintarAnillos(); if (n.dataset.vista === "estadisticas") animarAnillos(); }, 120); });
     window.MiServicioV269 = { faseInicio: ivFase, datosAnillos, aplicarTema, TEMAS, leerPapelera: limpiarPapelera, enviarAPapelera, derivarFirma, pendientes, errores, reunirDiagnostico, limpiarCaches, candidatosEventos, comprobarGlobos, globosFallan, leerInteresados };
   }
