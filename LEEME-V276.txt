@@ -152,3 +152,6 @@ V276-27629 · Ajustes iOS, «Hoy llevas…», evolución apilada, rueda de meta 
 - Al guardar un registro del mes en curso aparece una rueda con el avance de la meta (de % a %), lo añadido y lo que falta. Si se cruza el 100 % sale la celebración de siempre en lugar de la rueda. Sin objetivo configurado no aparece.
 - Estadísticas > Resumen mensual: botón «Tarjeta del mes» que genera una imagen 1080×1350 (mes, anillo de meta, horas por actividad, días activos y mejor semana) para compartir o guardar. No incluye notas ni nombres. El botón de compartir en texto sigue igual.
 - Sin claves de almacenamiento nuevas ni cambios en datos o copias JSON.
+
+V276-27630 · Cifras de los globos de Inicio
+- Corregido: a veces los números de los globos se quedaban a medias (cuenta de 0 al valor real detenida, por ejemplo al abrir la app desde el icono o al volver a ella) hasta entrar de nuevo en Inicio. Ahora la cuenta siempre termina en el valor real: al acabar, con una red de seguridad por tiempo, al volver a la app y al cambiar de pestaña. No cambia ningún dato.

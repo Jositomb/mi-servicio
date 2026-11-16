@@ -903,18 +903,29 @@
     requestAnimationFrame(() => requestAnimationFrame(() => arcos.forEach(a => a.style.setProperty("--p", a.dataset.p || 0))));
   }
   /* Solo cuenta las cifras de las burbujas. El total central NO se toca: visual-v260.js lanza una animación de opacidad cada vez que cambia su texto y, apiladas, dejaban el total invisible en iPhone. */
+  function ivCompletarCuenta() {
+    document.querySelectorAll("#graficoInicio .orbita-actividad>span[data-fin-v276]").forEach(e => { const f = e.getAttribute("data-fin-v276"); if (e.textContent !== f) e.textContent = f; e.removeAttribute("data-fin-v276"); });
+  }
+  let ivCuentaId = 0;
   function ivContar() {
+    ivCompletarCuenta();
     if (sinMovimiento()) return;
     const g = $("graficoInicio"); if (!g) return;
     const objetivos = [...g.querySelectorAll(".orbita-actividad>span:not(.sector-icono)")].filter(e => /\d/.test(e.textContent)).map(e => ({ e, fin: e.textContent, m: minDeTexto(e.textContent) }));
     if (!objetivos.length) return;
-    const t0 = performance.now(), dur = 900;
+    const id = ++ivCuentaId, t0 = performance.now(), dur = 900;
+    objetivos.forEach(o => o.e.setAttribute("data-fin-v276", o.fin));
+    const fin = () => { if (id === ivCuentaId) ivCompletarCuenta(); };
     const paso = ahora => {
+      if (id !== ivCuentaId) return;
       const k = Math.min(1, (ahora - t0) / dur), f = 1 - Math.pow(1 - k, 3);
-      objetivos.forEach(o => { o.e.textContent = k >= 1 ? o.fin : textoDeMin(o.m * f); });
-      if (k < 1) requestAnimationFrame(paso);
+      if (document.hidden || k >= 1) { fin(); return; }
+      objetivos.forEach(o => { if (o.e.isConnected && o.e.hasAttribute("data-fin-v276")) o.e.textContent = textoDeMin(o.m * f); });
+      requestAnimationFrame(paso);
     };
     requestAnimationFrame(paso);
+    /* Red de seguridad: si el navegador detiene los fotogramas (app en segundo plano, arranque desde el icono), las cifras acaban siempre en su valor real. */
+    setTimeout(fin, dur + 250);
   }
   function ivEntrada() {
     const g = $("graficoInicio"); if (!g || !g.querySelector(".orbita-grafico")) return;
@@ -957,6 +968,9 @@
   }
   function instalarInicioVivo() {
     ivDefs(); ivCielo();
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) ivCompletarCuenta(); });
+    window.addEventListener("pageshow", ivCompletarCuenta); window.addEventListener("focus", ivCompletarCuenta);
+    document.addEventListener("click", e => { if (e.target.closest && e.target.closest(".nav-item")) { if (!e.target.closest('.nav-item[data-vista="inicio"]')) ivCompletarCuenta(); } }, true);
     setInterval(ivCielo, 60000);
     document.addEventListener("visibilitychange", () => { if (!document.hidden) { ivCielo(); const v = $("vista-inicio"); if (v && v.classList.contains("activa")) { ivUltima = 0; ivEntrada(); } } });
     const g = $("graficoInicio");
