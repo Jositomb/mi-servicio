@@ -14216,3 +14216,121 @@ html body:not(#bta):not(#btb) #tendenciaV144 .v144-col.evo-mejor-v27629:not(#btc
 .tarjeta-mes-v27629 .tj-comp,.tarjeta-mes-v27629 .tj-guardar{background:var(--app-fuerte,#0a6cdc);color:#fff}
 .tarjeta-mes-v27629 .tj-msg{margin:0;min-height:1em;color:rgba(255,255,255,.8);font-size:13px;text-align:center}
 .compartir-mes-v260>#tarjetaMesV27629{margin-left:8px}
+
+/* ======================================================================
+   V27631 · Semana con racha, objetivo diario, recordatorio cálido y vitrina del año
+   ====================================================================== */
+/* 1 · Semana con racha */
+html body:not(#bta):not(#btb) #semanaRachaV27631:not(#btc){margin:0 0 10px!important;padding:0!important}
+.semana-racha-v27631 .sr-tarjeta{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:20px;background:var(--ios-tarjeta,#fff);box-shadow:inset 0 1px 0 rgba(255,255,255,.65),0 6px 18px rgba(20,30,60,.08)}
+@media (prefers-color-scheme:dark){.semana-racha-v27631 .sr-tarjeta{background:#1c1c1e;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 6px 18px rgba(0,0,0,.4)}}
+:root[data-modo-v276=oscuro] .semana-racha-v27631 .sr-tarjeta{background:#1c1c1e}
+:root[data-modo-v276=claro] .semana-racha-v27631 .sr-tarjeta{background:#fff}
+.sr-dias{flex:1 1 auto;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;min-width:0}
+.sr-dia{display:flex;flex-direction:column;align-items:center;gap:3px}
+.sr-dia small{font-size:11px;font-weight:700;color:var(--ios-texto2,rgba(60,60,67,.75));line-height:1}
+.sr-dia[data-estado=hoy] small{color:var(--app-fuerte,#0a6cdc)}
+.sr-circ{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;box-sizing:border-box;background:rgba(120,120,128,.14);box-shadow:inset 0 1px 2px rgba(0,0,0,.14)}
+.sr-circ svg{width:16px;height:16px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.3))}
+.sr-dia[data-estado=hecho] .sr-circ{background:radial-gradient(circle at 32% 24%,rgba(255,255,255,.5),rgba(255,255,255,0) 46%),linear-gradient(160deg,var(--c1),var(--c2));box-shadow:inset 0 -3px 5px rgba(0,0,0,.2),inset 0 1.5px 2px rgba(255,255,255,.55),0 4px 8px rgba(0,0,0,.2);animation:srPop-v27631 .5s cubic-bezier(.2,.9,.25,1.2) both;animation-delay:calc(var(--i)*55ms)}
+.sr-dia[data-estado=hoy] .sr-circ{border:2px dashed var(--app-fuerte,#0a6cdc);background:transparent;box-shadow:none;animation:srLate-v27631 1.8s ease-in-out infinite}
+.sr-dia[data-estado=futuro] .sr-circ{opacity:.5}
+@keyframes srPop-v27631{0%{opacity:0;scale:.4}100%{opacity:1;scale:1}}
+@keyframes srLate-v27631{0%,100%{opacity:1}50%{opacity:.45}}
+.sr-llama{flex:0 0 auto;display:grid;grid-template-columns:auto auto;grid-template-rows:auto auto;column-gap:5px;align-items:center;padding-left:10px;border-left:1px solid rgba(120,120,128,.25);min-width:76px}
+.sr-llama .sr-ico{grid-row:1/3;display:block;width:28px;height:32px;filter:drop-shadow(0 3px 4px rgba(255,90,0,.4));transform-origin:50% 90%;animation:srLlama-v27631 1.6s ease-in-out infinite}
+.sr-llama .sr-ico svg{display:block;width:100%;height:100%}
+.sr-llama b{font-size:22px;font-weight:800;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums}
+.sr-llama small{font-size:11px;font-weight:600;line-height:1.1;color:var(--ios-texto2,rgba(60,60,67,.75));grid-column:2}
+.sr-llama[data-nivel="0"] .sr-ico{filter:grayscale(1) opacity(.45);animation:none}
+.sr-llama[data-nivel="2"] .sr-ico{width:31px;height:35px}
+.sr-llama[data-nivel="3"] .sr-ico{width:34px;height:38px;filter:drop-shadow(0 0 7px rgba(255,120,0,.65))}
+.sr-llama[data-nivel="4"] .sr-ico{width:37px;height:41px;filter:drop-shadow(0 0 10px rgba(255,90,0,.85))}
+@keyframes srLlama-v27631{0%,100%{transform:scaleY(1) rotate(-1.5deg)}50%{transform:scaleY(1.07) rotate(1.5deg)}}
+@media (prefers-reduced-motion:reduce){.sr-dia .sr-circ,.sr-llama .sr-ico{animation:none!important}}
+
+/* 2 · Objetivo diario dentro de «Hoy llevas…» */
+html body:not(#bta):not(#btb) #vista-registrar .hoy-llevas-v27629:not(#btc){flex-wrap:wrap;gap:6px 11px;align-items:center;padding:8px 12px}
+html body:not(#bta):not(#btb) #vista-registrar .hoy-llevas-v27629.hl-vacio:not(#btc){display:none}
+.hoy-llevas-v27629 .hl-anillo{position:relative;flex:0 0 auto;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;transition:--pr .9s cubic-bezier(.22,.8,.25,1)}
+.hoy-llevas-v27629 .hl-aro{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,var(--app-fuerte,#2864d7) calc(var(--pr,0)*3.6deg),rgba(120,120,128,.2) 0);box-shadow:0 3px 7px rgba(var(--app-fuerte-rgb,40,100,215),.25)}
+.hoy-llevas-v27629 .hl-anillo::before{content:none}
+@media (prefers-color-scheme:dark){.hoy-llevas-v27629 .hl-anillo::before{background:#1c1c1e}}
+:root[data-modo-v276=oscuro] .hoy-llevas-v27629 .hl-anillo::before{background:#1c1c1e}
+:root[data-modo-v276=claro] .hoy-llevas-v27629 .hl-anillo::before{background:#fff}
+.hoy-llevas-v27629 .hl-anillo b{position:relative;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--ios-tarjeta,#fff);color:var(--ios-texto,#111);box-shadow:inset 0 1.5px 3px rgba(0,0,0,.14);font-size:11px;font-weight:800;font-variant-numeric:tabular-nums}
+@media (prefers-color-scheme:dark){.hoy-llevas-v27629 .hl-anillo b{background:#1c1c1e;color:#fff}}
+:root[data-modo-v276=oscuro] .hoy-llevas-v27629 .hl-anillo b{background:#1c1c1e;color:#fff}
+:root[data-modo-v276=claro] .hoy-llevas-v27629 .hl-anillo b{background:#fff;color:#111}
+.hoy-llevas-v27629 .hl-anillo.hl-ok .hl-aro{background:conic-gradient(from 0deg,#2fb463 calc(var(--pr,0)*3.6deg),rgba(120,120,128,.2) 0)}
+.hoy-llevas-v27629 .hl-anillo.hl-ok b{color:#1a7f3f;font-size:15px}
+@media (prefers-color-scheme:dark){.hoy-llevas-v27629 .hl-anillo.hl-ok b{color:#5fd68a}}
+:root[data-modo-v276=oscuro] .hoy-llevas-v27629 .hl-anillo.hl-ok b{color:#5fd68a}
+:root[data-modo-v276=claro] .hoy-llevas-v27629 .hl-anillo.hl-ok b{color:#1a7f3f}
+.hoy-llevas-v27629.hl-sin-meta .hl-anillo{display:none}
+.hoy-llevas-v27629 .hl-cuerpo{flex:1 1 150px;min-width:0}
+.hoy-llevas-v27629 .hl-cab{display:flex;align-items:baseline;justify-content:flex-start;gap:7px;white-space:nowrap}
+.hoy-llevas-v27629 .hl-falta{margin-left:auto;font-size:12.5px;font-weight:650;color:var(--app-fuerte-texto,var(--app-fuerte,#0a5ec2));overflow:hidden;text-overflow:ellipsis}
+.hoy-llevas-v27629 .hl-falta.hl-ok{color:#1a7f3f}
+@media (prefers-color-scheme:dark){.hoy-llevas-v27629 .hl-falta.hl-ok{color:#5fd68a}.hoy-llevas-v27629 .hl-falta{color:#8ab8ff}}
+:root[data-modo-v276=oscuro] .hoy-llevas-v27629 .hl-falta.hl-ok{color:#5fd68a}
+:root[data-modo-v276=claro] .hoy-llevas-v27629 .hl-falta.hl-ok{color:#1a7f3f}
+.hoy-llevas-v27629 .hl-cuerpo .hl-barra{flex:none;width:100%;min-width:0;margin-top:5px;height:11px}
+.hoy-llevas-v27629.hl-cero .hl-total{opacity:.65}
+
+/* 3 · Recordatorio cálido */
+.recuerdo-v27631{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 10px);z-index:8800;width:min(380px,calc(100vw - 24px));margin-left:calc(min(380px,calc(100vw - 24px))/-2);display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:center;padding:13px 14px;border-radius:24px;color:var(--ios-texto,#111);
+  background:rgba(255,255,255,.9);-webkit-backdrop-filter:saturate(1.8) blur(22px);backdrop-filter:saturate(1.8) blur(22px);box-shadow:0 18px 44px rgba(10,20,50,.3),inset 0 1px 0 rgba(255,255,255,.85);opacity:0;translate:0 -26px;transition:opacity .3s ease,translate .5s cubic-bezier(.2,.9,.25,1.12)}
+@media (prefers-color-scheme:dark){.recuerdo-v27631{background:rgba(44,44,46,.92);color:#fff;box-shadow:0 18px 44px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.14)}}
+:root[data-modo-v276=oscuro] .recuerdo-v27631{background:rgba(44,44,46,.92);color:#fff}
+:root[data-modo-v276=claro] .recuerdo-v27631{background:rgba(255,255,255,.9);color:#111}
+.recuerdo-v27631.rc-entra{opacity:1;translate:0 0}
+.recuerdo-v27631.rc-sale{opacity:0;translate:0 -18px}
+.recuerdo-v27631 .rc-gesto{grid-row:1/3;display:grid;place-items:center;width:48px;height:48px;border-radius:15px;font-size:27px;background:linear-gradient(160deg,#ffd27a,#ff9f1c);box-shadow:inset 0 -4px 6px rgba(0,0,0,.18),inset 0 2px 3px rgba(255,255,255,.6),0 6px 12px rgba(255,150,0,.35)}
+.recuerdo-v27631 .rc-gesto{animation:rcSaluda-v27631 1.4s ease-in-out .5s 3;transform-origin:70% 80%}
+@keyframes rcSaluda-v27631{0%,100%{rotate:0deg}20%{rotate:16deg}40%{rotate:-10deg}60%{rotate:14deg}80%{rotate:-6deg}}
+.recuerdo-v27631 .rc-txt{display:flex;flex-direction:column;gap:2px;min-width:0}
+.recuerdo-v27631 .rc-txt strong{font-size:15.5px;font-weight:750;letter-spacing:-.01em}
+.recuerdo-v27631 .rc-txt span{font-size:14px;line-height:1.3;font-weight:500;opacity:.85}
+.recuerdo-v27631 .rc-acc{grid-column:2;display:flex;gap:8px;margin-top:6px}
+.recuerdo-v27631 .rc-acc button{min-height:40px;padding:0 16px;border:0;border-radius:13px;font:650 14.5px -apple-system,system-ui,sans-serif;cursor:pointer}
+.recuerdo-v27631 .rc-si{background:var(--app-fuerte,#0a6cdc);color:#fff}
+.recuerdo-v27631 .rc-no{background:rgba(120,120,128,.18);color:inherit}
+@media (prefers-reduced-motion:reduce){.recuerdo-v27631{transition:opacity .2s ease}.recuerdo-v27631 .rc-gesto{animation:none}}
+
+/* 4 · Vitrina de insignias */
+#vista-estadisticas:not([data-seg-v264="anio"]) #vitrinaV27631{display:none!important}
+.vitrina-v27631{padding:16px 14px 14px!important}
+.vitrina-v27631 .vt-titulo{margin:0 0 2px;font-size:18px}
+.vitrina-v27631 .vt-sub{margin:0 0 12px;font-size:12.5px;color:var(--ios-texto2,rgba(60,60,67,.75))}
+.vitrina-v27631 .vt-rejilla{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 6px}
+.vitrina-v27631 .vt-mes{display:flex;flex-direction:column;align-items:center;gap:2px;animation:vtEntra-v27631 .5s cubic-bezier(.2,.9,.25,1.1) both;animation-delay:calc(var(--i)*40ms)}
+@keyframes vtEntra-v27631{0%{opacity:0;translate:0 10px}100%{opacity:1;translate:0 0}}
+.vitrina-v27631 .medalla-v267{width:54px;height:54px}
+.vitrina-v27631 .medalla-v267 .cara{inset:5px}
+.vitrina-v27631 .medalla-v267 .cara b{display:grid;place-items:center;width:26px;height:26px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35))}
+.vitrina-v27631 .medalla-v267 .cara b svg{width:100%;height:100%}
+.vitrina-v27631 .vt-mes strong{font-size:12.5px;font-weight:700;margin-top:3px}
+.vitrina-v27631 .vt-mes small{font-size:11.5px;font-weight:600;color:var(--ios-texto2,rgba(60,60,67,.75));font-variant-numeric:tabular-nums}
+.vitrina-v27631 .vt-mes[data-nivel="3"] small{color:#8a5a05;font-weight:750}
+@media (prefers-color-scheme:dark){.vitrina-v27631 .vt-mes[data-nivel="3"] small{color:#ffd166}}
+:root[data-modo-v276=oscuro] .vitrina-v27631 .vt-mes[data-nivel="3"] small{color:#ffd166}
+:root[data-modo-v276=claro] .vitrina-v27631 .vt-mes[data-nivel="3"] small{color:#8a5a05}
+.vitrina-v27631 .vt-datos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid rgba(120,120,128,.22);text-align:center}
+.vitrina-v27631 .vt-datos strong{display:block;font-size:19px;font-weight:800;letter-spacing:-.02em}
+.vitrina-v27631 .vt-datos small{font-size:11.5px;font-weight:600;color:var(--ios-texto2,rgba(60,60,67,.75))}
+@media (prefers-reduced-motion:reduce){.vitrina-v27631 .vt-mes{animation:none}}
+
+@media (prefers-color-scheme:dark){.sr-dia small,.sr-llama small{color:rgba(235,235,245,.66)}.sr-dia[data-estado=hoy] small{color:#8ab8ff}.sr-dia[data-estado=hoy] .sr-circ{border-color:#8ab8ff}.sr-circ{background:rgba(120,120,128,.28)}}
+:root[data-modo-v276=oscuro] .sr-dia small,:root[data-modo-v276=oscuro] .sr-llama small{color:rgba(235,235,245,.66)}
+:root[data-modo-v276=oscuro] .sr-dia[data-estado=hoy] small{color:#8ab8ff}
+:root[data-modo-v276=oscuro] .sr-dia[data-estado=hoy] .sr-circ{border-color:#8ab8ff}
+:root[data-modo-v276=claro] .sr-dia small,:root[data-modo-v276=claro] .sr-llama small{color:rgba(60,60,67,.75)}
+.semana-racha-v27631 .sr-llama b{color:var(--ios-texto,inherit)}
+@media (prefers-color-scheme:dark){.semana-racha-v27631 .sr-llama b{color:#fff}}
+:root[data-modo-v276=oscuro] .semana-racha-v27631 .sr-llama b{color:#fff}
+:root[data-modo-v276=claro] .semana-racha-v27631 .sr-llama b{color:#111}
+
+@media (max-height:759px){html body:not(#bta):not(#btb) #semanaRachaV27631:not(#btc){display:none!important}}
+@media (min-width:700px) and (max-height:1259px){html body:not(#bta):not(#btb) #semanaRachaV27631:not(#btc){display:none!important}}
+html body:not(#bta):not(#btb) #semanaRachaV27631.sr-oculta-v27631:not(#btc){display:none!important}

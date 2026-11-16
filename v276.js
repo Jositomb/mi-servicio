@@ -569,6 +569,7 @@
     });
     s.querySelector(".anio-compartir-v276").disabled = !d.total;
     s.classList.toggle("sin-datos-v276", !d.total);
+    try { vtPintar(); } catch (e) {}
   }
   function rrect(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
   function imagenAnio(d) {
@@ -1378,17 +1379,28 @@
     let s = $("hoyLlevasV27629");
     if (!s) {
       s = document.createElement("section"); s.id = "hoyLlevasV27629"; s.className = "hoy-llevas-v27629"; s.setAttribute("aria-live", "polite");
-      s.innerHTML = '<div class="hl-cab"><span class="hl-tit">Hoy llevas</span><b class="hl-total">0 min</b></div><div class="hl-barra" aria-hidden="true"></div><div class="hl-chips"></div>';
+      s.innerHTML = '<div class="hl-anillo" aria-hidden="true"><i class="hl-aro"></i><b></b></div><div class="hl-cuerpo"><div class="hl-cab"><span class="hl-tit">Hoy llevas</span><b class="hl-total">0 min</b><span class="hl-falta"></span></div><div class="hl-barra" aria-hidden="true"></div></div><div class="hl-chips"></div>';
       cron.parentNode.insertBefore(s, cron);
     }
     const hoy = fechaISO(new Date()), t = { ministerio: 0, ldc: 0, asambleas: 0, otras: 0 }; let tot = 0;
     v8Regs().forEach(r => { if (String(r.fecha || "").slice(0, 10) !== hoy) return; const m = v9Min(r); t[v9Tipo(r)] += m; tot += m; });
-    const firma = hoy + "|" + V8_TIPOS.map(x => t[x[0]]).join(",");
+    const plan = dnPlan(tot);
+    const firma = hoy + "|" + V8_TIPOS.map(x => t[x[0]]).join(",") + "|" + (plan ? plan.need + "," + plan.pct + "," + plan.mes : "-");
     if (firma === hlFirma && s.dataset.listo === "1") return;
-    const primera = s.dataset.listo !== "1", subio = !primera && firma.split("|")[0] === hlFirma.split("|")[0] && tot > (hlFirma ? hlFirma.split("|")[1].split(",").reduce((a, b) => a + Number(b), 0) : 0);
-    hlFirma = firma; s.dataset.listo = "1"; s.classList.toggle("hl-vacio", tot === 0);
-    v9Txt(s.querySelector(".hl-tit"), tot ? "Hoy llevas" : "Hoy aún no has registrado nada");
-    v9Txt(s.querySelector(".hl-total"), tot ? v8Hm(tot) : "");
+    const primera = s.dataset.listo !== "1", previo = hlFirma ? hlFirma.split("|")[1].split(",").reduce((a, b) => a + Number(b), 0) : 0, subio = !primera && firma.split("|")[0] === hlFirma.split("|")[0] && tot > previo;
+    hlFirma = firma; s.dataset.listo = "1"; s.classList.toggle("hl-vacio", tot === 0 && !plan); s.classList.toggle("hl-cero", tot === 0); s.classList.toggle("hl-sin-meta", !plan);
+    v9Txt(s.querySelector(".hl-total"), v8Hm(tot));
+    const falta = s.querySelector(".hl-falta");
+    let txt = "", cumplido = false;
+    if (plan) { if (plan.mes) { txt = "¡Meta del mes cumplida!"; cumplido = true; } else if (plan.falta > 0) txt = "faltan " + v8Hm(plan.falta); else { txt = "¡Vas al día!"; cumplido = true; } }
+    v9Txt(falta, txt); falta.classList.toggle("hl-ok", cumplido);
+    if (plan) falta.title = plan.mes ? "" : "Para ir al día con tu meta del mes: " + v8Hm(plan.need) + " hoy";
+    const an = s.querySelector(".hl-anillo");
+    if (an) {
+      const antes = Number(an.dataset.pct || 0), nuevo = plan ? plan.pct : 0; an.dataset.pct = String(nuevo); an.classList.toggle("hl-ok", cumplido);
+      v9Txt(an.querySelector("b"), cumplido ? "✓" : nuevo + "%");
+      if (movReducido() || primera) an.style.setProperty("--pr", String(nuevo)); else { an.style.setProperty("--pr", String(antes)); requestAnimationFrame(() => requestAnimationFrame(() => an.style.setProperty("--pr", String(nuevo)))); }
+    }
     const barra = s.querySelector(".hl-barra"), ref = Math.max(240, tot);
     let seg = "", chips = "";
     V8_TIPOS.forEach(x => { const m = t[x[0]]; if (!m) return; seg += '<i style="--c1:' + x[2] + ";--c2:" + x[1] + ';" data-w="' + (m / ref * 100).toFixed(2) + '"></i>'; chips += '<span><u style="background:' + x[1] + '"></u>' + (V8_NOMBRE[x[0]] || x[0]) + " " + v8Hm(m) + "</span>"; });
@@ -1396,7 +1408,7 @@
     const pon = () => barra.querySelectorAll("i").forEach(e => { e.style.width = e.dataset.w + "%"; });
     if (movReducido() || !primera && !subio) pon(); else { barra.querySelectorAll("i").forEach(e => { e.style.width = "0%"; }); requestAnimationFrame(() => requestAnimationFrame(pon)); }
     if (subio && !movReducido()) { const b = s.querySelector(".hl-total"); b.classList.remove("hl-sube"); void b.offsetWidth; b.classList.add("hl-sube"); }
-    s.setAttribute("aria-label", tot ? "Hoy llevas " + v8Hm(tot) : "Hoy aún no has registrado nada");
+    s.setAttribute("aria-label", "Hoy llevas " + v8Hm(tot) + (txt ? ". " + txt : ""));
   }
 
   /* 22c · Evolución con barras apiladas por actividad y corona al mejor mes */
@@ -1508,13 +1520,148 @@
     comp.parentNode.insertBefore(b, comp.nextSibling); b.addEventListener("click", tjAbrir);
   }
 
-  function v9Pasar() { try { ajPintar(); hlPintar(); evoPintar(); tjInstalar(); } catch (e) { console.warn("[V27629]", e); } }
+  function v9Pasar() { try { ajPintar(); hlPintar(); evoPintar(); tjInstalar(); srPintar(); vtPintar(); } catch (e) { console.warn("[V27629]", e); } }
   function instalarV9() {
     v9Pasar();
     document.addEventListener("input", e => { if (e.target && (e.target.id === "nombreSaludoV260" || e.target.id === "objetivoMensual")) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("change", e => { if (e.target && /^(tipoPublicador|nombreSaludoV260|objetivoMensual)$/.test(e.target.id)) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("click", e => { if (e.target.closest && e.target.closest("#abrirAjustesV260,#modoColorV27627")) setTimeout(ajPintar, 80); }, true);
-    window.MiServicioV27629 = { ajPintar, hlPintar, evoPintar, ruedaMostrar, tjDibujar, tjAbrir, ajResumenes };
+    rcInstalar();
+    setTimeout(() => srProgramar(100), 1100); window.addEventListener("resize", () => srProgramar(1200)); window.addEventListener("orientationchange", () => srProgramar(1500));
+    window.MiServicioV27629 = { ajPintar, hlPintar, evoPintar, ruedaMostrar, tjDibujar, tjAbrir, ajResumenes, srPintar, vtPintar, dnPlan, rcEvaluar, rcMensaje };
+  }
+
+  /* ================= 23. V27631 · SEMANA CON RACHA, OBJETIVO DIARIO, RECORDATORIO CÁLIDO Y VITRINA DEL AÑO ================= */
+  const SR_LETRAS = ["L", "M", "X", "J", "V", "S", "D"], SR_DIAS = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"];
+  const SR_LLAMA = '<svg viewBox="0 0 24 28" aria-hidden="true" focusable="false"><defs><linearGradient id="srLlamaG" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ff3b30"/><stop offset=".55" stop-color="#ff9500"/><stop offset="1" stop-color="#ffd54a"/></linearGradient></defs><path class="sr-ll-ext" d="M12.6 1.2c.6 4.4 6.9 7.2 6.9 14.1A7.5 7.5 0 0 1 12 23a7.5 7.5 0 0 1-7.5-7.7c0-3 1.7-4.9 3.2-6.4.2 2 1.1 3.3 2.4 3.9-.6-4.1.2-8 2.5-11.6z" fill="url(#srLlamaG)"/><path class="sr-ll-int" d="M12.2 12.5c.3 2.4 3.4 3.5 3.4 6.5a3.7 3.7 0 0 1-7.4 0c0-1.7 1-2.7 1.8-3.6.2 1 .6 1.6 1.3 1.9-.3-2 .1-3.6.9-4.8z" fill="#fff3b0" opacity=".92"/></svg>';
+  const SR_CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5.5 12.8l4.2 4.2 8.8-9.2" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  function srRacha() { try { const L = window.MiServicioV267 && window.MiServicioV267.calcularLogros; return L ? (L().rachaActual || 0) : 0; } catch (e) { return 0; } }
+  function srNivel(n) { return n >= 14 ? 4 : n >= 7 ? 3 : n >= 3 ? 2 : n >= 1 ? 1 : 0; }
+  function srPintar() {
+    const obj = $("seccionObjetivoInicioV260"); if (!obj) return;
+    let s = $("semanaRachaV27631");
+    if (!s) {
+      s = document.createElement("section"); s.id = "semanaRachaV27631"; s.className = "seccion semana-racha-v27631";
+      s.innerHTML = '<div class="sr-tarjeta"><div class="sr-dias" role="list"></div><div class="sr-llama" role="img"><span class="sr-ico">' + SR_LLAMA + '</span><b></b><small></small></div></div>';
+      obj.parentNode.insertBefore(s, obj);
+    }
+    const hoy = new Date(), dow = (hoy.getDay() + 6) % 7, lunes = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() - dow), hoyIso = fechaISO(hoy), racha = srRacha();
+    const mapa = {}; v8Regs().forEach(r => { const f = String(r.fecha).slice(0, 10); (mapa[f] = mapa[f] || { total: 0, t: {} }); const m = v9Min(r), k = v9Tipo(r); mapa[f].total += m; mapa[f].t[k] = (mapa[f].t[k] || 0) + m; });
+    const dias = [];
+    for (let i = 0; i < 7; i++) { const d = new Date(lunes.getFullYear(), lunes.getMonth(), lunes.getDate() + i), f = fechaISO(d), x = mapa[f], hecho = !!(x && x.total > 0); let dom = "ministerio"; if (hecho) dom = Object.keys(x.t).sort((a, b) => x.t[b] - x.t[a])[0]; dias.push({ i, f, hecho, total: hecho ? x.total : 0, dom, estado: hecho ? "hecho" : f === hoyIso ? "hoy" : f > hoyIso ? "futuro" : "vacio" }); }
+    const firma = dias.map(d => d.estado + d.total + d.dom).join("|") + "#" + racha + "#" + hoyIso;
+    if (s.dataset.firma === firma) return; s.dataset.firma = firma;
+    const cont = s.querySelector(".sr-dias"); cont.textContent = "";
+    dias.forEach(d => {
+      const e = document.createElement("div"); e.className = "sr-dia"; e.dataset.estado = d.estado; e.setAttribute("role", "listitem");
+      const col = V8_TIPOS.find(x => x[0] === d.dom) || V8_TIPOS[0]; e.style.setProperty("--c1", col[2]); e.style.setProperty("--c2", col[1]); e.style.setProperty("--i", String(d.i));
+      e.setAttribute("aria-label", SR_DIAS[d.i] + (d.hecho ? ": " + v8Hm(d.total) : d.estado === "hoy" ? ": hoy, sin registrar" : d.estado === "futuro" ? ": pendiente" : ": sin actividad"));
+      e.innerHTML = '<i class="sr-circ">' + (d.hecho ? SR_CHECK : "") + "</i><small>" + SR_LETRAS[d.i] + "</small>";
+      cont.appendChild(e);
+    });
+    const ll = s.querySelector(".sr-llama"); ll.dataset.nivel = String(srNivel(racha));
+    v9Txt(ll.querySelector("b"), racha ? String(racha) : "0");
+    v9Txt(ll.querySelector("small"), racha === 1 ? "día seguido" : racha ? "días seguidos" : "empieza hoy");
+    ll.setAttribute("aria-label", racha ? "Racha de " + racha + (racha === 1 ? " día" : " días") : "Sin racha todavía");
+  }
+
+  /* Si la franja de la semana impidiera que Inicio quepa entera en pantalla, se oculta sola (se prueba una vez por tamaño de pantalla). */
+  let srClave = "";
+  function srAjustar() {
+    const s = $("semanaRachaV27631"), vi = $("vista-inicio"); if (!s || !vi || !vi.classList.contains("activa") || document.hidden) return;
+    const clave = innerWidth + "x" + innerHeight; if (clave === srClave) return; srClave = clave;
+    const encaja = () => document.body.classList.contains("inicio-encajado-v260") || document.documentElement.scrollHeight <= innerHeight + 2;
+    s.classList.remove("sr-oculta-v27631");
+    setTimeout(() => {
+      if (encaja()) return;
+      s.classList.add("sr-oculta-v27631"); try { programarEncajeV260(true); } catch (e) {}
+      setTimeout(() => { if (!encaja()) { s.classList.remove("sr-oculta-v27631"); try { programarEncajeV260(true); } catch (e) {} } }, 1500);
+    }, 1200);
+  }
+  let srT = 0; function srProgramar(ms) { clearTimeout(srT); srT = setTimeout(srAjustar, ms); }
+
+  /* 23b · Objetivo diario inteligente (aro dentro de «Hoy llevas…») */
+  function dnPlan(hoyMin) {
+    const ob = objetivo(); if (!ob) return null;
+    const m = mesTotalCompu(), ahora = new Date(), ultimo = new Date(ahora.getFullYear(), ahora.getMonth() + 1, 0).getDate();
+    if (m.comp >= ob) return { mes: true, pct: 100, falta: 0, need: 0 };
+    const antes = Math.max(0, m.comp - hoyMin), rest = ob - antes, dias = Math.max(1, ultimo - ahora.getDate() + 1), need = Math.max(1, Math.ceil(rest / dias));
+    return { mes: false, need, pct: Math.min(100, Math.round(hoyMin / need * 100)), falta: Math.max(0, need - hoyMin) };
+  }
+
+  /* 23c · Recordatorio cálido dentro de la app */
+  const RC_K = "miServicio.recordatorioV27631", RC_E = "miServicio.recordatorioEstadoV27631";
+  function rcActivo() { try { return localStorage.getItem(RC_K) !== "0"; } catch (e) { return true; } }
+  function rcEstado() { try { const o = JSON.parse(localStorage.getItem(RC_E) || "null"); return o && o.f === fechaISO(new Date()) ? o : { f: fechaISO(new Date()), ts: 0, no: false }; } catch (e) { return { f: fechaISO(new Date()), ts: 0, no: false }; } }
+  function rcGuardar(o) { try { localStorage.setItem(RC_E, JSON.stringify(o)); } catch (e) {} }
+  function rcQuitar(rapido) { const o = $("recuerdoV27631"); if (!o) return; o.classList.remove("rc-entra"); o.classList.add("rc-sale"); setTimeout(() => { if (o.parentNode) o.remove(); }, rapido ? 0 : 380); }
+  function rcMensaje() {
+    const h = new Date().getHours(), racha = srRacha(); let n = ""; try { n = nombreSaludoV260() || ""; } catch (e) {}
+    const saludo = (h >= 20 ? "Buenas noches" : "Buenas tardes") + (n ? ", " + n : "");
+    if (racha >= 2) return [saludo, "Hoy aún no has registrado nada. No pierdas tu racha de " + racha + " días 🔥"];
+    return [saludo, "Hoy todavía no has registrado nada. ¿Lo anotamos antes de que acabe el día?"];
+  }
+  function rcEvaluar() {
+    try {
+      if (!rcActivo() || $("recuerdoV27631")) return;
+      const vi = $("vista-inicio"); if (!vi || !vi.classList.contains("activa") || document.hidden) return;
+      if (document.querySelector("dialog[open],.celebracion-v267,.tarjeta-mes-v27629,.celebracion-mes-v27628")) return;
+      const ahora = new Date(), h = ahora.getHours(); if (h < 18 || h >= 23) return;
+      const regs = v8Regs(); if (!regs.length) return;
+      const hoy = fechaISO(ahora); if (regs.some(r => String(r.fecha).slice(0, 10) === hoy && v9Min(r) > 0)) return;
+      const e = rcEstado(); if (e.no || (e.ts && Date.now() - e.ts < 2 * 3600e3)) return;
+      e.ts = Date.now(); rcGuardar(e);
+      const m = rcMensaje(), o = document.createElement("div"); o.id = "recuerdoV27631"; o.className = "recuerdo-v27631"; o.setAttribute("role", "status");
+      o.innerHTML = '<span class="rc-gesto" aria-hidden="true">👋</span><div class="rc-txt"><strong></strong><span></span></div><div class="rc-acc"><button type="button" class="rc-si">Registrar</button><button type="button" class="rc-no">Hoy no</button></div>';
+      o.querySelector("strong").textContent = m[0]; o.querySelector(".rc-txt span").textContent = m[1];
+      o.querySelector(".rc-si").addEventListener("click", () => { rcQuitar(); const n = document.querySelector('.nav-item[data-vista="registrar"]'); if (n) n.click(); });
+      o.querySelector(".rc-no").addEventListener("click", () => { const x = rcEstado(); x.no = true; rcGuardar(x); rcQuitar(); });
+      document.body.appendChild(o); requestAnimationFrame(() => requestAnimationFrame(() => o.classList.add("rc-entra")));
+    } catch (er) { console.warn("[V27631 recordatorio]", er); }
+  }
+  function rcVigilar() {
+    const o = $("recuerdoV27631"); if (!o) return;
+    const vi = $("vista-inicio"), hoy = fechaISO(new Date());
+    if (!vi || !vi.classList.contains("activa") || v8Regs().some(r => String(r.fecha).slice(0, 10) === hoy && v9Min(r) > 0)) rcQuitar(true);
+  }
+  function rcInstalar() {
+    const g = $("recordatorioV27631"); if (g) {
+      const pintar = () => g.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", (b.dataset.rcV27631 === "si") === rcActivo() ? "true" : "false"));
+      g.addEventListener("click", e => { const b = e.target.closest("button[data-rc-v27631]"); if (!b) return; try { localStorage.setItem(RC_K, b.dataset.rcV27631 === "si" ? "1" : "0"); } catch (er) {} if (!rcActivo()) rcQuitar(true); pintar(); });
+      pintar();
+    }
+    setTimeout(rcEvaluar, 3000);
+    setInterval(() => { rcVigilar(); rcEvaluar(); }, 300000);
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) setTimeout(rcEvaluar, 1200); });
+    document.addEventListener("click", e => { if (e.target.closest && e.target.closest(".nav-item")) { setTimeout(rcVigilar, 200); if (e.target.closest('.nav-item[data-vista="inicio"]')) setTimeout(rcEvaluar, 1500); } });
+  }
+
+  /* 23d · Vitrina de insignias del año de servicio */
+  const VT_ESTRELLA = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.2l2.6 5.5 6 .8-4.4 4.2 1.1 6-5.3-2.9-5.3 2.9 1.1-6L3.4 9.5l6-.8z" fill="#fff" stroke="rgba(0,0,0,.25)" stroke-width="1" stroke-linejoin="round"/></svg>';
+  const VT_MES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+  function vtPintar() {
+    const host = $("anioServicioV276"); if (!host || typeof resumenMesV143 !== "function") return;
+    let s = $("vitrinaV27631");
+    if (!s) { s = document.createElement("section"); s.id = "vitrinaV27631"; s.className = "tarjeta vitrina-v27631"; s.innerHTML = '<h2 class="titulo-bloque-v267 vt-titulo"></h2><p class="vt-sub"></p><div class="vt-rejilla"></div><div class="vt-datos"></div>'; host.insertAdjacentElement("afterend", s); }
+    const anio = anioV276 === null ? anioServicioHoy() : anioV276, d = calcularAnio(anio), ob = objetivo(), hoy = new Date(), clave = fechaISO(hoy).slice(0, 7);
+    const lista = d.meses.map(x => { const ini = new Date(x.y, x.m, 1); let comp = 0; try { const r = resumenMesV143(ini); comp = typeof r.computable === "number" ? r.computable : r.total; } catch (e) {} const futuro = (x.y + "-" + String(x.m + 1).padStart(2, "0")) > clave, pct = ob ? Math.round(comp / ob * 100) : 0; return { x, comp, pct, futuro, nivel: !ob || futuro ? 0 : pct >= 100 ? 3 : pct >= 75 ? 2 : pct >= 50 ? 1 : 0 }; });
+    const firma = anio + "|" + ob + "|" + lista.map(l => l.comp).join(",") + "|" + clave + "|" + d.racha + "|" + d.total;
+    if (s.dataset.firma === firma) return; s.dataset.firma = firma;
+    v9Txt(s.querySelector(".vt-titulo"), "Vitrina de insignias · " + d.anio);
+    const oros = lista.filter(l => l.nivel === 3).length;
+    v9Txt(s.querySelector(".vt-sub"), ob ? "Oro: meta cumplida · Plata: 75 % · Bronce: 50 %" : "Define tu objetivo mensual en Ajustes para ganar insignias.");
+    const rej = s.querySelector(".vt-rejilla"); rej.textContent = "";
+    const TONO = ["", "naranja", "plata", "oro"], NOM = ["sin insignia", "bronce", "plata", "oro"];
+    lista.forEach((l, i) => {
+      const c = document.createElement("div"); c.className = "vt-mes"; c.style.setProperty("--i", String(i)); c.dataset.nivel = String(l.nivel);
+      c.setAttribute("role", "img"); c.setAttribute("aria-label", MESES_L[l.x.m] + ": " + (l.futuro ? "pendiente" : ob ? l.pct + " % de la meta, " + NOM[l.nivel] : "sin objetivo"));
+      c.innerHTML = '<span class="medalla-v267' + (l.nivel ? "" : " bloqueada") + '"' + (l.nivel ? ' data-tono="' + TONO[l.nivel] + '"' : "") + '><i class="canto"></i><i class="cara"><b></b></i><i class="brillo"></i></span><strong></strong><small></small>';
+      c.querySelector("b").innerHTML = l.nivel ? VT_ESTRELLA : ""; c.querySelector("strong").textContent = MESES_L[l.x.m].charAt(0).toUpperCase() + MESES_L[l.x.m].slice(1, 3);
+      c.querySelector("small").textContent = l.futuro ? "—" : ob ? l.pct + " %" : "—";
+      rej.appendChild(c);
+    });
+    const dat = s.querySelector(".vt-datos"); dat.textContent = "";
+    [[oros + "/12", "meses de oro"], [String(d.racha), d.racha === 1 ? "día de racha máxima" : "días de racha máxima"], [Math.floor(d.total / 60) + " h", "en el año"]].forEach(p => { const e = document.createElement("div"); const b = document.createElement("strong"); b.textContent = p[0]; const sm = document.createElement("small"); sm.textContent = p[1]; e.append(b, sm); dat.appendChild(e); });
   }
 
   function instalarAzulejos() {

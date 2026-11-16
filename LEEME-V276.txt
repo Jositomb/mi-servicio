@@ -153,5 +153,12 @@ V276-27629 · Ajustes iOS, «Hoy llevas…», evolución apilada, rueda de meta 
 - Estadísticas > Resumen mensual: botón «Tarjeta del mes» que genera una imagen 1080×1350 (mes, anillo de meta, horas por actividad, días activos y mejor semana) para compartir o guardar. No incluye notas ni nombres. El botón de compartir en texto sigue igual.
 - Sin claves de almacenamiento nuevas ni cambios en datos o copias JSON.
 
-V276-27630 · Cifras de los globos de Inicio
+V276-27631 · Cifras de los globos de Inicio
 - Corregido: a veces los números de los globos se quedaban a medias (cuenta de 0 al valor real detenida, por ejemplo al abrir la app desde el icono o al volver a ella) hasta entrar de nuevo en Inicio. Ahora la cuenta siempre termina en el valor real: al acabar, con una red de seguridad por tiempo, al volver a la app y al cambiar de pestaña. No cambia ningún dato.
+
+V276-27631 · Semana con racha, objetivo diario, recordatorio cálido y vitrina del año
+- Inicio: franja «tu semana» (L–D) entre los globos y el objetivo. Cada día servido se llena con el color de su actividad dominante y una marca; hoy parpadea si falta. A la derecha, la llama con los días de racha (la misma racha de los Logros); crece y brilla con 3, 7 y 14 días. En pantallas pequeñas donde Inicio dejaría de caber entero, la franja se oculta sola.
+- Registrar: la franja «Hoy llevas…» incorpora un aro de objetivo diario: (objetivo del mes − lo llevado antes de hoy) ÷ días que quedan, incluido hoy. Muestra «faltan X», «¡Vas al día!» o «¡Meta del mes cumplida!». Sin objetivo configurado no hay aro.
+- Recordatorio cálido (dentro de la app, sin notificaciones): entre las 18:00 y las 23:00, si hoy no hay registros y ya usas la app, aparece un aviso con un saludo animado y botones «Registrar» / «Hoy no». Máximo uno cada 2 horas; «Hoy no» lo silencia hasta mañana. Se puede desactivar en Ajustes > Personalizar.
+- Estadísticas > Año: vitrina de insignias del año de servicio (sep–ago), una medalla 3D por mes: oro (meta cumplida), plata (75 %), bronce (50 %); datos de meses de oro, racha máxima y horas. Sigue el selector de año.
+- Claves nuevas solo de interfaz (no van en copias): miServicio.recordatorioV27631 y miServicio.recordatorioEstadoV27631. Ningún dato ni estructura cambia.
