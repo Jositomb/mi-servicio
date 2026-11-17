@@ -14395,3 +14395,19 @@ html body:not(#bta):not(#btb) .cp-fila-v27633 .cp-btn:not(#btc){flex:0 0 auto;mi
 :root[data-modo-v276=claro] .qr-mas{color:#0a63d6}
 @media (prefers-reduced-motion:reduce){.qr-fondo{transition:none}}
 .qr-hoja:focus{outline:none}
+
+/* ===== V27634 · Menos repeticiones: se oculta solo en pantalla, los datos no cambian ===== */
+html body:not(#bta):not(#btb) .dp-oculto-v27634:not(#btc){display:none!important}
+/* Inicio: la fecha ya está en el selector de arriba; el estado del ritmo ya lo dice la frase bajo el camino */
+html body:not(#bta):not(#btb) #vista-inicio #fechaProgresoMes:not(#btc){display:none!important}
+html body:not(#bta):not(#btb) #vista-inicio .progreso-personaje:not(#btc)::before,html body:not(#bta):not(#btb) #vista-inicio #progresoPersonaje:not(#btc)::before{content:none!important;display:none!important}
+/* Historial: el día ya está en el encabezado del grupo */
+html body:not(#bta):not(#btb) #vista-historial .historial-fecha-corta-v260:not(#btc){display:none!important}
+/* Estadísticas > Resumen */
+html body:not(#bta):not(#btb) #semanaVisualTotalV193:not(#btc){display:none!important}
+html body:not(#bta):not(#btb) .v143-rm-stats:not(#btc){grid-template-columns:repeat(var(--dp-n,2),1fr)!important}
+html body:not(#bta):not(#btb) .v143-rm-stats>div:first-child:not(#btc){display:none!important}
+/* Ajustes: la copia se muestra una vez (fila de arriba) */
+html body:not(#bta):not(#btb) #seguridadCopiaV260:not(#btc),html body:not(#bta):not(#btb) #ultimaCopiaAjustes:not(#btc),html body:not(#bta):not(#btb) #copiaRapidaV260:not(#btc){display:none!important}
+/* Año > vitrina: un solo dato */
+.vitrina-v27631 .vt-datos{grid-template-columns:1fr}

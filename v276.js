@@ -1262,7 +1262,7 @@
     const sig = calY + "-" + calM + "-" + h + "-" + sel + "-" + new Date().getDate(); if (sig === calSig) return; calSig = sig;
     const mes = {}, pref = calY + "-" + String(calM + 1).padStart(2, "0") + "-"; let totMes = 0;
     regs.forEach(r => { const f = String(r.fecha || "").slice(0, 10); if (f.indexOf(pref) !== 0) return; const o = mes[f] || (mes[f] = { m: 0, t: {} }), mi = Number(r.minutos) || 0; o.m += mi; o.t[r.tipo] = (o.t[r.tipo] || 0) + mi; totMes += mi; });
-    d.querySelector(".cal-res").textContent = V8_MESES[calM] + " " + calY + (totMes ? " · " + v8Hm(totMes) : "");
+    d.querySelector(".cal-res").textContent = V8_MESES[calM] + " " + calY;
     const prim = new Date(calY, calM, 1), desp = (prim.getDay() + 6) % 7, dias = new Date(calY, calM + 1, 0).getDate(), hoy = new Date();
     const esHoy = hoy.getFullYear() === calY && hoy.getMonth() === calM ? hoy.getDate() : -1;
     let s = '<div class="cal-nav"><button type="button" class="cal-flecha" data-cal-nav="-1" aria-label="Mes anterior">‹</button><strong>' + V8_MESES[calM] + " " + calY + '</strong><button type="button" class="cal-flecha" data-cal-nav="1" aria-label="Mes siguiente">›</button></div>';
@@ -1341,7 +1341,7 @@
     let copia = "Sin copia de seguridad aún";
     try { const f = typeof leerUltimaCopiaSeguridad === "function" ? leerUltimaCopiaSeguridad() : null; if (f) { const d = new Date(f); if (!isNaN(d)) copia = "Última copia: " + d.toLocaleDateString("es-ES", { day: "numeric", month: "short" }).replace(".", ""); } } catch (e) {}
     const con = $("estadoConexionTextoV190");
-    return { perfil: [tipo, ob ? "objetivo " + v8Hm(ob) : ""].filter(Boolean).join(" · ") || "Nombre, actividades y objetivo", sync: [con ? (con.textContent || "").trim() : "", copia].filter(Boolean).join(" · "), apar: "Modo " + (modo === "claro" ? "claro" : modo === "oscuro" ? "oscuro" : "automático"), ayuda: "Guía rápida y consejos" };
+    return { tipo, perfil: ob ? "Objetivo " + v8Hm(ob) + " al mes" : "Nombre, actividades y objetivo", sync: [con ? (con.textContent || "").trim() : ""].filter(Boolean).join(" · "), apar: "Modo " + (modo === "claro" ? "claro" : modo === "oscuro" ? "oscuro" : "automático"), ayuda: "Guía rápida y consejos" };
   }
   function ajPonResumen(det, txt) {
     if (!det || !txt) return; const s = det.querySelector(":scope>summary"); if (!s) return;
@@ -1365,7 +1365,7 @@
     const i = $("nombreSaludoV260"), nombre = i ? i.value.trim() : "", r = ajResumenes();
     v9Txt(cab.querySelector(".aj-avatar-v27629"), ajIniciales(nombre));
     v9Txt(cab.querySelector("b"), nombre || "Mi Servicio");
-    v9Txt(cab.querySelector("small"), (r.perfil.split(" · ")[0] || "Publicador") + " · " + v8Regs().length + " registros");
+    v9Txt(cab.querySelector("small"), r.tipo || "Publicador");
     ajPonResumen(vista.querySelector("details.ajustes-acordeon-v179:not([id])"), r.perfil);
     ajPonResumen($("sincronizacionDetalleV260"), r.sync);
     ajPonResumen($("aparienciaV201"), r.apar);
@@ -1662,7 +1662,7 @@
       rej.appendChild(c);
     });
     const dat = s.querySelector(".vt-datos"); dat.textContent = "";
-    [[oros + "/12", "meses de oro"], [String(d.racha), d.racha === 1 ? "día de racha máxima" : "días de racha máxima"], [Math.floor(d.total / 60) + " h", "en el año"]].forEach(p => { const e = document.createElement("div"); const b = document.createElement("strong"); b.textContent = p[0]; const sm = document.createElement("small"); sm.textContent = p[1]; e.append(b, sm); dat.appendChild(e); });
+    [[oros + "/12", "meses de oro"]].forEach(p => { const e = document.createElement("div"); const b = document.createElement("strong"); b.textContent = p[0]; const sm = document.createElement("small"); sm.textContent = p[1]; e.append(b, sm); dat.appendChild(e); });
   }
 
   /* ================= 24. V27633 · PROYECCIÓN DE CIERRE, ESTADO DE LA COPIA Y GESTOS ================= */
@@ -1689,6 +1689,7 @@
   function cpDias() { try { const f = typeof leerUltimaCopiaSeguridad === "function" ? leerUltimaCopiaSeguridad() : null; if (!f) return null; const d = Math.floor((Date.now() - new Date(f).getTime()) / 86400000); return isNaN(d) ? null : Math.max(0, d); } catch (e) { return null; } }
   function cpNivel(d) { return d === null ? "rojo" : d <= 7 ? "verde" : d <= 30 ? "naranja" : "rojo"; }
   function cpTexto(d) { return d === null ? "Sin copia todavía" : d === 0 ? "Hoy" : d === 1 ? "Ayer" : "Hace " + d + " días"; }
+  function cpFecha() { try { const f = typeof leerUltimaCopiaSeguridad === "function" ? leerUltimaCopiaSeguridad() : null; if (!f) return ""; const x = new Date(f); return isNaN(x) ? "" : x.toLocaleDateString("es-ES", { day: "numeric", month: "short" }).replace(".", ""); } catch (e) { return ""; } }
   function cpPintar() {
     const d = cpDias(), nivel = cpNivel(d), txt = cpTexto(d);
     const av = $("abrirAjustesV260");
@@ -1707,7 +1708,7 @@
     }
     if (cab.nextElementSibling !== fila) cab.parentNode.insertBefore(fila, cab.nextSibling);
     if (fila.dataset.nivel !== nivel) fila.dataset.nivel = nivel;
-    v9Txt(fila.querySelector("small"), txt);
+    v9Txt(fila.querySelector("small"), txt + (d !== null && cpFecha() ? " · " + cpFecha() : ""));
   }
 
   /* 24c · Gestos: pulsación larga en un globo y deslizar entre pestañas */
@@ -1799,7 +1800,25 @@
     document.addEventListener("touchcancel", () => { s = null; }, { passive: true });
     window.MiServicioV27633 = { pyPintar, cpPintar, cpDias, cpNivel, qrAbrir, qrCerrar, qrGuardar, gsActivo };
   }
-  function v33Pasar() { try { pyPintar(); cpPintar(); } catch (e) { console.warn("[V27633]", e); } }
+  /* 25 · V27634 · Lo repetido se oculta solo de la pantalla (los elementos y sus datos siguen existiendo) */
+  function dpPintar() {
+    const hoy = new Date(), mesAct = hoy.getFullYear() + "-" + String(hoy.getMonth() + 1).padStart(2, "0");
+    const rm = document.querySelector(".v143-resumen-mensual");
+    if (rm) {
+      const inp = $("mesResumenV143"), actual = !inp || !inp.value || inp.value === mesAct;
+      const st = rm.querySelector(".v143-rm-stats");
+      if (st) {
+        const cs = st.children, dias = cs[1];
+        if (dias) dias.classList.toggle("dp-oculto-v27634", actual);
+        const n = (cs[2] ? 1 : 0) + (dias && !actual ? 1 : 0); if (st.style.getPropertyValue("--dp-n") !== String(n)) st.style.setProperty("--dp-n", String(n));
+      }
+      const cmp = rm.querySelector("[data-v143-compara]"), msg = rm.querySelector("[data-v143-mensaje]");
+      if (cmp && msg) msg.classList.toggle("dp-oculto-v27634", /^sin comparaci/i.test((cmp.textContent || "").trim()));
+    }
+    const a = $("seguridadNubeV260"), b = $("estadoSyncV134");
+    if (a && b) b.classList.toggle("dp-oculto-v27634", !!a.textContent.trim() && a.textContent.trim() === b.textContent.trim());
+  }
+  function v33Pasar() { try { pyPintar(); cpPintar(); dpPintar(); } catch (e) { console.warn("[V27633]", e); } }
 
   function instalarAzulejos() {
     btPasar();
