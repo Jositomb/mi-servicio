@@ -1,8 +1,8 @@
-const BUILD = "V276-27635";
-const CACHE = "mi-servicio-v27635";
+const BUILD = "V276-27636";
+const CACHE = "mi-servicio-v27636";
 const CACHE_PREFIX = "mi-servicio-";
 const CODIGO = {
-  "./app-v276.js": "232a10e7f66c23c5d83ad0c09d121f63d9208a2e1dabefaaee0b17b50cf717b6",
+  "./app-v276.js": "a2c8cca80dd837395ef7db46a35de1c4d14cbb18ca3b01fe7454f7d6547abe54",
   "./config-v260.js": "2ef83ae552bfdf5e1e998fffe9f39f1cc6f999826b9229396280337ed5612b5d",
   "./estadisticas-render-v260.js": "d4b50491234def73bc1f3636c97c18c7c21fb8fd5e596cd5cbb82b5caa3d62e9",
   "./estadisticas-v260.js": "32989862e03bd33c2f2f0974355b569887283d1f21535995538ecd79912533bc",
@@ -18,11 +18,11 @@ const CODIGO = {
   "./solidez-v266.js": "948674da60283ca67720da1dcef621ecf7b7a2cc6600530f0fde1500b46e1015",
   "./simple-v260.js": "d4de97a738d75a20f26487f59f0011fcb51ed63980b00b53618be4a6629e6820",
   "./storage-v260.js": "c8dc9a3b4b440181b69dabf206319026d8f3057cccf63c57ae8585cd4bdfdca9",
-  "./styles-v276.css": "3e5f497e2fbfc378170a39a484272b14ec5198c3179983e14d29308eff62451f",
+  "./styles-v276.css": "a78143c950650428a936ce4c92a101ed77d8f5d7e199f12a9de6e2bd64580d79",
   "./tiempo-v262.js": "5e75178e6ba21dc2e3b136144dcaf1b1642193c1236f0ea7730b99581e39ff54",
-  "./v276.js": "3717c2168a08ab9d02c9b66b0b4fa1e685be17beb41a1780ea02f80fee42b9d3",
+  "./v276.js": "728a18e92cf2e69fc37b119500107f4167d38ed3a19066d254fb89a7ef087846",
   "./v268.js": "e18ce297803cdab21585eb721c15ba131da9fe745430b4d11cd5617149af31c3",
-  "./v267.js": "ad48a19f245758d6a5fb8943b073aa357f78d0613df83dfb329848b47a2d0897",
+  "./v267.js": "4af5711605c4b755c8443e63e92c5b9acfe226a745f0fa0a1a4e116306179f82",
   "./v264.js": "5850b534a0d5829da0514980d497b54790e1dd8316ab45ddfdd265f8463d5753",
   "./visual-v260.js": "1cd7e298b1f11523d440b19ab6e90264ef956a5d59e3aac1acd427f79fe26801"
 };

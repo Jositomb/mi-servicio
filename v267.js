@@ -186,8 +186,9 @@
       const rs = meses.get(m), tot = rs.reduce((a, r) => a + Math.max(0, Number(r.minutos) || 0), 0);
       const fs = Array.from(new Set(rs.filter(r => (Number(r.minutos) || 0) > 0).map(r => String(r.fecha).slice(0, 10)))).sort();
       if (!ganados.todas) { const vistos = new Set(); const orden = rs.slice().sort((a, b) => String(a.fecha).localeCompare(String(b.fecha))); for (const r of orden) { if ((Number(r.minutos) || 0) > 0 && TIPOS.includes(r.tipo)) vistos.add(r.tipo); if (vistos.size === 4) { ganados.todas = String(r.fecha).slice(0, 10); break; } } }
-      if (!ganados.objetivo && obj > 0 && computable(rs) >= obj) {
-        let a2 = 0; for (const f of fs) { a2 += dias.get(f).min; if (a2 >= obj) { ganados.objetivo = f; break; } }
+      const objM = typeof window.omObjetivoDeV27636 === "function" ? window.omObjetivoDeV27636(m) : obj;
+      if (!ganados.objetivo && objM > 0 && computable(rs) >= objM) {
+        let a2 = 0; for (const f of fs) { a2 += dias.get(f).min; if (a2 >= objM) { ganados.objetivo = f; break; } }
         if (!ganados.objetivo) ganados.objetivo = fs[fs.length - 1];
       }
       if (!ganados.record && i >= 2 && maxPrev > 0 && tot > maxPrev && fs.length) ganados.record = fs[fs.length - 1];
@@ -365,7 +366,7 @@
   }
   function construirSlides(clave) {
     if (esSemana(clave)) return construirSlidesSemana(clave);
-    const s = statsMes(clave), obj = objetivoMensual(), nombre = mayus(MESES[Number(clave.slice(5)) - 1]);
+    const s = statsMes(clave), obj = (typeof window.omObjetivoDeV27636 === "function" ? window.omObjetivoDeV27636(clave) : objetivoMensual()), nombre = mayus(MESES[Number(clave.slice(5)) - 1]);
     const slides = [];
     slides.push({ cls: "intro", html: '<small>Tu mes en Mi Servicio</small><h2>' + nombre + '</h2><p>' + clave.slice(0, 4) + '</p><span class="pista">Toca para continuar ›</span>' });
     if (!s.registros) { slides.push({ cls: "vacio", html: '<h2>Sin actividad registrada</h2><p>Este mes no hay registros. Cuando registres actividad, aquí verás tu resumen.</p>' }); return { s, slides }; }

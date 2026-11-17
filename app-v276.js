@@ -5014,8 +5014,22 @@ function normalizarPreferenciasImportadas(
         mostrarOtras:
             preferencias?.mostrarOtras !== false,
 
-        nombreOtras: normalizarNombreOtrasV260(preferencias?.nombreOtras)
+        nombreOtras: normalizarNombreOtrasV260(preferencias?.nombreOtras),
+
+        /* V27636: objetivo de cada mes (opcional; las copias antiguas no lo tienen) */
+        ...(normalizarObjetivosPorMesV27636(preferencias?.objetivosPorMes) ? { objetivosPorMes: normalizarObjetivosPorMesV27636(preferencias.objetivosPorMes) } : {})
     };
+}
+
+function normalizarObjetivosPorMesV27636(m) {
+    if (!m || typeof m !== "object" || Array.isArray(m)) return null;
+    const out = {};
+    Object.keys(m).forEach(k => {
+        if (!/^(0000-00|\d{4}-(0[1-9]|1[0-2]))$/.test(k)) return;
+        const v = Math.round(Number(m[k]));
+        if (Number.isFinite(v) && v >= 0 && v <= 200 * 60) out[k] = v;
+    });
+    return Object.keys(out).length ? out : null;
 }
 
 

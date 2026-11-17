@@ -14440,3 +14440,29 @@ html body:not(#bta):not(#btb) .ex-boton-v27635:not(#btc){display:block;margin:6p
 @media (prefers-color-scheme:dark){html body:not(#bta):not(#btb) .ex-boton-v27635:not(#btc){color:#6cb2ff}}
 :root[data-modo-v276=oscuro] body:not(#bta):not(#btb) .ex-boton-v27635:not(#btc){color:#6cb2ff}
 :root[data-modo-v276=claro] body:not(#bta):not(#btb) .ex-boton-v27635:not(#btc){color:#0a63d6}
+
+/* V27636 · Personalizar Inicio */
+html[data-ini-sin-semana-v27636] body:not(#bta):not(#btb) #semanaRachaV27631:not(#btc){display:none !important}
+html[data-ini-sin-tiempo-v27636] body:not(#bta):not(#btb) #climaDetalleV260:not(#btc){display:none !important}
+html[data-ini-sin-frase-v27636] body:not(#bta):not(#btb) .inicio-pie-v260 .frase-animo-card:not(#btc){display:none !important}
+html[data-ini-sin-pie-v27636] body:not(#bta):not(#btb) .inicio-pie-v260:not(#btc){display:none !important}
+.ini-conmutadores-v27636{display:grid;gap:6px}
+/* V27636 · Revisión de datos */
+#rvV27636 .qr-hoja{max-height:86vh;overflow-y:auto}
+.rv-lista{display:flex;flex-direction:column;gap:8px}
+.rv-fila{display:flex;flex-direction:column;gap:8px;padding:10px 14px;border-radius:16px;background:rgba(120,120,128,.14)}
+.rv-info{display:flex;flex-direction:column;gap:2px}
+.rv-info b{font-size:15px;font-weight:600}
+.rv-info small{font-size:13px;color:#8a4b00}
+.rv-acciones{display:flex;gap:8px;flex-wrap:wrap}
+.rv-acciones button{flex:1 1 auto;min-height:44px;padding:8px 12px;border:0;border-radius:12px;background:rgba(120,120,128,.18);color:inherit;font:inherit;font-weight:600;cursor:pointer}
+.rv-acciones .rv-borrar{color:#b3261e}
+.rv-ayuda,.rv-vacio{margin:0 0 8px;font-size:14px;color:#5c5c61}
+#revisionDatosV27636.rv-aviso{color:#8a4b00}
+@media (prefers-color-scheme:dark){.rv-info small,#revisionDatosV27636.rv-aviso{color:#ffb454}.rv-ayuda,.rv-vacio{color:#a1a1a6}.rv-acciones .rv-borrar{color:#ff8a80}}
+:root[data-modo-v276=oscuro] .rv-info small,:root[data-modo-v276=oscuro] #revisionDatosV27636.rv-aviso{color:#ffb454}
+:root[data-modo-v276=oscuro] .rv-ayuda,:root[data-modo-v276=oscuro] .rv-vacio{color:#a1a1a6}
+:root[data-modo-v276=oscuro] .rv-acciones .rv-borrar{color:#ff8a80}
+:root[data-modo-v276=claro] .rv-info small,:root[data-modo-v276=claro] #revisionDatosV27636.rv-aviso{color:#8a4b00}
+:root[data-modo-v276=claro] .rv-ayuda,:root[data-modo-v276=claro] .rv-vacio{color:#5c5c61}
+:root[data-modo-v276=claro] .rv-acciones .rv-borrar{color:#b3261e}

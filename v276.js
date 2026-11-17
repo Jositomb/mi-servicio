@@ -19,6 +19,7 @@
   function nombreTipo(t) { try { return typeof nombreActividad === "function" ? nombreActividad(t) : t; } catch (e) { return t; } }
   function registros() { try { return (estado.registros || []).filter(r => r && /^\d{4}-\d{2}-\d{2}/.test(String(r.fecha))); } catch (e) { return []; } }
   function objetivo() { try { return Number(estado.preferencias && estado.preferencias.objetivoMensualMinutos) || 0; } catch (e) { return 0; } }
+  const INI_K = "miServicio.inicioV27636", RV_K = "miServicio.revisionOkV27636", RV_TIPOS = ["ministerio", "ldc", "asambleas", "otras"]; /* arriba para que existan cuando arranca la app */
   function movReducido() { try { return window.matchMedia("(prefers-reduced-motion:reduce)").matches; } catch (e) { return false; } }
 
   /* ================= 1. TEMAS, COLOR PERSONAL, LETRA ================= */
@@ -1461,7 +1462,7 @@
   function tjDibujar(ref) {
     const W = 1080, H = 1350, cv = document.createElement("canvas"); cv.width = W; cv.height = H; const c = cv.getContext("2d");
     const css = getComputedStyle(document.documentElement), base = (css.getPropertyValue("--firma-base") || "").trim() || "#2864d7", luz = (css.getPropertyValue("--firma-luz") || "").trim() || "#6aa6ff";
-    const r = resumenMesV143(ref), ob = objetivo(), comp = typeof r.computable === "number" ? r.computable : r.total, pct = ob ? Math.min(100, Math.round(comp / ob * 100)) : 0;
+    const r = resumenMesV143(ref), ob = omObjetivoDe(fechaISO(ref).slice(0, 7)), comp = typeof r.computable === "number" ? r.computable : r.total, pct = ob ? Math.min(100, Math.round(comp / ob * 100)) : 0;
     const F = '-apple-system,"SF Pro Display","Helvetica Neue",Arial,sans-serif';
     let g = c.createLinearGradient(0, 0, W * 0.6, H); g.addColorStop(0, "#0d1426"); g.addColorStop(0.55, "#111c3a"); g.addColorStop(1, "#0a0f1f"); c.fillStyle = g; c.fillRect(0, 0, W, H);
     let rg = c.createRadialGradient(W * 0.85, H * 0.12, 20, W * 0.85, H * 0.12, 620); rg.addColorStop(0, base); rg.addColorStop(1, "rgba(0,0,0,0)"); c.globalAlpha = 0.5; c.fillStyle = rg; c.fillRect(0, 0, W, H); c.globalAlpha = 1;
@@ -1526,7 +1527,7 @@
     document.addEventListener("input", e => { if (e.target && (e.target.id === "nombreSaludoV260" || e.target.id === "objetivoMensual")) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("change", e => { if (e.target && /^(tipoPublicador|nombreSaludoV260|objetivoMensual)$/.test(e.target.id)) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("click", e => { if (e.target.closest && e.target.closest("#abrirAjustesV260,#modoColorV27627")) setTimeout(ajPintar, 80); }, true);
-    rcInstalar(); gsInstalar();
+    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar();
     document.addEventListener("visibilitychange", () => { if (!document.hidden) setTimeout(cpPintar, 300); });
     setTimeout(() => srProgramar(100), 1100); window.addEventListener("resize", () => srProgramar(1200)); window.addEventListener("orientationchange", () => srProgramar(1500));
     window.MiServicioV27629 = { ajPintar, hlPintar, evoPintar, ruedaMostrar, tjDibujar, tjAbrir, ajResumenes, srPintar, vtPintar, dnPlan, rcEvaluar, rcMensaje };
@@ -1645,8 +1646,8 @@
     let s = $("vitrinaV27631");
     if (!s) { s = document.createElement("section"); s.id = "vitrinaV27631"; s.className = "tarjeta vitrina-v27631"; s.innerHTML = '<h2 class="titulo-bloque-v267 vt-titulo"></h2><p class="vt-sub"></p><div class="vt-rejilla"></div><div class="vt-datos"></div>'; host.insertAdjacentElement("afterend", s); }
     const anio = anioV276 === null ? anioServicioHoy() : anioV276, d = calcularAnio(anio), ob = objetivo(), hoy = new Date(), clave = fechaISO(hoy).slice(0, 7);
-    const lista = d.meses.map(x => { const ini = new Date(x.y, x.m, 1); let comp = 0; try { const r = resumenMesV143(ini); comp = typeof r.computable === "number" ? r.computable : r.total; } catch (e) {} const futuro = (x.y + "-" + String(x.m + 1).padStart(2, "0")) > clave, pct = ob ? Math.round(comp / ob * 100) : 0; return { x, comp, pct, futuro, nivel: !ob || futuro ? 0 : pct >= 100 ? 3 : pct >= 75 ? 2 : pct >= 50 ? 1 : 0 }; });
-    const firma = anio + "|" + ob + "|" + lista.map(l => l.comp).join(",") + "|" + clave + "|" + d.racha + "|" + d.total;
+    const lista = d.meses.map(x => { const ini = new Date(x.y, x.m, 1); let comp = 0; try { const r = resumenMesV143(ini); comp = typeof r.computable === "number" ? r.computable : r.total; } catch (e) {} const claveM = x.y + "-" + String(x.m + 1).padStart(2, "0"), futuro = claveM > clave, obM = omObjetivoDe(claveM), pct = obM ? Math.round(comp / obM * 100) : 0; return { x, comp, pct, futuro, obM, nivel: !obM || futuro ? 0 : pct >= 100 ? 3 : pct >= 75 ? 2 : pct >= 50 ? 1 : 0 }; });
+    const firma = anio + "|" + ob + "|" + lista.map(l => l.comp + ":" + l.obM).join(",") + "|" + clave + "|" + d.racha + "|" + d.total;
     if (s.dataset.firma === firma) return; s.dataset.firma = firma;
     v9Txt(s.querySelector(".vt-titulo"), "Vitrina de insignias · " + d.anio);
     const oros = lista.filter(l => l.nivel === 3).length;
@@ -1655,7 +1656,7 @@
     const TONO = ["", "naranja", "plata", "oro"], NOM = ["sin insignia", "bronce", "plata", "oro"];
     lista.forEach((l, i) => {
       const c = document.createElement("div"); c.className = "vt-mes"; c.style.setProperty("--i", String(i)); c.dataset.nivel = String(l.nivel);
-      c.setAttribute("role", "img"); c.setAttribute("aria-label", MESES_L[l.x.m] + ": " + (l.futuro ? "pendiente" : ob ? l.pct + " % de la meta, " + NOM[l.nivel] : "sin objetivo"));
+      c.setAttribute("role", "img"); c.setAttribute("aria-label", MESES_L[l.x.m] + ": " + (l.futuro ? "pendiente" : l.obM ? l.pct + " % de la meta, " + NOM[l.nivel] : "sin objetivo"));
       c.innerHTML = '<span class="medalla-v267' + (l.nivel ? "" : " bloqueada") + '"' + (l.nivel ? ' data-tono="' + TONO[l.nivel] + '"' : "") + '><i class="canto"></i><i class="cara"><b></b></i><i class="brillo"></i></span><strong></strong><small></small>';
       c.querySelector("b").innerHTML = l.nivel ? VT_ESTRELLA : ""; c.querySelector("strong").textContent = MESES_L[l.x.m].charAt(0).toUpperCase() + MESES_L[l.x.m].slice(1, 3);
       c.querySelector("small").textContent = l.futuro ? "—" : ob ? l.pct + " %" : "—";
@@ -1798,8 +1799,130 @@
       const nav = document.querySelector('.nav-item[data-vista="' + GS_VISTAS[j] + '"]'); if (nav) nav.click();
     }, { passive: true });
     document.addEventListener("touchcancel", () => { s = null; }, { passive: true });
-    window.MiServicioV27633 = { cmAbrir, cmCerrar, pyPintar, cpPintar, cpDias, cpNivel, qrAbrir, qrCerrar, qrGuardar, gsActivo };
+    window.MiServicioV27633 = { omObjetivoDe, omTrasGuardar, cmAbrir, cmCerrar, pyPintar, cpPintar, cpDias, cpNivel, qrAbrir, qrCerrar, qrGuardar, gsActivo, iniLeer, iniAplicar, rvAnalizar, rvAbrir, rvCerrar, rvPintar };
   }
+  /* 28 · V27636 · Personalizar Inicio: mostrar u ocultar tarjetas (solo apariencia, no entra en las copias) */
+  function iniLeer() {
+    let o = {}; try { o = JSON.parse(localStorage.getItem(INI_K) || "{}") || {}; } catch (e) { o = {}; }
+    return { semana: o.semana !== false, tiempo: o.tiempo !== false, frase: o.frase !== false };
+  }
+  function iniAplicar() {
+    const c = iniLeer(), r = document.documentElement;
+    r.toggleAttribute("data-ini-sin-semana-v27636", !c.semana);
+    r.toggleAttribute("data-ini-sin-tiempo-v27636", !c.tiempo);
+    r.toggleAttribute("data-ini-sin-frase-v27636", !c.frase);
+    r.toggleAttribute("data-ini-sin-pie-v27636", !c.tiempo && !c.frase);
+    if (typeof programarEncajeV260 === "function") programarEncajeV260(true);
+  }
+  function iniInstalar() {
+    iniAplicar();
+    const g = $("inicioV27636"); if (!g) return;
+    const c = iniLeer();
+    g.querySelectorAll("input[data-ini-v27636]").forEach(i => { i.checked = c[i.dataset.iniV27636] !== false; });
+    g.addEventListener("change", e => {
+      const i = e.target.closest("input[data-ini-v27636]"); if (!i) return;
+      const n = iniLeer(); n[i.dataset.iniV27636] = i.checked;
+      try { localStorage.setItem(INI_K, JSON.stringify(n)); } catch (x) {}
+      iniAplicar();
+    });
+  }
+
+  /* 29 · V27636 · Revisión de datos: busca registros dudosos y deja corregirlos con un toque (nada cambia sin pulsar) */
+  const rvEsc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  function rvFirma(r) { return [r.fecha, r.tipo, r.minutos ?? r.minutosTotales].join("|"); }
+  function rvOk() { try { return JSON.parse(localStorage.getItem(RV_K) || "{}") || {}; } catch (e) { return {}; } }
+  function rvFechaValida(f) {
+    if (typeof f !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(f)) return false;
+    const [y, m, d] = f.split("-").map(Number), dt = new Date(y, m - 1, d, 12);
+    return dt.getFullYear() === y && dt.getMonth() === m - 1 && dt.getDate() === d;
+  }
+  function rvAnalizar(registros, hoyISO) {
+    const lista = Array.isArray(registros) ? registros : [], hoy = hoyISO || fechaISO(new Date()), porId = new Map();
+    const marca = (r, txt) => { const a = porId.get(r) || []; if (!a.includes(txt)) a.push(txt); porId.set(r, a); };
+    const vistos = new Map(), dias = new Map(), norm = v => String(v == null ? "" : v).trim().replace(/\s+/g, " ").toLocaleLowerCase("es");
+    lista.forEach(r => {
+      if (!r || typeof r !== "object") return;
+      const min = Number(r.minutos ?? r.minutosTotales), valida = rvFechaValida(r.fecha);
+      if (!valida) marca(r, "Fecha no válida");
+      if (!RV_TIPOS.includes(r.tipo)) marca(r, "Tipo de actividad desconocido");
+      if (!Number.isFinite(min) || min <= 0) marca(r, "Sin tiempo (0 minutos)");
+      else if (min > 1440) marca(r, "Más de 24 h en un solo registro");
+      if (valida && r.fecha > hoy) marca(r, "Fecha futura");
+      if (valida && Number.isFinite(min) && min > 0) {
+        const k = [r.fecha, r.tipo, min, norm(r.companero ?? r.acompanante), norm(r.notas)].join("|");
+        if (vistos.has(k)) marca(r, "Posible duplicado"); else vistos.set(k, r);
+        const d = dias.get(r.fecha) || { t: 0, rs: [] }; d.t += min; d.rs.push(r); dias.set(r.fecha, d);
+      }
+    });
+    dias.forEach(d => { if (d.t > 1440) d.rs.forEach(r => marca(r, "El día suma más de 24 h")); });
+    const ok = rvOk();
+    return lista.filter(r => porId.has(r)).map(r => ({ r, motivos: porId.get(r) })).filter(x => ok[x.r.id] !== rvFirma(x.r))
+      .sort((a, b) => String(b.r.fecha).localeCompare(String(a.r.fecha)));
+  }
+  function rvDatos() { try { return rvAnalizar(typeof estado !== "undefined" ? estado.registros : []); } catch (e) { return []; } }
+  function rvFecha(f) { return rvFechaValida(f) ? f.split("-").reverse().join("/") : String(f || "sin fecha"); }
+  function rvCerrar() { const o = $("rvV27636"); if (!o) return; o.classList.remove("qr-entra"); setTimeout(() => o.remove(), 220); }
+  function rvAbrir() {
+    if ($("rvV27636")) return;
+    const o = document.createElement("div"); o.id = "rvV27636"; o.className = "qr-fondo";
+    const items = rvDatos();
+    const filas = items.map(x => '<div class="rv-fila" data-id="' + rvEsc(x.r.id) + '"><div class="rv-info"><b>' + rvEsc(rvFecha(x.r.fecha)) + ' · ' + rvEsc(nombreTipo(x.r.tipo)) + ' · ' + rvEsc(v8Hm(Number(x.r.minutos ?? x.r.minutosTotales) || 0)) + '</b><small>' + x.motivos.map(rvEsc).join(" · ") + '</small></div><div class="rv-acciones"><button type="button" data-rv="editar">Revisar</button><button type="button" data-rv="ok">Está bien</button><button type="button" data-rv="borrar" class="rv-borrar">Eliminar</button></div></div>').join("");
+    o.innerHTML = '<div class="qr-hoja" role="dialog" aria-modal="true" aria-label="Revisión de datos"><span class="qr-agarre" aria-hidden="true"></span><h3>Revisión de datos</h3>' + (items.length ? '<p class="rv-ayuda">Estos registros parecen dudosos. No se cambia nada hasta que tú lo decidas.</p><div class="rv-lista">' + filas + '</div>' : '<p class="rv-vacio">✓ Todo en orden. No hay registros dudosos.</p>') + '<button type="button" class="qr-cancelar">Cerrar</button></div>';
+    document.body.appendChild(o); const t0 = Date.now();
+    o.addEventListener("click", e => {
+      if (e.target === o) { if (Date.now() - t0 > 400) rvCerrar(); return; }
+      if (e.target.closest(".qr-cancelar")) { rvCerrar(); return; }
+      const b = e.target.closest("button[data-rv]"); if (!b) return;
+      const fila = b.closest(".rv-fila"), id = fila && fila.dataset.id, reg = estado.registros.find(r => String(r.id) === String(id)); if (!reg) return;
+      if (b.dataset.rv === "ok") {
+        const ok = rvOk(); ok[reg.id] = rvFirma(reg); try { localStorage.setItem(RV_K, JSON.stringify(ok)); } catch (x) {}
+        fila.remove(); if (!o.querySelector(".rv-fila")) { rvCerrar(); } rvPintar();
+      } else if (b.dataset.rv === "editar") { rvCerrar(); if (typeof abrirModalEdicion === "function") abrirModalEdicion(reg.id); }
+      else if (b.dataset.rv === "borrar") { rvCerrar(); if (typeof abrirModalBorrado === "function") abrirModalBorrado(reg.id); }
+    });
+    document.addEventListener("keydown", function esc(e) { if (!$("rvV27636")) { document.removeEventListener("keydown", esc); return; } if (e.key === "Escape") { rvCerrar(); document.removeEventListener("keydown", esc); } });
+    requestAnimationFrame(() => requestAnimationFrame(() => o.classList.add("qr-entra")));
+    const h = o.querySelector(".qr-hoja"); if (h) { h.tabIndex = -1; try { h.focus({ preventScroll: true }); } catch (e) {} }
+  }
+  function rvPintar() {
+    const art = $("seguridadDatosV260"); if (!art) return;
+    let b = $("revisionDatosV27636");
+    if (!b) {
+      b = document.createElement("button"); b.type = "button"; b.id = "revisionDatosV27636"; b.className = "boton-secundario";
+      b.addEventListener("click", rvAbrir); art.appendChild(b);
+    }
+    const n = rvDatos().length, txt = n ? "Revisar datos (" + n + ")" : "Revisar datos · todo en orden";
+    if (b.textContent !== txt) b.textContent = txt;
+    b.classList.toggle("rv-aviso", n > 0);
+  }
+
+  /* 27 · V27636 · Objetivo de cada mes: los meses pasados se comparan con el objetivo que tenían entonces */
+  const OM_BASE = "0000-00";
+  function omClave(d) { return fechaISO(d || new Date()).slice(0, 7); }
+  function omObjetivoDe(clave) {
+    try {
+      if (!clave || clave >= omClave()) return objetivo();
+      const m = estado.preferencias && estado.preferencias.objetivosPorMes; if (!m || typeof m !== "object") return objetivo();
+      const ks = Object.keys(m).filter(k => /^(0000-00|\d{4}-(0[1-9]|1[0-2]))$/.test(k)).sort(); let v = null;
+      for (const k of ks) { if (k <= clave) v = m[k]; else break; }
+      return v === null ? objetivo() : (Number(v) || 0);
+    } catch (e) { return objetivo(); }
+  }
+  window.omObjetivoDeV27636 = omObjetivoDe;
+  function omTrasGuardar(antes) {
+    const p = estado.preferencias; if (!p) return;
+    const ob = Math.round(Number(p.objetivoMensualMinutos) || 0); if (ob === antes) return;
+    const m = Object.assign({}, p.objetivosPorMes && typeof p.objetivosPorMes === "object" ? p.objetivosPorMes : {});
+    if (!Object.keys(m).length && antes > 0) m[OM_BASE] = antes;
+    m[omClave()] = ob; p.objetivosPorMes = m;
+    try { guardarPreferencias(); } catch (e) { console.warn("[V27636]", e); }
+  }
+  function omInstalar() {
+    document.addEventListener("click", e => { if (!(e.target.closest && e.target.closest("#guardarAjustes"))) return; const antes = Math.round(objetivo()); setTimeout(() => omTrasGuardar(antes), 0); }, true);
+    const inp = $("objetivoMensual"), g = inp && inp.closest(".grupo-formulario");
+    if (g && !$("ayudaObjetivoMesV27636")) { const n = document.createElement("p"); n.id = "ayudaObjetivoMesV27636"; n.className = "ayuda-v203"; n.textContent = "Si lo cambias, vale desde este mes: los meses anteriores conservan el objetivo que tenían."; g.appendChild(n); }
+  }
+
   /* 25 · V27634 · Lo repetido se oculta solo de la pantalla (los elementos y sus datos siguen existiendo) */
   function dpPintar() {
     const hoy = new Date(), mesAct = hoy.getFullYear() + "-" + String(hoy.getMonth() + 1).padStart(2, "0");
@@ -1859,7 +1982,7 @@
   }
   function v35Pasar() { try { ctPintar(); cmPintar(); exPintar(); } catch (e) { console.warn("[V27635]", e); } }
 
-  function v33Pasar() { try { pyPintar(); cpPintar(); dpPintar(); v35Pasar(); } catch (e) { console.warn("[V27633]", e); } }
+  function v33Pasar() { try { pyPintar(); cpPintar(); dpPintar(); v35Pasar(); rvPintar(); } catch (e) { console.warn("[V27633]", e); } }
 
   function instalarAzulejos() {
     btPasar();
