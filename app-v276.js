@@ -2516,7 +2516,20 @@ function actualizarPersonajeProgreso(porcentaje) {
     const accesorioVisual = contextoVisual?.accesorio
         ? `<span class="personaje-accesorio-v186" aria-hidden="true">${contextoVisual.accesorio}</span>`
         : "";
-    personaje.innerHTML = `<span class="personaje-sombra-suelo-v186" aria-hidden="true"></span><img class="personaje-cuerpo-img" src="${imagenesPersonaje[personajeElegido] || imagenesPersonaje.hombre}" alt="">${accesorioVisual}`;
+    /* V27632 · Dos llamadas idénticas casi seguidas (ocurre al arrancar) repetían dos recálculos de diseño completos. */
+    const firmaPersonajeV27632 = [progreso, personajeElegido, estadoRitmo, contextoVisual?.tipo || "", window.matchMedia("(max-width: 430px)").matches, hoy.getDate()].join("|");
+    const ahoraPersonajeV27632 = (window.performance && performance.now()) || 0;
+    if (personaje.__firmaV27632 === firmaPersonajeV27632 && ahoraPersonajeV27632 - (personaje.__tV27632 || 0) < 400 && personaje.firstElementChild) {
+        return;
+    }
+    personaje.__firmaV27632 = firmaPersonajeV27632;
+    personaje.__tV27632 = ahoraPersonajeV27632;
+    const htmlPersonajeV27632 = `<span class="personaje-sombra-suelo-v186" aria-hidden="true"></span><img class="personaje-cuerpo-img" src="${imagenesPersonaje[personajeElegido] || imagenesPersonaje.hombre}" alt="">${accesorioVisual}`;
+    /* V27632 · Si el dibujo es idéntico no se vuelve a crear: evita decodificar la imagen otra vez. */
+    if (personaje.__htmlV27632 !== htmlPersonajeV27632 || !personaje.firstElementChild) {
+        personaje.innerHTML = htmlPersonajeV27632;
+        personaje.__htmlV27632 = htmlPersonajeV27632;
+    }
     personaje.dataset.personaje = personajeElegido;
     personaje.dataset.contexto = contextoVisual?.tipo || "normal";
     personaje.setAttribute(

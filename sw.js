@@ -1,8 +1,8 @@
-const BUILD = "V276-27631";
-const CACHE = "mi-servicio-v27631";
+const BUILD = "V276-27632";
+const CACHE = "mi-servicio-v27632";
 const CACHE_PREFIX = "mi-servicio-";
 const CODIGO = {
-  "./app-v276.js": "5a1c4e0b57721f336c672345d957f8e873f73893b05055ba44acfa8a8604a274",
+  "./app-v276.js": "232a10e7f66c23c5d83ad0c09d121f63d9208a2e1dabefaaee0b17b50cf717b6",
   "./config-v260.js": "2ef83ae552bfdf5e1e998fffe9f39f1cc6f999826b9229396280337ed5612b5d",
   "./estadisticas-render-v260.js": "d4b50491234def73bc1f3636c97c18c7c21fb8fd5e596cd5cbb82b5caa3d62e9",
   "./estadisticas-v260.js": "32989862e03bd33c2f2f0974355b569887283d1f21535995538ecd79912533bc",
