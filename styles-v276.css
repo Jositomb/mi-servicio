@@ -13682,7 +13682,7 @@ html body #vista-estadisticas #anioServicioV276#anioServicioV276#anioServicioV27
 html body #libretaV276{left:auto;right:23px;bottom:calc(var(--registro-nav-alto,84px) + 106px)}
 @media (max-height:700px){html body #libretaV276{left:auto;right:18px;bottom:calc(var(--registro-nav-alto,84px) + 92px)}}
 /* V276 · Evento junto a los globos más sutil: compacto, translúcido y sin invadir los globos */
-html body #vista-inicio .evento-chip-v276{top:30px;left:8px;max-width:min(31%,118px);gap:4px;padding:2px 7px 2px 3px;border-radius:11px;border-color:rgba(255,255,255,.16);
+html body #vista-inicio .evento-chip-v276{top:27px;left:7px;max-width:min(31%,118px);gap:4px;padding:2px 7px 2px 3px;border-radius:11px;border-color:rgba(255,255,255,.16);
  background:rgba(14,24,48,.28);box-shadow:0 1px 4px rgba(0,0,0,.16);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);opacity:.82}
 html body #vista-inicio .evento-chip-v276 .ico-ev-v276{width:17px;height:17px;font-size:10px;background:rgba(255,255,255,.14)}
 html body #vista-inicio .evento-chip-v276 .txt-ev-v276 small{font-size:8.5px;font-weight:600;opacity:.8;overflow:hidden;text-overflow:ellipsis}
@@ -14411,3 +14411,32 @@ html body:not(#bta):not(#btb) .v143-rm-stats>div:first-child:not(#btc){display:n
 html body:not(#bta):not(#btb) #seguridadCopiaV260:not(#btc),html body:not(#bta):not(#btb) #ultimaCopiaAjustes:not(#btc),html body:not(#bta):not(#btb) #copiaRapidaV260:not(#btc){display:none!important}
 /* Año > vitrina: un solo dato */
 .vitrina-v27631 .vt-datos{grid-template-columns:1fr}
+
+/* ===== V27635 · Menos elementos ===== */
+/* Cabecera: «Guardado 13 nov» pasa dentro de la píldora de estado (en pantallas estrechas se mantiene bajo el título) */
+@media (min-width:361px){
+  html body:not(#bta):not(#btb) #ultimaActualizacionV195:not(#btc){display:none!important}
+  #estadoConexionTextoV190[data-fecha-v27635]::after{content:" · " attr(data-fecha-v27635);font-weight:500;opacity:.85}
+}
+/* Inicio: una sola barra (la del camino con el personaje); los hitos quedan encima */
+html body:not(#bta):not(#btb) #seccionObjetivoInicioV260 .barra:not(#btc){display:none!important}
+/* Estadísticas: un único botón «Compartir y exportar» */
+html body:not(#bta):not(#btb) .compartir-mes-v260>button:not(#menuCompartirV27635):not(#btc){display:none!important}
+html body:not(#bta):not(#btb) #menuCompartirV27635:not(#btc){display:block;width:100%}
+.cm-lista{display:flex;flex-direction:column;gap:8px}
+.cm-fila{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:54px;padding:8px 16px;border:0;border-radius:16px;background:rgba(120,120,128,.14);color:inherit;font:inherit;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.cm-fila span{display:flex;flex-direction:column;gap:1px}
+.cm-fila b{font-size:16px;font-weight:600}
+.cm-fila small{font-size:13px;color:#5c5c61}
+.cm-fila i{font-style:normal;font-size:22px;opacity:.5}
+.cm-fila:active{background:rgba(120,120,128,.28)}
+@media (prefers-color-scheme:dark){.cm-fila small{color:#aeaeb2}}
+:root[data-modo-v276=oscuro] .cm-fila small{color:#aeaeb2}
+:root[data-modo-v276=claro] .cm-fila small{color:#5c5c61}
+/* Registrar: horas y minutos exactos plegados */
+html body:not(#bta):not(#btb) #vista-registrar .grupo-tiempo:not([data-exacto-v27635="1"]) .selector-tiempo:not(#btc){display:none!important}
+html body:not(#bta):not(#btb) #vista-registrar .grupo-tiempo .ayuda-v203:not(#btc){display:none!important}
+html body:not(#bta):not(#btb) .ex-boton-v27635:not(#btc){display:block;margin:6px auto 0;padding:8px 14px;min-height:36px;border:0;border-radius:999px;background:transparent;color:#0a63d6;font-size:14px;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent}
+@media (prefers-color-scheme:dark){html body:not(#bta):not(#btb) .ex-boton-v27635:not(#btc){color:#6cb2ff}}
+:root[data-modo-v276=oscuro] body:not(#bta):not(#btb) .ex-boton-v27635:not(#btc){color:#6cb2ff}
+:root[data-modo-v276=claro] body:not(#bta):not(#btb) .ex-boton-v27635:not(#btc){color:#0a63d6}

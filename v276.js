@@ -1798,7 +1798,7 @@
       const nav = document.querySelector('.nav-item[data-vista="' + GS_VISTAS[j] + '"]'); if (nav) nav.click();
     }, { passive: true });
     document.addEventListener("touchcancel", () => { s = null; }, { passive: true });
-    window.MiServicioV27633 = { pyPintar, cpPintar, cpDias, cpNivel, qrAbrir, qrCerrar, qrGuardar, gsActivo };
+    window.MiServicioV27633 = { cmAbrir, cmCerrar, pyPintar, cpPintar, cpDias, cpNivel, qrAbrir, qrCerrar, qrGuardar, gsActivo };
   }
   /* 25 · V27634 · Lo repetido se oculta solo de la pantalla (los elementos y sus datos siguen existiendo) */
   function dpPintar() {
@@ -1818,7 +1818,48 @@
     const a = $("seguridadNubeV260"), b = $("estadoSyncV134");
     if (a && b) b.classList.toggle("dp-oculto-v27634", !!a.textContent.trim() && a.textContent.trim() === b.textContent.trim());
   }
-  function v33Pasar() { try { pyPintar(); cpPintar(); dpPintar(); } catch (e) { console.warn("[V27633]", e); } }
+  /* 26 · V27635 · Menos elementos: estado único en la cabecera, hoja «Compartir y exportar», hora exacta plegada */
+  function ctPintar() {
+    const sp = $("estadoConexionTextoV190"), pq = $("ultimaActualizacionV195"); if (!sp || !pq) return;
+    const f = (pq.textContent || "").replace(/^\s*Guardado\s*/i, "").trim();
+    if (f && sp.dataset.fechaV27635 !== f) sp.dataset.fechaV27635 = f;
+    if (!f && sp.dataset.fechaV27635) delete sp.dataset.fechaV27635;
+  }
+  const CM_FILAS = [["wrappedBotonV267", "Resumen del mes", ""], ["wrappedSemanaBotonV269", "Resumen de la semana", ""], ["compartirMesV260", "Compartir resumen", "Texto con tus cifras"], ["tarjetaMesV27629", "Tarjeta del mes", "Imagen para compartir"], ["csvMesV264", "Exportar mes (CSV)", "Hoja de cálculo"]];
+  function cmCerrar() { const o = $("cmV27635"); if (!o) return; o.classList.remove("qr-entra"); setTimeout(() => { if (o.parentNode) o.remove(); }, movReducido() ? 0 : 200); }
+  function cmAbrir() {
+    if ($("cmV27635")) return;
+    const o = document.createElement("div"); o.id = "cmV27635"; o.className = "qr-fondo";
+    const filas = CM_FILAS.filter(f => $(f[0])).map(f => '<button type="button" class="cm-fila" data-id="' + f[0] + '"><span><b>' + f[1] + '</b>' + (f[2] ? '<small>' + f[2] + '</small>' : '') + '</span><i aria-hidden="true">›</i></button>').join("");
+    o.innerHTML = '<div class="qr-hoja" role="dialog" aria-modal="true" aria-label="Compartir y exportar"><span class="qr-agarre" aria-hidden="true"></span><h3>Compartir y exportar</h3><div class="cm-lista">' + filas + '</div><div class="qr-pie"><span></span><button type="button" class="qr-cancelar">Cerrar</button></div></div>';
+    document.body.appendChild(o); const t0 = Date.now();
+    o.addEventListener("click", e => {
+      if (e.target === o) { if (Date.now() - t0 > 400) cmCerrar(); return; }
+      const f = e.target.closest(".cm-fila"), c = e.target.closest(".qr-cancelar");
+      if (f) { const b = $(f.dataset.id); cmCerrar(); if (b) b.click(); } else if (c) cmCerrar();
+    });
+    document.addEventListener("keydown", function esc(e) { if (!$("cmV27635")) { document.removeEventListener("keydown", esc); return; } if (e.key === "Escape") { cmCerrar(); document.removeEventListener("keydown", esc); } });
+    requestAnimationFrame(() => requestAnimationFrame(() => o.classList.add("qr-entra")));
+    const h = o.querySelector(".qr-hoja"); if (h) { h.tabIndex = -1; try { h.focus({ preventScroll: true }); } catch (e) {} }
+  }
+  function cmPintar() {
+    const cont = document.querySelector(".compartir-mes-v260"); if (!cont) return;
+    let b = $("menuCompartirV27635");
+    if (!b) { b = document.createElement("button"); b.type = "button"; b.id = "menuCompartirV27635"; b.className = "boton-secundario"; b.textContent = "↗ Compartir y exportar"; b.addEventListener("click", cmAbrir); cont.insertBefore(b, cont.firstChild); }
+    else if (cont.firstChild !== b) cont.insertBefore(b, cont.firstChild);
+  }
+  function exPintar() {
+    const g = document.querySelector("#vista-registrar .grupo-tiempo"), at = g && g.querySelector(".atajos-tiempo"); if (!g || !at) return;
+    let b = $("tiempoExactoV27635");
+    if (!b) {
+      b = document.createElement("button"); b.type = "button"; b.id = "tiempoExactoV27635"; b.className = "ex-boton-v27635"; b.setAttribute("aria-expanded", "false"); b.textContent = "Escribir hora exacta";
+      b.addEventListener("click", () => { const a = g.dataset.exactoV27635 === "1"; if (a) delete g.dataset.exactoV27635; else g.dataset.exactoV27635 = "1"; b.setAttribute("aria-expanded", a ? "false" : "true"); b.textContent = a ? "Escribir hora exacta" : "Ocultar hora exacta"; });
+      at.insertAdjacentElement("afterend", b);
+    }
+  }
+  function v35Pasar() { try { ctPintar(); cmPintar(); exPintar(); } catch (e) { console.warn("[V27635]", e); } }
+
+  function v33Pasar() { try { pyPintar(); cpPintar(); dpPintar(); v35Pasar(); } catch (e) { console.warn("[V27633]", e); } }
 
   function instalarAzulejos() {
     btPasar();
