@@ -14334,3 +14334,64 @@ html body:not(#bta):not(#btb) #vista-registrar .hoy-llevas-v27629.hl-vacio:not(#
 @media (max-height:759px){html body:not(#bta):not(#btb) #semanaRachaV27631:not(#btc){display:none!important}}
 @media (min-width:700px) and (max-height:1259px){html body:not(#bta):not(#btb) #semanaRachaV27631:not(#btc){display:none!important}}
 html body:not(#bta):not(#btb) #semanaRachaV27631.sr-oculta-v27631:not(#btc){display:none!important}
+
+/* ===== V27633 · Proyección de cierre, estado de copia y registro rápido ===== */
+html body:not(#bta):not(#btb) .py-v27633:not(#btc){display:block;margin:2px 0 0!important;font-size:11px!important;font-weight:600;line-height:1.25;letter-spacing:.01em;font-variant-numeric:tabular-nums}
+html body:not(#bta):not(#btb) .py-v27633[hidden]:not(#btc){display:none!important}
+html body:not(#bta):not(#btb) .py-v27633.py-ok:not(#btc){color:#1d7a3a!important}
+html body:not(#bta):not(#btb) .py-v27633.py-bajo:not(#btc){color:#a35a00!important}
+@media (prefers-color-scheme:dark){
+  html body:not(#bta):not(#btb) .py-v27633.py-ok:not(#btc){color:#6fe08e!important}
+  html body:not(#bta):not(#btb) .py-v27633.py-bajo:not(#btc){color:#ffbf66!important}
+}
+:root[data-modo-v276=oscuro] body:not(#bta):not(#btb) .py-v27633.py-ok:not(#btc){color:#6fe08e!important}
+:root[data-modo-v276=oscuro] body:not(#bta):not(#btb) .py-v27633.py-bajo:not(#btc){color:#ffbf66!important}
+:root[data-modo-v276=claro] body:not(#bta):not(#btb) .py-v27633.py-ok:not(#btc){color:#1d7a3a!important}
+:root[data-modo-v276=claro] body:not(#bta):not(#btb) .py-v27633.py-bajo:not(#btc){color:#a35a00!important}
+
+#abrirAjustesV260{position:relative}
+.cp-punto-v27633{position:absolute;right:-3px;top:-3px;width:13px;height:13px;border-radius:50%;border:2px solid var(--ios-fondo,#fff);background:#34c759;box-shadow:0 1px 3px rgba(0,0,0,.35);pointer-events:none}
+.cp-punto-v27633[data-nivel=naranja]{background:#ff9f0a}
+.cp-punto-v27633[data-nivel=rojo]{background:#ff453a}
+@media (prefers-color-scheme:dark){.cp-punto-v27633{border-color:#000}}
+:root[data-modo-v276=oscuro] .cp-punto-v27633{border-color:#000}
+:root[data-modo-v276=claro] .cp-punto-v27633{border-color:#fff}
+
+html body:not(#bta):not(#btb) #vista-ajustes>.cp-fila-v27633:not(#btc){display:flex!important;align-items:center;gap:12px;margin:0 0 14px!important;padding:12px 14px!important;border-radius:20px!important;background:var(--ios-tarjeta,#fff)!important;color:var(--ios-texto,#111)!important;box-shadow:0 6px 18px rgba(20,30,60,.08)!important}
+.cp-fila-v27633 .cp-dot{flex:0 0 12px;width:12px;height:12px;border-radius:50%;background:#34c759}
+.cp-fila-v27633[data-nivel=naranja] .cp-dot{background:#ff9f0a}
+.cp-fila-v27633[data-nivel=rojo] .cp-dot{background:#ff453a}
+.cp-fila-v27633 .cp-txt{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:1px}
+.cp-fila-v27633 .cp-txt b{font-size:15px;font-weight:600;color:var(--ios-texto,#111)}
+.cp-fila-v27633 .cp-txt small{font-size:13px;color:var(--ios-texto2,#5c5c61)}
+html body:not(#bta):not(#btb) .cp-fila-v27633 .cp-btn:not(#btc){flex:0 0 auto;min-height:40px;padding:0 16px!important;border:0!important;border-radius:999px!important;background:#0a63d6!important;color:#fff!important;font-size:14px!important;font-weight:600!important;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.cp-fila-v27633 .cp-btn:active{filter:brightness(.92)}
+@media (prefers-color-scheme:dark){html body:not(#bta):not(#btb) #vista-ajustes>.cp-fila-v27633:not(#btc){background:var(--ios-tarjeta,#1c1c1e)!important;color:#fff!important;box-shadow:none!important}.cp-fila-v27633 .cp-txt b{color:#fff}.cp-fila-v27633 .cp-txt small{color:#aeaeb2}}
+:root[data-modo-v276=oscuro] .cp-fila-v27633 .cp-txt b{color:#fff}
+:root[data-modo-v276=oscuro] .cp-fila-v27633 .cp-txt small{color:#aeaeb2}
+:root[data-modo-v276=claro] .cp-fila-v27633 .cp-txt b{color:#111}
+:root[data-modo-v276=claro] .cp-fila-v27633 .cp-txt small{color:#5c5c61}
+
+#graficoInicio [data-actividad-inicio]{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.qr-fondo{position:fixed;inset:0;z-index:9000;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.38);opacity:0;transition:opacity .2s ease;padding:0 10px calc(env(safe-area-inset-bottom,0px) + 10px)}
+.qr-fondo.qr-entra{opacity:1}
+.qr-hoja{width:min(420px,100%);box-sizing:border-box;padding:12px 18px 16px;border-radius:26px;background:#fff;color:#111;box-shadow:0 18px 50px rgba(0,0,0,.35)}
+.qr-agarre{display:block;width:38px;height:5px;margin:0 auto 12px;border-radius:3px;background:rgba(120,120,128,.35)}
+.qr-hoja h3{display:flex;align-items:center;gap:9px;margin:0 0 2px;font-size:19px;font-weight:700;color:inherit}
+.qr-hoja h3 i{width:12px;height:12px;border-radius:50%;background:var(--qr-c,#3478f6)}
+.qr-sub{margin:0 0 14px;font-size:14px;color:#5c5c61}
+.qr-chips{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.qr-chip{min-height:54px;border:0;border-radius:16px;background:rgba(120,120,128,.14);color:inherit;font-size:18px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;font-variant-numeric:tabular-nums}
+.qr-chip:active,.qr-chip:focus-visible{background:var(--qr-c,#3478f6);color:#fff;outline:none}
+.qr-pie{display:flex;justify-content:space-between;gap:10px;margin-top:12px}
+.qr-mas,.qr-cancelar{min-height:44px;padding:0 6px;border:0;background:none;font-size:16px;font-weight:600;color:#0a63d6;cursor:pointer}
+.qr-cancelar{color:#5c5c61}
+@media (prefers-color-scheme:dark){.qr-hoja{background:#2c2c2e;color:#fff}.qr-sub{color:#aeaeb2}.qr-mas{color:#6cb2ff}.qr-cancelar{color:#aeaeb2}}
+:root[data-modo-v276=oscuro] .qr-hoja{background:#2c2c2e;color:#fff}
+:root[data-modo-v276=oscuro] .qr-sub,:root[data-modo-v276=oscuro] .qr-cancelar{color:#aeaeb2}
+:root[data-modo-v276=oscuro] .qr-mas{color:#6cb2ff}
+:root[data-modo-v276=claro] .qr-hoja{background:#fff;color:#111}
+:root[data-modo-v276=claro] .qr-sub,:root[data-modo-v276=claro] .qr-cancelar{color:#5c5c61}
+:root[data-modo-v276=claro] .qr-mas{color:#0a63d6}
+@media (prefers-reduced-motion:reduce){.qr-fondo{transition:none}}
+.qr-hoja:focus{outline:none}
