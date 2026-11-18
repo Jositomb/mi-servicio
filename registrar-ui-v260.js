@@ -489,7 +489,7 @@ function resumenLocalV260(valor){
 function actualizarSeguridadDatosV260(resumen){
     const local=document.getElementById("seguridadLocalV260"),nube=document.getElementById("seguridadNubeV260"),copia=document.getElementById("seguridadCopiaV260");
     if(local){try{local.textContent=resumenLocalV260(localStorage.getItem(STORAGE_KEYS.registros));}catch(e){local.textContent="No se ha podido comprobar el guardado local. Revisa el aviso de la última acción.";}}
-    if(nube)nube.textContent=resumen?.detalle||"OneDrive pendiente de comprobar.";
+    if(nube)nube.textContent=String(resumen?.detalle||"OneDrive pendiente de comprobar.").replace(/^Guardado en este dispositivo · /,"");
     if(copia){const fecha=leerUltimaCopiaSeguridad();copia.textContent=fecha?"Última copia registrada: "+fecha.toLocaleString("es-ES",{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}):"Todavía no hay una copia de seguridad registrada.";}
 }
 function instalarPulidoFinalV260(){

@@ -1,8 +1,8 @@
-const BUILD = "V276-27636";
-const CACHE = "mi-servicio-v27636";
+const BUILD = "V276-27637";
+const CACHE = "mi-servicio-v27637";
 const CACHE_PREFIX = "mi-servicio-";
 const CODIGO = {
-  "./app-v276.js": "a2c8cca80dd837395ef7db46a35de1c4d14cbb18ca3b01fe7454f7d6547abe54",
+  "./app-v276.js": "4b99db43fa3790e67a7e8757c9ddce90751ac1660c852c91aa787abfd71453fa",
   "./config-v260.js": "2ef83ae552bfdf5e1e998fffe9f39f1cc6f999826b9229396280337ed5612b5d",
   "./estadisticas-render-v260.js": "d4b50491234def73bc1f3636c97c18c7c21fb8fd5e596cd5cbb82b5caa3d62e9",
   "./estadisticas-v260.js": "32989862e03bd33c2f2f0974355b569887283d1f21535995538ecd79912533bc",
@@ -13,14 +13,14 @@ const CODIGO = {
   "./legacy-bridge-v260.js": "7a9f294149fecaa1bc9941ae6d87a97d47955de70b3a53e90b2258be6618f9c0",
   "./mejoras-v260.js": "cde6be90bb0422b66bb3183c0638b8a22bd9817b65a3519e328b89a36b8c3319",
   "./planificacion-v260.js": "3a88dd2e2036597e63529ff065e757c7a66f161daba0b897fcb6435c4088d7d0",
-  "./registrar-ui-v260.js": "6eed3f73add6d69a14cd4d72fb7a91c67f012c5f0496db7882f2005c1d1b0768",
+  "./registrar-ui-v260.js": "c4b2ee8a2196d8ae063e4a5984a27cefb2c6e58fd77c617422fd2a61e4aa7205",
   "./registrar-v260.js": "d3b7fcc9c7fb5b62681ef154302ac084a8088ed7ccfe144f5eb78ab8d52aa667",
   "./solidez-v266.js": "948674da60283ca67720da1dcef621ecf7b7a2cc6600530f0fde1500b46e1015",
   "./simple-v260.js": "d4de97a738d75a20f26487f59f0011fcb51ed63980b00b53618be4a6629e6820",
   "./storage-v260.js": "c8dc9a3b4b440181b69dabf206319026d8f3057cccf63c57ae8585cd4bdfdca9",
-  "./styles-v276.css": "a78143c950650428a936ce4c92a101ed77d8f5d7e199f12a9de6e2bd64580d79",
+  "./styles-v276.css": "86ba9af9a3dba59feb8f8d03f5ff681bf3e35bd6a543684ad4018853eb100776",
   "./tiempo-v262.js": "5e75178e6ba21dc2e3b136144dcaf1b1642193c1236f0ea7730b99581e39ff54",
-  "./v276.js": "728a18e92cf2e69fc37b119500107f4167d38ed3a19066d254fb89a7ef087846",
+  "./v276.js": "84129bde7ce47ef2bdef6336c97d877dae99b6c1fa302f4d50fb0c21f692eced",
   "./v268.js": "e18ce297803cdab21585eb721c15ba131da9fe745430b4d11cd5617149af31c3",
   "./v267.js": "4af5711605c4b755c8443e63e92c5b9acfe226a745f0fa0a1a4e116306179f82",
   "./v264.js": "5850b534a0d5829da0514980d497b54790e1dd8316ab45ddfdd265f8463d5753",

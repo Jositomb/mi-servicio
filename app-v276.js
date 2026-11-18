@@ -7528,7 +7528,7 @@ function actualizarComparacionSemanalV139(){
  const el=document.getElementById("comparacionSemanalV139");if(!el)return;
  const r=resumenComparacionSemanaV260(estado.registros);
  const cambio=r.diferencia>0?`↑ +${formatearTiempo(r.diferencia)}`:r.diferencia<0?`↓ −${formatearTiempo(-r.diferencia)}`:"Igual";
- el.textContent=r.actual===0&&r.previa===0?"Sin actividad registrada en ambas semanas":`${cambio} respecto a la semana anterior · Antes: ${formatearTiempo(r.previa)}`;
+ el.textContent=r.actual===0&&r.previa===0?"Sin actividad registrada en ambas semanas":`${cambio} respecto a la semana anterior`;
 }
 document.addEventListener("DOMContentLoaded",()=>setTimeout(actualizarComparacionSemanalV139,700));
 

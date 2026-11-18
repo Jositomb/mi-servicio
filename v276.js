@@ -564,8 +564,8 @@
     });
     const total = s.querySelector(".anio-total-v276"); total.setAttribute("aria-label", "Total del año de servicio: " + fmt(d.total));
     if (animar) cuentaArribaV276(total, d.total, fmt); else total.textContent = fmt(d.total);
-    const horasEl = s.querySelector(".anio-datos-v276"); horasEl.textContent = "";
-    [[String(d.diasActivos), d.diasActivos === 1 ? "día activo" : "días activos"], [String(d.racha), "racha máxima"], [d.total ? MESES_L[d.mejor.m].charAt(0).toUpperCase() + MESES_L[d.mejor.m].slice(1) : "—", "mejor mes"], [fmt(d.promedio), "media al mes"]].forEach(p => {
+    const horasEl = s.querySelector(".anio-datos-v276"); horasEl.textContent = ""; horasEl.dataset.n = d.promedio === d.total ? "3" : "4";
+    [[String(d.diasActivos), d.diasActivos === 1 ? "día activo" : "días activos"], [String(d.racha), "racha máxima"], [d.total ? MESES_L[d.mejor.m].charAt(0).toUpperCase() + MESES_L[d.mejor.m].slice(1) : "—", "mejor mes"], [fmt(d.promedio), "media al mes"]].filter((p, i) => !(i === 3 && d.promedio === d.total)).forEach(p => {
       const e = document.createElement("div"); const b = document.createElement("strong"); b.textContent = p[0]; const sm = document.createElement("small"); sm.textContent = p[1]; e.append(b, sm); horasEl.appendChild(e);
     });
     s.querySelector(".anio-compartir-v276").disabled = !d.total;
@@ -1527,7 +1527,7 @@
     document.addEventListener("input", e => { if (e.target && (e.target.id === "nombreSaludoV260" || e.target.id === "objetivoMensual")) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("change", e => { if (e.target && /^(tipoPublicador|nombreSaludoV260|objetivoMensual)$/.test(e.target.id)) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("click", e => { if (e.target.closest && e.target.closest("#abrirAjustesV260,#modoColorV27627")) setTimeout(ajPintar, 80); }, true);
-    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar();
+    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar(); rpInstalar();
     document.addEventListener("visibilitychange", () => { if (!document.hidden) setTimeout(cpPintar, 300); });
     setTimeout(() => srProgramar(100), 1100); window.addEventListener("resize", () => srProgramar(1200)); window.addEventListener("orientationchange", () => srProgramar(1500));
     window.MiServicioV27629 = { ajPintar, hlPintar, evoPintar, ruedaMostrar, tjDibujar, tjAbrir, ajResumenes, srPintar, vtPintar, dnPlan, rcEvaluar, rcMensaje };
@@ -1799,7 +1799,7 @@
       const nav = document.querySelector('.nav-item[data-vista="' + GS_VISTAS[j] + '"]'); if (nav) nav.click();
     }, { passive: true });
     document.addEventListener("touchcancel", () => { s = null; }, { passive: true });
-    window.MiServicioV27633 = { omObjetivoDe, omTrasGuardar, cmAbrir, cmCerrar, pyPintar, cpPintar, cpDias, cpNivel, qrAbrir, qrCerrar, qrGuardar, gsActivo, iniLeer, iniAplicar, rvAnalizar, rvAbrir, rvCerrar, rvPintar };
+    window.MiServicioV27633 = { omObjetivoDe, omTrasGuardar, cmAbrir, cmCerrar, pyPintar, cpPintar, cpDias, cpNivel, qrAbrir, qrCerrar, qrGuardar, gsActivo, iniLeer, iniAplicar, rvAnalizar, rvAbrir, rvCerrar, rvPintar, rpPintar };
   }
   /* 28 · V27636 · Personalizar Inicio: mostrar u ocultar tarjetas (solo apariencia, no entra en las copias) */
   function iniLeer() {
@@ -1896,6 +1896,36 @@
     b.classList.toggle("rv-aviso", n > 0);
   }
 
+  /* 30 · V27637 · Menos repetición: se oculta en pantalla lo que ya se ve en otro sitio (los datos siguen en el DOM) */
+  const RP_C = "rp-oculto-v27637";
+  function rpAlt(el, oculto) { if (el && el.classList.contains(RP_C) !== oculto) { el.classList.toggle(RP_C, oculto); return true; } return false; }
+  function rpPintar() {
+    try {
+      const R = document.documentElement; let cambio = false;
+      const ea = $("estadoAnimal"), fc = document.querySelector(".inicio-pie-v260 .frase-animo-card");
+      if (ea) {
+        const generico = /^(¡Meta conseguida|¡Vas lanzado|Paso a paso|¡Buen ritmo)/.test((ea.textContent || "").trim());
+        const frase = !!fc && !R.hasAttribute("data-ini-sin-frase-v27636") && !R.hasAttribute("data-ini-sin-pie-v27636");
+        cambio = rpAlt(ea, generico && frase) || cambio;
+      }
+      const fr = $("fechaRegistro"), rd = $("resumenDiaV264");
+      if (fr && rd) rpAlt(rd, fr.value === fechaISO(new Date()));
+      document.querySelectorAll(".grupo-historial-cabecera").forEach(c => {
+        const t = c.querySelector(".grupo-historial-total"), p = c.parentElement;
+        if (t && p) rpAlt(t, p.querySelectorAll(".registro-card").length === 1);
+      });
+      rpAlt(document.querySelector(".cal-hist-v27628 .cal-res"), true);
+      if (cambio && typeof programarEncajeV260 === "function") programarEncajeV260(true);
+    } catch (e) { console.warn("[V27637]", e); }
+  }
+  let rpTm = null;
+  function rpProgramar() { if (rpTm) return; rpTm = setTimeout(() => { rpTm = null; rpPintar(); }, 120); }
+  function rpInstalar() {
+    rpPintar();
+    new MutationObserver(rpProgramar).observe(document.body, { childList: true, subtree: true, characterData: true });
+    ["input", "change", "click"].forEach(n => document.addEventListener(n, rpProgramar, true));
+  }
+
   /* 27 · V27636 · Objetivo de cada mes: los meses pasados se comparan con el objetivo que tenían entonces */
   const OM_BASE = "0000-00";
   function omClave(d) { return fechaISO(d || new Date()).slice(0, 7); }
@@ -1939,7 +1969,7 @@
       if (cmp && msg) msg.classList.toggle("dp-oculto-v27634", /^sin comparaci/i.test((cmp.textContent || "").trim()));
     }
     const a = $("seguridadNubeV260"), b = $("estadoSyncV134");
-    if (a && b) b.classList.toggle("dp-oculto-v27634", !!a.textContent.trim() && a.textContent.trim() === b.textContent.trim());
+    if (a && b) { const q = x => x.textContent.trim().replace(/^Guardado en este dispositivo · /, ""); b.classList.toggle("dp-oculto-v27634", !!q(a) && q(a) === q(b)); }
   }
   /* 26 · V27635 · Menos elementos: estado único en la cabecera, hoja «Compartir y exportar», hora exacta plegada */
   function ctPintar() {
