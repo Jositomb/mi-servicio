@@ -215,7 +215,7 @@
       const b = document.createElement("button"); b.type = "button"; b.className = "logro-v267"; b.dataset.id = def.id;
       b.setAttribute("aria-label", def.nombre + ". " + (g ? "Conseguido el " + fechaCorta(g) : "Por conseguir. " + pistaLogro(def, info)));
       b.innerHTML = medallaHTML(def, !!g) + '<strong></strong><small></small>';
-      b.querySelector("strong").textContent = def.nombre; b.querySelector("small").textContent = g ? fechaCorta(g) : "Por conseguir";
+      b.querySelector("strong").textContent = def.nombre; b.querySelector("small").textContent = g ? fechaCorta(g) : ""; /* V27638: el candado ya dice «por conseguir» (sigue en aria-label) */
       b.addEventListener("click", () => { const t = host.querySelector(".logro-detalle-v267"); t.textContent = def.nombre + " · " + (g ? "conseguido el " + fechaCorta(g) : pistaLogro(def, info)); });
       rej.appendChild(b);
     });

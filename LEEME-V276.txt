@@ -153,23 +153,23 @@ V276-27629 · Ajustes iOS, «Hoy llevas…», evolución apilada, rueda de meta 
 - Estadísticas > Resumen mensual: botón «Tarjeta del mes» que genera una imagen 1080×1350 (mes, anillo de meta, horas por actividad, días activos y mejor semana) para compartir o guardar. No incluye notas ni nombres. El botón de compartir en texto sigue igual.
 - Sin claves de almacenamiento nuevas ni cambios en datos o copias JSON.
 
-V276-27637 · Cifras de los globos de Inicio
+V276-27638 · Cifras de los globos de Inicio
 - Corregido: a veces los números de los globos se quedaban a medias (cuenta de 0 al valor real detenida, por ejemplo al abrir la app desde el icono o al volver a ella) hasta entrar de nuevo en Inicio. Ahora la cuenta siempre termina en el valor real: al acabar, con una red de seguridad por tiempo, al volver a la app y al cambiar de pestaña. No cambia ningún dato.
 
-V276-27637 · Semana con racha, objetivo diario, recordatorio cálido y vitrina del año
+V276-27638 · Semana con racha, objetivo diario, recordatorio cálido y vitrina del año
 - Inicio: franja «tu semana» (L–D) entre los globos y el objetivo. Cada día servido se llena con el color de su actividad dominante y una marca; hoy parpadea si falta. A la derecha, la llama con los días de racha (la misma racha de los Logros); crece y brilla con 3, 7 y 14 días. En pantallas pequeñas donde Inicio dejaría de caber entero, la franja se oculta sola.
 - Registrar: la franja «Hoy llevas…» incorpora un aro de objetivo diario: (objetivo del mes − lo llevado antes de hoy) ÷ días que quedan, incluido hoy. Muestra «faltan X», «¡Vas al día!» o «¡Meta del mes cumplida!». Sin objetivo configurado no hay aro.
 - Recordatorio cálido (dentro de la app, sin notificaciones): entre las 18:00 y las 23:00, si hoy no hay registros y ya usas la app, aparece un aviso con un saludo animado y botones «Registrar» / «Hoy no». Máximo uno cada 2 horas; «Hoy no» lo silencia hasta mañana. Se puede desactivar en Ajustes > Personalizar.
 - Estadísticas > Año: vitrina de insignias del año de servicio (sep–ago), una medalla 3D por mes: oro (meta cumplida), plata (75 %), bronce (50 %); datos de meses de oro, racha máxima y horas. Sigue el selector de año.
 - Claves nuevas solo de interfaz (no van en copias): miServicio.recordatorioV27631 y miServicio.recordatorioEstadoV27631. Ningún dato ni estructura cambia.
 
-V276-27637 · Rendimiento al arrancar
+V276-27638 · Rendimiento al arrancar
 - Medido: primer pintado ~0,2 s (≈0,4 s con CPU 4× más lenta).
 - El personaje del progreso ya no repite al arrancar dos recálculos de diseño idénticos
   (ahorra ~100 ms en PC, más en móvil). No cambia nada visible ni los datos.
 - Sin cambios en funciones, claves de almacenamiento ni copias de seguridad.
 
-V276-27637 · Proyección de cierre, estado de la copia y gestos
+V276-27638 · Proyección de cierre, estado de la copia y gestos
 - Inicio > Objetivo: «Cierre previsto: X h» (ritmo del mes hasta hoy extrapolado al último día;
   verde si llegas al objetivo, ámbar si no). Solo aparece desde el día 3 y mientras no hayas cumplido la meta. No guarda nada.
 - Copia de seguridad: punto de color en el avatar (verde ≤ 7 días, naranja ≤ 30, rojo más o sin copia)
@@ -181,7 +181,7 @@ V276-27637 · Proyección de cierre, estado de la copia y gestos
     tarjetas del historial, Ajustes, ventanas ni en los bordes de la pantalla).
 - Clave nueva solo de interfaz (no entra en copias): miServicio.gestosV27633.
 
-V276-27637 · Pantallas más limpias (sin repetir datos)
+V276-27638 · Pantallas más limpias (sin repetir datos)
 Solo se oculta en pantalla: los elementos y los datos siguen existiendo; copias, registros y exportaciones no cambian.
 - Inicio: se quita la fecha repetida sobre los globos y la etiqueta «→ recuperando» (la frase de debajo ya lo dice).
 - Historial: cada registro ya no repite el día (está en el encabezado del grupo); el calendario no repite el total del mes.
@@ -191,21 +191,25 @@ Solo se oculta en pantalla: los elementos y los datos siguen existiendo; copias,
 - Ajustes: la copia de seguridad se muestra una vez (fila de arriba, con fecha y «Guardar ahora»); se ocultan «Última copia…» (×2),
   «Crear copia de seguridad» (igual que Guardar ahora) y el estado de OneDrive duplicado. Cabecera de perfil sin el nº de registros.
 
-V276-27637 · Menos elementos sueltos (sin quitar información)
+V276-27638 · Menos elementos sueltos (sin quitar información)
 - Cabecera: «Guardado 13 nov» pasa dentro de la píldora de estado («Local · 13 nov»). En pantallas de menos de 361 px se mantiene bajo el título.
 - Inicio > Objetivo: una sola barra de progreso (la del camino con el personaje); los hitos 25/50/75/100 siguen encima.
 - Estadísticas > Resumen: los cinco botones de compartir/exportar pasan a una hoja «Compartir y exportar» (usa los mismos botones de siempre).
 - Registrar: horas y minutos exactos plegados tras «Escribir hora exacta» (los atajos, ± y cronómetro siguen a la vista).
 - Se mantienen «Volver» (la flecha del título no es un botón) y «Tus datos» (lleva el aviso de iOS sobre guardar los datos).
 
-V276-27637
+V276-27638
 - Revisión de datos (Ajustes › Tus datos): busca duplicados, registros sin tiempo, fechas futuras o no válidas, tipos desconocidos y días de más de 24 h. Cada uno se puede revisar (abre la edición de siempre), marcar «Está bien» o eliminar (con Deshacer). No cambia nada sin tu toque.
 - Objetivo por mes: al cambiar el objetivo en Ajustes, vale desde el mes actual; los meses anteriores (medallas, resúmenes, logros) conservan el que tenían. Se guarda en preferencias.objetivosPorMes y viaja en las copias JSON; las copias antiguas siguen importándose igual.
 - Tarjetas de Inicio (Ajustes): se pueden ocultar «Semana y racha», «El tiempo para salir» y «Frase de ánimo». Es solo apariencia del dispositivo (no entra en las copias).
 
-V276-27637 (menos repetición, solo en pantalla; los datos no cambian)
+V276-27638 (menos repetición, solo en pantalla; los datos no cambian)
 - Inicio: si se ve la frase de ánimo, se oculta el mensaje genérico de ritmo del camino (los mensajes de calendario, como vacaciones, se conservan).
 - Registrar: al elegir hoy se oculta «Ese día ya llevas…» (ya está en «Hoy llevas»).
 - Historial: el total del día se oculta si el día tiene un solo registro; se quita el mes repetido junto a «Calendario».
 - Estadísticas: la comparación semanal ya no repite «Antes: X»; en Año, «media al mes» solo aparece si hay más de un mes con datos.
 - Ajustes: «Tus datos» ya no repite «Guardado en este dispositivo».
+
+V276-27638 (menos repetición, segunda vuelta; solo en pantalla)
+- Ajustes: se oculta la píldora de estado de la cabecera (la fila «Copia de seguridad» está justo debajo), «OneDrive no conectado» en Tus datos (lo dice la tarjeta de OneDrive) y el aviso genérico del navegador cuando ya se ve el consejo de iOS.
+- Estadísticas: sin el subtítulo «Actividad de lunes a domingo», sin el aviso «Sin comparación anterior», la Meta anual no repite el total del año y las medallas bloqueadas ya no repiten «Por conseguir» (el candado lo dice y sigue en la lectura de pantalla).
