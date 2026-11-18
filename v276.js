@@ -1765,19 +1765,25 @@
       g.addEventListener("click", e => { const b = e.target.closest("button[data-gs-v27633]"); if (!b) return; try { localStorage.setItem(GS_K, b.dataset.gsV27633 === "si" ? "1" : "0"); } catch (er) {} pintar(); });
       pintar();
     }
-    /* Pulsación larga en un globo/pieza de Inicio */
+    /* Pulsación larga en cualquier figura de una actividad: globos de Inicio, barras de Estadísticas y filtros del Historial */
+    const GS_SEL = "#graficoInicio [data-actividad-inicio],#vista-estadisticas .barra-actividad-item,#vista-historial .filtro-historial[data-filtro]";
+    const gsTipo = el => {
+      if (el.dataset.actividadInicio) return el.dataset.actividadInicio;
+      if (el.dataset.filtro) return el.dataset.filtro;
+      return ["ministerio", "ldc", "asambleas", "otras"].find(t => el.classList.contains(t)) || "";
+    };
     let tm = null, x0 = 0, y0 = 0;
     const cancelar = () => { if (tm) { clearTimeout(tm); tm = null; } };
     document.addEventListener("pointerdown", e => {
       cancelar(); if (!gsActivo() || e.button > 0) return;
-      const pieza = e.target.closest && e.target.closest("#graficoInicio [data-actividad-inicio]"); if (!pieza) return;
-      const tipo = pieza.dataset.actividadInicio; x0 = e.clientX; y0 = e.clientY;
+      const pieza = e.target.closest && e.target.closest(GS_SEL); if (!pieza) return;
+      const tipo = gsTipo(pieza); if (!tipo) return; x0 = e.clientX; y0 = e.clientY;
       tm = setTimeout(() => { tm = null; qrAbrir(tipo); }, 520);
     }, true);
     document.addEventListener("pointermove", e => { if (tm && Math.hypot(e.clientX - x0, e.clientY - y0) > 10) cancelar(); }, true);
     ["pointerup", "pointercancel", "scroll"].forEach(n => document.addEventListener(n, cancelar, true));
-    document.addEventListener("click", e => { if ($("qrV27633") && Date.now() - qrTs < 900 && e.target.closest && e.target.closest("#graficoInicio")) { e.preventDefault(); e.stopImmediatePropagation(); } }, true);
-    document.addEventListener("contextmenu", e => { if (gsActivo() && e.target.closest && e.target.closest("#graficoInicio [data-actividad-inicio]")) e.preventDefault(); }, true);
+    document.addEventListener("click", e => { if ($("qrV27633") && Date.now() - qrTs < 900 && e.target.closest && e.target.closest(GS_SEL)) { e.preventDefault(); e.stopImmediatePropagation(); } }, true);
+    document.addEventListener("contextmenu", e => { if (gsActivo() && e.target.closest && e.target.closest(GS_SEL) && gsTipo(e.target.closest(GS_SEL))) e.preventDefault(); }, true);
     /* Deslizar de lado para cambiar de pestaña */
     let s = null;
     const bloqueado = el => {

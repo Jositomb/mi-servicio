@@ -14471,3 +14471,5 @@ html[data-ini-sin-pie-v27636] body:not(#bta):not(#btb) .inicio-pie-v260:not(#btc
 html body:not(#bta):not(#btb) .rp-oculto-v27637:not(#btc){display:none !important}
 #anioServicioV276 .anio-datos-v276[data-n="3"]{grid-template-columns:repeat(3,1fr)}
 html body:has(#vista-registrar.activa):not(.registro-editando-v260) #vista-registrar #resumenDiaV264.rp-oculto-v27637{display:none!important}
+/* V27639 · pulsación larga también en barras de Estadísticas y filtros del Historial */
+#vista-estadisticas .barra-actividad-item,#vista-historial .filtro-historial[data-filtro]{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
