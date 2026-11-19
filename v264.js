@@ -54,23 +54,34 @@
     const sp = document.querySelector('.nav-item[data-vista="registrar"] > span:last-child');
     if (sp) { if (!sp.dataset.original) sp.dataset.original = sp.textContent.trim(); sp.textContent = texto === null ? sp.dataset.original : texto; }
   }
+  /* V27642: tiempo real = (ahora o momento de la pausa) − inicio − pausas acumuladas. Un cronómetro antiguo sin esos campos cuenta igual que siempre. */
+  function transcurridoCron(e) { return Math.max(0, (e.pausado || Date.now()) - e.inicio - (Number(e.pausas) || 0)); }
+  function alternarPausaCron() {
+    const e = estadoCron(); if (!e) return;
+    if (e.pausado) { e.pausas = (Number(e.pausas) || 0) + Math.max(0, Date.now() - e.pausado); delete e.pausado; }
+    else e.pausado = Date.now();
+    if (!guardar(K_CRON, JSON.stringify(e))) { aviso("No se pudo guardar la pausa (sin espacio de guardado)."); return; }
+    pintarCron();
+  }
   function pintarCron() {
     const e = estadoCron();
     const marcha = !!e;
     document.body.classList.toggle("cronometro-activo-v264", marcha);
     if ($("cronIniciarV264")) $("cronIniciarV264").hidden = marcha;
     if ($("cronTerminarV264")) $("cronTerminarV264").hidden = !marcha;
+    if ($("cronPausaV264")) { $("cronPausaV264").hidden = !marcha; $("cronPausaV264").textContent = marcha && e.pausado ? "▶ Reanudar" : "⏸ Pausar"; }
+    document.body.classList.toggle("cronometro-pausado-v27642", marcha && !!e.pausado);
     if ($("cronDescartarV264")) $("cronDescartarV264").hidden = !marcha;
     const tit = $("cronTituloV264"), sub = $("cronSubV264"), out = $("cronTiempoV264");
     if (marcha) {
-      const ms = Date.now() - e.inicio;
+      const ms = transcurridoCron(e);
       if (out) out.textContent = fmtHMS(ms);
       let nombre = "actividad";
       try { if (typeof nombreActividad === "function") nombre = nombreActividad(e.tipo); } catch (x) {}
-      if (tit) tit.textContent = "En curso · " + nombre;
-      if (sub) sub.textContent = "Empezó a las " + new Date(e.inicio).toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" }) + ". Puedes cerrar la app.";
+      if (tit) tit.textContent = (e.pausado ? "En pausa · " : "En curso · ") + nombre;
+      if (sub) sub.textContent = e.pausado ? "En pausa desde las " + new Date(e.pausado).toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" }) + ". Pulsa Reanudar para seguir." : "Empezó a las " + new Date(e.inicio).toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" }) + ". Puedes cerrar la app.";
       const s = Math.floor(ms / 1000), h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60);
-      etiquetaNav("⏱ " + h + ":" + String(m).padStart(2, "0"));
+      etiquetaNav((e.pausado ? "⏸ " : "⏱ ") + h + ":" + String(m).padStart(2, "0"));
     } else {
       if (out) out.textContent = "0:00:00";
       if (tit) tit.textContent = "Cronómetro";
@@ -92,7 +103,7 @@
   function terminarCron() {
     const e = estadoCron(); if (!e) return;
     const MAX = 24 * 60;
-    let minutos = Math.max(1, Math.round((Date.now() - e.inicio) / 60000));
+    let minutos = Math.max(1, Math.round(transcurridoCron(e) / 60000));
     let recortado = false;
     if (minutos > MAX) { minutos = MAX; recortado = true; }
     const inicio = new Date(e.inicio), hoy = new Date(), ayer = new Date(); ayer.setDate(hoy.getDate() - 1);
@@ -121,6 +132,7 @@
   function instalarCron() {
     $("cronIniciarV264")?.addEventListener("click", iniciarCron);
     $("cronTerminarV264")?.addEventListener("click", terminarCron);
+    $("cronPausaV264")?.addEventListener("click", alternarPausaCron);
     $("cronDescartarV264")?.addEventListener("click", descartarCron);
     document.addEventListener("visibilitychange", () => { if (!document.hidden) pintarCron(); });
     pintarCron();

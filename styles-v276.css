@@ -14491,3 +14491,8 @@ html body:has(#vista-registrar.activa):not(.registro-editando-v260) #vista-regis
 :root[data-modo-v276=oscuro] .hb-cab button{color:#6cb0ff}
 :root[data-modo-v276=claro] .habituales-v27641{background:rgba(255,255,255,.9)}
 :root[data-modo-v276=claro] .hb-cab button{color:#0a64d6}
+
+/* V27642 · pausa del cronómetro */
+.cron-pausa-v27642{background:rgba(120,120,128,.2);color:inherit}
+.cron-pausa-v27642[hidden]{display:none !important}
+body.cronometro-pausado-v27642 #cronTiempoV264{opacity:.6}
