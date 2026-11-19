@@ -14473,3 +14473,21 @@ html body:not(#bta):not(#btb) .rp-oculto-v27637:not(#btc){display:none !importan
 html body:has(#vista-registrar.activa):not(.registro-editando-v260) #vista-registrar #resumenDiaV264.rp-oculto-v27637{display:none!important}
 /* V27639 · pulsación larga también en barras de Estadísticas y filtros del Historial */
 #vista-estadisticas .barra-actividad-item,#vista-historial .filtro-historial[data-filtro]{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+/* V27641 · Habituales */
+.habituales-v27641{margin:0 0 12px;padding:12px 14px;border-radius:22px;background:var(--tarjeta,rgba(255,255,255,.9));box-shadow:0 6px 20px rgba(0,0,0,.08)}
+.habituales-v27641[hidden]{display:none !important}
+.hb-cab{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;font-size:14px}
+.hb-cab button{border:0;background:none;color:#0a64d6;font:inherit;font-weight:600;min-height:32px;padding:0 6px;cursor:pointer}
+.hb-lista{display:flex;flex-wrap:wrap;gap:8px}
+.hb-item{display:inline-flex;align-items:center;gap:4px}
+.hb-chip{min-height:44px;padding:8px 16px;border:0;border-radius:999px;background:linear-gradient(180deg,#2a62d6,#1450b8);color:#fff;font:inherit;font-weight:600;font-size:15px;box-shadow:0 3px 8px rgba(31,100,224,.35);cursor:pointer}
+.hb-item[data-tipo=ldc] .hb-chip{background:linear-gradient(180deg,#d6336c,#a8204f);box-shadow:0 3px 8px rgba(214,51,108,.35)}
+.hb-item[data-tipo=asambleas] .hb-chip{background:linear-gradient(180deg,#a85a03,#8a4700);box-shadow:0 3px 8px rgba(217,129,10,.35)}
+.hb-item[data-tipo=otras] .hb-chip{background:linear-gradient(180deg,#7a4ae0,#5128b0);box-shadow:0 3px 8px rgba(109,63,216,.35)}
+.hb-chip:active{transform:scale(.97)}
+.hb-x{width:36px;height:36px;border:0;border-radius:50%;background:#b3261e;color:#fff;font-size:20px;line-height:1;cursor:pointer}
+@media (prefers-color-scheme:dark){.habituales-v27641{background:rgba(44,44,46,.92)}.hb-cab button{color:#6cb0ff}}
+:root[data-modo-v276=oscuro] .habituales-v27641{background:rgba(44,44,46,.92)}
+:root[data-modo-v276=oscuro] .hb-cab button{color:#6cb0ff}
+:root[data-modo-v276=claro] .habituales-v27641{background:rgba(255,255,255,.9)}
+:root[data-modo-v276=claro] .hb-cab button{color:#0a64d6}

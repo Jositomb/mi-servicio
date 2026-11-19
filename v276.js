@@ -19,7 +19,7 @@
   function nombreTipo(t) { try { return typeof nombreActividad === "function" ? nombreActividad(t) : t; } catch (e) { return t; } }
   function registros() { try { return (estado.registros || []).filter(r => r && /^\d{4}-\d{2}-\d{2}/.test(String(r.fecha))); } catch (e) { return []; } }
   function objetivo() { try { return Number(estado.preferencias && estado.preferencias.objetivoMensualMinutos) || 0; } catch (e) { return 0; } }
-  const INI_K = "miServicio.inicioV27636", RV_K = "miServicio.revisionOkV27636", RV_TIPOS = ["ministerio", "ldc", "asambleas", "otras"]; /* arriba para que existan cuando arranca la app */
+  const HB_K = "miServicio.habitualesV27641", INI_K = "miServicio.inicioV27636", RV_K = "miServicio.revisionOkV27636", RV_TIPOS = ["ministerio", "ldc", "asambleas", "otras"]; /* arriba para que existan cuando arranca la app */
   function movReducido() { try { return window.matchMedia("(prefers-reduced-motion:reduce)").matches; } catch (e) { return false; } }
 
   /* ================= 1. TEMAS, COLOR PERSONAL, LETRA ================= */
@@ -1527,7 +1527,7 @@
     document.addEventListener("input", e => { if (e.target && (e.target.id === "nombreSaludoV260" || e.target.id === "objetivoMensual")) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("change", e => { if (e.target && /^(tipoPublicador|nombreSaludoV260|objetivoMensual)$/.test(e.target.id)) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("click", e => { if (e.target.closest && e.target.closest("#abrirAjustesV260,#modoColorV27627")) setTimeout(ajPintar, 80); }, true);
-    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar(); rpInstalar();
+    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar(); rpInstalar(); dsInstalar(); hbInstalar();
     document.addEventListener("visibilitychange", () => { if (!document.hidden) setTimeout(cpPintar, 300); });
     setTimeout(() => srProgramar(100), 1100); window.addEventListener("resize", () => srProgramar(1200)); window.addEventListener("orientationchange", () => srProgramar(1500));
     window.MiServicioV27629 = { ajPintar, hlPintar, evoPintar, ruedaMostrar, tjDibujar, tjAbrir, ajResumenes, srPintar, vtPintar, dnPlan, rcEvaluar, rcMensaje };
@@ -1718,12 +1718,13 @@
   let qrTs = 0;
   function qrCerrar() { const o = $("qrV27633"); if (!o) return; o.classList.remove("qr-entra"); setTimeout(() => { if (o.parentNode) o.remove(); }, movReducido() ? 0 : 200); }
   function qrColor(tipo) { const f = V8_TIPOS.find(x => x[0] === tipo); return f ? f : V8_TIPOS[0]; }
-  function qrGuardar(tipo, min) {
+  function qrGuardar(tipo, min, companero) {
+    companero = String(companero || "");
     if (!V8_NOMBRE[tipo] || !(min > 0)) return false;
     const fecha = fechaISO(new Date()), ahora = new Date().toISOString();
-    if (typeof posibleDuplicadoV260 === "function" && posibleDuplicadoV260(estado.registros, { fecha, tipo, minutos: min, companero: "", notas: "", cursosBiblicos: 0 }) &&
+    if (typeof posibleDuplicadoV260 === "function" && posibleDuplicadoV260(estado.registros, { fecha, tipo, minutos: min, companero, notas: "", cursosBiblicos: 0 }) &&
       !window.confirm("Ya hay un registro idéntico de " + V8_NOMBRE[tipo] + " (" + v8Hm(min) + ") hoy. ¿Guardar otro igual?")) return false;
-    const reg = { id: crearID(), fecha, tipo, minutos: min, notas: "", companero: "", cursosBiblicos: 0, creadoEn: ahora, modificadoEn: ahora, sincronizacion: { estado: "pendiente", ultimaSincronizacion: null } };
+    const reg = { id: crearID(), fecha, tipo, minutos: min, notas: "", companero, cursosBiblicos: 0, creadoEn: ahora, modificadoEn: ahora, sincronizacion: { estado: "pendiente", ultimaSincronizacion: null } };
     let pct = 0; try { pct = ivPctObjetivo() || 0; } catch (e) {}
     estado.registros.push(reg);
     if (!guardarRegistros()) { estado.registros.pop(); avisoV202("No se pudo guardar el registro."); return false; }
@@ -1805,7 +1806,7 @@
       const nav = document.querySelector('.nav-item[data-vista="' + GS_VISTAS[j] + '"]'); if (nav) nav.click();
     }, { passive: true });
     document.addEventListener("touchcancel", () => { s = null; }, { passive: true });
-    window.MiServicioV27633 = { omObjetivoDe, omTrasGuardar, cmAbrir, cmCerrar, pyPintar, cpPintar, cpDias, cpNivel, qrAbrir, qrCerrar, qrGuardar, gsActivo, iniLeer, iniAplicar, rvAnalizar, rvAbrir, rvCerrar, rvPintar, rpPintar };
+    window.MiServicioV27633 = { omObjetivoDe, omTrasGuardar, cmAbrir, cmCerrar, pyPintar, cpPintar, cpDias, cpNivel, qrAbrir, qrCerrar, qrGuardar, gsActivo, iniLeer, iniAplicar, rvAnalizar, rvAbrir, rvCerrar, rvPintar, rpPintar, hbLeer, hbPintar };
   }
   /* 28 · V27636 · Personalizar Inicio: mostrar u ocultar tarjetas (solo apariencia, no entra en las copias) */
   function iniLeer() {
@@ -1939,6 +1940,79 @@
     rpPintar();
     new MutationObserver(rpProgramar).observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ["hidden"] });
     ["input", "change", "click"].forEach(n => document.addEventListener(n, rpProgramar, true));
+  }
+
+  /* 31 · V27641 · Deshacer tras guardar desde el formulario (el registro rápido ya tenía el suyo) */
+  function dsInstalar() {
+    window.addEventListener("miServicio:registroGuardadoV188", ev => {
+      const reg = ev && ev.detail && ev.detail.registro; if (!reg || !reg.id) return;
+      setTimeout(() => {
+        try {
+          if ($("avisoV202")) return;                                   /* otro flujo ya mostró su aviso */
+          if (reg.creadoEn !== reg.modificadoEn) return;                /* una edición no es un alta: no se puede «deshacer» borrando */
+          if (Date.now() - (Date.parse(reg.creadoEn) || 0) > 8000) return;
+          if (!estado.registros.some(r => r.id === reg.id)) return;
+          avisoV202("✓ " + nombreTipo(reg.tipo) + " · " + v8Hm(Number(reg.minutos) || 0) + " guardado", () => {
+            const antes = estado.registros;
+            if (!antes.some(r => r.id === reg.id)) return;
+            estado.registros = antes.filter(r => r.id !== reg.id);
+            if (!guardarRegistros()) { estado.registros = antes; avisoV202("No se pudo deshacer."); return; }
+            const c = $("confirmacionRegistroV203"); if (c) c.hidden = true;
+            actualizarTodaLaInterfaz(); avisoV202("Registro deshecho");
+          });
+        } catch (e) { console.warn("[V27641] deshacer", e); }
+      }, 60);
+    });
+  }
+
+  /* 32 · V27641 · Habituales: salidas típicas que se registran con un toque (ajuste del dispositivo, no entra en las copias) */
+  function hbLeer() {
+    let a = []; try { a = JSON.parse(localStorage.getItem(HB_K) || "[]"); } catch (e) { a = []; }
+    return (Array.isArray(a) ? a : []).filter(h => h && RV_TIPOS.includes(h.tipo) && Number(h.min) > 0 && Number(h.min) <= 1440).slice(0, 6)
+      .map(h => ({ id: String(h.id || h.tipo + h.min), tipo: h.tipo, min: Math.round(Number(h.min)), companero: String(h.companero || "").slice(0, 60) }));
+  }
+  function hbGuardar(a) { try { localStorage.setItem(HB_K, JSON.stringify(a.slice(0, 6))); } catch (e) {} }
+  function hbEtiqueta(h) { return nombreTipo(h.tipo) + " · " + v8Hm(h.min) + (h.companero ? " · " + h.companero : ""); }
+  let hbEditando = false, hbUltimo = null;
+  function hbPintar() {
+    const vista = $("vista-registrar"); if (!vista) return;
+    let s = $("habitualesV27641");
+    if (!s) {
+      s = document.createElement("section"); s.id = "habitualesV27641"; s.className = "habituales-v27641"; s.setAttribute("aria-label", "Habituales");
+      const ref = $("avisoBorradorV260") || $("planRegistroV203"); if (!ref) return; ref.parentNode.insertBefore(s, ref);
+      s.addEventListener("click", e => {
+        const b = e.target.closest("button"); if (!b) return;
+        if (b.dataset.hbEditar) { hbEditando = !hbEditando; hbPintar(); return; }
+        const h = hbLeer().find(x => x.id === b.dataset.hbId); if (!h) return;
+        if (b.dataset.hbQuitar) { hbGuardar(hbLeer().filter(x => x.id !== h.id)); hbPintar(); avisoV202("Habitual quitado: " + hbEtiqueta(h), () => { hbGuardar([...hbLeer(), h]); hbPintar(); }); return; }
+        if (hbEditando) return;
+        qrGuardar(h.tipo, h.min, h.companero);
+      });
+    }
+    const a = hbLeer(); s.hidden = !a.length; if (!a.length) { s.textContent = ""; hbEditando = false; return; }
+    const html = '<div class="hb-cab"><b>Habituales</b><button type="button" data-hb-editar="1">' + (hbEditando ? "Listo" : "Editar") + '</button></div><div class="hb-lista">' +
+      a.map(h => '<span class="hb-item" data-tipo="' + rvEsc(h.tipo) + '"><button type="button" class="hb-chip" data-hb-id="' + rvEsc(h.id) + '"' + (hbEditando ? ' tabindex="-1"' : '') + '>' + rvEsc(hbEtiqueta(h)) + '</button>' + (hbEditando ? '<button type="button" class="hb-x" data-hb-quitar="1" data-hb-id="' + rvEsc(h.id) + '" aria-label="Quitar ' + rvEsc(hbEtiqueta(h)) + '">×</button>' : '') + '</span>').join("") + '</div>';
+    if (s.__html !== html) { s.innerHTML = html; s.__html = html; }
+  }
+  function hbInstalar() {
+    hbPintar();
+    window.addEventListener("miServicio:registroGuardadoV188", ev => {
+      const r = ev && ev.detail && ev.detail.registro; if (!r || r.creadoEn !== r.modificadoEn) return; hbUltimo = r;
+      const c = $("confirmacionRegistroV203"); if (!c) return;
+      let b = $("hbGuardarV27641");
+      if (!b) { b = document.createElement("button"); b.type = "button"; b.id = "hbGuardarV27641"; b.className = "boton-secundario"; c.appendChild(b);
+        b.addEventListener("click", () => {
+          const r2 = hbUltimo; if (!r2) return; const a = hbLeer(), min = Math.round(Number(r2.minutos)), comp = String(r2.companero || "").trim().slice(0, 60);
+          if (a.some(x => x.tipo === r2.tipo && x.min === min && x.companero === comp)) { avisoV202("Ya está en Habituales"); return; }
+          if (a.length >= 6) { avisoV202("Ya tienes 6 habituales. Quita alguno para añadir otro."); return; }
+          a.push({ id: "h" + Date.now().toString(36), tipo: r2.tipo, min, companero: comp }); hbGuardar(a); hbPintar();
+          b.textContent = "✓ Guardado en Habituales"; b.disabled = true;
+        });
+      }
+      const min = Math.round(Number(r.minutos)), comp = String(r.companero || "").trim();
+      const ya = hbLeer().some(x => x.tipo === r.tipo && x.min === min && x.companero === comp);
+      b.disabled = ya; b.textContent = ya ? "✓ Ya está en Habituales" : "☆ Guardar como habitual";
+    });
   }
 
   /* 27 · V27636 · Objetivo de cada mes: los meses pasados se comparan con el objetivo que tenían entonces */
