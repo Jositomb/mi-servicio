@@ -1649,7 +1649,7 @@
     const lista = d.meses.map(x => { const ini = new Date(x.y, x.m, 1); let comp = 0; try { const r = resumenMesV143(ini); comp = typeof r.computable === "number" ? r.computable : r.total; } catch (e) {} const claveM = x.y + "-" + String(x.m + 1).padStart(2, "0"), futuro = claveM > clave, obM = omObjetivoDe(claveM), pct = obM ? Math.round(comp / obM * 100) : 0; return { x, comp, pct, futuro, obM, nivel: !obM || futuro ? 0 : pct >= 100 ? 3 : pct >= 75 ? 2 : pct >= 50 ? 1 : 0 }; });
     const firma = anio + "|" + ob + "|" + lista.map(l => l.comp + ":" + l.obM).join(",") + "|" + clave + "|" + d.racha + "|" + d.total;
     if (s.dataset.firma === firma) return; s.dataset.firma = firma;
-    v9Txt(s.querySelector(".vt-titulo"), "Vitrina de insignias · " + d.anio);
+    v9Txt(s.querySelector(".vt-titulo"), "Vitrina de insignias"); /* V27640: el año ya está en «Tu año en cifras» */
     const oros = lista.filter(l => l.nivel === 3).length;
     v9Txt(s.querySelector(".vt-sub"), ob ? "Oro: meta cumplida · Plata: 75 % · Bronce: 50 %" : "Define tu objetivo mensual en Ajustes para ganar insignias.");
     const rej = s.querySelector(".vt-rejilla"); rej.textContent = "";
@@ -1922,8 +1922,9 @@
       });
       rpAlt(document.querySelector(".cal-hist-v27628 .cal-res"), true);
       /* V27638 */
-      const aj = $("vista-ajustes"), enAjustes = !!aj && aj.classList.contains("activa");
-      rpAlt($("estadoConexionV190"), enAjustes);
+      /* V27640: el estado de la copia solo en Inicio; si hay aviso (sin conexión, sincronizando, cambios pendientes…) se ve en todas partes */
+      const pill = $("estadoConexionV190"), vi = $("vista-inicio");
+      if (pill) rpAlt(pill, !!vi && !vi.classList.contains("activa") && pill.classList.contains("estado-online-v190") && !pill.hasAttribute("data-pendientes-v273"));
       const nb = $("seguridadNubeV260"); if (nb) rpAlt(nb, /^OneDrive no conectado\.?$/.test((nb.textContent || "").trim()));
       const av = $("avisoInstalacionV264"), pe = $("estadoPersistenciaV264");
       if (av && pe) rpAlt(pe, !av.hidden && getComputedStyle(av).display !== "none");
