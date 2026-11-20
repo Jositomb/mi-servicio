@@ -14496,3 +14496,8 @@ html body:has(#vista-registrar.activa):not(.registro-editando-v260) #vista-regis
 .cron-pausa-v27642{background:rgba(120,120,128,.2);color:inherit}
 .cron-pausa-v27642[hidden]{display:none !important}
 body.cronometro-pausado-v27642 #cronTiempoV264{opacity:.6}
+
+/* V27643 · aviso diario con la app cerrada */
+.aviso-cal-v27643 .ac-fila-v27643{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.aviso-cal-v27643 .ac-fila-v27643 .campo{width:auto;min-width:110px}
+.aviso-cal-v27643 .boton-secundario{width:100%;min-height:44px}

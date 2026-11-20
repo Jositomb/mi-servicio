@@ -1527,7 +1527,7 @@
     document.addEventListener("input", e => { if (e.target && (e.target.id === "nombreSaludoV260" || e.target.id === "objetivoMensual")) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("change", e => { if (e.target && /^(tipoPublicador|nombreSaludoV260|objetivoMensual)$/.test(e.target.id)) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("click", e => { if (e.target.closest && e.target.closest("#abrirAjustesV260,#modoColorV27627")) setTimeout(ajPintar, 80); }, true);
-    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar(); rpInstalar(); dsInstalar(); hbInstalar();
+    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar(); rpInstalar(); dsInstalar(); hbInstalar(); acInstalar();
     document.addEventListener("visibilitychange", () => { if (!document.hidden) setTimeout(cpPintar, 300); });
     setTimeout(() => srProgramar(100), 1100); window.addEventListener("resize", () => srProgramar(1200)); window.addEventListener("orientationchange", () => srProgramar(1500));
     window.MiServicioV27629 = { ajPintar, hlPintar, evoPintar, ruedaMostrar, tjDibujar, tjAbrir, ajResumenes, srPintar, vtPintar, dnPlan, rcEvaluar, rcMensaje };
@@ -1806,7 +1806,7 @@
       const nav = document.querySelector('.nav-item[data-vista="' + GS_VISTAS[j] + '"]'); if (nav) nav.click();
     }, { passive: true });
     document.addEventListener("touchcancel", () => { s = null; }, { passive: true });
-    window.MiServicioV27633 = { omObjetivoDe, omTrasGuardar, cmAbrir, cmCerrar, pyPintar, cpPintar, cpDias, cpNivel, qrAbrir, qrCerrar, qrGuardar, gsActivo, iniLeer, iniAplicar, rvAnalizar, rvAbrir, rvCerrar, rvPintar, rpPintar, hbLeer, hbPintar };
+    window.MiServicioV27633 = { omObjetivoDe, omTrasGuardar, cmAbrir, cmCerrar, pyPintar, cpPintar, cpDias, cpNivel, qrAbrir, qrCerrar, qrGuardar, gsActivo, iniLeer, iniAplicar, rvAnalizar, rvAbrir, rvCerrar, rvPintar, rpPintar, hbLeer, hbPintar, acICS, acHora };
   }
   /* 28 · V27636 · Personalizar Inicio: mostrar u ocultar tarjetas (solo apariencia, no entra en las copias) */
   function iniLeer() {
@@ -2013,6 +2013,37 @@
       const ya = hbLeer().some(x => x.tipo === r.tipo && x.min === min && x.companero === comp);
       b.disabled = ya; b.textContent = ya ? "✓ Ya está en Habituales" : "☆ Guardar como habitual";
     });
+  }
+
+  /* 34 · V27643 · Aviso diario con la app cerrada: un evento repetido con alarma para la app Calendario (.ics) */
+  function acHora(v) { const m = /^([01]\d|2[0-3]):([0-5]\d)$/.exec(String(v || "").trim()); return m ? m[0] : "21:30"; }
+  function acEsc(s) { return String(s).replace(/\\/g, "\\\\").replace(/;/g, "\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n"); }
+  function acPlegar(l) { const o = []; while (l.length > 73) { o.push(l.slice(0, 73)); l = " " + l.slice(73); } o.push(l); return o.join("\r\n"); }
+  function acICS(hora, ahora) {
+    const d = ahora || new Date(), p = n => String(n).padStart(2, "0"), [hh, mm] = acHora(hora).split(":").map(Number);
+    const dia = d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()), ini = dia + "T" + p(hh) + p(mm) + "00";
+    const sello = d.getUTCFullYear() + p(d.getUTCMonth() + 1) + p(d.getUTCDate()) + "T" + p(d.getUTCHours()) + p(d.getUTCMinutes()) + p(d.getUTCSeconds()) + "Z";
+    const url = location.origin + location.pathname.replace(/[^/]*$/, "");
+    const L = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Mi Servicio//Aviso diario//ES", "CALSCALE:GREGORIAN", "BEGIN:VEVENT",
+      "UID:aviso-diario-mi-servicio-v27643@" + (location.hostname || "mi-servicio"), "DTSTAMP:" + sello, "DTSTART:" + ini, "DURATION:PT5M", "RRULE:FREQ=DAILY",
+      "SUMMARY:" + acEsc("¿Registraste hoy tu servicio?"), "DESCRIPTION:" + acEsc("Abre Mi Servicio y anota lo de hoy. " + url), "URL:" + url, "TRANSP:TRANSPARENT",
+      "BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:" + acEsc("¿Registraste hoy tu servicio?"), "TRIGGER:PT0M", "END:VALARM", "END:VEVENT", "END:VCALENDAR"];
+    return L.map(acPlegar).join("\r\n") + "\r\n";
+  }
+  async function acEntregar(texto) {
+    const blob = new Blob([texto], { type: "text/calendar;charset=utf-8" }), nombre = "aviso-mi-servicio.ics";
+    try {
+      const f = new File([blob], nombre, { type: "text/calendar" });
+      if (navigator.canShare && navigator.canShare({ files: [f] }) && /iPhone|iPad|iPod/.test(navigator.userAgent)) { await navigator.share({ files: [f], title: "Aviso diario" }); return; }
+    } catch (e) { if (e && e.name === "AbortError") return; }
+    const u = URL.createObjectURL(blob), a = document.createElement("a"); a.href = u; a.download = nombre; a.style.display = "none"; document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(u); a.remove(); }, 1500);
+  }
+  function acInstalar() {
+    const i = $("acHoraV27643"), b = $("acBotonV27643"); if (!i || !b) return;
+    try { i.value = acHora(localStorage.getItem("miServicio.avisoCalV27643") || i.value); } catch (e) {}
+    i.addEventListener("change", () => { i.value = acHora(i.value); try { localStorage.setItem("miServicio.avisoCalV27643", i.value); } catch (e) {} });
+    b.addEventListener("click", () => { i.value = acHora(i.value); try { localStorage.setItem("miServicio.avisoCalV27643", i.value); } catch (e) {} acEntregar(acICS(i.value)); avisoV202("Abre el archivo y pulsa «Añadir a Calendario»."); });
   }
 
   /* 27 · V27636 · Objetivo de cada mes: los meses pasados se comparan con el objetivo que tenían entonces */
