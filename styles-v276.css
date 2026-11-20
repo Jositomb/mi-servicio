@@ -14525,3 +14525,15 @@ html[data-concentracion-v27645] body #vista-inicio > :is(.inicio-resumen-grid,#s
  body #vista-estadisticas .logros-rejilla-v267{grid-template-columns:repeat(7,minmax(0,1fr))}
 }
 html[data-concentracion-v27645] body #vista-inicio{overflow-x:clip}
+
+/* V27646 · pulido de Inicio */
+html body:not(#bta):not(#btb) #abrirRegistroRapidoV191.v191-boton-flotante{display:none!important}
+html body:not(#bta):not(#btb) #hitosProgresoMes{display:none!important}
+html body:not(#bta):not(#btb) header.cabecera > div:first-child{min-width:0;flex:1 1 auto}
+html body:not(#bta):not(#btb) #saludoDinamicoV195{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.comparar-atajos-v27646{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px}
+.comparar-atajos-v27646 button{border:0;border-radius:999px;padding:8px 12px;font:600 13px/1.2 inherit;background:rgba(120,120,128,.16);color:inherit;cursor:pointer}
+.comparar-atajos-v27646 button[aria-pressed="true"]{background:rgba(40,100,215,.18);color:#1d55c4}
+@media (prefers-color-scheme:dark){:root:not([data-modo-v276=claro]) .comparar-atajos-v27646 button[aria-pressed="true"]{color:#9cc2ff}}
+:root[data-modo-v276=oscuro] .comparar-atajos-v27646 button[aria-pressed="true"]{color:#9cc2ff}
+html body:not(#bta):not(#btb) #seccionObjetivoInicioV260{margin-top:10px}

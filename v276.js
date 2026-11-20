@@ -1527,7 +1527,7 @@
     document.addEventListener("input", e => { if (e.target && (e.target.id === "nombreSaludoV260" || e.target.id === "objetivoMensual")) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("change", e => { if (e.target && /^(tipoPublicador|nombreSaludoV260|objetivoMensual)$/.test(e.target.id)) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("click", e => { if (e.target.closest && e.target.closest("#abrirAjustesV260,#modoColorV27627")) setTimeout(ajPintar, 80); }, true);
-    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar(); rpInstalar(); dsInstalar(); hbInstalar(); acInstalar(); txInstalar();
+    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar(); rpInstalar(); dsInstalar(); hbInstalar(); acInstalar(); txInstalar(); plInstalar();
     document.addEventListener("visibilitychange", () => { if (!document.hidden) setTimeout(cpPintar, 300); });
     setTimeout(() => srProgramar(100), 1100); window.addEventListener("resize", () => srProgramar(1200)); window.addEventListener("orientationchange", () => srProgramar(1500));
     window.MiServicioV27629 = { ajPintar, hlPintar, evoPintar, ruedaMostrar, tjDibujar, tjAbrir, ajResumenes, srPintar, vtPintar, dnPlan, rcEvaluar, rcMensaje };
@@ -1806,7 +1806,7 @@
       const nav = document.querySelector('.nav-item[data-vista="' + GS_VISTAS[j] + '"]'); if (nav) nav.click();
     }, { passive: true });
     document.addEventListener("touchcancel", () => { s = null; }, { passive: true });
-    window.MiServicioV27633 = { omObjetivoDe, omTrasGuardar, cmAbrir, cmCerrar, pyPintar, cpPintar, cpDias, cpNivel, qrAbrir, qrCerrar, qrGuardar, gsActivo, iniLeer, iniAplicar, rvAnalizar, rvAbrir, rvCerrar, rvPintar, rpPintar, hbLeer, hbPintar, acICS, acHora, cnNombres, dfDatos, dfPintar, cnPintar, txLeer, coLeer, txAplicar };
+    window.MiServicioV27633 = { omObjetivoDe, omTrasGuardar, cmAbrir, cmCerrar, pyPintar, cpPintar, cpDias, cpNivel, qrAbrir, qrCerrar, qrGuardar, gsActivo, iniLeer, iniAplicar, rvAnalizar, rvAbrir, rvCerrar, rvPintar, rpPintar, hbLeer, hbPintar, acICS, acHora, cnNombres, dfDatos, dfPintar, cnPintar, txLeer, coLeer, txAplicar, plMes };
   }
   /* 28 · V27636 · Personalizar Inicio: mostrar u ocultar tarjetas (solo apariencia, no entra en las copias) */
   function iniLeer() {
@@ -2121,6 +2121,43 @@
     if (g) g.addEventListener("click", e => { const b = e.target.closest("button[data-tx-v27645]"); if (!b || !TX_OPC[b.dataset.txV27645]) return; try { localStorage.setItem(TX_K, b.dataset.txV27645); } catch (x) {} txAplicar(); pintar(); });
     if (c) c.addEventListener("click", e => { const b = e.target.closest("button[data-co-v27645]"); if (!b) return; try { localStorage.setItem(CO_K, b.dataset.coV27645 === "si" ? "1" : "0"); } catch (x) {} txAplicar(); pintar(); });
     pintar();
+  }
+
+  /* 37 · V27646 · Pulido de Inicio (chip de sincronización corto, tarjeta del tiempo con dato real) y atajos en «Comparar dos meses» */
+  function plPill() {
+    const t = $("estadoConexionTextoV190"); if (!t) return;
+    const s = t.textContent || ""; if (/^Al día · /.test(s)) t.textContent = s.replace(/^Al día · /, "");
+  }
+  function plTiempo() {
+    const tt = document.querySelector("#climaDetalleV260 .clima-titulo-v260"); if (!tt) return;
+    const T = $("tiempoTemperatura"), D = $("tiempoDescripcion"), I = $("tiempoIcono"), sum = tt.parentNode, ico = sum && sum.querySelector("span[aria-hidden]");
+    const temp = T && /\d/.test(T.textContent) ? T.textContent.trim() : "", desc = D ? D.textContent.trim() : "", ok = !!temp && !!desc && !/Consultando|Preparando/.test(desc);
+    const txt = ok ? temp + " · " + desc : "El tiempo para salir";
+    if (tt.textContent !== txt) tt.textContent = txt;
+    const e = ok && I && I.textContent.trim() ? I.textContent.trim() : "☀";
+    if (ico && ico.textContent !== e) ico.textContent = e;
+  }
+  function plMes(d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0"); }
+  function cmAtajos() {
+    const sel = document.querySelector("#compararMesesV202 .comparar-selectores-v202"); if (!sel || $("compararAtajosV27646")) return;
+    const bar = document.createElement("div"); bar.id = "compararAtajosV27646"; bar.className = "comparar-atajos-v27646";
+    bar.innerHTML = '<button type="button" data-cm="mes">Con el mes anterior</button><button type="button" data-cm="anio">Con el mismo mes del año pasado</button>';
+    sel.parentNode.insertBefore(bar, sel);
+    bar.addEventListener("click", e => {
+      const b = e.target.closest("button[data-cm]"); if (!b) return;
+      const A = $("compararMesAV202"), B = $("compararMesBV202"); if (!A || !B) return;
+      const hoy = new Date(), act = new Date(hoy.getFullYear(), hoy.getMonth(), 1), ant = new Date(act);
+      if (b.dataset.cm === "mes") ant.setMonth(ant.getMonth() - 1); else ant.setFullYear(ant.getFullYear() - 1);
+      A.value = plMes(ant); B.value = plMes(act);
+      A.dispatchEvent(new Event("change", { bubbles: true })); B.dispatchEvent(new Event("change", { bubbles: true }));
+      bar.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    });
+  }
+  function plInstalar() {
+    plPill(); plTiempo(); cmAtajos();
+    const t = $("estadoConexionTextoV190"); if (t) new MutationObserver(plPill).observe(t, { childList: true, characterData: true, subtree: true });
+    ["tiempoTemperatura", "tiempoDescripcion", "tiempoIcono"].forEach(id => { const e = $(id); if (e) new MutationObserver(plTiempo).observe(e, { childList: true, characterData: true, subtree: true }); });
+    setInterval(() => { plPill(); plTiempo(); }, 5000);
   }
 
   /* 27 · V27636 · Objetivo de cada mes: los meses pasados se comparan con el objetivo que tenían entonces */
