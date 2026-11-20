@@ -14513,3 +14513,15 @@ body.cronometro-pausado-v27642 #cronTiempoV264{opacity:.6}
 #diasFuertesV27644 .df-mejor .df-dia,#diasFuertesV27644 .df-mejor .df-valor{font-weight:700}
 #diasFuertesV27644 .df-valor{text-align:right;font-variant-numeric:tabular-nums}
 #diasFuertesV27644 .df-nota{margin:10px 0 0;font-size:13px;opacity:.75}
+
+/* V27645 · tamaño de texto, modo concentración, iPad */
+html[data-texto-v27645="peq"]{zoom:.92}
+html[data-texto-v27645="gra"]{zoom:1.12}
+html[data-concentracion-v27645] body #vista-inicio > :is(.inicio-resumen-grid,#semanaRachaV27631,#seccionObjetivoInicioV260,.inicio-pie-v260,.inicio-calendario-panel-wrap,#recordatorioCopiaInicio){display:none!important}
+@media (min-width:900px){
+ body #vista-estadisticas.activa{grid-auto-flow:row dense}
+ body #vista-estadisticas[data-seg-v264="resumen"].activa > #historialResumenV153{grid-column:1/-1}
+ body #vista-estadisticas[data-seg-v264="mas"].activa > :is(#statsPeriodoV183,#diasFuertesV27644,#compararMesesV202,#statsEvolucionV183){grid-column:auto}
+ body #vista-estadisticas .logros-rejilla-v267{grid-template-columns:repeat(7,minmax(0,1fr))}
+}
+html[data-concentracion-v27645] body #vista-inicio{overflow-x:clip}

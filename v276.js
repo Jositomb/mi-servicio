@@ -19,7 +19,7 @@
   function nombreTipo(t) { try { return typeof nombreActividad === "function" ? nombreActividad(t) : t; } catch (e) { return t; } }
   function registros() { try { return (estado.registros || []).filter(r => r && /^\d{4}-\d{2}-\d{2}/.test(String(r.fecha))); } catch (e) { return []; } }
   function objetivo() { try { return Number(estado.preferencias && estado.preferencias.objetivoMensualMinutos) || 0; } catch (e) { return 0; } }
-  const HB_K = "miServicio.habitualesV27641", INI_K = "miServicio.inicioV27636", RV_K = "miServicio.revisionOkV27636", RV_TIPOS = ["ministerio", "ldc", "asambleas", "otras"]; /* arriba para que existan cuando arranca la app */
+  const HB_K = "miServicio.habitualesV27641", INI_K = "miServicio.inicioV27636", RV_K = "miServicio.revisionOkV27636", RV_TIPOS = ["ministerio", "ldc", "asambleas", "otras"], TX_K = "miServicio.textoV27645", CO_K = "miServicio.concentracionV27645"; /* arriba para que existan cuando arranca la app */
   function movReducido() { try { return window.matchMedia("(prefers-reduced-motion:reduce)").matches; } catch (e) { return false; } }
 
   /* ================= 1. TEMAS, COLOR PERSONAL, LETRA ================= */
@@ -1527,7 +1527,7 @@
     document.addEventListener("input", e => { if (e.target && (e.target.id === "nombreSaludoV260" || e.target.id === "objetivoMensual")) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("change", e => { if (e.target && /^(tipoPublicador|nombreSaludoV260|objetivoMensual)$/.test(e.target.id)) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("click", e => { if (e.target.closest && e.target.closest("#abrirAjustesV260,#modoColorV27627")) setTimeout(ajPintar, 80); }, true);
-    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar(); rpInstalar(); dsInstalar(); hbInstalar(); acInstalar();
+    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar(); rpInstalar(); dsInstalar(); hbInstalar(); acInstalar(); txInstalar();
     document.addEventListener("visibilitychange", () => { if (!document.hidden) setTimeout(cpPintar, 300); });
     setTimeout(() => srProgramar(100), 1100); window.addEventListener("resize", () => srProgramar(1200)); window.addEventListener("orientationchange", () => srProgramar(1500));
     window.MiServicioV27629 = { ajPintar, hlPintar, evoPintar, ruedaMostrar, tjDibujar, tjAbrir, ajResumenes, srPintar, vtPintar, dnPlan, rcEvaluar, rcMensaje };
@@ -1806,7 +1806,7 @@
       const nav = document.querySelector('.nav-item[data-vista="' + GS_VISTAS[j] + '"]'); if (nav) nav.click();
     }, { passive: true });
     document.addEventListener("touchcancel", () => { s = null; }, { passive: true });
-    window.MiServicioV27633 = { omObjetivoDe, omTrasGuardar, cmAbrir, cmCerrar, pyPintar, cpPintar, cpDias, cpNivel, qrAbrir, qrCerrar, qrGuardar, gsActivo, iniLeer, iniAplicar, rvAnalizar, rvAbrir, rvCerrar, rvPintar, rpPintar, hbLeer, hbPintar, acICS, acHora, cnNombres, dfDatos, dfPintar, cnPintar };
+    window.MiServicioV27633 = { omObjetivoDe, omTrasGuardar, cmAbrir, cmCerrar, pyPintar, cpPintar, cpDias, cpNivel, qrAbrir, qrCerrar, qrGuardar, gsActivo, iniLeer, iniAplicar, rvAnalizar, rvAbrir, rvCerrar, rvPintar, rpPintar, hbLeer, hbPintar, acICS, acHora, cnNombres, dfDatos, dfPintar, cnPintar, txLeer, coLeer, txAplicar };
   }
   /* 28 · V27636 · Personalizar Inicio: mostrar u ocultar tarjetas (solo apariencia, no entra en las copias) */
   function iniLeer() {
@@ -2099,6 +2099,28 @@
       const v = document.createElement("span"); v.className = "df-valor"; v.textContent = m > 0 ? v8Hm(Math.round(m)) : "—";
       f.append(l, p, v); cont.appendChild(f);
     });
+  }
+
+  /* 36 · V27645 · Tamaño del texto (pequeño/normal/grande) y Modo concentración (Inicio mínimo). Solo preferencias de este dispositivo */
+  const TX_OPC = { peq: 1, normal: 1, gra: 1 };
+  function txLeer() { let v = "normal"; try { v = localStorage.getItem(TX_K) || "normal"; } catch (e) {} return TX_OPC[v] ? v : "normal"; }
+  function coLeer() { try { return localStorage.getItem(CO_K) === "1"; } catch (e) { return false; } }
+  function txAplicar() {
+    const r = document.documentElement, v = txLeer();
+    if (v === "normal") r.removeAttribute("data-texto-v27645"); else r.setAttribute("data-texto-v27645", v);
+    r.toggleAttribute("data-concentracion-v27645", coLeer());
+    if (typeof programarEncajeV260 === "function") programarEncajeV260(true);
+  }
+  function txInstalar() {
+    txAplicar();
+    const g = $("textoV27645"), c = $("concentracionV27645");
+    const pintar = () => {
+      if (g) g.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.txV27645 === txLeer())));
+      if (c) c.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String((b.dataset.coV27645 === "si") === coLeer())));
+    };
+    if (g) g.addEventListener("click", e => { const b = e.target.closest("button[data-tx-v27645]"); if (!b || !TX_OPC[b.dataset.txV27645]) return; try { localStorage.setItem(TX_K, b.dataset.txV27645); } catch (x) {} txAplicar(); pintar(); });
+    if (c) c.addEventListener("click", e => { const b = e.target.closest("button[data-co-v27645]"); if (!b) return; try { localStorage.setItem(CO_K, b.dataset.coV27645 === "si" ? "1" : "0"); } catch (x) {} txAplicar(); pintar(); });
+    pintar();
   }
 
   /* 27 · V27636 · Objetivo de cada mes: los meses pasados se comparan con el objetivo que tenían entonces */

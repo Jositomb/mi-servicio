@@ -9229,7 +9229,7 @@ function ajustarInicioPantallaV260(){
     const alto=window.visualViewport?.height||window.innerHeight,ancho=window.visualViewport?.width||window.innerWidth,clave=Math.round(ancho)+"x"+Math.round(alto);
     const editar=document.activeElement?.matches('input,textarea,select,[contenteditable="true"]');
     const expandido=panel&&!panel.classList.contains("oculto");
-    const apto=inicio?.classList.contains("activa")&&ancho<=600&&alto>=600&&!expandido&&!clima?.open&&!document.getElementById("cierreMesInicioV260")?.open&&!editar;
+    const apto=inicio?.classList.contains("activa")&&ancho<=600&&alto>=600&&!expandido&&!clima?.open&&!document.getElementById("cierreMesInicioV260")?.open&&!editar&&!document.documentElement.hasAttribute("data-concentracion-v27645");
     const antes=body.classList.contains("inicio-encajado-v260");
     if(!apto||bloqueoEncajeV260===clave){
         body.classList.remove("inicio-encajado-v260");limpiarEncajeV260();if(antes)requestAnimationFrame(resolverColisionesOrbitasV120);return;
