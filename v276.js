@@ -1527,7 +1527,7 @@
     document.addEventListener("input", e => { if (e.target && (e.target.id === "nombreSaludoV260" || e.target.id === "objetivoMensual")) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("change", e => { if (e.target && /^(tipoPublicador|nombreSaludoV260|objetivoMensual)$/.test(e.target.id)) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("click", e => { if (e.target.closest && e.target.closest("#abrirAjustesV260,#modoColorV27627")) setTimeout(ajPintar, 80); }, true);
-    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar(); rpInstalar(); dsInstalar(); hbInstalar(); acInstalar(); txInstalar(); plInstalar();
+    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar(); rpInstalar(); dsInstalar(); hbInstalar(); acInstalar(); txInstalar(); plInstalar(); scInstalar();
     document.addEventListener("visibilitychange", () => { if (!document.hidden) setTimeout(cpPintar, 300); });
     setTimeout(() => srProgramar(100), 1100); window.addEventListener("resize", () => srProgramar(1200)); window.addEventListener("orientationchange", () => srProgramar(1500));
     window.MiServicioV27629 = { ajPintar, hlPintar, evoPintar, ruedaMostrar, tjDibujar, tjAbrir, ajResumenes, srPintar, vtPintar, dnPlan, rcEvaluar, rcMensaje };
@@ -1806,7 +1806,7 @@
       const nav = document.querySelector('.nav-item[data-vista="' + GS_VISTAS[j] + '"]'); if (nav) nav.click();
     }, { passive: true });
     document.addEventListener("touchcancel", () => { s = null; }, { passive: true });
-    window.MiServicioV27633 = { omObjetivoDe, omTrasGuardar, cmAbrir, cmCerrar, pyPintar, cpPintar, cpDias, cpNivel, qrAbrir, qrCerrar, qrGuardar, gsActivo, iniLeer, iniAplicar, rvAnalizar, rvAbrir, rvCerrar, rvPintar, rpPintar, hbLeer, hbPintar, acICS, acHora, cnNombres, dfDatos, dfPintar, cnPintar, txLeer, coLeer, txAplicar, plMes };
+    window.MiServicioV27633 = { omObjetivoDe, omTrasGuardar, cmAbrir, cmCerrar, pyPintar, cpPintar, cpDias, cpNivel, qrAbrir, qrCerrar, qrGuardar, gsActivo, iniLeer, iniAplicar, rvAnalizar, rvAbrir, rvCerrar, rvPintar, rpPintar, hbLeer, hbPintar, acICS, acHora, cnNombres, dfDatos, dfPintar, cnPintar, txLeer, coLeer, txAplicar, plMes, scLeer, scAplicar, SC_LISTA };
   }
   /* 28 · V27636 · Personalizar Inicio: mostrar u ocultar tarjetas (solo apariencia, no entra en las copias) */
   function iniLeer() {
@@ -1831,6 +1831,7 @@
       const n = iniLeer(); n[i.dataset.iniV27636] = i.checked;
       try { localStorage.setItem(INI_K, JSON.stringify(n)); } catch (x) {}
       iniAplicar();
+      if (i.checked && typeof scSalirConcentracion === "function") scSalirConcentracion();
     });
   }
 
@@ -2126,7 +2127,7 @@
   /* 37 · V27646 · Pulido de Inicio (chip de sincronización corto, tarjeta del tiempo con dato real) y atajos en «Comparar dos meses» */
   function plPill() {
     const t = $("estadoConexionTextoV190"); if (!t) return;
-    const s = t.textContent || ""; if (/^Al día · /.test(s)) t.textContent = s.replace(/^Al día · /, "");
+    const s = t.textContent || ""; if (/^Al día · /.test(s)) t.textContent = s.replace(/^Al día · /, ""); else if (/^Sincronizando[^·]*· Sincronizado/.test(s)) t.textContent = s.replace(/^(Sincronizando[^·]*?)\s*· .*$/, "$1");
   }
   function plTiempo() {
     const tt = document.querySelector("#climaDetalleV260 .clima-titulo-v260"); if (!tt) return;
@@ -2158,6 +2159,85 @@
     const t = $("estadoConexionTextoV190"); if (t) new MutationObserver(plPill).observe(t, { childList: true, characterData: true, subtree: true });
     ["tiempoTemperatura", "tiempoDescripcion", "tiempoIcono"].forEach(id => { const e = $(id); if (e) new MutationObserver(plTiempo).observe(e, { childList: true, characterData: true, subtree: true }); });
     setInterval(() => { plPill(); plTiempo(); }, 5000);
+  }
+
+  /* 38 · V27647 · Secciones de la app que se pueden mostrar u ocultar (solo apariencia, no entra en las copias) y salida visible del modo concentración */
+  const SC_K = "miServicio.seccionesV27647";
+  const SC_LISTA = [
+    { g: "Inicio", id: "fecha", t: "Barra de fecha y calendario", s: "#vista-inicio .inicio-resumen-grid, #vista-inicio .inicio-calendario-panel-wrap" },
+    { g: "Inicio", id: "globos", t: "Globos de actividad", s: "#seccionGraficoInicio" },
+    { g: "Inicio", id: "evento", t: "Próximo evento sobre los globos", s: ".evento-chip-v276" },
+    { g: "Inicio", id: "objetivo", t: "Objetivo del mes", s: "#seccionObjetivoInicioV260" },
+    { g: "Inicio", id: "personaje", t: "Personaje y camino del objetivo", s: "#progresoPersonaje" },
+    { g: "Inicio", id: "cierre", t: "Cierre previsto del mes", s: "#proyeccionV27633" },
+    { g: "Inicio", id: "copia", t: "Recordatorio mensual de copia", s: "#recordatorioCopiaInicio" },
+    { g: "Inicio", id: "conexion", t: "Estado de conexión y cambios sin sincronizar", s: "#estadoConexionV190" },
+    { g: "Registrar", id: "hoy", t: "Resumen «Hoy llevas»", s: "#hoyLlevasV27629" },
+    { g: "Registrar", id: "cronometro", t: "Cronómetro", s: "#cronometroV264" },
+    { g: "Registrar", id: "habituales", t: "Registros habituales", s: "#habitualesV27641" },
+    { g: "Historial", id: "calhist", t: "Calendario de actividad", s: "#calHistorialV27628" },
+    { g: "Estadísticas", id: "anillos", t: "Anillos del resumen", s: "#seccionAnillosV269" },
+    { g: "Estadísticas", id: "semanavis", t: "Esta semana", s: "#semanaVisualV193" },
+    { g: "Estadísticas", id: "resmensual", t: "Resumen mensual", s: "#historialResumenV153" },
+    { g: "Estadísticas", id: "anio", t: "Tu año en cifras", s: "#anioServicioV276" },
+    { g: "Estadísticas", id: "vitrina", t: "Vitrina de insignias", s: "#vitrinaV27631" },
+    { g: "Estadísticas", id: "metaanual", t: "Meta anual", s: "#metaDetalleV260" },
+    { g: "Estadísticas", id: "logros", t: "Logros", s: "#logrosV267" },
+    { g: "Estadísticas", id: "masdetalle", t: "Más detalle", s: "#statsPeriodoV183" },
+    { g: "Estadísticas", id: "diasfuertes", t: "Tus días fuertes", s: "#diasFuertesV27644" },
+    { g: "Estadísticas", id: "comparar", t: "Comparar dos meses", s: "#compararMesesV202" },
+    { g: "Estadísticas", id: "evolucion", t: "Evolución de 6 meses", s: "#statsEvolucionV183" }
+  ];
+  function scLeer() {
+    let o = []; try { o = JSON.parse(localStorage.getItem(SC_K) || "[]"); } catch (e) { o = []; }
+    return Array.isArray(o) ? o.filter(x => SC_LISTA.some(i => i.id === x)) : [];
+  }
+  function scGuardar(l) { try { localStorage.setItem(SC_K, JSON.stringify(l)); } catch (e) {} }
+  function scAplicar() {
+    const o = scLeer(); let st = $("seccionesEstiloV27647");
+    if (!st) { st = document.createElement("style"); st.id = "seccionesEstiloV27647"; document.head.appendChild(st); }
+    const pre = "html body:not(#bta):not(#btb) ";
+    st.textContent = SC_LISTA.filter(i => o.includes(i.id)).map(i => i.s.split(",").map(x => pre + x.trim()).join(", ") + "{display:none!important}").join("\n");
+    if (typeof programarEncajeV260 === "function") programarEncajeV260(true);
+  }
+  function scSalirConcentracion() {
+    if (!coLeer()) return;
+    const b = document.querySelector('#concentracionV27645 [data-co-v27645="no"]');
+    if (b) b.click(); else { try { localStorage.setItem(CO_K, "0"); } catch (e) {} txAplicar(); }
+  }
+  function scInstalar() {
+    scAplicar();
+    const cont = $("seccionesV27647");
+    if (cont && !cont.children.length) {
+      let g = "";
+      SC_LISTA.forEach(i => {
+        if (i.g !== g) { g = i.g; const h = document.createElement("p"); h.className = "sec-grupo-v27647"; h.textContent = g; cont.appendChild(h); }
+        const l = document.createElement("label"); l.className = "fondo-clima-opcion-v260";
+        const c = document.createElement("input"); c.type = "checkbox"; c.dataset.secV27647 = i.id;
+        const s = document.createElement("span"); s.textContent = i.t; l.append(c, s); cont.appendChild(l);
+      });
+      const pintar = () => { const o = scLeer(); cont.querySelectorAll("input[data-sec-v27647]").forEach(c => { c.checked = !o.includes(c.dataset.secV27647); }); };
+      pintar();
+      cont.addEventListener("change", e => {
+        const c = e.target.closest("input[data-sec-v27647]"); if (!c) return;
+        const o = scLeer().filter(x => x !== c.dataset.secV27647); if (!c.checked) o.push(c.dataset.secV27647);
+        scGuardar(o); scAplicar(); if (c.checked) scSalirConcentracion();
+      });
+      const todo = $("seccionesTodoV27647");
+      if (todo) todo.addEventListener("click", () => {
+        scGuardar([]); try { localStorage.setItem(INI_K, JSON.stringify({ semana: true, tiempo: true, frase: true })); } catch (e) {}
+        scAplicar(); iniAplicar(); scSalirConcentracion();
+        const g = $("inicioV27636"); if (g) g.querySelectorAll("input[data-ini-v27636]").forEach(i => { i.checked = true; });
+        pintar();
+      });
+    }
+    const vi = $("vista-inicio");
+    if (vi && !$("concentracionAvisoV27647")) {
+      const b = document.createElement("button"); b.type = "button"; b.id = "concentracionAvisoV27647"; b.className = "concentracion-aviso-v27647";
+      b.textContent = "Modo concentración activo · Mostrar todo";
+      b.addEventListener("click", () => { scSalirConcentracion(); });
+      const dlg = vi.querySelector("dialog"); if (dlg) vi.insertBefore(b, dlg); else vi.appendChild(b);
+    }
   }
 
   /* 27 · V27636 · Objetivo de cada mes: los meses pasados se comparan con el objetivo que tenían entonces */

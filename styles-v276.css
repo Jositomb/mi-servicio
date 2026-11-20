@@ -14537,3 +14537,14 @@ html body:not(#bta):not(#btb) #saludoDinamicoV195{white-space:nowrap;overflow:hi
 @media (prefers-color-scheme:dark){:root:not([data-modo-v276=claro]) .comparar-atajos-v27646 button[aria-pressed="true"]{color:#9cc2ff}}
 :root[data-modo-v276=oscuro] .comparar-atajos-v27646 button[aria-pressed="true"]{color:#9cc2ff}
 html body:not(#bta):not(#btb) #seccionObjetivoInicioV260{margin-top:10px}
+
+/* V27647 · secciones configurables, aviso del modo concentración, cabecera */
+html:not([data-concentracion-v27645]) #concentracionAvisoV27647{display:none!important}
+.concentracion-aviso-v27647{display:block;margin:12px auto 0;border:0;border-radius:999px;padding:9px 16px;font:600 14px/1.2 inherit;background:rgba(120,120,128,.2);color:inherit;cursor:pointer}
+.sec-grupo-v27647{margin:10px 0 2px;font-size:13px;font-weight:700;opacity:.7;text-transform:uppercase;letter-spacing:.04em}
+.secciones-acc-v27647{margin-top:10px}
+html body:not(#bta):not(#btb) header.cabecera > div:first-child{flex:0 0 auto;max-width:58%}
+html body:not(#bta):not(#btb) .cabecera-estado-v190{min-width:0;flex:0 1 auto}
+html body:not(#bta):not(#btb) #estadoConexionV190{min-width:0;max-width:100%}
+html body:not(#bta):not(#btb) #estadoConexionTextoV190{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.secciones-v27647 .fondo-clima-opcion-v260{min-height:0;padding-top:6px;padding-bottom:6px}
