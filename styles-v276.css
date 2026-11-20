@@ -14501,3 +14501,15 @@ body.cronometro-pausado-v27642 #cronTiempoV264{opacity:.6}
 .aviso-cal-v27643 .ac-fila-v27643{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
 .aviso-cal-v27643 .ac-fila-v27643 .campo{width:auto;min-width:110px}
 .aviso-cal-v27643 .boton-secundario{width:100%;min-height:44px}
+
+/* V27644 · días fuertes */
+#vista-estadisticas:not([data-seg-v264="mas"]) #diasFuertesV27644{display:none!important}
+#diasFuertesV27644 .df-resumen{margin:0 0 10px;font-weight:600}
+#diasFuertesV27644 .df-barras{display:flex;flex-direction:column;gap:6px}
+#diasFuertesV27644 .df-fila{display:grid;grid-template-columns:34px 1fr 76px;align-items:center;gap:8px;font-size:14px}
+#diasFuertesV27644 .df-pista{height:12px;border-radius:999px;background:rgba(120,120,128,.18);overflow:hidden}
+#diasFuertesV27644 .df-pista i{display:block;height:100%;border-radius:999px;background:var(--firma-base,#2864d7);opacity:.55}
+#diasFuertesV27644 .df-mejor .df-pista i{opacity:1}
+#diasFuertesV27644 .df-mejor .df-dia,#diasFuertesV27644 .df-mejor .df-valor{font-weight:700}
+#diasFuertesV27644 .df-valor{text-align:right;font-variant-numeric:tabular-nums}
+#diasFuertesV27644 .df-nota{margin:10px 0 0;font-size:13px;opacity:.75}

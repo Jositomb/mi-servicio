@@ -1806,7 +1806,7 @@
       const nav = document.querySelector('.nav-item[data-vista="' + GS_VISTAS[j] + '"]'); if (nav) nav.click();
     }, { passive: true });
     document.addEventListener("touchcancel", () => { s = null; }, { passive: true });
-    window.MiServicioV27633 = { omObjetivoDe, omTrasGuardar, cmAbrir, cmCerrar, pyPintar, cpPintar, cpDias, cpNivel, qrAbrir, qrCerrar, qrGuardar, gsActivo, iniLeer, iniAplicar, rvAnalizar, rvAbrir, rvCerrar, rvPintar, rpPintar, hbLeer, hbPintar, acICS, acHora };
+    window.MiServicioV27633 = { omObjetivoDe, omTrasGuardar, cmAbrir, cmCerrar, pyPintar, cpPintar, cpDias, cpNivel, qrAbrir, qrCerrar, qrGuardar, gsActivo, iniLeer, iniAplicar, rvAnalizar, rvAbrir, rvCerrar, rvPintar, rpPintar, hbLeer, hbPintar, acICS, acHora, cnNombres, dfDatos, dfPintar, cnPintar };
   }
   /* 28 · V27636 · Personalizar Inicio: mostrar u ocultar tarjetas (solo apariencia, no entra en las copias) */
   function iniLeer() {
@@ -2046,6 +2046,61 @@
     b.addEventListener("click", () => { i.value = acHora(i.value); try { localStorage.setItem("miServicio.avisoCalV27643", i.value); } catch (e) {} acEntregar(acICS(i.value)); avisoV202("Abre el archivo y pulsa «Añadir a Calendario»."); });
   }
 
+  /* 35 · V27644 · Compañeros sugeridos (datalist) y «Tus días fuertes» (Estadísticas › Más) */
+  function cnNombres(regs) {
+    const mapa = new Map(), lista = (Array.isArray(regs) ? regs : []).filter(r => r && typeof r.companero === "string" && r.companero.trim())
+      .sort((a, b) => String(b.fecha).localeCompare(String(a.fecha)) || String(b.creadoEn || "").localeCompare(String(a.creadoEn || "")));
+    lista.forEach(r => {
+      const txt = r.companero.trim().replace(/\s+/g, " "), k = txt.normalize("NFD").replace(/[̀-ͯ]/g, "").toLocaleLowerCase("es");
+      const e = mapa.get(k); if (e) e.n++; else mapa.set(k, { txt, n: 1, orden: mapa.size });
+    });
+    return [...mapa.values()].sort((a, b) => (b.n >= 2) - (a.n >= 2) || a.orden - b.orden).slice(0, 15).map(x => x.txt);
+  }
+  function cnPintar() {
+    let dl = $("companerosV27644");
+    if (!dl) {
+      dl = document.createElement("datalist"); dl.id = "companerosV27644"; document.body.appendChild(dl);
+      ["companeroRegistro", "editarCompanero"].forEach(id => { const i = $(id); if (i) i.setAttribute("list", "companerosV27644"); });
+    }
+    const n = cnNombres(typeof estado !== "undefined" ? estado.registros : []), firma = n.join("\u0001");
+    if (dl.__f === firma) return; dl.__f = firma; dl.textContent = "";
+    n.forEach(x => { const o = document.createElement("option"); o.value = x; dl.appendChild(o); });
+  }
+  const DF_DIAS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+  function dfDatos(regs, hoy) {
+    const fin = new Date((hoy || new Date()).getFullYear(), (hoy || new Date()).getMonth(), (hoy || new Date()).getDate(), 12), ini = new Date(fin); ini.setDate(ini.getDate() - 83);
+    const iso = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"), a = iso(ini), b = iso(fin);
+    const tot = Array(7).fill(0), ocurr = Array(7).fill(0), activos = new Set();
+    for (let d = new Date(ini); d <= fin; d.setDate(d.getDate() + 1)) ocurr[(d.getDay() + 6) % 7]++;
+    (Array.isArray(regs) ? regs : []).forEach(r => {
+      const f = String(r && r.fecha || "").slice(0, 10), m = Number(r && (r.minutos ?? r.minutosTotales)); if (f < a || f > b || !(m > 0) || !rvFechaValida(f)) return;
+      const [y, mo, d] = f.split("-").map(Number); tot[(new Date(y, mo - 1, d, 12).getDay() + 6) % 7] += m; activos.add(f);
+    });
+    const media = tot.map((t, i) => ocurr[i] ? t / ocurr[i] : 0), mx = Math.max(...media), mejor = mx > 0 ? media.indexOf(mx) : -1;
+    return { media, mejor, activos: activos.size, mx };
+  }
+  function dfPintar() {
+    const vista = $("vista-estadisticas"); if (!vista || !vista.classList.contains("activa")) return;
+    let d = $("diasFuertesV27644");
+    if (!d) {
+      const ref = $("statsPeriodoV183"); if (!ref) return;
+      d = document.createElement("details"); d.id = "diasFuertesV27644"; d.className = "stats-accordion-v183";
+      d.innerHTML = '<summary><span class="stats-accordion-icono-v183">📅</span><span>Tus días fuertes</span><span class="stats-accordion-flecha-v183">›</span></summary><div class="stats-accordion-cuerpo-v183"><p class="df-resumen"></p><div class="df-barras"></div><p class="df-nota">Media por día de la semana en las últimas 12 semanas.</p></div>';
+      ref.parentNode.insertBefore(d, ref.nextSibling); d.addEventListener("toggle", dfPintar);
+    }
+    const r = dfDatos(typeof estado !== "undefined" ? estado.registros : []), firma = JSON.stringify([r.media.map(x => Math.round(x)), r.mejor, r.activos]);
+    if (d.__f === firma) return; d.__f = firma;
+    d.querySelector(".df-resumen").textContent = r.activos < 3 ? "Registra unos días más y verás aquí tu patrón de la semana." : "Tu día más fuerte: " + DF_DIAS[r.mejor].toLowerCase() + " · media " + v8Hm(Math.round(r.media[r.mejor])) + ".";
+    const cont = d.querySelector(".df-barras"); cont.textContent = "";
+    r.media.forEach((m, i) => {
+      const f = document.createElement("div"); f.className = "df-fila" + (i === r.mejor && r.activos >= 3 ? " df-mejor" : "");
+      const l = document.createElement("span"); l.className = "df-dia"; l.textContent = DF_DIAS[i].slice(0, 3); l.title = DF_DIAS[i];
+      const p = document.createElement("span"); p.className = "df-pista"; const i2 = document.createElement("i"); i2.style.width = (r.mx > 0 ? Math.max(m > 0 ? 4 : 0, Math.round(m / r.mx * 100)) : 0) + "%"; p.appendChild(i2);
+      const v = document.createElement("span"); v.className = "df-valor"; v.textContent = m > 0 ? v8Hm(Math.round(m)) : "—";
+      f.append(l, p, v); cont.appendChild(f);
+    });
+  }
+
   /* 27 · V27636 · Objetivo de cada mes: los meses pasados se comparan con el objetivo que tenían entonces */
   const OM_BASE = "0000-00";
   function omClave(d) { return fechaISO(d || new Date()).slice(0, 7); }
@@ -2132,7 +2187,7 @@
   }
   function v35Pasar() { try { ctPintar(); cmPintar(); exPintar(); } catch (e) { console.warn("[V27635]", e); } }
 
-  function v33Pasar() { try { pyPintar(); cpPintar(); dpPintar(); v35Pasar(); rvPintar(); } catch (e) { console.warn("[V27633]", e); } }
+  function v33Pasar() { try { pyPintar(); cpPintar(); dpPintar(); v35Pasar(); rvPintar(); cnPintar(); dfPintar(); } catch (e) { console.warn("[V27633]", e); } }
 
   function instalarAzulejos() {
     btPasar();
