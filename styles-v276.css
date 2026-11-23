@@ -14548,3 +14548,16 @@ html body:not(#bta):not(#btb) .cabecera-estado-v190{min-width:0;flex:0 1 auto}
 html body:not(#bta):not(#btb) #estadoConexionV190{min-width:0;max-width:100%}
 html body:not(#bta):not(#btb) #estadoConexionTextoV190{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
 .secciones-v27647 .fondo-clima-opcion-v260{min-height:0;padding-top:6px;padding-bottom:6px}
+
+/* V27648 · Ajustes › Personalizar compacto */
+html body:not(#bta):not(#btb) #aparienciaV201 fieldset.aj-sub-v27648{margin:0 0 6px;padding:0 14px;border-radius:14px}
+html body:not(#bta):not(#btb) #aparienciaV201 fieldset.aj-sub-v27648 > legend{display:flex;align-items:center;gap:10px;float:none;width:100%;box-sizing:border-box;padding:13px 0;margin:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+html body:not(#bta):not(#btb) #aparienciaV201 fieldset.aj-sub-v27648 > legend::after{content:"›";margin-left:6px;font-size:20px;line-height:1;opacity:.5;transform:rotate(90deg);transition:transform .2s ease}
+html body:not(#bta):not(#btb) #aparienciaV201 fieldset.aj-sub-v27648.aj-abierto-v27648 > legend::after{transform:rotate(-90deg)}
+html body:not(#bta):not(#btb) #aparienciaV201 fieldset.aj-sub-v27648 > legend .aj-valor-v27648{margin-left:auto;font-weight:500;font-size:14px;opacity:.65;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:48%}
+html body:not(#bta):not(#btb) #aparienciaV201 fieldset.aj-sub-v27648:not(.aj-abierto-v27648) > :not(legend){display:none!important}
+html body:not(#bta):not(#btb) #aparienciaV201 fieldset.aj-sub-v27648.aj-abierto-v27648{padding-bottom:12px}
+html body:not(#bta):not(#btb) #aparienciaV201 #seccionesV27647{display:grid;grid-template-columns:1fr 1fr;gap:2px 10px}
+html body:not(#bta):not(#btb) #aparienciaV201 #seccionesV27647 .sec-grupo-v27647{grid-column:1/-1;margin:8px 0 0}
+html body:not(#bta):not(#btb) #aparienciaV201 #seccionesV27647 .fondo-clima-opcion-v260{margin-top:0;padding-top:3px;padding-bottom:3px;font-size:14px;line-height:1.2}
+@media (max-width:340px){html body:not(#bta):not(#btb) #aparienciaV201 #seccionesV27647{grid-template-columns:1fr}}

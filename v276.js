@@ -1527,7 +1527,7 @@
     document.addEventListener("input", e => { if (e.target && (e.target.id === "nombreSaludoV260" || e.target.id === "objetivoMensual")) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("change", e => { if (e.target && /^(tipoPublicador|nombreSaludoV260|objetivoMensual)$/.test(e.target.id)) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("click", e => { if (e.target.closest && e.target.closest("#abrirAjustesV260,#modoColorV27627")) setTimeout(ajPintar, 80); }, true);
-    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar(); rpInstalar(); dsInstalar(); hbInstalar(); acInstalar(); txInstalar(); plInstalar(); scInstalar();
+    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar(); rpInstalar(); dsInstalar(); hbInstalar(); acInstalar(); txInstalar(); plInstalar(); scInstalar(); ajInstalar();
     document.addEventListener("visibilitychange", () => { if (!document.hidden) setTimeout(cpPintar, 300); });
     setTimeout(() => srProgramar(100), 1100); window.addEventListener("resize", () => srProgramar(1200)); window.addEventListener("orientationchange", () => srProgramar(1500));
     window.MiServicioV27629 = { ajPintar, hlPintar, evoPintar, ruedaMostrar, tjDibujar, tjAbrir, ajResumenes, srPintar, vtPintar, dnPlan, rcEvaluar, rcMensaje };
@@ -1806,7 +1806,7 @@
       const nav = document.querySelector('.nav-item[data-vista="' + GS_VISTAS[j] + '"]'); if (nav) nav.click();
     }, { passive: true });
     document.addEventListener("touchcancel", () => { s = null; }, { passive: true });
-    window.MiServicioV27633 = { omObjetivoDe, omTrasGuardar, cmAbrir, cmCerrar, pyPintar, cpPintar, cpDias, cpNivel, qrAbrir, qrCerrar, qrGuardar, gsActivo, iniLeer, iniAplicar, rvAnalizar, rvAbrir, rvCerrar, rvPintar, rpPintar, hbLeer, hbPintar, acICS, acHora, cnNombres, dfDatos, dfPintar, cnPintar, txLeer, coLeer, txAplicar, plMes, scLeer, scAplicar, SC_LISTA };
+    window.MiServicioV27633 = { omObjetivoDe, omTrasGuardar, cmAbrir, cmCerrar, pyPintar, cpPintar, cpDias, cpNivel, qrAbrir, qrCerrar, qrGuardar, gsActivo, iniLeer, iniAplicar, rvAnalizar, rvAbrir, rvCerrar, rvPintar, rpPintar, hbLeer, hbPintar, acICS, acHora, cnNombres, dfDatos, dfPintar, cnPintar, txLeer, coLeer, txAplicar, plMes, scLeer, scAplicar, SC_LISTA, ajValor };
   }
   /* 28 · V27636 · Personalizar Inicio: mostrar u ocultar tarjetas (solo apariencia, no entra en las copias) */
   function iniLeer() {
@@ -2164,14 +2164,14 @@
   /* 38 · V27647 · Secciones de la app que se pueden mostrar u ocultar (solo apariencia, no entra en las copias) y salida visible del modo concentración */
   const SC_K = "miServicio.seccionesV27647";
   const SC_LISTA = [
-    { g: "Inicio", id: "fecha", t: "Barra de fecha y calendario", s: "#vista-inicio .inicio-resumen-grid, #vista-inicio .inicio-calendario-panel-wrap" },
+    { g: "Inicio", id: "fecha", t: "Barra de fecha", s: "#vista-inicio .inicio-resumen-grid, #vista-inicio .inicio-calendario-panel-wrap" },
     { g: "Inicio", id: "globos", t: "Globos de actividad", s: "#seccionGraficoInicio" },
-    { g: "Inicio", id: "evento", t: "Próximo evento sobre los globos", s: ".evento-chip-v276" },
+    { g: "Inicio", id: "evento", t: "Próximo evento", s: ".evento-chip-v276" },
     { g: "Inicio", id: "objetivo", t: "Objetivo del mes", s: "#seccionObjetivoInicioV260" },
-    { g: "Inicio", id: "personaje", t: "Personaje y camino del objetivo", s: "#progresoPersonaje" },
+    { g: "Inicio", id: "personaje", t: "Personaje del objetivo", s: "#progresoPersonaje" },
     { g: "Inicio", id: "cierre", t: "Cierre previsto del mes", s: "#proyeccionV27633" },
-    { g: "Inicio", id: "copia", t: "Recordatorio mensual de copia", s: "#recordatorioCopiaInicio" },
-    { g: "Inicio", id: "conexion", t: "Estado de conexión y cambios sin sincronizar", s: "#estadoConexionV190" },
+    { g: "Inicio", id: "copia", t: "Recordatorio de copia", s: "#recordatorioCopiaInicio" },
+    { g: "Inicio", id: "conexion", t: "Estado de conexión", s: "#estadoConexionV190" },
     { g: "Registrar", id: "hoy", t: "Resumen «Hoy llevas»", s: "#hoyLlevasV27629" },
     { g: "Registrar", id: "cronometro", t: "Cronómetro", s: "#cronometroV264" },
     { g: "Registrar", id: "habituales", t: "Registros habituales", s: "#habitualesV27641" },
@@ -2186,7 +2186,7 @@
     { g: "Estadísticas", id: "masdetalle", t: "Más detalle", s: "#statsPeriodoV183" },
     { g: "Estadísticas", id: "diasfuertes", t: "Tus días fuertes", s: "#diasFuertesV27644" },
     { g: "Estadísticas", id: "comparar", t: "Comparar dos meses", s: "#compararMesesV202" },
-    { g: "Estadísticas", id: "evolucion", t: "Evolución de 6 meses", s: "#statsEvolucionV183" }
+    { g: "Estadísticas", id: "evolucion", t: "Evolución", s: "#statsEvolucionV183" }
   ];
   function scLeer() {
     let o = []; try { o = JSON.parse(localStorage.getItem(SC_K) || "[]"); } catch (e) { o = []; }
@@ -2238,6 +2238,43 @@
       b.addEventListener("click", () => { scSalirConcentracion(); });
       const dlg = vi.querySelector("dialog"); if (dlg) vi.insertBefore(b, dlg); else vi.appendChild(b);
     }
+  }
+
+  /* 39 · V27648 · Ajustes › Personalizar compacto: cada bloque es una fila plegable con su valor actual; solo uno abierto a la vez */
+  function ajValor(f) {
+    const seg = f.querySelectorAll('.segmento-v264 button[aria-pressed="true"]');
+    if (seg.length === 1) return seg[0].textContent.trim();
+    const cb = f.querySelectorAll('input[type="checkbox"][data-ini-v27636],input[type="checkbox"][data-sec-v27647]');
+    if (cb.length) return [...cb].filter(c => c.checked).length + " de " + cb.length;
+    const a = f.querySelector('[aria-pressed="true"],[aria-checked="true"],input[type="radio"]:checked,.activo,.activa,.seleccionado');
+    if (a) { const x = (a.getAttribute("aria-label") || a.textContent || a.value || "").replace(/\s+/g, " ").replace(/^Elegir /, "").trim(); if (x && x.length <= 26) return x; }
+    return "";
+  }
+  function ajPintarValor(f) {
+    const lg = f.querySelector(":scope > legend"); if (!lg) return;
+    let v = lg.querySelector(".aj-valor-v27648"); if (!v) { v = document.createElement("span"); v.className = "aj-valor-v27648"; lg.appendChild(v); }
+    const t = ajValor(f); if (v.textContent !== t) v.textContent = t;
+  }
+  function ajAlternar(f, abrir) {
+    const lg = f.querySelector(":scope > legend"); if (!lg) return;
+    if (abrir) [...(f.parentElement ? f.parentElement.children : [])].forEach(h => { if (h !== f && h.classList && h.classList.contains("aj-abierto-v27648")) { h.classList.remove("aj-abierto-v27648"); const l = h.querySelector(":scope > legend"); if (l) l.setAttribute("aria-expanded", "false"); } });
+    f.classList.toggle("aj-abierto-v27648", abrir); lg.setAttribute("aria-expanded", String(abrir));
+    if (abrir) ajPintarValor(f);
+  }
+  function ajInstalar() {
+    const raiz = $("aparienciaV201"); if (!raiz) return;
+    const todos = [...raiz.querySelectorAll("fieldset.selector-grafico-v260")];
+    todos.forEach(f => {
+      const lg = f.querySelector(":scope > legend"); if (!lg || f.classList.contains("aj-sub-v27648")) return;
+      f.classList.add("aj-sub-v27648"); lg.setAttribute("role", "button"); lg.setAttribute("tabindex", "0"); lg.setAttribute("aria-expanded", "false");
+      const alt = () => ajAlternar(f, !f.classList.contains("aj-abierto-v27648"));
+      lg.addEventListener("click", alt);
+      lg.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); alt(); } });
+      const refrescar = () => setTimeout(() => ajPintarValor(f), 60);
+      f.addEventListener("click", refrescar); f.addEventListener("change", refrescar);
+      ajPintarValor(f);
+    });
+    raiz.addEventListener("toggle", () => todos.forEach(ajPintarValor));
   }
 
   /* 27 · V27636 · Objetivo de cada mes: los meses pasados se comparan con el objetivo que tenían entonces */
