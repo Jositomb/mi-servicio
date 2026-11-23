@@ -1527,7 +1527,7 @@
     document.addEventListener("input", e => { if (e.target && (e.target.id === "nombreSaludoV260" || e.target.id === "objetivoMensual")) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("change", e => { if (e.target && /^(tipoPublicador|nombreSaludoV260|objetivoMensual)$/.test(e.target.id)) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("click", e => { if (e.target.closest && e.target.closest("#abrirAjustesV260,#modoColorV27627")) setTimeout(ajPintar, 80); }, true);
-    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar(); rpInstalar(); dsInstalar(); hbInstalar(); acInstalar(); txInstalar(); plInstalar(); scInstalar(); ajInstalar(); ajxInstalar();
+    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar(); rpInstalar(); dsInstalar(); hbInstalar(); acInstalar(); txInstalar(); plInstalar(); scInstalar(); ajInstalar(); ajxInstalar(); mrInstalar();
     document.addEventListener("visibilitychange", () => { if (!document.hidden) setTimeout(cpPintar, 300); });
     setTimeout(() => srProgramar(100), 1100); window.addEventListener("resize", () => srProgramar(1200)); window.addEventListener("orientationchange", () => srProgramar(1500));
     window.MiServicioV27629 = { ajPintar, hlPintar, evoPintar, ruedaMostrar, tjDibujar, tjAbrir, ajResumenes, srPintar, vtPintar, dnPlan, rcEvaluar, rcMensaje };
@@ -2380,6 +2380,85 @@
     ajxOrdenar();
     const v = $("vista-ajustes"); if (v) new MutationObserver(() => { ajxOrdenar(); }).observe(v, { childList: true });
     let n = 0; const t = setInterval(() => { ajxOrdenar(); if (++n > 12) clearInterval(t); }, 500);
+  }
+
+  /* 41 · V27650 · Historial: un solo botón «⋯» por registro (los botones reales siguen en el DOM y se activan desde el menú) */
+  function mrMenu() { return document.getElementById("menuRegV27650"); }
+  function mrCerrar() {
+    const m = mrMenu();
+    if (!m) return;
+    const b = m._origen;
+    m.remove();
+    if (b) { b.setAttribute("aria-expanded", "false"); }
+  }
+  function mrAbrir(btn) {
+    mrCerrar();
+    const acc = btn.parentElement;
+    const orig = {
+      rep: acc.querySelector(".boton-repetir-v260"),
+      edi: acc.querySelector(".boton-editar-registro"),
+      bor: acc.querySelector(".boton-borrar")
+    };
+    const m = document.createElement("div");
+    m.id = "menuRegV27650";
+    m.setAttribute("role", "menu");
+    m._origen = btn;
+    const items = [["rep", "Repetir hoy", "↻"], ["edi", "Editar", "✎"], ["bor", "Eliminar", "🗑"]];
+    items.forEach(([k, t, ic]) => {
+      if (!orig[k]) return;
+      const i = document.createElement("button");
+      i.type = "button";
+      i.setAttribute("role", "menuitem");
+      i.dataset.mr = k;
+      i.innerHTML = '<span aria-hidden="true">' + ic + "</span>" + t;
+      i.addEventListener("click", (e) => {
+        e.stopPropagation();
+        mrCerrar();
+        orig[k].click();
+      });
+      m.appendChild(i);
+    });
+    document.body.appendChild(m);
+    btn.setAttribute("aria-expanded", "true");
+    const r = btn.getBoundingClientRect(), w = m.offsetWidth, h = m.offsetHeight;
+    const vw = window.innerWidth, vh = window.innerHeight;
+    let top = r.bottom + 6;
+    if (top + h > vh - 12) top = Math.max(12, r.top - h - 6);
+    m.style.top = Math.round(top) + "px";
+    m.style.left = Math.round(Math.min(Math.max(12, r.right - w), vw - w - 12)) + "px";
+    const p = m.querySelector("button");
+    if (p) p.focus({ preventScroll: true });
+  }
+  let mrPend = false;
+  function mrInyectar() {
+    mrPend = false;
+    document.querySelectorAll("#vista-historial .registro-acciones").forEach((a) => {
+      if (a.querySelector(".mas-v27650")) return;
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "mas-v27650";
+      b.setAttribute("aria-haspopup", "menu");
+      b.setAttribute("aria-expanded", "false");
+      b.setAttribute("aria-label", "Más acciones");
+      b.textContent = "⋯";
+      a.appendChild(b);
+    });
+  }
+  function mrInstalar() {
+    const v = document.getElementById("vista-historial");
+    if (!v || v.dataset.mrV27650) return;
+    v.dataset.mrV27650 = "1";
+    const pedir = () => { if (!mrPend) { mrPend = true; requestAnimationFrame(mrInyectar); } };
+    new MutationObserver(pedir).observe(v, { childList: true, subtree: true });
+    mrInyectar();
+    document.addEventListener("click", (e) => {
+      const b = e.target.closest?.(".mas-v27650");
+      if (b) { e.preventDefault(); e.stopPropagation(); if (mrMenu() && mrMenu()._origen === b) mrCerrar(); else mrAbrir(b); return; }
+      if (mrMenu() && !e.target.closest("#menuRegV27650")) mrCerrar();
+    }, true);
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && mrMenu()) { const o = mrMenu()._origen; mrCerrar(); o?.focus(); } });
+    window.addEventListener("scroll", mrCerrar, true);
+    window.addEventListener("resize", mrCerrar);
   }
 
   /* 27 · V27636 · Objetivo de cada mes: los meses pasados se comparan con el objetivo que tenían entonces */

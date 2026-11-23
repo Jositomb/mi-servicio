@@ -14585,3 +14585,38 @@ html body:not(#bta):not(#btb) #vista-ajustes>#copiaFilaV27633:not(#btc){margin-b
 html body:not(#iosa):not(#iosb) #vista-ajustes:not(#iosc):not(#iosd):not(#iose):not(#iosf) #acercaV27649 .ajustes-acordeon-icono{display:grid!important;place-items:center;width:28px!important;height:28px!important;font-size:16px!important;font-weight:700;border-radius:8px;background:linear-gradient(180deg,#66738f,#48536b)!important;background-image:linear-gradient(180deg,#66738f,#48536b)!important;color:#fff!important}
 html body:not(#bta):not(#btb) #vista-ajustes>#seguridadDatosV260:not(#btc){margin-top:0!important;border-top-left-radius:0!important;border-top-right-radius:0!important}
 html body:not(#bta):not(#btb) #vista-ajustes .aj-filtrado-v27649:not(#btc):not(#btd){display:none!important}
+
+/* V27650 · simplificación y estética */
+/* 7 · saludo solo en Inicio */
+html body:not(#bta):not(#btb) #saludoDinamicoV195:not(#btc){}
+body:not(:has(#vista-inicio.activa)) #saludoDinamicoV195{display:none!important}
+/* 1 · botón «⋯» por registro; los tres botones reales quedan en el DOM, ocultos */
+html body:not(#bta):not(#btb) #vista-historial .registro-acciones>button:not(.mas-v27650):not(#btc){position:absolute!important;width:1px!important;height:1px!important;min-width:0!important;min-height:0!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;opacity:0!important;pointer-events:none!important;border:0!important}
+html body:not(#bta):not(#btb) #vista-historial .registro-acciones{flex-wrap:nowrap!important;min-width:0!important}
+html body:not(#bta):not(#btb) #vista-historial .registro-acciones>.mas-v27650:not(#btc){display:inline-flex!important;align-items:center;justify-content:center;width:44px;min-width:44px;height:44px;min-height:44px;padding:0;border:0;border-radius:50%;background:rgba(120,120,128,.14);color:inherit;font:700 22px/1 -apple-system,system-ui,sans-serif;letter-spacing:1px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.mas-v27650:active{transform:scale(.92)}
+#menuRegV27650{position:fixed;z-index:9999;min-width:176px;padding:6px;border-radius:16px;background:rgba(255,255,255,.94);-webkit-backdrop-filter:saturate(180%) blur(22px);backdrop-filter:saturate(180%) blur(22px);box-shadow:0 12px 36px rgba(0,0,0,.22),0 0 0 .5px rgba(0,0,0,.08);animation:mrIn27650 .14s ease-out}
+#menuRegV27650 button{display:flex;align-items:center;gap:10px;width:100%;min-height:44px;padding:0 12px;border:0;border-radius:11px;background:transparent;color:#1c1c1e;font:600 16px/1.2 -apple-system,system-ui,sans-serif;text-align:left;cursor:pointer}
+#menuRegV27650 button span{width:20px;text-align:center}
+#menuRegV27650 button:active,#menuRegV27650 button:focus-visible{background:rgba(120,120,128,.16);outline:none}
+#menuRegV27650 button[data-mr=bor]{color:#c4271d}
+@keyframes mrIn27650{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+@media (prefers-color-scheme:dark){:root:not([data-modo-v276=claro]) #menuRegV27650{background:rgba(44,44,46,.94);box-shadow:0 12px 36px rgba(0,0,0,.55),0 0 0 .5px rgba(255,255,255,.12)}:root:not([data-modo-v276=claro]) #menuRegV27650 button{color:#f5f5f7}:root:not([data-modo-v276=claro]) #menuRegV27650 button[data-mr=bor]{color:#ff6b61}}
+:root[data-modo-v276=oscuro] #menuRegV27650{background:rgba(44,44,46,.94);box-shadow:0 12px 36px rgba(0,0,0,.55),0 0 0 .5px rgba(255,255,255,.12)}
+:root[data-modo-v276=oscuro] #menuRegV27650 button{color:#f5f5f7}
+:root[data-modo-v276=oscuro] #menuRegV27650 button[data-mr=bor]{color:#ff6b61}
+@media (prefers-reduced-motion:reduce){#menuRegV27650{animation:none}}
+/* 2 · un solo indicador de color por fila: fuera el punto de la cabecera del día */
+html body:not(#bta):not(#btb) #vista-historial .grupo-historial-cabecera[data-dom-v276] .grupo-historial-titulo:not(#btc)::before{display:none!important}
+/* 4 · selector de mes compacto: fuera el botón ▦ */
+html body:not(#bta):not(#btb) .v143-rm-nav .mes-selector-v260:not(#btc){display:none!important}
+/* 3 · anillo mensual duplicado fuera (las barras por actividad se mantienen) */
+html body:not(#bta):not(#btb) #resumenMensualV143 #anillosActV27628:not(#btc){display:none!important}
+/* 5 · «Hoy llevas» y cronómetro como una sola tarjeta */
+html body:not(#bta):not(#btb) #hoyLlevasV27629:not(#btc){border-bottom-left-radius:0!important;border-bottom-right-radius:0!important;margin-bottom:0!important}
+html body:not(#bta):not(#btb) #cronometroV264:not(#btc){border-top-left-radius:0!important;border-top-right-radius:0!important;margin-top:0!important;border-top:.5px solid rgba(128,128,128,.28)!important}
+/* 8 · mismo radio y mismo respiro entre tarjetas principales */
+html body:not(#bta):not(#btb) :is(#hoyLlevasV27629,#cronometroV264,#seccionAnillosV269,#semanaVisualV193,#historialResumenV153):not(#btc){--r-v27650:18px}
+html body:not(#bta):not(#btb) :is(#seccionAnillosV269,#semanaVisualV193,#historialResumenV153):not(#btc):not(#btd):not(#bte):not(#btf){border-radius:18px!important;margin-top:12px!important;margin-bottom:0!important}
+html body:not(#bta):not(#btb) #hoyLlevasV27629:not(#btc){border-top-left-radius:18px!important;border-top-right-radius:18px!important}
+html body:not(#bta):not(#btb) #cronometroV264:not(#btc){border-bottom-left-radius:18px!important;border-bottom-right-radius:18px!important;margin-bottom:12px!important}
