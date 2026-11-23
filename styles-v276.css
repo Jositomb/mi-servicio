@@ -14620,3 +14620,21 @@ html body:not(#bta):not(#btb) :is(#hoyLlevasV27629,#cronometroV264,#seccionAnill
 html body:not(#bta):not(#btb) :is(#seccionAnillosV269,#semanaVisualV193,#historialResumenV153):not(#btc):not(#btd):not(#bte):not(#btf){border-radius:18px!important;margin-top:12px!important;margin-bottom:0!important}
 html body:not(#bta):not(#btb) #hoyLlevasV27629:not(#btc){border-top-left-radius:18px!important;border-top-right-radius:18px!important}
 html body:not(#bta):not(#btb) #cronometroV264:not(#btc){border-bottom-left-radius:18px!important;border-bottom-right-radius:18px!important;margin-bottom:12px!important}
+
+/* V27651 · etiquetas, día de descanso, aviso de respaldo */
+.etq-fila-v27651{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 2px}
+.etq-v27651{display:inline-flex;align-items:center;min-height:32px;padding:0 11px;border:0;border-radius:16px;background:rgba(10,132,255,.14);color:#0a60d0;font:600 14px/1 -apple-system,system-ui,sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.etq-v27651:active{transform:scale(.95)}
+.registro-notas .etq-v27651{min-height:26px;padding:0 8px;font-size:13px;margin:0 2px;vertical-align:baseline}
+@media (prefers-color-scheme:dark){:root:not([data-modo-v276=claro]) .etq-v27651{background:rgba(10,132,255,.28);color:#7dbbff}}
+:root[data-modo-v276=oscuro] .etq-v27651{background:rgba(10,132,255,.28);color:#7dbbff}
+.descanso-dias-v27651 button{min-width:0;flex:1;padding-left:0;padding-right:0}
+#avisoIdbV27651{position:fixed;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 86px);z-index:9998;padding:14px 16px;border-radius:16px;background:#fff7e0;color:#4a3500;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+#avisoIdbV27651 p{margin:6px 0 10px;font-size:14px}
+#avisoIdbV27651 .acciones-v266{display:flex;gap:8px}
+#avisoIdbV27651 button{flex:1;min-height:44px;border:0;border-radius:12px;font:600 15px -apple-system,system-ui,sans-serif;background:rgba(0,0,0,.08);color:#4a3500}
+#avisoIdbV27651 button[data-a=restaurar]{background:#0a84ff;color:#fff}
+@media (prefers-color-scheme:dark){:root:not([data-modo-v276=claro]) #avisoIdbV27651{background:#3a3020;color:#ffe9b0}:root:not([data-modo-v276=claro]) #avisoIdbV27651 button{color:#ffe9b0;background:rgba(255,255,255,.14)}:root:not([data-modo-v276=claro]) #avisoIdbV27651 button[data-a=restaurar]{color:#fff;background:#0a84ff}}
+:root[data-modo-v276=oscuro] #avisoIdbV27651{background:#3a3020;color:#ffe9b0}
+:root[data-modo-v276=oscuro] #avisoIdbV27651 button{color:#ffe9b0;background:rgba(255,255,255,.14)}
+:root[data-modo-v276=oscuro] #avisoIdbV27651 button[data-a=restaurar]{color:#fff;background:#0a84ff}

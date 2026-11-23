@@ -155,8 +155,12 @@
     { id: "h500", icono: "👑", nombre: "500 horas", desc: "500 h acumuladas", tono: "oro" }
   ];
   function lunes(d) { const x = new Date(d); const w = (x.getDay() + 6) % 7; x.setDate(x.getDate() - w); return fechaISO(x); }
+  /* V27651 · día de descanso: un día marcado sin actividad no rompe la racha (por defecto, ninguno) */
+  function descansoRacha() { try { const a = JSON.parse(localStorage.getItem("miServicio.descansoV27651") || "[]"); return new Set(Array.isArray(a) ? a.filter(n => Number.isInteger(n) && n >= 0 && n <= 6) : []); } catch (e) { return new Set(); } }
   function calcularLogros(regs) {
     regs = regs || registros();
+    const DESC = descansoRacha();
+    const enlazaRacha = (a, b) => { const n = Math.round((b - a) / 86400000); if (n === 1) return true; if (n < 2 || !DESC.size) return false; for (let i = 1; i < n; i++) { const x = new Date(a.getTime()); x.setDate(x.getDate() + i); if (!DESC.has(x.getDay())) return false; } return true; };
     const dias = porDia(regs), fechas = Array.from(dias.keys()).filter(f => dias.get(f).min > 0).sort();
     const ganados = {};
     if (!fechas.length) return { ganados, fechas, rachaActual: 0, horasTotales: 0 };
@@ -164,13 +168,13 @@
     // rachas
     let cur = 0, prev = null; const rachaFecha = { 3: null, 7: null, 14: null };
     fechas.forEach(f => {
-      const d = deISO(f); cur = (prev && Math.round((d - prev) / 86400000) === 1) ? cur + 1 : 1; prev = d;
+      const d = deISO(f); cur = (prev && enlazaRacha(prev, d)) ? cur + 1 : 1; prev = d;
       [3, 7, 14].forEach(n => { if (cur >= n && !rachaFecha[n]) rachaFecha[n] = f; });
     });
     if (rachaFecha[3]) ganados.racha3 = rachaFecha[3]; if (rachaFecha[7]) ganados.racha7 = rachaFecha[7]; if (rachaFecha[14]) ganados.racha14 = rachaFecha[14];
     // racha actual (hasta hoy o ayer)
     let rachaActual = 0; { const hoy = new Date(); hoy.setHours(12); let d = new Date(hoy); if (!dias.has(fechaISO(d)) || dias.get(fechaISO(d)).min <= 0) d.setDate(d.getDate() - 1);
-      while (dias.has(fechaISO(d)) && dias.get(fechaISO(d)).min > 0) { rachaActual++; d.setDate(d.getDate() - 1); } }
+      for (let g = 0; g < 4000; g++) { if (dias.has(fechaISO(d)) && dias.get(fechaISO(d)).min > 0) rachaActual++; else if (!DESC.has(d.getDay())) break; d.setDate(d.getDate() - 1); } }
     // semanas
     const semanas = new Map(); fechas.forEach(f => { const l = lunes(deISO(f)); if (!semanas.has(l)) semanas.set(l, []); semanas.get(l).push(f); });
     for (const [l, fs] of Array.from(semanas.entries()).sort()) { if (fs.length >= 7) { ganados.semana = fs[fs.length - 1]; break; } }

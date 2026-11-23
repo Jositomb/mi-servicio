@@ -1527,7 +1527,7 @@
     document.addEventListener("input", e => { if (e.target && (e.target.id === "nombreSaludoV260" || e.target.id === "objetivoMensual")) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("change", e => { if (e.target && /^(tipoPublicador|nombreSaludoV260|objetivoMensual)$/.test(e.target.id)) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("click", e => { if (e.target.closest && e.target.closest("#abrirAjustesV260,#modoColorV27627")) setTimeout(ajPintar, 80); }, true);
-    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar(); rpInstalar(); dsInstalar(); hbInstalar(); acInstalar(); txInstalar(); plInstalar(); scInstalar(); ajInstalar(); ajxInstalar(); mrInstalar();
+    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar(); rpInstalar(); dsInstalar(); hbInstalar(); acInstalar(); txInstalar(); plInstalar(); scInstalar(); ajInstalar(); ajxInstalar(); mrInstalar(); rbInstalar(); rdInstalar(); etInstalar();
     document.addEventListener("visibilitychange", () => { if (!document.hidden) setTimeout(cpPintar, 300); });
     setTimeout(() => srProgramar(100), 1100); window.addEventListener("resize", () => srProgramar(1200)); window.addEventListener("orientationchange", () => srProgramar(1500));
     window.MiServicioV27629 = { ajPintar, hlPintar, evoPintar, ruedaMostrar, tjDibujar, tjAbrir, ajResumenes, srPintar, vtPintar, dnPlan, rcEvaluar, rcMensaje };
@@ -2432,6 +2432,7 @@
   let mrPend = false;
   function mrInyectar() {
     mrPend = false;
+    etNotas();
     document.querySelectorAll("#vista-historial .registro-acciones").forEach((a) => {
       if (a.querySelector(".mas-v27650")) return;
       const b = document.createElement("button");
@@ -2459,6 +2460,171 @@
     document.addEventListener("keydown", (e) => { if (e.key === "Escape" && mrMenu()) { const o = mrMenu()._origen; mrCerrar(); o?.focus(); } });
     window.addEventListener("scroll", mrCerrar, true);
     window.addEventListener("resize", mrCerrar);
+  }
+
+  /* 42 · V27651 · Respaldo en IndexedDB, día de descanso de la racha y etiquetas en notas */
+  const RB_N = "miServicioRespaldoV27651", RB_S = "copia", RB_IGN = "miServicio.idbIgnoradoV27651";
+  const RB_CLAVES = { registros: "miServicio.registros", preferencias: "miServicio.preferencias", agenda: "miServicio.agendaSalidas" };
+  function rbAbrir() {
+    return new Promise((res, rej) => {
+      try {
+        if (!window.indexedDB) return rej(new Error("sin indexedDB"));
+        const r = indexedDB.open(RB_N, 1);
+        r.onupgradeneeded = () => { r.result.createObjectStore(RB_S); };
+        r.onsuccess = () => res(r.result);
+        r.onerror = () => rej(r.error);
+      } catch (e) { rej(e); }
+    });
+  }
+  function rbLeer() {
+    return rbAbrir().then((db) => new Promise((res, rej) => {
+      const q = db.transaction(RB_S, "readonly").objectStore(RB_S).get("ultima");
+      q.onsuccess = () => { db.close(); res(q.result || null); };
+      q.onerror = () => { db.close(); rej(q.error); };
+    }));
+  }
+  function rbEscribir(v) {
+    return rbAbrir().then((db) => new Promise((res, rej) => {
+      const tx = db.transaction(RB_S, "readwrite");
+      tx.objectStore(RB_S).put(v, "ultima");
+      tx.oncomplete = () => { db.close(); res(true); };
+      tx.onerror = () => { db.close(); rej(tx.error); };
+    }));
+  }
+  function rbNumRegs(raw) { try { const a = JSON.parse(raw); return Array.isArray(a) ? a.length : 0; } catch (e) { return -1; } }
+  let rbSig = "";
+  function rbCopiar() {
+    let raw;
+    try { raw = { registros: localStorage.getItem(RB_CLAVES.registros), preferencias: localStorage.getItem(RB_CLAVES.preferencias), agenda: localStorage.getItem(RB_CLAVES.agenda) }; } catch (e) { return Promise.resolve(false); }
+    const n = rbNumRegs(raw.registros);
+    if (n < 1) return Promise.resolve(false); /* una copia vacía o ilegible nunca sustituye a la buena */
+    const sig = (raw.registros || "") + "|" + (raw.preferencias || "") + "|" + (raw.agenda || "");
+    if (sig === rbSig) return Promise.resolve(false);
+    return rbEscribir({ t: new Date().toISOString(), n: n, d: raw }).then(() => { rbSig = sig; rbEstado(); return true; }).catch(() => false);
+  }
+  function rbFecha(t) { try { return new Date(t).toLocaleString("es-ES", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }); } catch (e) { return ""; } }
+  function rbEstado() {
+    const lista = $("listaCopiasInternasV266"); if (!lista || !lista.parentNode) return;
+    let p = $("idbEstadoV27651");
+    if (!p) { p = document.createElement("p"); p.id = "idbEstadoV27651"; p.className = "nota-v266"; lista.parentNode.insertBefore(p, lista.nextSibling); }
+    rbLeer().then((c) => { p.textContent = c ? "Respaldo extra en el navegador: " + c.n + " registros · " + rbFecha(c.t) : "Respaldo extra en el navegador: aún sin crear."; }).catch(() => { p.textContent = "Respaldo extra en el navegador: no disponible en este modo."; });
+  }
+  function rbRestaurar(c) {
+    try {
+      Object.keys(RB_CLAVES).forEach((k) => { if (typeof c.d[k] === "string") localStorage.setItem(RB_CLAVES[k], c.d[k]); });
+    } catch (e) { window.alert("No se pudo restaurar el respaldo. Tus datos no se han cambiado."); return; }
+    location.reload();
+  }
+  function rbAviso() {
+    let ls = null, mal = false;
+    try { ls = localStorage.getItem(RB_CLAVES.registros); } catch (e) { mal = true; }
+    const n = mal ? -1 : (ls === null ? 0 : rbNumRegs(ls));
+    if (n > 0) return;
+    rbLeer().then((c) => {
+      if (!c || c.n < 1 || $("avisoIntegridadV266") || $("avisoIdbV27651")) return;
+      let ign = ""; try { ign = localStorage.getItem(RB_IGN) || ""; } catch (e) {}
+      if (ign === c.t) return;
+      const caja = document.createElement("div");
+      caja.id = "avisoIdbV27651"; caja.setAttribute("role", "alert");
+      caja.innerHTML = '<strong>⚠️ No hay registros en este dispositivo, pero hay un respaldo del navegador.</strong><p>Respaldo del ' + rbFecha(c.t) + ' con ' + c.n + ' registros.</p><div class="acciones-v266"><button type="button" data-a="restaurar">Restaurar ese respaldo</button><button type="button" data-a="ignorar">Ignorar</button></div>';
+      caja.addEventListener("click", (e) => {
+        const a = e.target.closest("[data-a]"); if (!a) return;
+        if (a.dataset.a === "restaurar") { if (window.confirm("Se restaurarán " + c.n + " registros del respaldo del " + rbFecha(c.t) + ". ¿Continuar?")) rbRestaurar(c); }
+        else { try { localStorage.setItem(RB_IGN, c.t); } catch (er) {} caja.remove(); }
+      });
+      document.body.appendChild(caja);
+    }).catch(() => {});
+  }
+  function rbInstalar() {
+    setTimeout(rbAviso, 2500);
+    setTimeout(() => { rbCopiar(); rbEstado(); }, 4000);
+    document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") rbCopiar(); });
+    window.addEventListener("pagehide", () => { rbCopiar(); });
+    setInterval(rbCopiar, 60000);
+    const v = $("vista-ajustes"); if (v) new MutationObserver(() => { if (!$("idbEstadoV27651")) rbEstado(); }).observe(v, { childList: true, subtree: true });
+  }
+
+  /* Día de descanso de la racha (clave de interfaz; no entra en las copias JSON) */
+  const RD_K = "miServicio.descansoV27651";
+  function rdLeer() { try { const a = JSON.parse(localStorage.getItem(RD_K) || "[]"); return Array.isArray(a) ? a.filter((n) => Number.isInteger(n) && n >= 0 && n <= 6).slice(0, 2) : []; } catch (e) { return []; } }
+  function rdPintar() {
+    const g = $("descansoV27651"); if (!g) return;
+    const s = rdLeer();
+    g.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(s.includes(Number(b.dataset.rd)))));
+    const n = $("descansoNotaV27651"); if (n) n.textContent = s.length >= 2 ? "Máximo 2 días de descanso a la semana." : "Un día marcado no rompe la racha si no registras actividad. Solo en este dispositivo.";
+  }
+  function rdInstalar() {
+    const g = $("descansoV27651"); if (!g) return;
+    g.addEventListener("click", (e) => {
+      const b = e.target.closest("button[data-rd]"); if (!b) return;
+      const d = Number(b.dataset.rd); let s = rdLeer();
+      if (s.includes(d)) s = s.filter((x) => x !== d); else if (s.length < 2) s.push(d); else { rdPintar(); return; }
+      try { if (s.length) localStorage.setItem(RD_K, JSON.stringify(s)); else localStorage.removeItem(RD_K); } catch (er) {}
+      rdPintar();
+    });
+    rdPintar();
+  }
+
+  /* Etiquetas #así en las notas: chips en Historial, filtro rápido y sugerencias en Registrar */
+  const ET_RE = /#([\p{L}\p{N}_-]{2,24})/gu;
+  function etNorm(s) { return String(s).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase(); }
+  function etTop(max) {
+    let regs = []; try { regs = JSON.parse(localStorage.getItem("miServicio.registros") || "[]"); } catch (e) {}
+    const m = new Map();
+    (Array.isArray(regs) ? regs : []).forEach((r) => { String((r && r.notas) || "").replace(ET_RE, (_, t) => { const k = etNorm(t); const o = m.get(k) || { t: t, n: 0 }; o.n++; m.set(k, o); return _; }); });
+    return Array.from(m.values()).sort((a, b) => b.n - a.n || a.t.localeCompare(b.t)).slice(0, max);
+  }
+  function etBuscar(tag) {
+    const i = $("buscarHistorialV260"); if (!i) return;
+    i.value = "#" + tag; i.dispatchEvent(new Event("input", { bubbles: true }));
+    const v = $("vista-historial"); if (v) v.scrollIntoView({ block: "start" });
+  }
+  function etNotas() {
+    document.querySelectorAll("#vista-historial .registro-notas:not([data-et-v27651])").forEach((p) => {
+      p.dataset.etV27651 = "1";
+      const txt = p.textContent; if (!/#[\p{L}\p{N}_-]{2,24}/u.test(txt)) return;
+      const f = document.createDocumentFragment(); let ult = 0;
+      txt.replace(ET_RE, (m, t, off) => {
+        if (off > ult) f.appendChild(document.createTextNode(txt.slice(ult, off)));
+        const b = document.createElement("button"); b.type = "button"; b.className = "etq-v27651"; b.dataset.etq = t; b.textContent = "#" + t; b.setAttribute("aria-label", "Filtrar por " + t);
+        f.appendChild(b); ult = off + m.length; return m;
+      });
+      if (ult < txt.length) f.appendChild(document.createTextNode(txt.slice(ult)));
+      p.textContent = ""; p.appendChild(f);
+    });
+    const caja = $("etiquetasHistV27651"), ref = document.querySelector("#vista-historial .buscar-historial-v260");
+    const top = etTop(8);
+    if (!top.length) { if (caja) caja.remove(); }
+    else if (ref) {
+      const firma = top.map((x) => x.t + x.n).join("|");
+      let c = caja;
+      if (!c) { c = document.createElement("div"); c.id = "etiquetasHistV27651"; c.className = "etq-fila-v27651"; c.setAttribute("role", "group"); c.setAttribute("aria-label", "Etiquetas de tus notas"); ref.parentNode.insertBefore(c, ref.nextSibling); }
+      if (c.dataset.f !== firma) { c.dataset.f = firma; c.textContent = ""; top.forEach((x) => { const b = document.createElement("button"); b.type = "button"; b.className = "etq-v27651"; b.dataset.etq = x.t; b.textContent = "#" + x.t; c.appendChild(b); }); }
+    }
+  }
+  function etSugerencias() {
+    const ta = $("notasRegistro"); if (!ta) return;
+    let c = $("etiquetasRegV27651");
+    const top = etTop(6);
+    if (!top.length) { if (c) c.remove(); return; }
+    if (!c) { c = document.createElement("div"); c.id = "etiquetasRegV27651"; c.className = "etq-fila-v27651"; c.setAttribute("role", "group"); c.setAttribute("aria-label", "Añadir etiqueta a la nota"); ta.parentNode.insertBefore(c, ta.nextSibling); }
+    c.textContent = "";
+    top.forEach((x) => { const b = document.createElement("button"); b.type = "button"; b.className = "etq-v27651"; b.dataset.add = x.t; b.textContent = "#" + x.t; c.appendChild(b); });
+  }
+  function etInstalar() {
+    document.addEventListener("click", (e) => {
+      const b = e.target.closest?.(".etq-v27651"); if (!b) return;
+      e.preventDefault(); e.stopPropagation();
+      if (b.dataset.add) {
+        const ta = $("notasRegistro"); if (!ta) return;
+        const tag = "#" + b.dataset.add;
+        if (!new RegExp("(^|\\s)" + tag.replace(/[-]/g, "\\-") + "(\\s|$)", "i").test(ta.value)) { ta.value = (ta.value && !/\s$/.test(ta.value) ? ta.value + " " : ta.value) + tag + " "; ta.dispatchEvent(new Event("input", { bubbles: true })); }
+        ta.focus();
+      } else if (b.dataset.etq) etBuscar(b.dataset.etq);
+    }, true);
+    const ta = $("notasRegistro"); if (ta) ta.addEventListener("focus", etSugerencias);
+    const vr = $("vista-registrar"); if (vr) new MutationObserver(() => { if (vr.classList.contains("activa") && !$("etiquetasRegV27651")) etSugerencias(); }).observe(vr, { attributes: true, attributeFilter: ["class"] });
+    etSugerencias(); etNotas();
   }
 
   /* 27 · V27636 · Objetivo de cada mes: los meses pasados se comparan con el objetivo que tenían entonces */
