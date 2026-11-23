@@ -14561,3 +14561,27 @@ html body:not(#bta):not(#btb) #aparienciaV201 #seccionesV27647{display:grid;grid
 html body:not(#bta):not(#btb) #aparienciaV201 #seccionesV27647 .sec-grupo-v27647{grid-column:1/-1;margin:8px 0 0}
 html body:not(#bta):not(#btb) #aparienciaV201 #seccionesV27647 .fondo-clima-opcion-v260{margin-top:0;padding-top:3px;padding-bottom:3px;font-size:14px;line-height:1.2}
 @media (max-width:340px){html body:not(#bta):not(#btb) #aparienciaV201 #seccionesV27647{grid-template-columns:1fr}}
+
+/* V27649 · Ajustes: grupos, sin repeticiones, buscador, Acerca de */
+.aj-grupo-v27649{margin:16px 6px 6px;font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;opacity:.6}
+html body:not(#bta):not(#btb) #vista-ajustes details.ajustes-acordeon-v179:not([id]) > summary{display:none!important}
+html body:not(#bta):not(#btb) #vista-ajustes #volverAjustesV260{margin:0 0 8px;min-height:0;padding:6px 14px;width:auto}
+.aj-buscar-v27649{margin:0 0 4px}
+.aj-buscar-v27649 .campo{width:100%;box-sizing:border-box}
+.aj-sin-resultados-v27649{margin:14px 6px;opacity:.7;text-align:center}
+.aj-filtrado-v27649{display:none!important}
+html body:not(#bta):not(#btb) #vista-ajustes.aj-buscando-v27649 .aj-grupo-v27649{display:none!important}
+html body:not(#bta):not(#btb) #vista-ajustes #copiaFilaV27633{margin-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0;box-shadow:none}
+html body:not(#bta):not(#btb) #vista-ajustes #seguridadDatosV260{margin-top:0;border-top-left-radius:0;border-top-right-radius:0;border-top:1px solid rgba(120,120,128,.25)}
+html body:not(#bta):not(#btb) #oneDriveSeccionV260 #versionPublicadaV156{display:none!important}
+html body:not(#bta):not(#btb) #oneDriveSeccionV260 .onedrive-cabecera{cursor:pointer;-webkit-tap-highlight-color:transparent}
+html body:not(#bta):not(#btb) #oneDriveSeccionV260.aj-compacto-v27649:not(.aj-abierto-v27649) .onedrive-ayuda{display:none!important}
+.acerca-cuerpo-v27649{padding:4px 2px 8px}
+.acerca-cuerpo-v27649 button{margin:6px 8px 0 0}
+.acerca-cuerpo-v27649 p{margin:8px 0}
+.aj-restablecer-v27649{margin-top:14px}
+html body:not(#bta):not(#btb) #vista-ajustes details.ajustes-acordeon-v179:not([id]):not([open]){display:none!important}
+html body:not(#bta):not(#btb) #vista-ajustes>#copiaFilaV27633:not(#btc){margin-bottom:0!important;border-bottom-left-radius:0!important;border-bottom-right-radius:0!important}
+html body:not(#iosa):not(#iosb) #vista-ajustes:not(#iosc):not(#iosd):not(#iose):not(#iosf) #acercaV27649 .ajustes-acordeon-icono{display:grid!important;place-items:center;width:28px!important;height:28px!important;font-size:16px!important;font-weight:700;border-radius:8px;background:linear-gradient(180deg,#66738f,#48536b)!important;background-image:linear-gradient(180deg,#66738f,#48536b)!important;color:#fff!important}
+html body:not(#bta):not(#btb) #vista-ajustes>#seguridadDatosV260:not(#btc){margin-top:0!important;border-top-left-radius:0!important;border-top-right-radius:0!important}
+html body:not(#bta):not(#btb) #vista-ajustes .aj-filtrado-v27649:not(#btc):not(#btd){display:none!important}

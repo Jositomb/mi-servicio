@@ -1363,10 +1363,10 @@
         setTimeout(() => { try { d.scrollIntoView({ behavior: movReducido() ? "auto" : "smooth", block: "start" }); } catch (e) { d.scrollIntoView(); } const i = $("nombreSaludoV260"); if (i) { try { i.focus({ preventScroll: true }); } catch (e) { i.focus(); } } }, 60);
       });
     }
-    const i = $("nombreSaludoV260"), nombre = i ? i.value.trim() : "", r = ajResumenes();
+    const i = $("nombreSaludoV260"), nombre = i ? i.value.trim() : "", r = ajResumenes(), ob0 = /^Objetivo /.test(r.perfil || "");
     v9Txt(cab.querySelector(".aj-avatar-v27629"), ajIniciales(nombre));
     v9Txt(cab.querySelector("b"), nombre || "Mi Servicio");
-    v9Txt(cab.querySelector("small"), r.tipo || "Publicador");
+    v9Txt(cab.querySelector("small"), (r.tipo || "Publicador") + (ob0 ? " · " + r.perfil.replace(/^Objetivo /, "") : ""));
     ajPonResumen(vista.querySelector("details.ajustes-acordeon-v179:not([id])"), r.perfil);
     ajPonResumen($("sincronizacionDetalleV260"), r.sync);
     ajPonResumen($("aparienciaV201"), r.apar);
@@ -1527,7 +1527,7 @@
     document.addEventListener("input", e => { if (e.target && (e.target.id === "nombreSaludoV260" || e.target.id === "objetivoMensual")) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("change", e => { if (e.target && /^(tipoPublicador|nombreSaludoV260|objetivoMensual)$/.test(e.target.id)) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("click", e => { if (e.target.closest && e.target.closest("#abrirAjustesV260,#modoColorV27627")) setTimeout(ajPintar, 80); }, true);
-    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar(); rpInstalar(); dsInstalar(); hbInstalar(); acInstalar(); txInstalar(); plInstalar(); scInstalar(); ajInstalar();
+    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar(); rpInstalar(); dsInstalar(); hbInstalar(); acInstalar(); txInstalar(); plInstalar(); scInstalar(); ajInstalar(); ajxInstalar();
     document.addEventListener("visibilitychange", () => { if (!document.hidden) setTimeout(cpPintar, 300); });
     setTimeout(() => srProgramar(100), 1100); window.addEventListener("resize", () => srProgramar(1200)); window.addEventListener("orientationchange", () => srProgramar(1500));
     window.MiServicioV27629 = { ajPintar, hlPintar, evoPintar, ruedaMostrar, tjDibujar, tjAbrir, ajResumenes, srPintar, vtPintar, dnPlan, rcEvaluar, rcMensaje };
@@ -1707,7 +1707,7 @@
       fila.innerHTML = '<span class="cp-dot" aria-hidden="true"></span><span class="cp-txt"><b>Copia de seguridad</b><small></small></span><button type="button" class="cp-btn">Guardar ahora</button>';
       fila.querySelector(".cp-btn").addEventListener("click", () => { try { exportarCopiaSeguridad(); } catch (e) { console.warn("[V27633]", e); } setTimeout(cpPintar, 600); setTimeout(cpPintar, 2500); });
     }
-    if (cab.nextElementSibling !== fila) cab.parentNode.insertBefore(fila, cab.nextSibling);
+    { const refD = $("seguridadDatosV260"); if (refD && refD.parentNode === cab.parentNode) { if (refD.previousElementSibling !== fila) refD.parentNode.insertBefore(fila, refD); } else if (cab.nextElementSibling !== fila) cab.parentNode.insertBefore(fila, cab.nextSibling); }
     if (fila.dataset.nivel !== nivel) fila.dataset.nivel = nivel;
     v9Txt(fila.querySelector("small"), txt + (d !== null && cpFecha() ? " · " + cpFecha() : ""));
   }
@@ -1806,7 +1806,7 @@
       const nav = document.querySelector('.nav-item[data-vista="' + GS_VISTAS[j] + '"]'); if (nav) nav.click();
     }, { passive: true });
     document.addEventListener("touchcancel", () => { s = null; }, { passive: true });
-    window.MiServicioV27633 = { omObjetivoDe, omTrasGuardar, cmAbrir, cmCerrar, pyPintar, cpPintar, cpDias, cpNivel, qrAbrir, qrCerrar, qrGuardar, gsActivo, iniLeer, iniAplicar, rvAnalizar, rvAbrir, rvCerrar, rvPintar, rpPintar, hbLeer, hbPintar, acICS, acHora, cnNombres, dfDatos, dfPintar, cnPintar, txLeer, coLeer, txAplicar, plMes, scLeer, scAplicar, SC_LISTA, ajValor };
+    window.MiServicioV27633 = { omObjetivoDe, omTrasGuardar, cmAbrir, cmCerrar, pyPintar, cpPintar, cpDias, cpNivel, qrAbrir, qrCerrar, qrGuardar, gsActivo, iniLeer, iniAplicar, rvAnalizar, rvAbrir, rvCerrar, rvPintar, rpPintar, hbLeer, hbPintar, acICS, acHora, cnNombres, dfDatos, dfPintar, cnPintar, txLeer, coLeer, txAplicar, plMes, scLeer, scAplicar, SC_LISTA, ajValor, acBuscarAct, ajxNorm, scRestablecer, ajxFiltrar };
   }
   /* 28 · V27636 · Personalizar Inicio: mostrar u ocultar tarjetas (solo apariencia, no entra en las copias) */
   function iniLeer() {
@@ -2224,12 +2224,7 @@
         scGuardar(o); scAplicar(); if (c.checked) scSalirConcentracion();
       });
       const todo = $("seccionesTodoV27647");
-      if (todo) todo.addEventListener("click", () => {
-        scGuardar([]); try { localStorage.setItem(INI_K, JSON.stringify({ semana: true, tiempo: true, frase: true })); } catch (e) {}
-        scAplicar(); iniAplicar(); scSalirConcentracion();
-        const g = $("inicioV27636"); if (g) g.querySelectorAll("input[data-ini-v27636]").forEach(i => { i.checked = true; });
-        pintar();
-      });
+      if (todo) todo.addEventListener("click", () => { scRestablecer(false); });
     }
     const vi = $("vista-inicio");
     if (vi && !$("concentracionAvisoV27647")) {
@@ -2275,6 +2270,116 @@
       ajPintarValor(f);
     });
     raiz.addEventListener("toggle", () => todos.forEach(ajPintarValor));
+  }
+
+  /* 40 · V27649 · Ajustes: orden por grupos, sin repeticiones, buscador, «Acerca de» y «Restablecer apariencia» */
+  const AJX_G = [["cuenta", "Cuenta"], ["aspecto", "Aspecto"], ["datos", "Datos y sincronización"], ["ayuda", "Ayuda"]];
+  function ajxNorm(s) { return String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/\s+/g, " ").trim(); }
+  function ajxPerfilDet() { const v = $("vista-ajustes"); return v ? v.querySelector("details.ajustes-acordeon-v179:not([id])") : null; }
+  function ajxCrear() {
+    const v = $("vista-ajustes"); if (!v) return;
+    if (!$("buscarAjustesV27649")) {
+      const d = document.createElement("div"); d.className = "aj-buscar-v27649";
+      d.innerHTML = '<input type="search" id="buscarAjustesV27649" class="campo" placeholder="Buscar en Ajustes…" aria-label="Buscar en Ajustes" autocomplete="off" autocapitalize="off" spellcheck="false">';
+      v.appendChild(d); d.querySelector("input").addEventListener("input", ajxFiltrar);
+      const s = document.createElement("p"); s.id = "ajSinResultadosV27649"; s.className = "aj-sin-resultados-v27649"; s.hidden = true; s.textContent = "Nada coincide con esa búsqueda."; v.appendChild(s);
+    }
+    AJX_G.forEach(g => { if (!$("ajGrupo" + g[0] + "V27649")) { const p = document.createElement("p"); p.id = "ajGrupo" + g[0] + "V27649"; p.className = "aj-grupo-v27649"; p.textContent = g[1]; v.appendChild(p); } });
+    if (!$("acercaV27649")) {
+      const d = document.createElement("details"); d.id = "acercaV27649"; d.className = "ajustes-acordeon-v179 acerca-v27649";
+      d.innerHTML = '<summary><span class="ajustes-acordeon-icono" aria-hidden="true">i</span><span class="ajustes-acordeon-titulo">Acerca de</span><small class="aj-resumen-v27629"></small><span class="ajustes-acordeon-flecha" aria-hidden="true">›</span></summary><div class="acerca-cuerpo-v27649"><p>Versión instalada: <b id="acercaVersionV27649"></b></p><button type="button" id="acercaBuscarV27649" class="boton-secundario">Buscar actualización</button><button type="button" id="acercaRecargarV27649" class="boton-guardar" hidden>Actualizar ahora</button><p id="acercaEstadoV27649" role="status" aria-live="polite"></p><small>El diagnóstico detallado está en «Sincronización y copias».</small></div>';
+      v.appendChild(d);
+      const ver = buildInstalada(); $("acercaVersionV27649").textContent = ver; d.querySelector(".aj-resumen-v27629").textContent = ver;
+      $("acercaBuscarV27649").addEventListener("click", acBuscarAct);
+      $("acercaRecargarV27649").addEventListener("click", () => { try { location.reload(); } catch (e) {} });
+    }
+    const cuerpo = document.querySelector("#aparienciaV201 .apariencia-cuerpo-v201");
+    if (cuerpo && !$("restablecerAparienciaV27649")) {
+      const d = document.createElement("div"); d.className = "aj-restablecer-v27649";
+      d.innerHTML = '<button type="button" id="restablecerAparienciaV27649" class="boton-secundario">Restablecer apariencia</button><p class="ayuda-fondo-clima-v260">Devuelve el tamaño del texto, las secciones, las tarjetas de Inicio y el modo concentración a su valor original. No toca tus datos ni el tema de color.</p>';
+      cuerpo.appendChild(d);
+      $("restablecerAparienciaV27649").addEventListener("click", () => { if (window.confirm("¿Restablecer la apariencia? No borra ningún dato.")) scRestablecer(true); });
+    }
+    const od = $("oneDriveSeccionV260");
+    if (od && !od.classList.contains("aj-compacto-v27649")) {
+      od.classList.add("aj-compacto-v27649");
+      const cab = od.querySelector(".onedrive-cabecera");
+      if (cab) { cab.setAttribute("role", "button"); cab.setAttribute("tabindex", "0"); cab.setAttribute("aria-expanded", "false");
+        const alt = () => { const ab = od.classList.toggle("aj-abierto-v27649"); cab.setAttribute("aria-expanded", String(ab)); };
+        cab.addEventListener("click", alt); cab.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); alt(); } }); }
+    }
+    const cab = $("perfilCabV27629");
+    if (cab && !cab.dataset.ajx) {
+      cab.dataset.ajx = "1";
+      cab.addEventListener("click", e => { const d = ajxPerfilDet(); if (d && d.open) { e.stopImmediatePropagation(); d.open = false; cab.setAttribute("aria-expanded", "false"); } else cab.setAttribute("aria-expanded", "true"); }, true);
+      cab.setAttribute("aria-expanded", "false");
+    }
+  }
+  function ajxBloques() {
+    const g = id => $(id), l = a => a.filter(Boolean);
+    return [l([g("perfilCabV27629"), ajxPerfilDet()]), l([g("aparienciaV201")]), l([g("copiaFilaV27633"), g("seguridadDatosV260")]), l([g("sincronizacionDetalleV260")]), l([g("oneDriveSeccionV260")]), l([g("ayudaBreveV260")]), l([g("acercaV27649")])].filter(b => b.length);
+  }
+  function ajxOrdenar() {
+    const v = $("vista-ajustes"); if (!v) return; ajxCrear();
+    const G = id => $("ajGrupo" + id + "V27649"), B = ajxBloques();
+    const por = e => B.find(b => b.includes(e)), pick = (...ids) => ids.map(i => $(i));
+    const esp = [$("volverAjustesV260"), $("buscarAjustesV27649") && $("buscarAjustesV27649").parentNode, G("cuenta"), $("perfilCabV27629"), ajxPerfilDet(), G("aspecto"), $("aparienciaV201"), G("datos"), $("copiaFilaV27633"), $("seguridadDatosV260"), $("sincronizacionDetalleV260"), $("oneDriveSeccionV260"), G("ayuda"), $("ayudaBreveV260"), $("acercaV27649"), $("ajSinResultadosV27649")].filter(e => e && e.parentNode === v);
+    const actual = [...v.children].filter(e => esp.includes(e));
+    if (esp.every((e, i) => actual[i] === e)) return;
+    esp.forEach(e => v.appendChild(e));
+  }
+  let ajxAbiertos = new Set();
+  function ajxFiltrar() {
+    const q = ajxNorm(($("buscarAjustesV27649") || {}).value), v = $("vista-ajustes"); if (!v) return;
+    const FIL = "aj-filtrado-v27649", activo = q.length > 0;
+    v.classList.toggle("aj-buscando-v27649", activo);
+    let algo = false;
+    ajxBloques().forEach(b => {
+      const coincide = !activo || b.some(e => ajxNorm(e.textContent).includes(q));
+      b.forEach(e => e.classList.toggle(FIL, !coincide));
+      if (coincide) algo = true;
+      b.forEach(e => { if (e.tagName === "DETAILS" && e.id !== "aparienciaV201") { if (activo && coincide) { if (!e.open) { e.open = true; ajxAbiertos.add(e); } } else if (ajxAbiertos.has(e)) { e.open = false; ajxAbiertos.delete(e); } } });
+    });
+    const ap = $("aparienciaV201");
+    if (ap) {
+      const fs = [...ap.querySelectorAll("fieldset.aj-sub-v27648")];
+      fs.forEach(f => { const c = !activo || ajxNorm(f.textContent).includes(q); f.classList.toggle(FIL, !c); f.classList.toggle("aj-abierto-v27648", activo && c); const lg = f.querySelector(":scope > legend"); if (lg) lg.setAttribute("aria-expanded", String(activo && c)); });
+      ap.querySelectorAll("details").forEach(d => { const hay = [...d.querySelectorAll("fieldset.aj-sub-v27648")].some(f => !f.classList.contains(FIL)); if (activo) { d.classList.toggle(FIL, !hay); if (hay && !d.open) { d.open = true; ajxAbiertos.add(d); } } else { d.classList.remove(FIL); if (ajxAbiertos.has(d)) { d.open = false; ajxAbiertos.delete(d); } } });
+      if (activo) { const hay = fs.some(f => !f.classList.contains(FIL)); if (hay && !ap.open) { ap.open = true; ajxAbiertos.add(ap); } }
+      else if (ajxAbiertos.has(ap)) { ap.open = false; ajxAbiertos.delete(ap); }
+    }
+    const pd = ajxPerfilDet(); if (pd && !activo && ajxAbiertos.has(pd)) { pd.open = false; ajxAbiertos.delete(pd); }
+    const sr = $("ajSinResultadosV27649"); if (sr) sr.hidden = !(activo && !algo);
+  }
+  async function acBuscarAct() {
+    const est = $("acercaEstadoV27649"), rec = $("acercaRecargarV27649"), inst = buildInstalada(); if (!est) return "sin-panel";
+    if (rec) rec.hidden = true;
+    est.textContent = "Comprobando…";
+    if (!navigator.onLine) { est.textContent = "Sin conexión: no se puede comprobar ahora."; return "offline"; }
+    let pub = null;
+    try { const r = await fetch("./sw.js?v=" + Date.now(), { cache: "no-store" }); if (r.ok) { const t = await r.text(); pub = (t.match(/const BUILD\s*=\s*"([^"]+)"/) || [])[1] || null; } } catch (e) {}
+    if (!pub) { est.textContent = "No se pudo comprobar. Inténtalo de nuevo con conexión."; return "error"; }
+    if (pub === inst) { est.textContent = "Tienes la última versión (" + inst + ")."; return "igual"; }
+    est.textContent = "Hay una versión nueva (" + pub + "). Descargándola…";
+    try { const reg = navigator.serviceWorker ? await navigator.serviceWorker.getRegistration() : null; if (reg && reg.update) await reg.update(); } catch (e) {}
+    est.textContent = "Hay una versión nueva (" + pub + "). Pulsa «Actualizar ahora»; si sigue la anterior, cierra la app y ábrela de nuevo.";
+    if (rec) rec.hidden = false;
+    return "nueva";
+  }
+  function scRestablecer(tambienTexto) {
+    scGuardar([]); try { localStorage.setItem(INI_K, JSON.stringify({ semana: true, tiempo: true, frase: true })); } catch (e) {}
+    if (tambienTexto) { try { localStorage.setItem(TX_K, "normal"); } catch (e) {} }
+    scAplicar(); iniAplicar(); txAplicar();
+    const g = $("inicioV27636"); if (g) g.querySelectorAll("input[data-ini-v27636]").forEach(i => { i.checked = true; });
+    const c = $("seccionesV27647"); if (c) c.querySelectorAll("input[data-sec-v27647]").forEach(i => { i.checked = true; });
+    if (tambienTexto) { const b = document.querySelector('#textoV27645 [data-tx-v27645="normal"]'); if (b) b.click(); }
+    scSalirConcentracion();
+    document.querySelectorAll("#aparienciaV201 fieldset.aj-sub-v27648").forEach(ajPintarValor);
+  }
+  function ajxInstalar() {
+    ajxOrdenar();
+    const v = $("vista-ajustes"); if (v) new MutationObserver(() => { ajxOrdenar(); }).observe(v, { childList: true });
+    let n = 0; const t = setInterval(() => { ajxOrdenar(); if (++n > 12) clearInterval(t); }, 500);
   }
 
   /* 27 · V27636 · Objetivo de cada mes: los meses pasados se comparan con el objetivo que tenían entonces */
