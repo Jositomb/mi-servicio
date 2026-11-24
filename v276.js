@@ -1527,7 +1527,7 @@
     document.addEventListener("input", e => { if (e.target && (e.target.id === "nombreSaludoV260" || e.target.id === "objetivoMensual")) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("change", e => { if (e.target && /^(tipoPublicador|nombreSaludoV260|objetivoMensual)$/.test(e.target.id)) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("click", e => { if (e.target.closest && e.target.closest("#abrirAjustesV260,#modoColorV27627")) setTimeout(ajPintar, 80); }, true);
-    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar(); rpInstalar(); dsInstalar(); hbInstalar(); acInstalar(); txInstalar(); plInstalar(); scInstalar(); ajInstalar(); ajxInstalar(); mrInstalar(); rbInstalar(); rdInstalar(); etInstalar(); cdInstalar();
+    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar(); rpInstalar(); dsInstalar(); hbInstalar(); acInstalar(); txInstalar(); plInstalar(); scInstalar(); ajInstalar(); ajxInstalar(); mrInstalar(); rbInstalar(); rdInstalar(); etInstalar(); cdInstalar(); hsInstalar(); lfInstalar(); cuInstalar();
     document.addEventListener("visibilitychange", () => { if (!document.hidden) setTimeout(cpPintar, 300); });
     setTimeout(() => srProgramar(100), 1100); window.addEventListener("resize", () => srProgramar(1200)); window.addEventListener("orientationchange", () => srProgramar(1500));
     window.MiServicioV27629 = { ajPintar, hlPintar, evoPintar, ruedaMostrar, tjDibujar, tjAbrir, ajResumenes, srPintar, vtPintar, dnPlan, rcEvaluar, rcMensaje };
@@ -1806,7 +1806,7 @@
       const nav = document.querySelector('.nav-item[data-vista="' + GS_VISTAS[j] + '"]'); if (nav) nav.click();
     }, { passive: true });
     document.addEventListener("touchcancel", () => { s = null; }, { passive: true });
-    window.MiServicioV27633 = { omObjetivoDe, omTrasGuardar, cmAbrir, cmCerrar, pyPintar, cpPintar, cpDias, cpNivel, qrAbrir, qrCerrar, qrGuardar, gsActivo, iniLeer, iniAplicar, rvAnalizar, rvAbrir, rvCerrar, rvPintar, rpPintar, hbLeer, hbPintar, acICS, acHora, cnNombres, dfDatos, dfPintar, cnPintar, txLeer, coLeer, txAplicar, plMes, scLeer, scAplicar, SC_LISTA, ajValor, acBuscarAct, ajxNorm, scRestablecer, ajxFiltrar };
+    window.MiServicioV27633 = { omObjetivoDe, omTrasGuardar, cmAbrir, cmCerrar, pyPintar, cpPintar, cpDias, cpNivel, qrAbrir, qrCerrar, qrGuardar, gsActivo, iniLeer, iniAplicar, rvAnalizar, rvAbrir, rvCerrar, rvPintar, rpPintar, hbLeer, hbPintar, acICS, acHora, cnNombres, dfDatos, dfPintar, cnPintar, txLeer, coLeer, txAplicar, plMes, scLeer, scAplicar, SC_LISTA, ajValor, acBuscarAct, ajxNorm, scRestablecer, ajxFiltrar, cdEstacion };
   }
   /* 28 · V27636 · Personalizar Inicio: mostrar u ocultar tarjetas (solo apariencia, no entra en las copias) */
   function iniLeer() {
@@ -2645,6 +2645,8 @@
     p = Math.min(1, Math.max(0, p));
     const x = 8 + 84 * p, y = 78 - Math.sin(Math.PI * p) * 56; /* % de ancho y de alto */
     pp.dataset.cieloV27652 = f;
+    pp.dataset.estacionV27652 = cdEstacion(d);
+    if (!cielo.querySelector(".cd-est")) cielo.insertAdjacentHTML("beforeend", '<b class="cd-est cd-e1"></b><b class="cd-est cd-e2"></b><b class="cd-est cd-e3"></b>');
     cielo.style.setProperty("--cd-x", x.toFixed(1) + "%");
     cielo.style.setProperty("--cd-y", y.toFixed(1) + "%");
   }
@@ -2653,6 +2655,206 @@
     setInterval(cdPintar, 300000);
     document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") cdPintar(); });
     const v = $("vista-inicio"); if (v) new MutationObserver(() => { const pp = $("progresoPersonaje"); if (pp && !pp.querySelector(":scope>.cielo-dia-v27652")) cdPintar(); }).observe(v, { childList: true, subtree: true });
+  }
+
+  /* 44 · V27653 · Historial: selección múltiple y agrupar por semana · botones flotantes · números animados · estaciones */
+  const AG_K = "miServicio.agrupHistV27653", LF_K = "miServicio.ladoFabV27653";
+  const HS = { on: false, sel: new Set() };
+  function agLeer() { try { return localStorage.getItem(AG_K) === "semana" ? "semana" : "dia"; } catch (e) { return "dia"; } }
+  function agAplicar(m) {
+    const v = $("vista-historial"); if (v) v.dataset.agrupV27653 = m;
+    document.querySelectorAll("#herramientasHistV27653 [data-agr]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.agr === m)));
+  }
+  function hsNombres() {
+    const o = document.querySelector("[data-nombre-otras-v260]");
+    return { ministerio: "Ministerio", ldc: "LDC", asambleas: "Asambleas", otras: (o && o.textContent.trim()) || "Otras" };
+  }
+  function hsBarra() { return $("barraSelV27653"); }
+  function hsContar() {
+    const b = hsBarra(); if (!b) return;
+    const n = HS.sel.size;
+    b.querySelector(".hs-cuenta").textContent = n === 0 ? "Toca los registros" : n === 1 ? "1 seleccionado" : n + " seleccionados";
+    b.querySelectorAll('[data-hs="act"],[data-hs="del"]').forEach((x) => { x.disabled = n === 0; });
+  }
+  function hsPintar() {
+    const v = $("vista-historial"); if (!v) return;
+    v.querySelectorAll(".registro-card").forEach((c) => {
+      let k = c.querySelector(":scope>.sel-v27653");
+      if (!HS.on) { if (k) k.remove(); c.classList.remove("sel-marcado-v27653"); return; }
+      if (!k) { k = document.createElement("span"); k.className = "sel-v27653"; k.setAttribute("aria-hidden", "true"); c.insertBefore(k, c.firstChild); }
+      c.classList.toggle("sel-marcado-v27653", HS.sel.has(c.dataset.registroId));
+    });
+  }
+  function hsCerrarMenu() { const m = $("menuActV27653"); if (m) m.remove(); }
+  function hsSalir() {
+    HS.on = false; HS.sel.clear(); hsCerrarMenu();
+    const v = $("vista-historial"); if (v) v.removeAttribute("data-sel-v27653");
+    const b = hsBarra(); if (b) b.remove();
+    const s = $("selBtnV27653"); if (s) { s.setAttribute("aria-pressed", "false"); s.textContent = "Seleccionar"; }
+    hsPintar();
+  }
+  function hsEntrar() {
+    HS.on = true; HS.sel.clear();
+    const v = $("vista-historial"); if (v) v.setAttribute("data-sel-v27653", "1");
+    const s = $("selBtnV27653"); if (s) { s.setAttribute("aria-pressed", "true"); s.textContent = "Listo"; }
+    const b = document.createElement("div"); b.id = "barraSelV27653"; b.setAttribute("role", "toolbar"); b.setAttribute("aria-label", "Acciones sobre los registros seleccionados");
+    b.innerHTML = '<span class="hs-cuenta" aria-live="polite"></span><button type="button" data-hs="todo">Todo</button><button type="button" data-hs="act">Actividad</button><button type="button" data-hs="del" class="hs-peligro">Eliminar</button>';
+    document.body.appendChild(b); hsContar(); hsPintar();
+  }
+  function hsActividad(btn) {
+    hsCerrarMenu();
+    if (!HS.sel.size) return;
+    const nom = hsNombres();
+    const m = document.createElement("div"); m.id = "menuActV27653"; m.setAttribute("role", "menu");
+    Object.keys(nom).forEach((k) => { const i = document.createElement("button"); i.type = "button"; i.setAttribute("role", "menuitem"); i.dataset.tipo = k; i.textContent = nom[k]; m.appendChild(i); });
+    document.body.appendChild(m);
+    const r = btn.getBoundingClientRect();
+    m.style.left = Math.round(Math.min(Math.max(12, r.left), window.innerWidth - m.offsetWidth - 12)) + "px";
+    m.style.top = Math.round(Math.max(12, r.top - m.offsetHeight - 8)) + "px";
+    m.querySelector("button").focus({ preventScroll: true });
+  }
+  function hsCambiarTipo(tipo) {
+    hsCerrarMenu();
+    const ids = new Set(HS.sel); if (!ids.size) return;
+    const antes = estado.registros, ahora = new Date().toISOString();
+    let n = 0;
+    estado.registros = antes.map((r) => {
+      if (!ids.has(r.id) || r.tipo === tipo) return r;
+      n++; return { ...r, tipo: tipo, modificadoEn: ahora, sincronizacion: { estado: "pendiente", ultimaSincronizacion: (r.sincronizacion && r.sincronizacion.ultimaSincronizacion) || null } };
+    });
+    if (!n) { estado.registros = antes; hsSalir(); return; }
+    let ok = false; try { ok = guardarRegistros(); } catch (e) {}
+    if (!ok) { estado.registros = antes; avisoV202("No se pudo cambiar la actividad. Los registros se conservan."); return; }
+    hsSalir(); actualizarTodaLaInterfaz();
+    avisoV202(n + (n === 1 ? " registro cambiado a " : " registros cambiados a ") + hsNombres()[tipo], () => {
+      const act = estado.registros; estado.registros = antes;
+      if (!guardarRegistros()) { estado.registros = act; avisoV202("No se pudo deshacer."); return; }
+      actualizarTodaLaInterfaz(); avisoV202("Cambio deshecho");
+    });
+  }
+  function hsEliminar() {
+    const ids = new Set(HS.sel); if (!ids.size) return;
+    if (!window.confirm("¿Eliminar " + ids.size + (ids.size === 1 ? " registro?" : " registros?") + " Podrás deshacerlo unos segundos y recuperarlos desde la papelera.")) return;
+    const antes = estado.registros, eliminados = antes.filter((r) => ids.has(r.id));
+    estado.registros = antes.filter((r) => !ids.has(r.id));
+    let ok = false; try { ok = guardarRegistros(); } catch (e) {}
+    if (!ok) { estado.registros = antes; avisoV202("No se pudo eliminar. Los registros se conservan."); return; }
+    hsSalir(); ofrecerDeshacerV202(eliminados); actualizarTodaLaInterfaz();
+  }
+  /* Cabeceras de semana (solo se ven en la agrupación por semanas) */
+  function agIso(d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+  function agSemana(f) { const d = new Date(f + "T12:00:00"); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return agIso(d); }
+  function agCorta(f) { const d = new Date(f + "T12:00:00"); return d.getDate() + " " + d.toLocaleDateString("es-ES", { month: "short" }).replace(".", ""); }
+  function agPasada() {
+    const mins = new Map(); (estado.registros || []).forEach((r) => mins.set(r.id, Number(r.minutos) || 0));
+    document.querySelectorAll("#vista-historial .historial-mes-contenido-v260").forEach((cont) => {
+      const sec = [...cont.querySelectorAll(":scope>section.grupo-historial")], grupos = new Map();
+      sec.forEach((s) => {
+        const c = s.querySelector(".registro-card"); if (!c) return;
+        const f = c.dataset.registroFecha, k = agSemana(f), g = grupos.get(k) || { first: s, fechas: new Set(), min: 0 };
+        g.fechas.add(f); s.querySelectorAll(".registro-card").forEach((x) => { g.min += mins.get(x.dataset.registroId) || 0; });
+        grupos.set(k, g);
+      });
+      cont.querySelectorAll(":scope>.sem-cab-v27653").forEach((h) => { if (!grupos.has(h.dataset.k)) h.remove(); });
+      grupos.forEach((g, k) => {
+        let h = g.first.previousElementSibling;
+        if (!h || !h.classList.contains("sem-cab-v27653") || h.dataset.k !== k) {
+          h = document.createElement("div"); h.className = "sem-cab-v27653"; h.dataset.k = k; h.innerHTML = "<strong></strong><span></span>";
+          g.first.parentNode.insertBefore(h, g.first);
+        }
+        const fs = [...g.fechas].sort(), t1 = fs.length === 1 ? agCorta(fs[0]) : agCorta(fs[0]) + " – " + agCorta(fs[fs.length - 1]);
+        const t2 = formatearTiempo(g.min) + " · " + fs.length + (fs.length === 1 ? " día" : " días");
+        const a = h.firstChild, b = h.lastChild;
+        if (a.textContent !== "Semana " + t1) a.textContent = "Semana " + t1;
+        if (b.textContent !== t2) b.textContent = t2;
+      });
+    });
+  }
+  let hsPend = false;
+  function hsMut() { hsPend = false; hsPintar(); if (agLeer() === "semana") agPasada(); }
+  function hsInstalar() {
+    const v = $("vista-historial"), ref = v && v.querySelector(".accesos-historial-v260");
+    if (!v || !ref || $("herramientasHistV27653")) return;
+    const h = document.createElement("div"); h.id = "herramientasHistV27653"; h.className = "herr-hist-v27653";
+    h.innerHTML = '<div class="agr-v27653" role="group" aria-label="Agrupar por"><button type="button" data-agr="dia" aria-pressed="true">Día</button><button type="button" data-agr="semana" aria-pressed="false">Semana</button></div><button type="button" id="selBtnV27653" aria-pressed="false">Seleccionar</button>';
+    ref.insertAdjacentElement("afterend", h);
+    agAplicar(agLeer());
+    h.addEventListener("click", (e) => {
+      const a = e.target.closest("[data-agr]");
+      if (a) { try { localStorage.setItem(AG_K, a.dataset.agr); } catch (er) {} agAplicar(a.dataset.agr); if (a.dataset.agr === "semana") agPasada(); return; }
+      if (e.target.closest("#selBtnV27653")) { if (HS.on) hsSalir(); else hsEntrar(); }
+    });
+    new MutationObserver(() => { if (!hsPend) { hsPend = true; requestAnimationFrame(hsMut); } }).observe(v, { childList: true, subtree: true });
+    new MutationObserver(() => { if (!v.classList.contains("activa") && HS.on) hsSalir(); }).observe(v, { attributes: true, attributeFilter: ["class"] });
+    document.addEventListener("click", (e) => {
+      if (!HS.on) return;
+      const m = e.target.closest("#menuActV27653 [data-tipo]");
+      if (m) { e.stopPropagation(); hsCambiarTipo(m.dataset.tipo); return; }
+      const b = e.target.closest("#barraSelV27653 [data-hs]");
+      if (b) {
+        e.stopPropagation();
+        if (b.dataset.hs === "todo") { v.querySelectorAll(".registro-card").forEach((c) => HS.sel.add(c.dataset.registroId)); hsPintar(); hsContar(); }
+        else if (b.dataset.hs === "act") hsActividad(b);
+        else if (b.dataset.hs === "del") hsEliminar();
+        return;
+      }
+      if (!e.target.closest("#menuActV27653")) hsCerrarMenu();
+      const c = e.target.closest("#vista-historial .registro-card");
+      if (c) { e.preventDefault(); e.stopPropagation(); const id = c.dataset.registroId; if (HS.sel.has(id)) HS.sel.delete(id); else HS.sel.add(id); hsPintar(); hsContar(); }
+    }, true);
+    ["touchstart", "touchmove", "touchend"].forEach((ev) => document.addEventListener(ev, (e) => { if (HS.on && e.target.closest && e.target.closest("#vista-historial .registro-card")) e.stopPropagation(); }, { capture: true, passive: true }));
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && HS.on) { if ($("menuActV27653")) hsCerrarMenu(); else hsSalir(); } });
+    hsMut();
+  }
+
+  /* Botones flotantes de Registrar: lado elegido y aspecto translúcido */
+  function lfLeer() { try { return localStorage.getItem(LF_K) === "izq" ? "izq" : "der"; } catch (e) { return "der"; } }
+  function lfAplicar() {
+    const l = lfLeer(); document.documentElement.setAttribute("data-lado-fab-v27653", l);
+    document.querySelectorAll("#ladoFabV27653 [data-lado]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lado === l)));
+  }
+  function lfInstalar() {
+    lfAplicar();
+    const g = $("ladoFabV27653");
+    if (g) g.addEventListener("click", (e) => { const b = e.target.closest("[data-lado]"); if (!b) return; try { if (b.dataset.lado === "izq") localStorage.setItem(LF_K, "izq"); else localStorage.removeItem(LF_K); } catch (er) {} lfAplicar(); });
+    let t = 0;
+    window.addEventListener("scroll", () => { document.documentElement.setAttribute("data-desplaza-v27653", "1"); clearTimeout(t); t = setTimeout(() => document.documentElement.removeAttribute("data-desplaza-v27653"), 450); }, { passive: true, capture: true });
+  }
+
+  /* Números que cuentan hasta su valor al abrir Inicio (una vez por sesión) */
+  let cuHecho = false;
+  function cuAnimar() {
+    if (cuHecho) return; cuHecho = true;
+    try { if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return; } catch (e) {}
+    const els = [...document.querySelectorAll("#vista-inicio .tarjeta-grafico-inicio span, #vista-inicio .tarjeta-grafico-inicio b, #vista-inicio .tarjeta-grafico-inicio strong, #porcentajeObjetivo")]
+      .filter((e) => e.children.length === 0 && /^\s*\d+(\s*(h|min|%))?(\s+\d+\s*min)?\s*$/.test(e.textContent) && Number(e.textContent.replace(/\D+/g, " ").trim().split(" ")[0]) > 0);
+    if (!els.length) { cuHecho = false; return; }
+    const info = els.map((e) => ({ e: e, fin: e.textContent, last: null }));
+    const cero = (s, f) => s.replace(/\d+/g, (m) => String(Math.round(Number(m) * f)));
+    const D = 700; let t0 = null;
+    info.forEach((o) => { o.last = cero(o.fin, 0); o.e.textContent = o.last; });
+    function paso(ts) {
+      if (t0 === null) t0 = ts;
+      const p = Math.min(1, (ts - t0) / D), f = 1 - Math.pow(1 - p, 3);
+      info.forEach((o) => {
+        if (o.parado) return;
+        if (o.e.textContent !== o.last) { o.parado = true; return; } /* la app lo ha cambiado: no se toca más */
+        o.last = p >= 1 ? o.fin : cero(o.fin, f); o.e.textContent = o.last;
+      });
+      if (p < 1) requestAnimationFrame(paso);
+    }
+    requestAnimationFrame(paso);
+  }
+  function cuInstalar() {
+    const v = $("vista-inicio"); if (!v) return;
+    const ir = () => { if (v.classList.contains("activa")) setTimeout(cuAnimar, 350); };
+    ir(); new MutationObserver(ir).observe(v, { attributes: true, attributeFilter: ["class"] });
+  }
+
+  /* Estación del año en el cielo del personaje */
+  function cdEstacion(d) {
+    const m = d.getMonth() + 1, dia = d.getDate(), n = m * 100 + dia;
+    return n >= 1221 || n < 320 ? "invierno" : n < 621 ? "primavera" : n < 922 ? "verano" : "otono";
   }
 
   /* 27 · V27636 · Objetivo de cada mes: los meses pasados se comparan con el objetivo que tenían entonces */
