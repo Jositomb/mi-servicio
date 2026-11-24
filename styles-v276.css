@@ -14638,3 +14638,21 @@ html body:not(#bta):not(#btb) #cronometroV264:not(#btc){border-bottom-left-radiu
 :root[data-modo-v276=oscuro] #avisoIdbV27651{background:#3a3020;color:#ffe9b0}
 :root[data-modo-v276=oscuro] #avisoIdbV27651 button{color:#ffe9b0;background:rgba(255,255,255,.14)}
 :root[data-modo-v276=oscuro] #avisoIdbV27651 button[data-a=restaurar]{color:#fff;background:#0a84ff}
+
+/* V27652 · cielo del día detrás del personaje de objetivo */
+.cielo-dia-v27652{position:absolute;left:-4px;right:-4px;top:0;bottom:-2px;z-index:0;border-radius:16px;overflow:hidden;pointer-events:none;background:linear-gradient(#6db8ff,#bfe3ff 62%,#eaf6ff);box-shadow:inset 0 0 0 .5px rgba(0,0,0,.08)}
+#progresoPersonaje[data-cielo-v27652=amanecer] .cielo-dia-v27652{background:linear-gradient(#8fb4ff,#ffd2b0 60%,#ffeedd)}
+#progresoPersonaje[data-cielo-v27652=atardecer] .cielo-dia-v27652{background:linear-gradient(#4f63c9,#e58aae 58%,#ffc27a)}
+#progresoPersonaje[data-cielo-v27652=noche] .cielo-dia-v27652{background:radial-gradient(1.5px 1.5px at 12% 28%,#fff,transparent),radial-gradient(1px 1px at 30% 62%,#fff,transparent),radial-gradient(1.5px 1.5px at 52% 22%,#fff,transparent),radial-gradient(1px 1px at 68% 55%,#fff,transparent),radial-gradient(1.5px 1.5px at 86% 30%,#fff,transparent),radial-gradient(1px 1px at 94% 70%,#fff,transparent),linear-gradient(#0a0f2e,#1c2b66)}
+.cielo-dia-v27652 .cd-astro{position:absolute;left:var(--cd-x,50%);top:var(--cd-y,40%);width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;background:radial-gradient(circle at 40% 40%,#fff6c2,#ffd54a 60%,#ffb300);box-shadow:0 0 14px 5px rgba(255,200,60,.55);transition:left .6s ease,top .6s ease}
+#progresoPersonaje[data-cielo-v27652=atardecer] .cd-astro{background:radial-gradient(circle at 40% 40%,#fff0c0,#ff9a4a 65%,#ff6a3a);box-shadow:0 0 16px 6px rgba(255,120,60,.5)}
+#progresoPersonaje[data-cielo-v27652=noche] .cd-astro{background:#f3f1e4;box-shadow:inset -5px -2px 0 0 #d4d1bd,0 0 12px 3px rgba(240,240,255,.35)}
+.cielo-dia-v27652 .cd-nube{position:absolute;height:12px;border-radius:12px;background:rgba(255,255,255,.8);filter:blur(1.5px);animation:cdNube27652 38s linear infinite}
+.cielo-dia-v27652 .cd-n1{width:46px;top:22%;left:-60px}
+.cielo-dia-v27652 .cd-n2{width:34px;top:48%;left:-60px;animation-duration:54s;animation-delay:-20s;opacity:.7}
+#progresoPersonaje[data-cielo-v27652=noche] .cd-nube{display:none}
+#progresoPersonaje[data-cielo-v27652=atardecer] .cd-nube{background:rgba(255,220,230,.55)}
+@keyframes cdNube27652{from{transform:translateX(0)}to{transform:translateX(480px)}}
+@media (prefers-reduced-motion:reduce){.cielo-dia-v27652 .cd-nube{animation:none;left:30%}.cielo-dia-v27652 .cd-astro{transition:none}}
+@media (prefers-color-scheme:dark){:root:not([data-modo-v276=claro]) .cielo-dia-v27652{filter:brightness(.82)}}
+:root[data-modo-v276=oscuro] .cielo-dia-v27652{filter:brightness(.82)}

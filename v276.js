@@ -1527,7 +1527,7 @@
     document.addEventListener("input", e => { if (e.target && (e.target.id === "nombreSaludoV260" || e.target.id === "objetivoMensual")) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("change", e => { if (e.target && /^(tipoPublicador|nombreSaludoV260|objetivoMensual)$/.test(e.target.id)) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("click", e => { if (e.target.closest && e.target.closest("#abrirAjustesV260,#modoColorV27627")) setTimeout(ajPintar, 80); }, true);
-    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar(); rpInstalar(); dsInstalar(); hbInstalar(); acInstalar(); txInstalar(); plInstalar(); scInstalar(); ajInstalar(); ajxInstalar(); mrInstalar(); rbInstalar(); rdInstalar(); etInstalar();
+    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar(); rpInstalar(); dsInstalar(); hbInstalar(); acInstalar(); txInstalar(); plInstalar(); scInstalar(); ajInstalar(); ajxInstalar(); mrInstalar(); rbInstalar(); rdInstalar(); etInstalar(); cdInstalar();
     document.addEventListener("visibilitychange", () => { if (!document.hidden) setTimeout(cpPintar, 300); });
     setTimeout(() => srProgramar(100), 1100); window.addEventListener("resize", () => srProgramar(1200)); window.addEventListener("orientationchange", () => srProgramar(1500));
     window.MiServicioV27629 = { ajPintar, hlPintar, evoPintar, ruedaMostrar, tjDibujar, tjAbrir, ajResumenes, srPintar, vtPintar, dnPlan, rcEvaluar, rcMensaje };
@@ -2625,6 +2625,34 @@
     const ta = $("notasRegistro"); if (ta) ta.addEventListener("focus", etSugerencias);
     const vr = $("vista-registrar"); if (vr) new MutationObserver(() => { if (vr.classList.contains("activa") && !$("etiquetasRegV27651")) etSugerencias(); }).observe(vr, { attributes: true, attributeFilter: ["class"] });
     etSugerencias(); etNotas();
+  }
+
+  /* 43 · V27652 · El cielo de la tarjeta del personaje sigue el curso del día (sol/luna según la hora real) */
+  function cdPintar() {
+    const pp = $("progresoPersonaje"); if (!pp) return;
+    let cielo = pp.querySelector(":scope>.cielo-dia-v27652");
+    if (!cielo) {
+      cielo = document.createElement("i"); cielo.className = "cielo-dia-v27652"; cielo.setAttribute("aria-hidden", "true");
+      cielo.innerHTML = '<b class="cd-astro"></b><b class="cd-nube cd-n1"></b><b class="cd-nube cd-n2"></b>';
+      pp.insertBefore(cielo, pp.firstChild);
+    }
+    const d = new Date(), h = d.getHours() + d.getMinutes() / 60, s = ivSol(d), sale = s[0], pone = s[1];
+    const f = ivFase();
+    let p; /* 0..1 a lo largo del tramo en que el astro está sobre el horizonte */
+    if (f === "noche") {
+      const dur = 24 - pone + sale; p = (h >= pone ? h - pone : h + 24 - pone) / dur;
+    } else { p = (h - sale) / (pone - sale); }
+    p = Math.min(1, Math.max(0, p));
+    const x = 8 + 84 * p, y = 78 - Math.sin(Math.PI * p) * 56; /* % de ancho y de alto */
+    pp.dataset.cieloV27652 = f;
+    cielo.style.setProperty("--cd-x", x.toFixed(1) + "%");
+    cielo.style.setProperty("--cd-y", y.toFixed(1) + "%");
+  }
+  function cdInstalar() {
+    cdPintar();
+    setInterval(cdPintar, 300000);
+    document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") cdPintar(); });
+    const v = $("vista-inicio"); if (v) new MutationObserver(() => { const pp = $("progresoPersonaje"); if (pp && !pp.querySelector(":scope>.cielo-dia-v27652")) cdPintar(); }).observe(v, { childList: true, subtree: true });
   }
 
   /* 27 · V27636 · Objetivo de cada mes: los meses pasados se comparan con el objetivo que tenían entonces */
