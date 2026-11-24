@@ -14623,21 +14623,21 @@ html body:not(#bta):not(#btb) #cronometroV264:not(#btc){border-bottom-left-radiu
 
 /* V27651 · etiquetas, día de descanso, aviso de respaldo */
 .etq-fila-v27651{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 2px}
-.etq-v27651{display:inline-flex;align-items:center;min-height:32px;padding:0 11px;border:0;border-radius:16px;background:rgba(10,132,255,.14);color:#0a60d0;font:600 14px/1 -apple-system,system-ui,sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.etq-v27651{display:inline-flex;align-items:center;min-height:32px;padding:0 11px;border:0;border-radius:16px;background:rgba(var(--firma-rgb,40,100,215),.14);color:var(--primary,#2864d7);font:600 14px/1 -apple-system,system-ui,sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .etq-v27651:active{transform:scale(.95)}
 .registro-notas .etq-v27651{min-height:26px;padding:0 8px;font-size:13px;margin:0 2px;vertical-align:baseline}
-@media (prefers-color-scheme:dark){:root:not([data-modo-v276=claro]) .etq-v27651{background:rgba(10,132,255,.28);color:#7dbbff}}
-:root[data-modo-v276=oscuro] .etq-v27651{background:rgba(10,132,255,.28);color:#7dbbff}
+@media (prefers-color-scheme:dark){:root:not([data-modo-v276=claro]) .etq-v27651{background:rgba(var(--firma-rgb,40,100,215),.28);color:var(--firma-luz,#80b3ff)}}
+:root[data-modo-v276=oscuro] .etq-v27651{background:rgba(var(--firma-rgb,40,100,215),.28);color:var(--firma-luz,#80b3ff)}
 .descanso-dias-v27651 button{min-width:0;flex:1;padding-left:0;padding-right:0}
 #avisoIdbV27651{position:fixed;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 86px);z-index:9998;padding:14px 16px;border-radius:16px;background:#fff7e0;color:#4a3500;box-shadow:0 10px 30px rgba(0,0,0,.25)}
 #avisoIdbV27651 p{margin:6px 0 10px;font-size:14px}
 #avisoIdbV27651 .acciones-v266{display:flex;gap:8px}
 #avisoIdbV27651 button{flex:1;min-height:44px;border:0;border-radius:12px;font:600 15px -apple-system,system-ui,sans-serif;background:rgba(0,0,0,.08);color:#4a3500}
-#avisoIdbV27651 button[data-a=restaurar]{background:#0a84ff;color:#fff}
-@media (prefers-color-scheme:dark){:root:not([data-modo-v276=claro]) #avisoIdbV27651{background:#3a3020;color:#ffe9b0}:root:not([data-modo-v276=claro]) #avisoIdbV27651 button{color:#ffe9b0;background:rgba(255,255,255,.14)}:root:not([data-modo-v276=claro]) #avisoIdbV27651 button[data-a=restaurar]{color:#fff;background:#0a84ff}}
+#avisoIdbV27651 button[data-a=restaurar]{background:var(--primary,#2864d7);color:#fff}
+@media (prefers-color-scheme:dark){:root:not([data-modo-v276=claro]) #avisoIdbV27651{background:#3a3020;color:#ffe9b0}:root:not([data-modo-v276=claro]) #avisoIdbV27651 button{color:#ffe9b0;background:rgba(255,255,255,.14)}:root:not([data-modo-v276=claro]) #avisoIdbV27651 button[data-a=restaurar]{color:#fff;background:var(--primary,#2864d7)}}
 :root[data-modo-v276=oscuro] #avisoIdbV27651{background:#3a3020;color:#ffe9b0}
 :root[data-modo-v276=oscuro] #avisoIdbV27651 button{color:#ffe9b0;background:rgba(255,255,255,.14)}
-:root[data-modo-v276=oscuro] #avisoIdbV27651 button[data-a=restaurar]{color:#fff;background:#0a84ff}
+:root[data-modo-v276=oscuro] #avisoIdbV27651 button[data-a=restaurar]{color:#fff;background:var(--primary,#2864d7)}
 
 /* V27652 · cielo del día detrás del personaje de objetivo */
 .cielo-dia-v27652{position:absolute;left:-4px;right:-4px;top:0;bottom:-2px;z-index:0;border-radius:16px;overflow:hidden;pointer-events:none;background:linear-gradient(#6db8ff,#bfe3ff 62%,#eaf6ff);box-shadow:inset 0 0 0 .5px rgba(0,0,0,.08)}
@@ -14662,8 +14662,8 @@ html body:not(#bta):not(#btb) #cronometroV264:not(#btc){border-bottom-left-radiu
 .agr-v27653{display:inline-flex;padding:2px;border-radius:10px;background:rgba(120,120,128,.16)}
 .agr-v27653 button{min-height:34px;min-width:64px;padding:0 12px;border:0;border-radius:8px;background:transparent;color:inherit;font:600 14px/1 -apple-system,system-ui,sans-serif;cursor:pointer}
 .agr-v27653 button[aria-pressed=true]{background:#fff;color:#1c1c1e;box-shadow:0 1px 3px rgba(0,0,0,.18)}
-#selBtnV27653{min-height:36px;padding:0 14px;border:0;border-radius:18px;background:rgba(10,132,255,.14);color:#0a60d0;font:600 14px/1 -apple-system,system-ui,sans-serif;cursor:pointer}
-#selBtnV27653[aria-pressed=true]{background:#0a60d0;color:#fff}
+#selBtnV27653{min-height:36px;padding:0 14px;border:0;border-radius:18px;background:rgba(var(--firma-rgb,40,100,215),.14);color:var(--primary,#2864d7);font:600 14px/1 -apple-system,system-ui,sans-serif;cursor:pointer}
+#selBtnV27653[aria-pressed=true]{background:var(--primary,#2864d7);color:#fff}
 .sem-cab-v27653{display:none}
 #vista-historial[data-agrup-v27653=semana] .sem-cab-v27653{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin:14px 2px 2px;padding:6px 10px;border-radius:10px;background:rgba(120,120,128,.14);font-size:13px}
 #vista-historial[data-agrup-v27653=semana] .sem-cab-v27653 strong{font-weight:700}
@@ -14673,11 +14673,11 @@ html body:not(#bta):not(#btb) #vista-historial[data-agrup-v27653=semana] .grupo-
 #vista-historial[data-sel-v27653] .registro-card{position:relative;cursor:pointer}
 html body:not(#bta):not(#btb) #vista-historial[data-sel-v27653] .registro-acciones:not(#btc){display:none!important}
 .sel-v27653{flex:0 0 auto;width:24px;height:24px;margin-right:8px;border-radius:50%;border:2px solid rgba(120,120,128,.6);align-self:center;box-sizing:border-box;transition:background .15s,border-color .15s}
-.sel-marcado-v27653 .sel-v27653{background:#0a84ff;border-color:#0a84ff;box-shadow:inset 0 0 0 3px #fff}
-html body:not(#bta):not(#btb) #vista-historial .registro-card.sel-marcado-v27653:not(#btc){outline:2px solid #0a84ff;outline-offset:-2px}
+.sel-marcado-v27653 .sel-v27653{background:var(--primary,#2864d7);border-color:var(--primary,#2864d7);box-shadow:inset 0 0 0 3px #fff}
+html body:not(#bta):not(#btb) #vista-historial .registro-card.sel-marcado-v27653:not(#btc){outline:2px solid var(--primary,#2864d7);outline-offset:-2px}
 #barraSelV27653{position:fixed;left:12px;right:12px;bottom:calc(var(--registro-nav-alto,84px) + 8px);z-index:9990;display:flex;align-items:center;gap:6px;padding:8px 10px;border-radius:18px;background:rgba(255,255,255,.92);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);box-shadow:0 8px 28px rgba(0,0,0,.22),0 0 0 .5px rgba(0,0,0,.08)}
 #barraSelV27653 .hs-cuenta{flex:1;min-width:0;font:600 14px/1.2 -apple-system,system-ui,sans-serif;color:#1c1c1e}
-#barraSelV27653 button{min-height:44px;padding:0 12px;border:0;border-radius:12px;background:rgba(10,132,255,.14);color:#0a60d0;font:600 14px/1 -apple-system,system-ui,sans-serif;cursor:pointer}
+#barraSelV27653 button{min-height:44px;padding:0 12px;border:0;border-radius:12px;background:rgba(var(--firma-rgb,40,100,215),.14);color:var(--primary,#2864d7);font:600 14px/1 -apple-system,system-ui,sans-serif;cursor:pointer}
 #barraSelV27653 button:disabled{opacity:.4}
 #barraSelV27653 .hs-peligro{background:rgba(255,59,48,.14);color:#c4271d}
 #menuActV27653{position:fixed;z-index:9999;min-width:170px;padding:6px;border-radius:16px;background:rgba(255,255,255,.96);-webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px);box-shadow:0 12px 36px rgba(0,0,0,.25),0 0 0 .5px rgba(0,0,0,.08)}
@@ -14685,30 +14685,30 @@ html body:not(#bta):not(#btb) #vista-historial .registro-card.sel-marcado-v27653
 #menuActV27653 button:active,#menuActV27653 button:focus-visible{background:rgba(120,120,128,.16);outline:none}
 @media (prefers-color-scheme:dark){
 :root:not([data-modo-v276=claro]) .agr-v27653 button[aria-pressed=true]{background:#636366;color:#fff}
-:root:not([data-modo-v276=claro]) #selBtnV27653{background:rgba(10,132,255,.28);color:#7dbbff}
-:root:not([data-modo-v276=claro]) #selBtnV27653[aria-pressed=true]{background:#0a84ff;color:#fff}
+:root:not([data-modo-v276=claro]) #selBtnV27653{background:rgba(var(--firma-rgb,40,100,215),.28);color:var(--firma-luz,#80b3ff)}
+:root:not([data-modo-v276=claro]) #selBtnV27653[aria-pressed=true]{background:var(--primary,#2864d7);color:#fff}
 :root:not([data-modo-v276=claro]) #barraSelV27653,:root:not([data-modo-v276=claro]) #menuActV27653{background:rgba(44,44,46,.94);box-shadow:0 8px 28px rgba(0,0,0,.55),0 0 0 .5px rgba(255,255,255,.12)}
 :root:not([data-modo-v276=claro]) #barraSelV27653 .hs-cuenta,:root:not([data-modo-v276=claro]) #menuActV27653 button{color:#f5f5f7}
-:root:not([data-modo-v276=claro]) #barraSelV27653 button:not(.hs-peligro){background:rgba(10,132,255,.28);color:#7dbbff}
+:root:not([data-modo-v276=claro]) #barraSelV27653 button:not(.hs-peligro){background:rgba(var(--firma-rgb,40,100,215),.28);color:var(--firma-luz,#80b3ff)}
 :root:not([data-modo-v276=claro]) #barraSelV27653 .hs-peligro{background:rgba(255,69,58,.24);color:#ff8a82}
 :root:not([data-modo-v276=claro]) .sel-marcado-v27653 .sel-v27653{box-shadow:inset 0 0 0 3px #1c1c1e}}
 :root[data-modo-v276=oscuro] .agr-v27653 button[aria-pressed=true]{background:#636366;color:#fff}
-:root[data-modo-v276=oscuro] #selBtnV27653{background:rgba(10,132,255,.28);color:#7dbbff}
-:root[data-modo-v276=oscuro] #selBtnV27653[aria-pressed=true]{background:#0a84ff;color:#fff}
+:root[data-modo-v276=oscuro] #selBtnV27653{background:rgba(var(--firma-rgb,40,100,215),.28);color:var(--firma-luz,#80b3ff)}
+:root[data-modo-v276=oscuro] #selBtnV27653[aria-pressed=true]{background:var(--primary,#2864d7);color:#fff}
 :root[data-modo-v276=oscuro] #barraSelV27653,:root[data-modo-v276=oscuro] #menuActV27653{background:rgba(44,44,46,.94);box-shadow:0 8px 28px rgba(0,0,0,.55),0 0 0 .5px rgba(255,255,255,.12)}
 :root[data-modo-v276=oscuro] #barraSelV27653 .hs-cuenta,:root[data-modo-v276=oscuro] #menuActV27653 button{color:#f5f5f7}
-:root[data-modo-v276=oscuro] #barraSelV27653 button:not(.hs-peligro){background:rgba(10,132,255,.28);color:#7dbbff}
+:root[data-modo-v276=oscuro] #barraSelV27653 button:not(.hs-peligro){background:rgba(var(--firma-rgb,40,100,215),.28);color:var(--firma-luz,#80b3ff)}
 :root[data-modo-v276=oscuro] #barraSelV27653 .hs-peligro{background:rgba(255,69,58,.24);color:#ff8a82}
 :root[data-modo-v276=oscuro] .sel-marcado-v27653 .sel-v27653{box-shadow:inset 0 0 0 3px #1c1c1e}
 
 /* V27653 · botones flotantes de Registrar: translúcidos, atenuados al desplazarse y con lado elegible */
-html body:not(#bta):not(#btb) #libretaV276:not(#btc):not(#btd),html body:not(#bta):not(#btb) #vista-registrar #guardarRegistroV203:not(#btc):not(#btd){background:rgba(255,255,255,.5)!important;-webkit-backdrop-filter:saturate(160%) blur(14px)!important;backdrop-filter:saturate(160%) blur(14px)!important;color:#1f4fb3!important;border:.5px solid rgba(255,255,255,.55)!important;box-shadow:0 2px 10px rgba(0,0,0,.12)!important;opacity:.82;transition:opacity .25s ease}
+html body:not(#bta):not(#btb) #libretaV276:not(#btc):not(#btd),html body:not(#bta):not(#btb) #vista-registrar #guardarRegistroV203:not(#btc):not(#btd){background:rgba(255,255,255,.5)!important;-webkit-backdrop-filter:saturate(160%) blur(14px)!important;backdrop-filter:saturate(160%) blur(14px)!important;color:var(--primary,#2864d7)!important;border:.5px solid rgba(255,255,255,.55)!important;box-shadow:0 2px 10px rgba(0,0,0,.12)!important;opacity:.82;transition:opacity .25s ease}
 html body:not(#bta):not(#btb) #vista-registrar #guardarRegistroV203:not(#btc):not(#btd) *{color:inherit!important}
 html[data-desplaza-v27653] body:not(#bta):not(#btb) #libretaV276:not(#btc):not(#btd):not(#bte),html[data-desplaza-v27653] body:not(#bta):not(#btb) #vista-registrar #guardarRegistroV203:not(#btc):not(#btd):not(#bte){opacity:.34!important}
 html[data-lado-fab-v27653=izq] body:not(#bta):not(#btb) .guardar-registro-v203:not(#btc){right:auto!important;left:16px!important}
 html[data-lado-fab-v27653=izq] body:not(#bta):not(#btb) #libretaV276:not(#btc):not(#btd){right:auto!important;left:23px!important}
-@media (prefers-color-scheme:dark){:root:not([data-modo-v276=claro]) body:not(#bta):not(#btb) #libretaV276:not(#btc):not(#btd),:root:not([data-modo-v276=claro]) body:not(#bta):not(#btb) #vista-registrar #guardarRegistroV203:not(#btc):not(#btd){background:rgba(44,44,46,.5)!important;color:#8ec5ff!important;border-color:rgba(255,255,255,.18)!important}}
-:root[data-modo-v276=oscuro] body:not(#bta):not(#btb) #libretaV276:not(#btc):not(#btd),:root[data-modo-v276=oscuro] body:not(#bta):not(#btb) #vista-registrar #guardarRegistroV203:not(#btc):not(#btd){background:rgba(44,44,46,.5)!important;color:#8ec5ff!important;border-color:rgba(255,255,255,.18)!important}
+@media (prefers-color-scheme:dark){:root:not([data-modo-v276=claro]) body:not(#bta):not(#btb) #libretaV276:not(#btc):not(#btd),:root:not([data-modo-v276=claro]) body:not(#bta):not(#btb) #vista-registrar #guardarRegistroV203:not(#btc):not(#btd){background:rgba(44,44,46,.5)!important;color:var(--firma-luz,#80b3ff)!important;border-color:rgba(255,255,255,.18)!important}}
+:root[data-modo-v276=oscuro] body:not(#bta):not(#btb) #libretaV276:not(#btc):not(#btd),:root[data-modo-v276=oscuro] body:not(#bta):not(#btb) #vista-registrar #guardarRegistroV203:not(#btc):not(#btd){background:rgba(44,44,46,.5)!important;color:var(--firma-luz,#80b3ff)!important;border-color:rgba(255,255,255,.18)!important}
 
 /* V27653 · estaciones en el cielo del personaje */
 .cielo-dia-v27652 .cd-est{position:absolute;top:-16px;font-size:12px;line-height:1;font-style:normal;opacity:.85;animation:cdCae27653 9s linear infinite}
@@ -14725,3 +14725,73 @@ html[data-lado-fab-v27653=izq] body:not(#bta):not(#btb) #libretaV276:not(#btc):n
 #vista-historial[data-sel-v27653] .registro-card .registro-contenido{flex:1 1 auto;min-width:0;text-align:left}
 html body:not(#bta):not(#btb) #vista-historial[data-sel-v27653] .registro-card:not(#btc){grid-template-columns:24px 40px minmax(0,1fr)!important;column-gap:10px}
 html body:not(#bta):not(#btb) #vista-historial[data-sel-v27653] .registro-card .sel-v27653:not(#btc){margin-right:0}
+
+
+/* V27654 · gestor de etiquetas, tendencia 12 meses, novedades, espacio */
+.etq-aj-v27654 .ajustes-acordeon-icono{background:linear-gradient(135deg,#7a62d0,#5846a8)!important;color:#fff!important}
+.etq-cuerpo-v27654{padding:4px 2px 8px}
+.etq-ayuda-v27654,.etq-vacio-v27654{font-size:13px;opacity:.75;margin:6px 0 10px}
+.eg-fila-v27654{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;padding:8px 0;border-top:.5px solid rgba(128,128,128,.28)}
+.eg-nombre{flex:1 1 90px;min-width:0;font-weight:700;overflow-wrap:anywhere}
+.eg-n{opacity:.7}
+.eg-fila-v27654 button{min-height:40px;padding:0 12px;border:0;border-radius:12px;background:rgba(var(--firma-rgb,40,100,215),.14);color:var(--primary,#2864d7);font:600 14px/1 -apple-system,system-ui,sans-serif;cursor:pointer}
+.eg-fila-v27654 button[data-eg=quit]{background:rgba(120,120,128,.16);color:inherit}
+.eg-fila-v27654 .eg-campo{flex:1 1 140px;min-height:40px}
+.eg-error{flex-basis:100%;color:#c4271d;font-size:13px}
+.etq-msg-v27654{font-size:13px;margin:8px 0 0;opacity:.85}
+@media (prefers-color-scheme:dark){:root:not([data-modo-v276=claro]) .eg-fila-v27654 button:not([data-eg=quit]){color:var(--firma-luz,#80b3ff)}:root:not([data-modo-v276=claro]) .eg-error{color:#ff8a82}}
+:root[data-modo-v276=oscuro] .eg-fila-v27654 button:not([data-eg=quit]){color:var(--firma-luz,#80b3ff)}
+:root[data-modo-v276=oscuro] .eg-error{color:#ff8a82}
+#vista-estadisticas:not([data-seg-v264="mas"]) #tendencia12V27654{display:none!important}
+.td-cuerpo{display:block}
+.td-detalle{margin:2px 0 6px;font-weight:700;font-size:15px}
+.td-grafico{position:relative}
+.td-svg{display:block;width:100%;height:auto;overflow:visible}
+.td-rej{stroke:rgba(128,128,128,.28);stroke-width:.6}
+.td-obj{stroke:rgba(128,128,128,.85);stroke-width:1;stroke-dasharray:4 4}
+.td-etq{font:600 9px -apple-system,system-ui,sans-serif;fill:currentColor;opacity:.7}
+.td-mes{font:600 10px -apple-system,system-ui,sans-serif;fill:currentColor;opacity:.7}
+.td-s1{stop-color:var(--primary,#2864d7);stop-opacity:.32}.td-s2{stop-color:var(--primary,#2864d7);stop-opacity:0}
+.td-linea{stroke:var(--primary,#2864d7);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.td-punto{fill:#fff;stroke:var(--primary,#2864d7);stroke-width:2}
+.td-actual{fill:var(--primary,#2864d7);stroke:#fff;stroke-width:2}
+.td-toque{position:absolute;top:0;bottom:0;width:9%;transform:translateX(-50%);border:0;background:transparent;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.td-toque:focus-visible{outline:2px solid var(--primary,#2864d7);outline-offset:-2px;border-radius:8px}
+.td-resumen{margin:8px 0 2px;font-size:14px}
+.td-nota{display:block;opacity:.65}
+@media (prefers-color-scheme:dark){:root:not([data-modo-v276=claro]) .td-linea,:root:not([data-modo-v276=claro]) .td-punto{stroke:var(--firma-luz,#80b3ff)}:root:not([data-modo-v276=claro]) .td-actual{fill:var(--firma-luz,#80b3ff);stroke:#1c1c1e}:root:not([data-modo-v276=claro]) .td-punto{fill:#1c1c1e}:root:not([data-modo-v276=claro]) .td-s1,:root:not([data-modo-v276=claro]) .td-s2{stop-color:var(--firma-luz,#80b3ff)}}
+:root[data-modo-v276=oscuro] .td-linea,:root[data-modo-v276=oscuro] .td-punto{stroke:var(--firma-luz,#80b3ff)}
+:root[data-modo-v276=oscuro] .td-actual{fill:var(--firma-luz,#80b3ff);stroke:#1c1c1e}
+:root[data-modo-v276=oscuro] .td-punto{fill:#1c1c1e}
+:root[data-modo-v276=oscuro] .td-s1,:root[data-modo-v276=oscuro] .td-s2{stop-color:var(--firma-luz,#80b3ff)}
+@media (min-width:900px){.td-v27654{grid-column:1/-1}}
+#novedadesV27654{position:fixed;left:12px;right:12px;bottom:calc(var(--registro-nav-alto,84px) + 10px);z-index:9997;max-width:520px;margin:0 auto;padding:16px 16px 12px;border-radius:20px;background:rgba(255,255,255,.96);color:#1c1c1e;-webkit-backdrop-filter:saturate(180%) blur(22px);backdrop-filter:saturate(180%) blur(22px);box-shadow:0 14px 40px rgba(0,0,0,.28),0 0 0 .5px rgba(0,0,0,.08);animation:nvIn27654 .28s ease-out}
+#novedadesV27654 h3{margin:0 0 8px;font:700 17px/1.2 -apple-system,system-ui,sans-serif}
+#novedadesV27654 ul{list-style:none;margin:0 0 10px;padding:0}
+#novedadesV27654 li{display:flex;gap:10px;padding:6px 0;font-size:14px;line-height:1.35}
+#novedadesV27654 li>span{flex:0 0 26px;text-align:center;font-size:18px}
+#novedadesV27654 .nv-ok{width:100%;min-height:46px;font-size:16px}
+@keyframes nvIn27654{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#novedadesV27654{animation:none}}
+@media (prefers-color-scheme:dark){:root:not([data-modo-v276=claro]) #novedadesV27654{background:rgba(44,44,46,.96);color:#f5f5f7;box-shadow:0 14px 40px rgba(0,0,0,.6),0 0 0 .5px rgba(255,255,255,.12)}}
+:root[data-modo-v276=oscuro] #novedadesV27654{background:rgba(44,44,46,.96);color:#f5f5f7;box-shadow:0 14px 40px rgba(0,0,0,.6),0 0 0 .5px rgba(255,255,255,.12)}
+#avisoEspacioV27654{position:fixed;left:12px;right:12px;bottom:calc(var(--registro-nav-alto,84px) + 10px);z-index:9996;padding:14px 16px;border-radius:16px;background:#fff1d6;color:#4a3000;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+#avisoEspacioV27654 p{margin:6px 0 10px;font-size:14px}
+#avisoEspacioV27654 button{min-height:44px;width:100%;border:0;border-radius:12px;background:rgba(0,0,0,.1);color:#4a3000;font:600 15px -apple-system,system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-modo-v276=claro]) #avisoEspacioV27654{background:#3a2d12;color:#ffe3a8}:root:not([data-modo-v276=claro]) #avisoEspacioV27654 button{background:rgba(255,255,255,.14);color:#ffe3a8}}
+:root[data-modo-v276=oscuro] #avisoEspacioV27654{background:#3a2d12;color:#ffe3a8}
+:root[data-modo-v276=oscuro] #avisoEspacioV27654 button{background:rgba(255,255,255,.14);color:#ffe3a8}
+#espacioV27654[data-nivel=alto]{color:#c4271d;font-weight:600}
+#espacioV27654[data-nivel=medio]{color:#8a5a00}
+@media (prefers-color-scheme:dark){:root:not([data-modo-v276=claro]) #espacioV27654[data-nivel=alto]{color:#ff8a82}:root:not([data-modo-v276=claro]) #espacioV27654[data-nivel=medio]{color:#f1c47d}}
+:root[data-modo-v276=oscuro] #espacioV27654[data-nivel=alto]{color:#ff8a82}
+:root[data-modo-v276=oscuro] #espacioV27654[data-nivel=medio]{color:#f1c47d}
+@supports (color:color-mix(in srgb,red,blue)){
+#selBtnV27653:not([aria-pressed=true]),.etq-v27651,#barraSelV27653 button:not(.hs-peligro),.eg-fila-v27654 button:not([data-eg=quit]){color:color-mix(in srgb,var(--primary,#2864d7) 70%,#000)}
+}
+
+@supports (color:color-mix(in srgb,red,blue)){
+@media (prefers-color-scheme:dark){
+:root:not([data-modo-v276=claro]) #selBtnV27653:not([aria-pressed=true]),:root:not([data-modo-v276=claro]) .etq-v27651,:root:not([data-modo-v276=claro]) #barraSelV27653 button:not(.hs-peligro),:root:not([data-modo-v276=claro]) .eg-fila-v27654 button:not([data-eg=quit]){color:color-mix(in srgb,var(--firma-luz,#80b3ff) 60%,#fff)}}
+:root[data-modo-v276=oscuro] #selBtnV27653:not([aria-pressed=true]),:root[data-modo-v276=oscuro] .etq-v27651,:root[data-modo-v276=oscuro] #barraSelV27653 button:not(.hs-peligro),:root[data-modo-v276=oscuro] .eg-fila-v27654 button:not([data-eg=quit]){color:color-mix(in srgb,var(--firma-luz,#80b3ff) 60%,#fff)}
+}

@@ -38,7 +38,7 @@
   function luminancia(c) { const f = v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }; return .2126 * f(c[0]) + .7152 * f(c[1]) + .0722 * f(c[2]); }
   function derivarFirma(hex) {
     let base = hexARgb(hex);
-    while (luminancia(base) > 0.34) base = mezcla(base, [0, 0, 0], .12); // legible sobre fondos claros
+    while (luminancia(base) > 0.18) base = mezcla(base, [0, 0, 0], .12); // texto blanco legible (contraste ≥ 4,5)
     const luz = mezcla(base, [255, 255, 255], .45);
     return { base: aHex(base), luz: aHex(luz), rgb: base.map(Math.round).join(",") };
   }
@@ -1527,7 +1527,7 @@
     document.addEventListener("input", e => { if (e.target && (e.target.id === "nombreSaludoV260" || e.target.id === "objetivoMensual")) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("change", e => { if (e.target && /^(tipoPublicador|nombreSaludoV260|objetivoMensual)$/.test(e.target.id)) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("click", e => { if (e.target.closest && e.target.closest("#abrirAjustesV260,#modoColorV27627")) setTimeout(ajPintar, 80); }, true);
-    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar(); rpInstalar(); dsInstalar(); hbInstalar(); acInstalar(); txInstalar(); plInstalar(); scInstalar(); ajInstalar(); ajxInstalar(); mrInstalar(); rbInstalar(); rdInstalar(); etInstalar(); cdInstalar(); hsInstalar(); lfInstalar(); cuInstalar();
+    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar(); rpInstalar(); dsInstalar(); hbInstalar(); acInstalar(); txInstalar(); plInstalar(); scInstalar(); ajInstalar(); ajxInstalar(); mrInstalar(); rbInstalar(); rdInstalar(); etInstalar(); cdInstalar(); hsInstalar(); lfInstalar(); cuInstalar(); egCrear(); tdInstalar(); nvInstalar(); esInstalar();
     document.addEventListener("visibilitychange", () => { if (!document.hidden) setTimeout(cpPintar, 300); });
     setTimeout(() => srProgramar(100), 1100); window.addEventListener("resize", () => srProgramar(1200)); window.addEventListener("orientationchange", () => srProgramar(1500));
     window.MiServicioV27629 = { ajPintar, hlPintar, evoPintar, ruedaMostrar, tjDibujar, tjAbrir, ajResumenes, srPintar, vtPintar, dnPlan, rcEvaluar, rcMensaje };
@@ -2317,13 +2317,13 @@
   }
   function ajxBloques() {
     const g = id => $(id), l = a => a.filter(Boolean);
-    return [l([g("perfilCabV27629"), ajxPerfilDet()]), l([g("aparienciaV201")]), l([g("copiaFilaV27633"), g("seguridadDatosV260")]), l([g("sincronizacionDetalleV260")]), l([g("oneDriveSeccionV260")]), l([g("ayudaBreveV260")]), l([g("acercaV27649")])].filter(b => b.length);
+    return [l([g("perfilCabV27629"), ajxPerfilDet()]), l([g("aparienciaV201")]), l([g("copiaFilaV27633"), g("seguridadDatosV260")]), l([g("etiquetasAjV27654")]), l([g("sincronizacionDetalleV260")]), l([g("oneDriveSeccionV260")]), l([g("ayudaBreveV260")]), l([g("acercaV27649")])].filter(b => b.length);
   }
   function ajxOrdenar() {
     const v = $("vista-ajustes"); if (!v) return; ajxCrear();
     const G = id => $("ajGrupo" + id + "V27649"), B = ajxBloques();
     const por = e => B.find(b => b.includes(e)), pick = (...ids) => ids.map(i => $(i));
-    const esp = [$("volverAjustesV260"), $("buscarAjustesV27649") && $("buscarAjustesV27649").parentNode, G("cuenta"), $("perfilCabV27629"), ajxPerfilDet(), G("aspecto"), $("aparienciaV201"), G("datos"), $("copiaFilaV27633"), $("seguridadDatosV260"), $("sincronizacionDetalleV260"), $("oneDriveSeccionV260"), G("ayuda"), $("ayudaBreveV260"), $("acercaV27649"), $("ajSinResultadosV27649")].filter(e => e && e.parentNode === v);
+    const esp = [$("volverAjustesV260"), $("buscarAjustesV27649") && $("buscarAjustesV27649").parentNode, G("cuenta"), $("perfilCabV27629"), ajxPerfilDet(), G("aspecto"), $("aparienciaV201"), G("datos"), $("copiaFilaV27633"), $("seguridadDatosV260"), $("etiquetasAjV27654"), $("sincronizacionDetalleV260"), $("oneDriveSeccionV260"), G("ayuda"), $("ayudaBreveV260"), $("acercaV27649"), $("ajSinResultadosV27649")].filter(e => e && e.parentNode === v);
     const actual = [...v.children].filter(e => esp.includes(e));
     if (esp.every((e, i) => actual[i] === e)) return;
     esp.forEach(e => v.appendChild(e));
@@ -2855,6 +2855,192 @@
   function cdEstacion(d) {
     const m = d.getMonth() + 1, dia = d.getDate(), n = m * 100 + dia;
     return n >= 1221 || n < 320 ? "invierno" : n < 621 ? "primavera" : n < 922 ? "verano" : "otono";
+  }
+
+  /* 45 · V27654 · Gestor de etiquetas · tendencia de 12 meses · novedades · aviso de espacio */
+  /* --- Gestor de etiquetas (Ajustes › Datos) --- */
+  const EG_OK = /^[\p{L}\p{N}_-]{2,24}$/u;
+  function egCrear() {
+    const v = $("vista-ajustes"); if (!v || $("etiquetasAjV27654")) return;
+    const d = document.createElement("details"); d.id = "etiquetasAjV27654"; d.className = "ajustes-acordeon-v179 etq-aj-v27654";
+    d.innerHTML = '<summary><span class="ajustes-acordeon-icono" aria-hidden="true">#</span><span class="ajustes-acordeon-titulo">Etiquetas</span><small class="aj-resumen-v27629"></small><span class="ajustes-acordeon-flecha" aria-hidden="true">›</span></summary><div class="etq-cuerpo-v27654"><p class="etq-ayuda-v27654">Las etiquetas son las palabras con # que escribes en las notas. Aquí puedes renombrarlas, fusionarlas o quitarles la almohadilla en todos los registros a la vez. «Quitar» deja la palabra en la nota.</p><div id="listaEtiquetasV27654" role="list"></div></div>';
+    v.appendChild(d);
+    d.addEventListener("toggle", () => { if (d.open) egPintar(); });
+    d.addEventListener("click", egClic);
+    d.addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.matches(".eg-campo")) { e.preventDefault(); const f = e.target.closest("[data-eg-fila]"); if (f) egGuardar(f); } else if (e.key === "Escape" && e.target.matches(".eg-campo")) { egPintar(); } });
+    egResumen();
+  }
+  function egResumen() { const s = document.querySelector("#etiquetasAjV27654 .aj-resumen-v27629"); if (!s) return; const n = etTop(999).length; s.textContent = n === 0 ? "ninguna" : n === 1 ? "1 etiqueta" : n + " etiquetas"; }
+  function egPintar(msg) {
+    const l = $("listaEtiquetasV27654"); if (!l) return;
+    const t = etTop(999); l.textContent = "";
+    if (!t.length) { const p = document.createElement("p"); p.className = "etq-vacio-v27654"; p.textContent = "Todavía no hay etiquetas. Escribe #palabra en una nota para crear una."; l.appendChild(p); }
+    t.forEach((x) => {
+      const f = document.createElement("div"); f.className = "eg-fila-v27654"; f.setAttribute("role", "listitem"); f.dataset.egFila = etNorm(x.t); f.dataset.tag = x.t;
+      f.innerHTML = '<span class="eg-nombre"></span><small class="eg-n"></small><button type="button" data-eg="ren">Renombrar</button><button type="button" data-eg="quit">Quitar</button>';
+      f.querySelector(".eg-nombre").textContent = "#" + x.t; f.querySelector(".eg-n").textContent = x.n + (x.n === 1 ? " vez" : " veces");
+      l.appendChild(f);
+    });
+    if (msg) { const p = document.createElement("p"); p.className = "etq-msg-v27654"; p.setAttribute("role", "status"); p.textContent = msg; l.appendChild(p); }
+    egResumen();
+  }
+  function egClic(e) {
+    const b = e.target.closest("[data-eg]"); if (!b) return;
+    const f = b.closest("[data-eg-fila]"); if (!f) return;
+    const a = b.dataset.eg;
+    if (a === "ren") {
+      f.innerHTML = '<input class="eg-campo campo" type="text" maxlength="25" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Nuevo nombre de la etiqueta"><button type="button" data-eg="ok">Guardar</button><button type="button" data-eg="no">Cancelar</button><small class="eg-error" role="alert"></small>';
+      const i = f.querySelector("input"); i.value = "#" + f.dataset.tag; i.focus(); i.select();
+    } else if (a === "no") egPintar();
+    else if (a === "ok") egGuardar(f);
+    else if (a === "quit") egAplicar(f.dataset.egFila, null, f.dataset.tag);
+  }
+  function egGuardar(f) {
+    const i = f.querySelector(".eg-campo"), er = f.querySelector(".eg-error");
+    const nuevo = String(i.value || "").trim().replace(/^#/, "");
+    if (!EG_OK.test(nuevo)) { er.textContent = "Usa de 2 a 24 letras, números, - o _, sin espacios."; i.focus(); return; }
+    if (etNorm(nuevo) === f.dataset.egFila && nuevo === f.dataset.tag) { egPintar(); return; }
+    egAplicar(f.dataset.egFila, nuevo, f.dataset.tag);
+  }
+  function egAplicar(viejaNorm, nuevo, nombreViejo) {
+    const antes = estado.registros, ahora = new Date().toISOString();
+    const destinoExiste = nuevo && etTop(999).some((x) => etNorm(x.t) === etNorm(nuevo) && etNorm(x.t) !== viejaNorm);
+    let n = 0;
+    estado.registros = antes.map((r) => {
+      const nt = String((r && r.notas) || ""); if (nt.indexOf("#") < 0) return r;
+      let cambio = false;
+      const out = nt.replace(ET_RE, (m, t) => { if (etNorm(t) !== viejaNorm) return m; cambio = true; return nuevo ? "#" + nuevo : t; });
+      if (!cambio || out === nt) return r;
+      n++; return { ...r, notas: out, modificadoEn: ahora, sincronizacion: { estado: "pendiente", ultimaSincronizacion: (r.sincronizacion && r.sincronizacion.ultimaSincronizacion) || null } };
+    });
+    if (!n) { estado.registros = antes; egPintar("No había nada que cambiar."); return; }
+    let ok = false; try { ok = guardarRegistros(); } catch (er) {}
+    if (!ok) { estado.registros = antes; egPintar("No se pudo guardar. Tus notas se conservan."); return; }
+    try { actualizarTodaLaInterfaz(); } catch (er) {}
+    const txt = nuevo ? (destinoExiste ? "#" + nombreViejo + " fusionada con #" + nuevo : "#" + nombreViejo + " renombrada a #" + nuevo) + " en " + n + (n === 1 ? " nota" : " notas") : "Quitada la almohadilla de #" + nombreViejo + " en " + n + (n === 1 ? " nota" : " notas");
+    egPintar(txt);
+    avisoV202(txt, () => {
+      const act = estado.registros; estado.registros = antes;
+      let ok2 = false; try { ok2 = guardarRegistros(); } catch (er) {}
+      if (!ok2) { estado.registros = act; avisoV202("No se pudo deshacer."); return; }
+      try { actualizarTodaLaInterfaz(); } catch (er) {} egPintar("Cambio deshecho"); avisoV202("Cambio deshecho");
+    });
+  }
+
+  /* --- Tendencia de 12 meses (Estadísticas › Más) --- */
+  const TD_M = ["E", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"];
+  function tdDatos() {
+    const hoy = new Date(), out = [];
+    for (let i = 11; i >= 0; i--) {
+      const ref = new Date(hoy.getFullYear(), hoy.getMonth() - i, 1); let min = 0;
+      try { const r = resumenMesV143(ref); min = Number(r.computable != null ? r.computable : r.total) || 0; } catch (e) {}
+      out.push({ ref: ref, min: min, mes: ref.getMonth(), anio: ref.getFullYear() });
+    }
+    return out;
+  }
+  function tdCurva(P) {
+    if (P.length < 2) return "";
+    let d = "M" + P[0][0].toFixed(1) + " " + P[0][1].toFixed(1);
+    for (let i = 0; i < P.length - 1; i++) {
+      const p0 = P[i - 1] || P[i], p1 = P[i], p2 = P[i + 1], p3 = P[i + 2] || p2;
+      d += "C" + (p1[0] + (p2[0] - p0[0]) / 6).toFixed(1) + " " + (p1[1] + (p2[1] - p0[1]) / 6).toFixed(1) + " " + (p2[0] - (p3[0] - p1[0]) / 6).toFixed(1) + " " + (p2[1] - (p3[1] - p1[1]) / 6).toFixed(1) + " " + p2[0].toFixed(1) + " " + p2[1].toFixed(1);
+    }
+    return d;
+  }
+  function tdNombre(x) { return MESES_L[x.mes].charAt(0).toUpperCase() + MESES_L[x.mes].slice(1) + " " + x.anio; }
+  function tdPintar() {
+    const c = $("tendencia12V27654"); if (!c) return;
+    const D = tdDatos(), obj = objetivo(), mx = Math.max(1, obj, ...D.map((x) => x.min)) * 1.12;
+    const W = 340, H = 150, pl = 10, pr = 10, pt = 14, pb = 24, aw = W - pl - pr, ah = H - pt - pb;
+    const X = (i) => pl + (aw * i) / 11, Y = (m) => pt + ah - (ah * Math.min(m, mx)) / mx;
+    const P = D.map((x, i) => [X(i), Y(x.min)]);
+    const cv = tdCurva(P), area = cv + "L" + P[11][0].toFixed(1) + " " + (pt + ah) + "L" + P[0][0].toFixed(1) + " " + (pt + ah) + "Z";
+    const total = D.reduce((a, x) => a + x.min, 0), activos = D.filter((x) => x.min > 0), media = activos.length ? total / activos.length : 0;
+    const mejor = D.reduce((a, x) => (x.min > a.min ? x : a), D[0]);
+    let s = '<svg viewBox="0 0 ' + W + " " + H + '" class="td-svg" aria-hidden="true" focusable="false"><defs><linearGradient id="tdGrad27654" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="td-s1"/><stop offset="1" class="td-s2"/></linearGradient></defs>';
+    [0, .5, 1].forEach((f) => { const y = (pt + ah - ah * f).toFixed(1); s += '<line class="td-rej" x1="' + pl + '" x2="' + (W - pr) + '" y1="' + y + '" y2="' + y + '"/>'; });
+    if (obj > 0) { const y = Y(obj).toFixed(1); s += '<line class="td-obj" x1="' + pl + '" x2="' + (W - pr) + '" y1="' + y + '" y2="' + y + '"/><text class="td-etq td-etq-obj" x="' + (W - pr) + '" y="' + (Y(obj) - 4).toFixed(1) + '" text-anchor="end">objetivo ' + formatearTiempo(obj) + "</text>"; }
+    s += '<path class="td-area" d="' + area + '" fill="url(#tdGrad27654)"/><path class="td-linea" d="' + cv + '" fill="none"/>';
+    D.forEach((x, i) => { s += '<text class="td-mes" x="' + X(i).toFixed(1) + '" y="' + (H - 7) + '" text-anchor="middle">' + TD_M[x.mes] + "</text>"; });
+    D.forEach((x, i) => { s += '<circle class="td-punto' + (i === 11 ? " td-actual" : "") + '" cx="' + P[i][0].toFixed(1) + '" cy="' + P[i][1].toFixed(1) + '" r="' + (i === 11 ? 4.5 : 3) + '"/>'; });
+    s += "</svg>";
+    const puntos = D.map((x, i) => '<button type="button" class="td-toque" data-td="' + i + '" style="left:' + ((X(i) / W) * 100).toFixed(2) + '%" aria-label="' + tdNombre(x) + ": " + formatearTiempo(x.min) + '"></button>').join("");
+    c.querySelector(".td-grafico").innerHTML = s + puntos;
+    c.querySelector(".td-grafico").dataset.sel = "11";
+    c.dataset.datos = JSON.stringify(D.map((x) => [tdNombre(x), x.min]));
+    const resumen = total === 0 ? "Aún no hay horas registradas en los últimos 12 meses." : "Media " + formatearTiempo(Math.round(media)) + " al mes · mejor mes: " + MESES_L[mejor.mes] + " (" + formatearTiempo(mejor.min) + ")";
+    c.querySelector(".td-resumen").textContent = resumen;
+    c.querySelector(".td-detalle").textContent = tdNombre(D[11]) + " · " + formatearTiempo(D[11].min);
+    c.querySelector(".td-grafico").setAttribute("role", "img");
+    c.querySelector(".td-grafico").setAttribute("aria-label", "Horas que computan en los últimos 12 meses. " + D.map((x) => tdNombre(x) + " " + formatearTiempo(x.min)).join(", ") + (obj > 0 ? ". Objetivo mensual " + formatearTiempo(obj) : ""));
+  }
+  function tdInstalar() {
+    const ref = $("statsEvolucionV183"); if (!ref || $("tendencia12V27654")) return;
+    const d = document.createElement("details"); d.id = "tendencia12V27654"; d.className = "stats-accordion-v183 td-v27654"; d.open = true;
+    d.innerHTML = '<summary><span class="stats-accordion-icono-v183">📈</span><span>Tendencia · 12 meses</span><span class="stats-accordion-flecha-v183">›</span></summary><div class="stats-accordion-cuerpo-v183"><article class="td-cuerpo"><p class="td-detalle" aria-live="polite"></p><div class="td-grafico"></div><p class="td-resumen"></p><small class="td-nota">Horas que computan cada mes. La línea discontinua es tu objetivo actual.</small></article></div>';
+    ref.insertAdjacentElement("afterend", d);
+    d.addEventListener("click", (e) => { const b = e.target.closest(".td-toque"); if (!b) return; const D = JSON.parse(d.dataset.datos || "[]"), x = D[Number(b.dataset.td)]; if (x) d.querySelector(".td-detalle").textContent = x[0] + " · " + formatearTiempo(x[1]); });
+    tdPintar();
+    let pend = false; const re = () => { if (!pend) { pend = true; setTimeout(() => { pend = false; if (!d.contains(document.activeElement)) tdPintar(); }, 250); } };
+    const v = $("vista-estadisticas"); if (v) { new MutationObserver((m) => { if (m.some((x) => x.type === "attributes" && x.attributeName === "data-seg-v264")) re(); }).observe(v, { attributes: true, attributeFilter: ["data-seg-v264"] }); }
+    const rm = $("resumenMensualV143"); if (rm) new MutationObserver(re).observe(rm, { childList: true, subtree: true, characterData: true });
+    document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") re(); });
+  }
+
+  /* --- Novedades tras actualizar --- */
+  const NV_K = "miServicio.novedadesVistoV27654";
+  const NV_LINEAS = [
+    ["⋯", "Historial", "Un solo botón «⋯» por registro, «Seleccionar» para actuar sobre varios y vista por semanas."],
+    ["🔥", "Racha y notas", "Día de descanso que no rompe la racha y etiquetas #así con gestor en Ajustes."],
+    ["🛟", "Tus datos", "Respaldo extra en el navegador y aviso cuando el espacio se acerca al límite."],
+    ["📈", "Estadísticas", "Tendencia de 12 meses con tu objetivo, y el cielo del personaje que sigue la hora y la estación."]
+  ];
+  function nvCerrar(marcar) { const c = $("novedadesV27654"); if (c) c.remove(); if (marcar) { try { localStorage.setItem(NV_K, buildInstalada()); } catch (e) {} } }
+  function nvMostrar(manual) {
+    if ($("novedadesV27654")) return;
+    const c = document.createElement("div"); c.id = "novedadesV27654"; c.setAttribute("role", "dialog"); c.setAttribute("aria-label", "Novedades de esta actualización");
+    c.innerHTML = '<h3>Novedades de esta actualización</h3><ul>' + NV_LINEAS.map((l) => '<li><span aria-hidden="true">' + l[0] + '</span><div><b>' + l[1] + "</b><br>" + l[2] + "</div></li>").join("") + '</ul><button type="button" class="nv-ok boton-guardar">Entendido</button>';
+    c.querySelector(".nv-ok").addEventListener("click", () => nvCerrar(true));
+    c.addEventListener("keydown", (e) => { if (e.key === "Escape") nvCerrar(true); });
+    document.body.appendChild(c); c.querySelector(".nv-ok").focus({ preventScroll: true });
+  }
+  function nvInstalar() {
+    const verBtn = () => { const b = $("acercaNovedadesV27654"); if (b) return; const cuerpo = document.querySelector("#acercaV27649 .acerca-cuerpo-v27649"); if (!cuerpo) return; const n = document.createElement("button"); n.type = "button"; n.id = "acercaNovedadesV27654"; n.className = "boton-secundario"; n.textContent = "Ver novedades"; n.addEventListener("click", () => nvMostrar(true)); const ref = $("acercaBuscarV27649"); if (ref) ref.insertAdjacentElement("afterend", n); else cuerpo.appendChild(n); };
+    verBtn(); const v = $("vista-ajustes"); if (v) new MutationObserver(verBtn).observe(v, { childList: true, subtree: true });
+    setTimeout(() => {
+      let visto = null; try { visto = localStorage.getItem(NV_K); } catch (e) {}
+      const b = buildInstalada(); if (visto === b) return;
+      if (!registros().length) { try { localStorage.setItem(NV_K, b); } catch (e) {} return; } /* instalación nueva: sin novedades que contar */
+      if (navigator.webdriver && !window.__novedadesForzarV27654) return; /* los navegadores automatizados no ven cartas de novedades */
+      if ($("avisoIdbV27651") || $("avisoIntegridadV266") || $("avisoEspacioV27654")) { setTimeout(() => nvMostrar(false), 6000); return; }
+      nvMostrar(false);
+    }, 3200);
+  }
+
+  /* --- Espacio de almacenamiento --- */
+  const ES_LIM = 5 * 1024 * 1024;
+  function esBytes() { let n = 0; try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); n += (k.length + (localStorage.getItem(k) || "").length) * 2; } } catch (e) {} return n; }
+  function esMB(b) { return (b / 1048576).toLocaleString("es-ES", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + " MB"; }
+  function esTexto() { const b = esBytes(), p = Math.min(100, Math.round((b / ES_LIM) * 100)); return { b: b, p: p, t: "Espacio de datos: " + esMB(b) + " de unos 5 MB (" + p + " %)" + (p >= 80 ? " · casi lleno: haz una copia y limpia la papelera" : p >= 60 ? " · empieza a llenarse" : "") }; }
+  function esEstado() {
+    const lista = $("listaCopiasInternasV266"); if (!lista || !lista.parentNode) return;
+    let p = $("espacioV27654");
+    if (!p) { p = document.createElement("p"); p.id = "espacioV27654"; p.className = "nota-v266"; const ref = $("idbEstadoV27651") || lista; ref.parentNode.insertBefore(p, ref.nextSibling); }
+    const e = esTexto(); p.textContent = e.t; p.dataset.nivel = e.p >= 80 ? "alto" : e.p >= 60 ? "medio" : "ok";
+    if (navigator.storage && navigator.storage.estimate) navigator.storage.estimate().then((x) => { if (x && x.usage) p.textContent = e.t + " · el navegador guarda en total " + esMB(x.usage); }).catch(() => {});
+  }
+  function esAviso() {
+    const e = esTexto(); if (e.p < 80 || $("avisoEspacioV27654")) return;
+    try { if (sessionStorage.getItem("miServicio.espacioAvisadoV27654")) return; } catch (er) {}
+    const c = document.createElement("div"); c.id = "avisoEspacioV27654"; c.setAttribute("role", "alert");
+    c.innerHTML = "<strong>El espacio de datos está al " + e.p + " %</strong><p>Haz una copia JSON y vacía la papelera para evitar que el navegador deje de guardar.</p><button type=\"button\">Entendido</button>";
+    c.querySelector("button").addEventListener("click", () => { try { sessionStorage.setItem("miServicio.espacioAvisadoV27654", "1"); } catch (er) {} c.remove(); });
+    document.body.appendChild(c);
+  }
+  function esInstalar() {
+    setTimeout(() => { esEstado(); esAviso(); }, 3600);
+    const v = $("vista-ajustes"); if (v) new MutationObserver(() => { if (!$("espacioV27654")) esEstado(); }).observe(v, { childList: true, subtree: true });
+    document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") esEstado(); });
   }
 
   /* 27 · V27636 · Objetivo de cada mes: los meses pasados se comparan con el objetivo que tenían entonces */
