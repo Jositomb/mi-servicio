@@ -1527,7 +1527,7 @@
     document.addEventListener("input", e => { if (e.target && (e.target.id === "nombreSaludoV260" || e.target.id === "objetivoMensual")) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("change", e => { if (e.target && /^(tipoPublicador|nombreSaludoV260|objetivoMensual)$/.test(e.target.id)) setTimeout(ajPintar, 0); }, true);
     document.addEventListener("click", e => { if (e.target.closest && e.target.closest("#abrirAjustesV260,#modoColorV27627")) setTimeout(ajPintar, 80); }, true);
-    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar(); rpInstalar(); dsInstalar(); hbInstalar(); acInstalar(); txInstalar(); plInstalar(); scInstalar(); ajInstalar(); ajxInstalar(); mrInstalar(); rbInstalar(); rdInstalar(); etInstalar(); cdInstalar(); hsInstalar(); lfInstalar(); cuInstalar(); egCrear(); tdInstalar(); nvInstalar(); esInstalar();
+    rcInstalar(); gsInstalar(); omInstalar(); iniInstalar(); rpInstalar(); dsInstalar(); hbInstalar(); acInstalar(); txInstalar(); plInstalar(); scInstalar(); ajInstalar(); ajxInstalar(); mrInstalar(); rbInstalar(); rdInstalar(); etInstalar(); cdInstalar(); hsInstalar(); lfInstalar(); cuInstalar(); egCrear(); tdInstalar(); nvInstalar(); esInstalar(); wowInstalar();
     document.addEventListener("visibilitychange", () => { if (!document.hidden) setTimeout(cpPintar, 300); });
     setTimeout(() => srProgramar(100), 1100); window.addEventListener("resize", () => srProgramar(1200)); window.addEventListener("orientationchange", () => srProgramar(1500));
     window.MiServicioV27629 = { ajPintar, hlPintar, evoPintar, ruedaMostrar, tjDibujar, tjAbrir, ajResumenes, srPintar, vtPintar, dnPlan, rcEvaluar, rcMensaje };
@@ -1806,7 +1806,7 @@
       const nav = document.querySelector('.nav-item[data-vista="' + GS_VISTAS[j] + '"]'); if (nav) nav.click();
     }, { passive: true });
     document.addEventListener("touchcancel", () => { s = null; }, { passive: true });
-    window.MiServicioV27633 = { omObjetivoDe, omTrasGuardar, cmAbrir, cmCerrar, pyPintar, cpPintar, cpDias, cpNivel, qrAbrir, qrCerrar, qrGuardar, gsActivo, iniLeer, iniAplicar, rvAnalizar, rvAbrir, rvCerrar, rvPintar, rpPintar, hbLeer, hbPintar, acICS, acHora, cnNombres, dfDatos, dfPintar, cnPintar, txLeer, coLeer, txAplicar, plMes, scLeer, scAplicar, SC_LISTA, ajValor, acBuscarAct, ajxNorm, scRestablecer, ajxFiltrar, cdEstacion };
+    window.MiServicioV27633 = { omObjetivoDe, omTrasGuardar, cmAbrir, cmCerrar, pyPintar, cpPintar, cpDias, cpNivel, qrAbrir, qrCerrar, qrGuardar, gsActivo, iniLeer, iniAplicar, rvAnalizar, rvAbrir, rvCerrar, rvPintar, rpPintar, hbLeer, hbPintar, acICS, acHora, cnNombres, dfDatos, dfPintar, cnPintar, txLeer, coLeer, txAplicar, plMes, scLeer, scAplicar, SC_LISTA, ajValor, acBuscarAct, ajxNorm, scRestablecer, ajxFiltrar, cdEstacion, wowFrase: frAnalizar };
   }
   /* 28 · V27636 · Personalizar Inicio: mostrar u ocultar tarjetas (solo apariencia, no entra en las copias) */
   function iniLeer() {
@@ -2169,6 +2169,7 @@
     { g: "Inicio", id: "evento", t: "Próximo evento", s: ".evento-chip-v276" },
     { g: "Inicio", id: "objetivo", t: "Objetivo del mes", s: "#seccionObjetivoInicioV260" },
     { g: "Inicio", id: "personaje", t: "Personaje del objetivo", s: "#progresoPersonaje" },
+    { g: "Inicio", id: "curiosidad", t: "Curiosidad del día", s: "#curiosidadV27655" },
     { g: "Inicio", id: "cierre", t: "Cierre previsto del mes", s: "#proyeccionV27633" },
     { g: "Inicio", id: "copia", t: "Recordatorio de copia", s: "#recordatorioCopiaInicio" },
     { g: "Inicio", id: "conexion", t: "Estado de conexión", s: "#estadoConexionV190" },
@@ -2317,13 +2318,13 @@
   }
   function ajxBloques() {
     const g = id => $(id), l = a => a.filter(Boolean);
-    return [l([g("perfilCabV27629"), ajxPerfilDet()]), l([g("aparienciaV201")]), l([g("copiaFilaV27633"), g("seguridadDatosV260")]), l([g("etiquetasAjV27654")]), l([g("sincronizacionDetalleV260")]), l([g("oneDriveSeccionV260")]), l([g("ayudaBreveV260")]), l([g("acercaV27649")])].filter(b => b.length);
+    return [l([g("perfilCabV27629"), ajxPerfilDet()]), l([g("aparienciaV201")]), l([g("copiaFilaV27633"), g("seguridadDatosV260")]), l([g("etiquetasAjV27654")]), l([g("transferenciaAjV27655")]), l([g("sincronizacionDetalleV260")]), l([g("oneDriveSeccionV260")]), l([g("ayudaBreveV260")]), l([g("acercaV27649")])].filter(b => b.length);
   }
   function ajxOrdenar() {
     const v = $("vista-ajustes"); if (!v) return; ajxCrear();
     const G = id => $("ajGrupo" + id + "V27649"), B = ajxBloques();
     const por = e => B.find(b => b.includes(e)), pick = (...ids) => ids.map(i => $(i));
-    const esp = [$("volverAjustesV260"), $("buscarAjustesV27649") && $("buscarAjustesV27649").parentNode, G("cuenta"), $("perfilCabV27629"), ajxPerfilDet(), G("aspecto"), $("aparienciaV201"), G("datos"), $("copiaFilaV27633"), $("seguridadDatosV260"), $("etiquetasAjV27654"), $("sincronizacionDetalleV260"), $("oneDriveSeccionV260"), G("ayuda"), $("ayudaBreveV260"), $("acercaV27649"), $("ajSinResultadosV27649")].filter(e => e && e.parentNode === v);
+    const esp = [$("volverAjustesV260"), $("buscarAjustesV27649") && $("buscarAjustesV27649").parentNode, G("cuenta"), $("perfilCabV27629"), ajxPerfilDet(), G("aspecto"), $("aparienciaV201"), G("datos"), $("copiaFilaV27633"), $("seguridadDatosV260"), $("etiquetasAjV27654"), $("transferenciaAjV27655"), $("sincronizacionDetalleV260"), $("oneDriveSeccionV260"), G("ayuda"), $("ayudaBreveV260"), $("acercaV27649"), $("ajSinResultadosV27649")].filter(e => e && e.parentNode === v);
     const actual = [...v.children].filter(e => esp.includes(e));
     if (esp.every((e, i) => actual[i] === e)) return;
     esp.forEach(e => v.appendChild(e));
@@ -2934,7 +2935,8 @@
     for (let i = 11; i >= 0; i--) {
       const ref = new Date(hoy.getFullYear(), hoy.getMonth() - i, 1); let min = 0;
       try { const r = resumenMesV143(ref); min = Number(r.computable != null ? r.computable : r.total) || 0; } catch (e) {}
-      out.push({ ref: ref, min: min, mes: ref.getMonth(), anio: ref.getFullYear() });
+      let ob = 0; try { ob = Number(omObjetivoDe(fechaISO(ref).slice(0, 7))) || 0; } catch (e) { ob = objetivo(); }
+      out.push({ ref: ref, min: min, obj: ob, mes: ref.getMonth(), anio: ref.getFullYear() });
     }
     return out;
   }
@@ -2950,7 +2952,7 @@
   function tdNombre(x) { return MESES_L[x.mes].charAt(0).toUpperCase() + MESES_L[x.mes].slice(1) + " " + x.anio; }
   function tdPintar() {
     const c = $("tendencia12V27654"); if (!c) return;
-    const D = tdDatos(), obj = objetivo(), mx = Math.max(1, obj, ...D.map((x) => x.min)) * 1.12;
+    const D = tdDatos(), obj = D[11].obj, mx = Math.max(1, ...D.map((x) => x.obj), ...D.map((x) => x.min)) * 1.12;
     const W = 340, H = 150, pl = 10, pr = 10, pt = 14, pb = 24, aw = W - pl - pr, ah = H - pt - pb;
     const X = (i) => pl + (aw * i) / 11, Y = (m) => pt + ah - (ah * Math.min(m, mx)) / mx;
     const P = D.map((x, i) => [X(i), Y(x.min)]);
@@ -2959,7 +2961,12 @@
     const mejor = D.reduce((a, x) => (x.min > a.min ? x : a), D[0]);
     let s = '<svg viewBox="0 0 ' + W + " " + H + '" class="td-svg" aria-hidden="true" focusable="false"><defs><linearGradient id="tdGrad27654" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="td-s1"/><stop offset="1" class="td-s2"/></linearGradient></defs>';
     [0, .5, 1].forEach((f) => { const y = (pt + ah - ah * f).toFixed(1); s += '<line class="td-rej" x1="' + pl + '" x2="' + (W - pr) + '" y1="' + y + '" y2="' + y + '"/>'; });
-    if (obj > 0) { const y = Y(obj).toFixed(1); s += '<line class="td-obj" x1="' + pl + '" x2="' + (W - pr) + '" y1="' + y + '" y2="' + y + '"/><text class="td-etq td-etq-obj" x="' + (W - pr) + '" y="' + (Y(obj) - 4).toFixed(1) + '" text-anchor="end">objetivo ' + formatearTiempo(obj) + "</text>"; }
+    if (D.some((x) => x.obj > 0)) {
+      const hw = aw / 11 / 2; let dd = "", prev = null;
+      D.forEach((x, i) => { if (!(x.obj > 0)) { prev = null; return; } const y = Y(x.obj).toFixed(1), x0 = Math.max(pl, X(i) - hw).toFixed(1), x1 = Math.min(W - pr, X(i) + hw).toFixed(1); dd += (prev === null ? "M" + x0 + " " + y : "L" + x0 + " " + y) + "L" + x1 + " " + y; prev = y; });
+      s += '<path class="td-obj" d="' + dd + '" fill="none"/>';
+      if (obj > 0) s += '<text class="td-etq td-etq-obj" x="' + (W - pr) + '" y="' + (Y(obj) - 4).toFixed(1) + '" text-anchor="end">objetivo ' + formatearTiempo(obj) + "</text>";
+    }
     s += '<path class="td-area" d="' + area + '" fill="url(#tdGrad27654)"/><path class="td-linea" d="' + cv + '" fill="none"/>';
     D.forEach((x, i) => { s += '<text class="td-mes" x="' + X(i).toFixed(1) + '" y="' + (H - 7) + '" text-anchor="middle">' + TD_M[x.mes] + "</text>"; });
     D.forEach((x, i) => { s += '<circle class="td-punto' + (i === 11 ? " td-actual" : "") + '" cx="' + P[i][0].toFixed(1) + '" cy="' + P[i][1].toFixed(1) + '" r="' + (i === 11 ? 4.5 : 3) + '"/>'; });
@@ -2977,7 +2984,7 @@
   function tdInstalar() {
     const ref = $("statsEvolucionV183"); if (!ref || $("tendencia12V27654")) return;
     const d = document.createElement("details"); d.id = "tendencia12V27654"; d.className = "stats-accordion-v183 td-v27654"; d.open = true;
-    d.innerHTML = '<summary><span class="stats-accordion-icono-v183">📈</span><span>Tendencia · 12 meses</span><span class="stats-accordion-flecha-v183">›</span></summary><div class="stats-accordion-cuerpo-v183"><article class="td-cuerpo"><p class="td-detalle" aria-live="polite"></p><div class="td-grafico"></div><p class="td-resumen"></p><small class="td-nota">Horas que computan cada mes. La línea discontinua es tu objetivo actual.</small></article></div>';
+    d.innerHTML = '<summary><span class="stats-accordion-icono-v183">📈</span><span>Tendencia · 12 meses</span><span class="stats-accordion-flecha-v183">›</span></summary><div class="stats-accordion-cuerpo-v183"><article class="td-cuerpo"><p class="td-detalle" aria-live="polite"></p><div class="td-grafico"></div><p class="td-resumen"></p><small class="td-nota">Horas que computan cada mes. La línea discontinua es el objetivo que tenías cada mes.</small></article></div>';
     ref.insertAdjacentElement("afterend", d);
     d.addEventListener("click", (e) => { const b = e.target.closest(".td-toque"); if (!b) return; const D = JSON.parse(d.dataset.datos || "[]"), x = D[Number(b.dataset.td)]; if (x) d.querySelector(".td-detalle").textContent = x[0] + " · " + formatearTiempo(x[1]); });
     tdPintar();
@@ -3042,6 +3049,335 @@
     const v = $("vista-ajustes"); if (v) new MutationObserver(() => { if (!$("espacioV27654")) esEstado(); }).observe(v, { childList: true, subtree: true });
     document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") esEstado(); });
   }
+
+  /* 46 · V27655 · Registro por frase · cronómetro inmersivo · curiosidades · traspaso por QR animado */
+  const FR_NUM = { un: 1, una: 1, uno: 1, dos: 2, tres: 3, cuatro: 4, cinco: 5, seis: 6, siete: 7, ocho: 8, nueve: 9, diez: 10, once: 11, doce: 12 };
+  const FR_DIAS = ["domingo", "lunes", "martes", "miercoles", "jueves", "viernes", "sabado"];
+  const FR_MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+  function frSin(s) { return String(s).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase(); }
+  function frTitulo(s) { return s.split(/\s+/).map((w) => (w.toLowerCase() === "y" ? "y" : w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())).join(" "); }
+  function frTipos() {
+    const out = { ministerio: ["ministerio", "predicar", "predicacion", "salida", "casa en casa", "puerta en puerta", "revisita", "revisitas", "testimonio"], ldc: ["ldc"], asambleas: ["asamblea", "asambleas", "congreso"], otras: ["otra", "otras"] };
+    try { if (typeof nombreActividad === "function") ["ministerio", "ldc", "asambleas", "otras"].forEach((t) => { const n = frSin(nombreActividad(t) || "").trim(); if (n && n.length > 1 && !out[t].includes(n)) out[t].push(n); }); } catch (e) {}
+    return out;
+  }
+  /* Analiza una frase («ayer 1 h 30 ministerio con Marta #revisita») y devuelve lo que ha entendido; no toca nada. */
+  function frAnalizar(texto, ahora) {
+    const hoy = ahora instanceof Date ? ahora : new Date(), orig = String(texto || "").trim().replace(/\s+/g, " ");
+    const r = { ok: false, fecha: null, fechaTxt: "", tipo: null, minutos: 0, companero: "", etiquetas: [], nota: "", futura: false, entendido: [] };
+    if (!orig) return r;
+    let t = " " + frSin(orig) + " ", resto = " " + orig + " ";
+    const quitar = (re) => { const m = t.match(re); if (!m) return null; const i = m.index, n = m[0].length; t = t.slice(0, i) + " ".repeat(n) + t.slice(i + n); resto = resto.slice(0, i) + " ".repeat(n) + resto.slice(i + n); return m; };
+    /* etiquetas */
+    let m; const tagRe = /#[\p{L}\p{N}_]+/gu; (orig.match(tagRe) || []).forEach((x) => { if (!r.etiquetas.includes(x)) r.etiquetas.push(x); });
+    while ((m = quitar(/#[a-z0-9_]+/))) { /* quitadas */ }
+    /* fecha */
+    let f = null, d0 = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 12);
+    const sumar = (n) => { const x = new Date(d0); x.setDate(x.getDate() + n); return x; };
+    if ((m = quitar(/ (?:antes de ayer|anteayer|antier) /))) f = sumar(-2);
+    else if ((m = quitar(/ ayer /))) f = sumar(-1);
+    else if ((m = quitar(/ (?:manana|pasado manana) /))) f = sumar(m[0].includes("pasado") ? 2 : 1);
+    else if ((m = quitar(/ hoy /))) f = sumar(0);
+    else if ((m = quitar(/ (\d{1,2})[\/\-](\d{1,2})(?:[\/\-](\d{2,4}))? /))) { const dd = +m[1], mm = +m[2]; let yy = m[3] ? +m[3] : hoy.getFullYear(); if (yy < 100) yy += 2000; f = new Date(yy, mm - 1, dd, 12); if (f.getMonth() !== mm - 1) f = null; else if (!m[3] && f > d0) f = new Date(yy - 1, mm - 1, dd, 12); }
+    else if ((m = quitar(new RegExp(" (?:el )?(\\d{1,2}) de (" + FR_MESES.join("|") + ")(?: de (\\d{4}))? ")))) { const dd = +m[1], mm = FR_MESES.indexOf(m[2]); let yy = m[3] ? +m[3] : hoy.getFullYear(); f = new Date(yy, mm, dd, 12); if (f.getMonth() !== mm) f = null; else if (!m[3] && f > d0) f = new Date(yy - 1, mm, dd, 12); }
+    else if ((m = quitar(new RegExp(" (?:el |este |el pasado )?(" + FR_DIAS.join("|") + ") ")))) { const w = FR_DIAS.indexOf(m[1]); let dif = (d0.getDay() - w + 7) % 7; if (dif === 0) dif = 7; f = sumar(-dif); }
+    if (f) { r.fecha = f; r.entendido.push("fecha"); } else { r.fecha = d0; }
+    r.futura = r.fecha > d0;
+    /* tiempo */
+    let min = 0, hall = false;
+    const nuevo = (re, fn) => { if (hall) return; const x = quitar(re); if (x) { min = fn(x); hall = true; } };
+    const num = (s) => { s = String(s).replace(",", "."); return FR_NUM[s] !== undefined ? FR_NUM[s] : parseFloat(s); };
+    const NW = "(\\d+(?:[.,]\\d+)?|" + Object.keys(FR_NUM).join("|") + ")";
+    nuevo(new RegExp(" " + NW + " ?(?:h|hs|hr|hrs|hora|horas) ?(?:y )?(\\d{1,2}) ?(?:m|min|mins|minutos?)? "), (x) => Math.round(num(x[1]) * 60 + (+x[2])));
+    nuevo(new RegExp(" " + NW + " (?:horas? )?y (media|cuarto) "), (x) => Math.round(num(x[1]) * 60 + (x[2] === "media" ? 30 : 15)));
+    nuevo(/ (?:una )?hora y media /, () => 90);
+    nuevo(/ (?:una )?hora y cuarto /, () => 75);
+    nuevo(/ tres cuartos de hora /, () => 45);
+    nuevo(/ media hora /, () => 30);
+    nuevo(/ (?:un )?cuarto de hora /, () => 15);
+    nuevo(/ (\d{1,2}):(\d{2}) /, (x) => (+x[1]) * 60 + (+x[2]));
+    nuevo(new RegExp(" " + NW + " ?(?:h|hs|hr|hrs|hora|horas) "), (x) => Math.round(num(x[1]) * 60));
+    nuevo(new RegExp(" " + NW + " ?(?:m|min|mins|minuto|minutos) "), (x) => Math.round(num(x[1])));
+    if (hall && min > 0) { r.minutos = Math.min(24 * 60, min); r.entendido.push("tiempo"); }
+    /* actividad */
+    const tp = frTipos();
+    for (const tipo of ["ldc", "asambleas", "otras", "ministerio"]) {
+      if (r.tipo) break;
+      for (const k of tp[tipo]) { const re = new RegExp(" " + k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + " "); if (re.test(t)) { quitar(re); r.tipo = tipo; r.entendido.push("actividad"); break; } }
+    }
+    /* acompañante: «con Marta», «con Marta y Luis» */
+    if ((m = t.match(/ con ((?:[a-zñ]+)(?: (?:y )?[a-zñ]+){0,2}) /))) {
+      const ini = m.index, palabras = m[1].split(" "), stop = /^(ayer|hoy|anteayer|antier|\d+|h|hs|hora|horas|min|minutos?|ldc|ministerio|asamblea|asambleas|otra|otras|el|la|los|las|de|del|un|una|por|en|a|y)$/;
+      let n = 0, rawIni = ini + 5; const out = [];
+      for (let i = 0; i < palabras.length; i++) { const w = palabras[i]; if (w === "y") { if (i + 1 < palabras.length && !stop.test(palabras[i + 1]) && out.length) { out.push("y"); continue; } break; } if (stop.test(w) || FR_NUM[w] !== undefined) break; out.push(w); }
+      while (out.length && out[out.length - 1] === "y") out.pop();
+      if (out.length) { const largo = out.join(" ").length, ini2 = ini + 5; const crudo = resto.slice(ini2, ini2 + largo).trim(); r.companero = frTitulo(crudo || out.join(" ")); const lenTot = 5 + largo; t = t.slice(0, ini) + " ".repeat(lenTot) + t.slice(ini + lenTot); resto = resto.slice(0, ini) + " ".repeat(lenTot) + resto.slice(ini + lenTot); r.entendido.push("companero"); }
+    }
+    /* nota: lo que sobra, sin muletillas, + etiquetas */
+    const relleno = new Set(["de", "el", "la", "los", "las", "un", "una", "y", "a", "al", "en", "con", "fui", "estuve", "hice", "sali", "salimos", "hicimos", "registra", "registrar", "apunta", "anota", "durante", "por", "me", "mi", "se"]);
+    const sobra = resto.split(/\s+/).filter((w) => w && !relleno.has(frSin(w)) && /[\p{L}\p{N}]/u.test(w)).join(" ");
+    r.nota = [sobra, r.etiquetas.join(" ")].filter(Boolean).join(" ").trim();
+    r.ok = r.minutos > 0 && !r.futura;
+    return r;
+  }
+  function frFechaTxt(d) { return DIAS_L[d.getDay()] + " " + d.getDate() + " de " + MESES_L[d.getMonth()]; }
+  const DIAS_L = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+  function frNombreTipo(t) { try { return typeof nombreActividad === "function" ? nombreActividad(t) : t; } catch (e) { return t; } }
+  let FR_ULTIMO = null;
+  function frPintar() {
+    const inp = $("fraseCampoV27655"), vista = $("fraseVistaV27655"), btn = $("fraseRellenarV27655"); if (!inp || !vista) return;
+    const txt = inp.value.trim();
+    if (!txt) { vista.hidden = true; btn.disabled = true; FR_ULTIMO = null; return; }
+    const r = frAnalizar(txt); FR_ULTIMO = r; vista.hidden = false;
+    const actual = ($("tipoRegistro") && $("tipoRegistro").value) || "ministerio", tipo = r.tipo || actual;
+    const fila = (k, v, ok) => '<li class="' + (ok ? "fr-ok" : "fr-falta") + '"><span>' + k + "</span><b>" + v + "</b></li>";
+    let h = fila("Fecha", frFechaTxt(r.fecha) + (r.futura ? " · es futura" : r.entendido.includes("fecha") ? "" : " · hoy"), !r.futura);
+    h += fila("Actividad", frNombreTipo(tipo) + (r.tipo ? "" : " · la que está elegida"), true);
+    h += fila("Tiempo", r.minutos > 0 ? formatearTiempo(r.minutos) : "No he entendido el tiempo (ej. «1 h 30» o «90 min»)", r.minutos > 0);
+    if (r.companero) h += fila("Con", r.companero, true);
+    if (r.nota) h += fila("Nota", r.nota, true);
+    vista.querySelector("ul").innerHTML = h; btn.disabled = !r.ok;
+  }
+  function frRellenar() {
+    const r = FR_ULTIMO; if (!r || !r.ok) return;
+    const tipo = r.tipo || ($("tipoRegistro") && $("tipoRegistro").value) || "ministerio";
+    const b = document.querySelector('#formRegistro .actividad-boton[data-tipo="' + tipo + '"]'); if (b) b.click();
+    const hoy = fechaISO(new Date()), ayer = (() => { const x = new Date(); x.setDate(x.getDate() - 1); return fechaISO(x); })(), f = fechaISO(r.fecha);
+    const dia = f === hoy ? "hoy" : f === ayer ? "ayer" : "otra", bd = document.querySelector('#formRegistro [data-dia-v203="' + dia + '"]'); if (bd) bd.click();
+    if (dia === "otra" && $("fechaRegistro")) { $("fechaRegistro").value = f; $("fechaRegistro").dispatchEvent(new Event("input", { bubbles: true })); $("fechaRegistro").dispatchEvent(new Event("change", { bubbles: true })); }
+    $("horasRegistro").value = String(Math.floor(r.minutos / 60)); $("minutosRegistro").value = String(r.minutos % 60);
+    $("minutosRegistro").dispatchEvent(new Event("input", { bubbles: true }));
+    const det = $("detallesRegistroV203");
+    if (r.companero && $("companeroRegistro")) { $("companeroRegistro").value = r.companero; $("companeroRegistro").dispatchEvent(new Event("input", { bubbles: true })); }
+    if (r.nota && $("notasRegistro")) { $("notasRegistro").value = r.nota; $("notasRegistro").dispatchEvent(new Event("input", { bubbles: true })); }
+    if (det && (r.companero || r.nota)) det.open = true;
+    avisoV202("Registro preparado: " + formatearTiempo(r.minutos) + ". Revisa y guarda.");
+    try { $("guardarRegistroV203").scrollIntoView({ block: "center", behavior: movReducido() ? "auto" : "smooth" }); } catch (e) {}
+    $("fraseCampoV27655").value = ""; frPintar();
+  }
+  function frInstalar() {
+    const ref = $("cronometroV264"); if (!ref || $("frasesV27655")) return;
+    const s = document.createElement("section"); s.id = "frasesV27655"; s.className = "frase-v27655"; s.setAttribute("aria-label", "Registrar con una frase");
+    s.innerHTML = '<label for="fraseCampoV27655"><span aria-hidden="true">💬</span> Escríbelo o díctalo</label><div class="fr-fila"><input id="fraseCampoV27655" type="text" inputmode="text" enterkeyhint="done" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Ej.: ayer 1 h 30 ministerio con Marta #revisita"></div><div id="fraseVistaV27655" class="fr-vista" hidden><ul></ul><button id="fraseRellenarV27655" type="button" class="boton-guardar" disabled>Rellenar el registro</button></div><small class="fr-ayuda">Pulsa el micrófono del teclado del iPhone para dictar. Se rellena el formulario y tú revisas y guardas.</small>';
+    ref.insertAdjacentElement("afterend", s);
+    $("fraseCampoV27655").addEventListener("input", frPintar);
+    $("fraseCampoV27655").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); if (FR_ULTIMO && FR_ULTIMO.ok) frRellenar(); } });
+    $("fraseRellenarV27655").addEventListener("click", frRellenar);
+  }
+
+  /* --- Pantalla pegada (wake lock) --- */
+  const WL = { s: null, quiere: false };
+  async function wlPedir() { WL.quiere = true; try { if (navigator.wakeLock && navigator.wakeLock.request && document.visibilityState === "visible" && !WL.s) { WL.s = await navigator.wakeLock.request("screen"); WL.s.addEventListener("release", () => { WL.s = null; wlEtq(); }); } } catch (e) { WL.s = null; } wlEtq(); }
+  function wlSoltar() { WL.quiere = false; try { if (WL.s) WL.s.release(); } catch (e) {} WL.s = null; wlEtq(); }
+  function wlEtq() { document.querySelectorAll("[data-wl-v27655]").forEach((el) => { el.textContent = WL.s ? "☀️ Pantalla encendida" : ""; }); }
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && WL.quiere && !WL.s) wlPedir(); });
+
+  /* --- Cronómetro inmersivo --- */
+  const CI = { t: 0 };
+  function ciEstado() { try { const o = JSON.parse(localStorage.getItem("miServicio.cronometroV264") || "null"); return o && o.inicio > 0 ? o : null; } catch (e) { return null; } }
+  function ciPos() {
+    const d = new Date(), h = d.getHours() + d.getMinutes() / 60, s = ivSol(d), f = ivFase(); let p;
+    if (f === "noche") { const dur = 24 - s[1] + s[0]; p = (h >= s[1] ? h - s[1] : h + 24 - s[1]) / dur; } else p = (h - s[0]) / (s[1] - s[0]);
+    p = Math.min(1, Math.max(0, p)); return { f, x: 8 + 84 * p, y: 78 - Math.sin(Math.PI * p) * 56 };
+  }
+  function ciPintar() {
+    const o = $("cronInmersivoV27655"); if (!o) return;
+    const e = ciEstado(), P = ciPos(); o.dataset.fase = P.f; o.style.setProperty("--ci-x", P.x.toFixed(1) + "%"); o.style.setProperty("--ci-y", P.y.toFixed(1) + "%");
+    const out = $("cronTiempoV264"), digitos = o.querySelector(".ci-digitos"), titulo = o.querySelector(".ci-titulo");
+    digitos.textContent = out ? out.textContent : "0:00:00";
+    let frac = 0, nom = "Cronómetro"; if (e) { const ms = Math.max(0, (e.pausado || Date.now()) - e.inicio - (Number(e.pausas) || 0)); frac = (ms % 3600000) / 3600000; try { nom = frNombreTipo(e.tipo); } catch (x) {} nom = (e.pausado ? "En pausa · " : "En curso · ") + nom; }
+    titulo.textContent = nom; o.classList.toggle("ci-pausa", !!(e && e.pausado)); o.classList.toggle("ci-marcha", !!e);
+    const C = 2 * Math.PI * 120; o.querySelector(".ci-arco").style.strokeDasharray = (C * frac).toFixed(1) + " " + C.toFixed(1);
+    o.querySelector('[data-ci="iniciar"]').hidden = !!e; o.querySelector('[data-ci="pausa"]').hidden = !e; o.querySelector('[data-ci="terminar"]').hidden = !e;
+    o.querySelector('[data-ci="pausa"]').textContent = e && e.pausado ? "▶ Reanudar" : "⏸ Pausar";
+    if (e && !e.pausado) { if (!WL.s) wlPedir(); } else wlSoltar();
+  }
+  function ciCerrar() { const o = $("cronInmersivoV27655"); if (o) o.remove(); document.body.classList.remove("ci-abierto-v27655"); clearInterval(CI.t); CI.t = 0; wlSoltar(); }
+  function ciAbrir() {
+    if ($("cronInmersivoV27655")) return;
+    const o = document.createElement("div"); o.id = "cronInmersivoV27655"; o.setAttribute("role", "dialog"); o.setAttribute("aria-modal", "true"); o.setAttribute("aria-label", "Cronómetro a pantalla completa");
+    const animal = $("animalProgreso"), pj = animal ? animal.textContent.trim() : "🚶";
+    o.innerHTML = '<i class="ci-astro" aria-hidden="true"></i><i class="ci-nube ci-n1" aria-hidden="true"></i><i class="ci-nube ci-n2" aria-hidden="true"></i><button type="button" class="ci-x" data-ci="cerrar" aria-label="Cerrar">✕</button><p class="ci-titulo"></p><div class="ci-anillo"><svg viewBox="0 0 260 260" aria-hidden="true"><circle class="ci-pista" cx="130" cy="130" r="120"/><circle class="ci-arco" cx="130" cy="130" r="120" transform="rotate(-90 130 130)"/></svg><div class="ci-centro"><span class="ci-pj" aria-hidden="true"></span><output class="ci-digitos" aria-live="off">0:00:00</output></div></div><small class="ci-wl" data-wl-v27655></small><div class="ci-acciones"><button type="button" data-ci="iniciar" class="boton-guardar">▶ Iniciar</button><button type="button" data-ci="pausa" class="boton-secundario" hidden>⏸ Pausar</button><button type="button" data-ci="terminar" class="boton-guardar ci-terminar" hidden>■ Terminar</button></div>';
+    o.querySelector(".ci-pj").textContent = pj;
+    document.body.appendChild(o); document.body.classList.add("ci-abierto-v27655");
+    const clic = (id) => { const b = $(id); if (b) b.click(); };
+    o.addEventListener("click", (ev) => {
+      const b = ev.target.closest("[data-ci]"); if (!b) return; const a = b.dataset.ci;
+      if (a === "cerrar") ciCerrar();
+      else if (a === "iniciar") { clic("cronIniciarV264"); setTimeout(ciPintar, 30); }
+      else if (a === "pausa") { clic("cronPausaV264"); setTimeout(ciPintar, 30); }
+      else if (a === "terminar") { clic("cronTerminarV264"); ciCerrar(); }
+    });
+    o.addEventListener("keydown", (ev) => { if (ev.key === "Escape") ciCerrar(); });
+    o.tabIndex = -1; o.focus({ preventScroll: true }); ciPintar(); CI.t = setInterval(ciPintar, 1000);
+  }
+  function ciInstalar() {
+    const o = $("cronTiempoV264"); if (!o || o.dataset.ciV27655) return; o.dataset.ciV27655 = "1";
+    o.setAttribute("role", "button"); o.tabIndex = 0; o.setAttribute("aria-label", "Cronómetro a pantalla completa"); o.classList.add("cron-pantalla-v27655");
+    o.addEventListener("click", ciAbrir); o.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); ciAbrir(); } });
+  }
+
+  /* --- Curiosidades de Inicio --- */
+  function cuObservaciones() {
+    const regs = registros(), hoy = new Date(), hoyS = fechaISO(hoy), out = [];
+    const min = (r) => Math.max(0, Number(r.minutos) || 0), porDia = new Map();
+    regs.forEach((r) => { const f = String(r.fecha).slice(0, 10); porDia.set(f, (porDia.get(f) || 0) + min(r)); });
+    if (!porDia.size) return [["🌱", "Cuando registres tu primera actividad, aquí verás curiosidades sobre tu servicio."]];
+    const total = [...porDia.values()].reduce((a, b) => a + b, 0), dias = [...porDia.keys()].sort(), ult = dias[dias.length - 1];
+    const mesAct = hoyS.slice(0, 7), dd = hoy.getDate(), pm = new Date(hoy.getFullYear(), hoy.getMonth() - 1, 1, 12), mesPrev = fechaISO(pm).slice(0, 7);
+    let a = 0, b = 0; porDia.forEach((v, f) => { if (f.startsWith(mesAct)) a += v; else if (f.startsWith(mesPrev) && +f.slice(8, 10) <= dd) b += v; });
+    if (a > 0 && b > 0) out.push([a >= b ? "📈" : "📉", "Este mes llevas " + formatearTiempo(a) + (a > b ? ", " + formatearTiempo(a - b) + " más que el mes pasado a estas alturas." : a < b ? ", " + formatearTiempo(b - a) + " menos que el mes pasado a estas alturas." : ", justo lo mismo que el mes pasado a estas alturas.")]);
+    const sem = [0, 0, 0, 0, 0, 0, 0], nsem = [0, 0, 0, 0, 0, 0, 0]; porDia.forEach((v, f) => { const w = deISO(f).getDay(); sem[w] += v; nsem[w]++; });
+    if (porDia.size >= 8) { let w = 0; sem.forEach((v, i) => { if (v / Math.max(1, nsem[i]) > sem[w] / Math.max(1, nsem[w])) w = i; }); out.push(["⭐", "Tu día más fuerte es el " + DIAS_L[w] + ": de media " + formatearTiempo(Math.round(sem[w] / nsem[w])) + " ese día."]); }
+    let racha = 0; { const c = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 12); if (!porDia.has(fechaISO(c))) c.setDate(c.getDate() - 1); while (porDia.has(fechaISO(c))) { racha++; c.setDate(c.getDate() - 1); } }
+    if (racha >= 2) out.push(["🔥", "Llevas " + racha + " días seguidos con actividad."]);
+    const sin = Math.round((deISO(hoyS) - deISO(ult)) / 86400000); if (sin >= 3) out.push(["🌤️", "Hace " + sin + " días que no registras. Un ratito también cuenta."]);
+    out.push(["⏳", "En total has registrado " + formatearTiempo(total) + " en " + porDia.size + (porDia.size === 1 ? " día." : " días.")]);
+    let mj = null; porDia.forEach((v, f) => { if (!mj || v > mj[1]) mj = [f, v]; }); if (mj && porDia.size >= 5) { const d = deISO(mj[0]); out.push(["🏆", "Tu mejor día fue el " + d.getDate() + " de " + MESES_L[d.getMonth()] + " de " + d.getFullYear() + ": " + formatearTiempo(mj[1]) + "."]); }
+    const cm = new Map(); regs.forEach((r) => { const n = String(r.companero || "").trim(); if (n) { const k = n.toLowerCase(); const x = cm.get(k) || { n, c: 0 }; x.c++; cm.set(k, x); } });
+    let top = null; cm.forEach((x) => { if (!top || x.c > top.c) top = x; }); if (top && top.c >= 3) out.push(["🤝", "Has salido " + top.c + " veces con " + top.n + "."]);
+    const lun = (() => { const x = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 12); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return x; })(), l0 = fechaISO(lun), l1 = (() => { const x = new Date(lun); x.setDate(x.getDate() - 7); return fechaISO(x); })();
+    let sa = 0, sp = 0; porDia.forEach((v, f) => { if (f >= l0) sa += v; else if (f >= l1) sp += v; });
+    if (sa > 0 && sp > 0) out.push(["🗓️", "Esta semana llevas " + formatearTiempo(sa) + "; la semana pasada fueron " + formatearTiempo(sp) + "."]);
+    const delMes = [...porDia.entries()].filter(([f]) => f.startsWith(mesAct)); if (delMes.length >= 3) out.push(["⚖️", "Este mes, " + formatearTiempo(Math.round(a / delMes.length)) + " por día activo."]);
+    return out;
+  }
+  const CU = { i: 0, t: 0, lista: [] };
+  function cuPintar(avanzar) {
+    const c = $("curiosidadV27655"); if (!c) return;
+    if (!CU.lista.length || avanzar === "recalcular") { CU.lista = cuObservaciones(); const dia = Math.floor(Date.now() / 86400000); CU.i = CU.lista.length ? dia % CU.lista.length : 0; }
+    else if (avanzar) CU.i = (CU.i + 1) % CU.lista.length;
+    const o = CU.lista[CU.i] || ["✨", ""]; const tx = c.querySelector(".cu-texto");
+    c.classList.remove("cu-entra"); void c.offsetWidth; c.querySelector(".cu-ico").textContent = o[0]; tx.textContent = o[1]; c.classList.add("cu-entra");
+  }
+  function cuInstalarCuriosidad() {
+    const ref = $("seccionObjetivoInicioV260"); if (!ref || $("curiosidadV27655")) return;
+    const s = document.createElement("section"); s.id = "curiosidadV27655"; s.className = "seccion curiosidad-v27655"; s.setAttribute("aria-label", "Curiosidad sobre tu servicio");
+    s.innerHTML = '<button type="button" class="cu-boton" aria-label="Otra curiosidad"><span class="cu-ico" aria-hidden="true"></span><span class="cu-texto" aria-live="off"></span></button>';
+    ref.insertAdjacentElement("afterend", s);
+    s.querySelector(".cu-boton").addEventListener("click", () => { cuPintar(true); clearInterval(CU.t); CU.t = setInterval(() => { if (!document.hidden) cuPintar(true); }, 9000); });
+    cuPintar("recalcular"); CU.t = setInterval(() => { if (!document.hidden) cuPintar(true); }, 9000);
+    window.addEventListener("miServicio:registroGuardadoV188", () => setTimeout(() => cuPintar("recalcular"), 500));
+    document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") cuPintar("recalcular"); });
+  }
+
+  /* --- Traspaso por QR animado (sin nube) --- */
+  const QR = { gen: null, lector: null, frames: [], i: 0, t: 0, flujo: null, recib: null, raf: 0, video: null };
+  function qrCargar(src, prueba) {
+    if (prueba()) return Promise.resolve();
+    return new Promise((ok, mal) => { const s = document.createElement("script"); s.src = src; s.onload = () => (prueba() ? ok() : mal(new Error("lib"))); s.onerror = () => mal(new Error("lib")); document.head.appendChild(s); });
+  }
+  const qrGenListo = () => qrCargar("./lib-qrgen.js", () => typeof window.qrcode === "function");
+  const qrLecListo = () => qrCargar("./lib-jsqr.js", () => typeof window.jsQR === "function");
+  const CRC_T = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+  function crc32(u8) { let c = 0xffffffff; for (let i = 0; i < u8.length; i++) c = CRC_T[(c ^ u8[i]) & 255] ^ (c >>> 8); return ((c ^ 0xffffffff) >>> 0).toString(16).padStart(8, "0"); }
+  function b64de(u8) { let s = ""; for (let i = 0; i < u8.length; i += 8192) s += String.fromCharCode.apply(null, u8.subarray(i, i + 8192)); return btoa(s); }
+  function b64a(s) { const b = atob(s), u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; }
+  async function qrFlujo(entrada, modo) {
+    const C = modo === "c" ? CompressionStream : DecompressionStream; if (typeof C === "undefined") throw new Error("sin compresion");
+    const s = new C("deflate-raw"), w = s.writable.getWriter(); w.write(entrada); w.close();
+    return new Uint8Array(await new Response(s.readable).arrayBuffer());
+  }
+  const QR_CH = 230;
+  async function qrFramesDe(json) {
+    let datos = new TextEncoder().encode(json), flag = "r";
+    try { const z = await qrFlujo(datos, "c"); if (z.length < datos.length) { datos = z; flag = "z"; } } catch (e) {}
+    const b64 = b64de(datos), crc = crc32(datos), id = Math.random().toString(36).slice(2, 6), n = Math.max(1, Math.ceil(b64.length / QR_CH)), fr = [];
+    for (let i = 0; i < n; i++) fr.push(["MS1", id, i + 1, n, flag, crc, b64.slice(i * QR_CH, (i + 1) * QR_CH)].join("|"));
+    return fr;
+  }
+  function qrDibujar(canvas, texto) {
+    const q = window.qrcode(0, "L"); q.addData(texto); q.make();
+    const n = q.getModuleCount(), quiet = 4, px = Math.max(3, Math.floor(Math.min(canvas.clientWidth || 300, 360) * (window.devicePixelRatio || 1) / (n + quiet * 2))), W = (n + quiet * 2) * px;
+    canvas.width = W; canvas.height = W; const c = canvas.getContext("2d"); c.fillStyle = "#fff"; c.fillRect(0, 0, W, W); c.fillStyle = "#000";
+    for (let r = 0; r < n; r++) for (let k = 0; k < n; k++) if (q.isDark(r, k)) c.fillRect((k + quiet) * px, (r + quiet) * px, px, px);
+  }
+  function qrPanel(html, clase) {
+    qtCerrar(); const o = document.createElement("div"); o.id = "qrTransV27655"; o.className = clase || ""; o.setAttribute("role", "dialog"); o.setAttribute("aria-modal", "true");
+    o.innerHTML = '<div class="qt-caja"><button type="button" class="qt-x" data-qt="cerrar" aria-label="Cerrar">✕</button>' + html + "</div>";
+    document.body.appendChild(o); document.body.classList.add("qt-abierto-v27655");
+    o.addEventListener("click", (e) => { const b = e.target.closest("[data-qt]"); if (!b) return; const a = b.dataset.qt; if (a === "cerrar") qtCerrar(); else if (a === "rapido") qrVel(-80); else if (a === "lento") qrVel(80); else if (a === "pausa") qrPausa(b); });
+    o.addEventListener("keydown", (e) => { if (e.key === "Escape") qtCerrar(); });
+    o.tabIndex = -1; o.focus({ preventScroll: true }); return o;
+  }
+  function qtCerrar() {
+    clearInterval(QR.t); QR.t = 0; cancelAnimationFrame(QR.raf); QR.raf = 0; QR.frames = []; QR.recib = null; QR.pausado = false;
+    if (QR.video && QR.video.srcObject) { try { QR.video.srcObject.getTracks().forEach((t) => t.stop()); } catch (e) {} QR.video.srcObject = null; }
+    QR.video = null; const o = $("qrTransV27655"); if (o) o.remove(); document.body.classList.remove("qt-abierto-v27655"); wlSoltar();
+  }
+  QR.vel = 300;
+  function qrVel(d) { QR.vel = Math.min(900, Math.max(120, QR.vel + d)); qrArrancarCiclo(); const e = document.querySelector("#qrTransV27655 .qt-vel"); if (e) e.textContent = (1000 / QR.vel).toFixed(1).replace(".", ",") + " imágenes/s"; }
+  function qrPausa(b) { QR.pausado = !QR.pausado; b.textContent = QR.pausado ? "▶ Seguir" : "⏸ Pausar"; }
+  function qrArrancarCiclo() {
+    clearInterval(QR.t); const cv = document.querySelector("#qrTransV27655 canvas"), et = document.querySelector("#qrTransV27655 .qt-prog"); if (!cv) return;
+    const paso = () => { if (QR.pausado || !QR.frames.length) return; qrDibujar(cv, QR.frames[QR.i]); if (et) et.textContent = "Imagen " + (QR.i + 1) + " de " + QR.frames.length; QR.i = (QR.i + 1) % QR.frames.length; };
+    paso(); QR.t = setInterval(paso, QR.vel);
+  }
+  async function qrEnviar() {
+    const o = qrPanel('<h3>Enviar mis datos</h3><p class="qt-ayuda">En el otro dispositivo abre <b>Ajustes › Pasar datos › Recibir</b> y apunta la cámara a esta pantalla. No hace falta internet.</p><canvas class="qt-canvas" aria-label="Código QR animado"></canvas><p class="qt-prog" role="status">Preparando…</p><div class="qt-fila"><button type="button" class="boton-secundario" data-qt="lento">Más lento</button><button type="button" class="boton-secundario" data-qt="pausa">⏸ Pausar</button><button type="button" class="boton-secundario" data-qt="rapido">Más rápido</button></div><small class="qt-vel">3,3 imágenes/s</small><small class="qt-wl" data-wl-v27655></small>', "qt-enviar");
+    try {
+      await qrGenListo();
+      const json = JSON.stringify(crearDatosCopiaSeguridad()); QR.frames = await qrFramesDe(json); QR.i = 0; QR.pausado = false;
+      if (!$("qrTransV27655")) return;
+      const nt = o.querySelector(".qt-ayuda"); if (QR.frames.length > 400) nt.insertAdjacentHTML("afterend", '<p class="qt-aviso">Hay muchos datos (' + QR.frames.length + " imágenes). Tardará unos minutos; para un traspaso rápido usa la copia JSON.</p>");
+      qrArrancarCiclo(); wlPedir();
+    } catch (e) { const p = o.querySelector(".qt-prog"); if (p) p.textContent = "No se pudo preparar el código. Usa la copia de seguridad JSON."; }
+  }
+  /* Recibe un fotograma ya leído; devuelve {n, hay, listo, error}. Se usa desde la cámara y desde las pruebas. */
+  function qrRecibirTexto(txt) {
+    const p = String(txt).split("|"); if (p[0] !== "MS1" || p.length < 7) return null;
+    const id = p[1], i = +p[2], n = +p[3]; if (!(i >= 1 && n >= 1 && i <= n && n < 5000)) return null;
+    let R = QR.recib; if (!R || R.id !== id) { R = QR.recib = { id, n, flag: p[4], crc: p[5], partes: new Map(), fin: false }; }
+    if (!R.partes.has(i)) R.partes.set(i, p.slice(6).join("|"));
+    return { n: R.n, hay: R.partes.size, listo: R.partes.size === R.n };
+  }
+  async function qrTerminarRecepcion() {
+    const R = QR.recib; if (!R || R.fin) return; R.fin = true;
+    try {
+      let s = ""; for (let i = 1; i <= R.n; i++) s += R.partes.get(i);
+      let datos = b64a(s); if (crc32(datos) !== R.crc) throw new Error("crc");
+      if (R.flag === "z") datos = await qrFlujo(datos, "d");
+      const json = new TextDecoder().decode(datos), o = JSON.parse(json); if (!o || o.formato !== "mi-servicio-backup") throw new Error("formato");
+      qtCerrar(); avisoV202("Datos recibidos. Revisa y confirma.");
+      await importarCopiaSeguridad(new File([json], "Traspaso-QR.json", { type: "application/json" }));
+    } catch (e) { const p = document.querySelector("#qrTransV27655 .qt-prog"); if (p) p.textContent = "Los datos recibidos no son válidos. Vuelve a intentarlo."; QR.recib = null; }
+  }
+  async function qrRecibir() {
+    const o = qrPanel('<h3>Recibir datos</h3><p class="qt-ayuda">En el otro dispositivo abre <b>Ajustes › Pasar datos › Enviar</b> y apunta la cámara al código.</p><div class="qt-visor"><video playsinline muted></video><i class="qt-marco" aria-hidden="true"></i></div><div class="qt-barra"><i style="width:0%"></i></div><p class="qt-prog" role="status">Abriendo la cámara…</p>', "qt-recibir");
+    try {
+      await qrLecListo();
+      const flujo = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 } }, audio: false });
+      if (!$("qrTransV27655")) { flujo.getTracks().forEach((t) => t.stop()); return; }
+      const v = o.querySelector("video"); QR.video = v; v.srcObject = flujo; await v.play().catch(() => {});
+      const cv = document.createElement("canvas"), cx = cv.getContext("2d", { willReadFrequently: true }), prog = o.querySelector(".qt-prog"), barra = o.querySelector(".qt-barra i"); let ult = 0;
+      prog.textContent = "Apunta al código…";
+      const bucle = (ts) => {
+        if (!$("qrTransV27655") || !QR.video) return;
+        QR.raf = requestAnimationFrame(bucle);
+        if (ts - ult < 80 || v.readyState < 2 || !v.videoWidth) return; ult = ts;
+        const w = Math.min(720, v.videoWidth), h = Math.round(w * v.videoHeight / v.videoWidth); cv.width = w; cv.height = h; cx.drawImage(v, 0, 0, w, h);
+        let r; try { r = window.jsQR(cx.getImageData(0, 0, w, h).data, w, h, { inversionAttempts: "dontInvert" }); } catch (e) { r = null; }
+        if (!r || !r.data) return; const x = qrRecibirTexto(r.data); if (!x) return;
+        prog.textContent = "Recibidas " + x.hay + " de " + x.n; barra.style.width = Math.round(x.hay / x.n * 100) + "%";
+        if (x.listo) { cancelAnimationFrame(QR.raf); qrTerminarRecepcion(); }
+      };
+      QR.raf = requestAnimationFrame(bucle); wlPedir();
+    } catch (e) { const p = o.querySelector(".qt-prog"); if (p) p.textContent = "No se pudo abrir la cámara. Revisa el permiso de la cámara para esta página en los ajustes del dispositivo."; }
+  }
+  function qrCrearAjustes() {
+    const v = $("vista-ajustes"); if (!v || $("transferenciaAjV27655")) return;
+    const d = document.createElement("details"); d.id = "transferenciaAjV27655"; d.className = "ajustes-acordeon-v179 qt-aj-v27655";
+    d.innerHTML = '<summary><span class="ajustes-acordeon-icono" aria-hidden="true">📲</span><span class="ajustes-acordeon-titulo">Pasar datos a otro dispositivo</span><small class="aj-resumen-v27629">sin nube</small><span class="ajustes-acordeon-flecha" aria-hidden="true">›</span></summary><div class="qt-cuerpo"><p class="ayuda-fondo-clima-v260">Pasa tus registros de iPhone a iPad (o al revés) con la cámara, sin internet ni cuentas. El dispositivo que recibe te enseñará un resumen antes de cambiar nada y guardará antes una copia de lo que tenía.</p><div class="qt-botones"><button type="button" id="qrEnviarV27655" class="boton-secundario">📤 Enviar</button><button type="button" id="qrRecibirV27655" class="boton-secundario">📥 Recibir</button></div></div>';
+    v.appendChild(d);
+    $("qrEnviarV27655").addEventListener("click", qrEnviar); $("qrRecibirV27655").addEventListener("click", qrRecibir);
+  }
+
+  function wowInstalar() {
+    frInstalar(); ciInstalar(); cuInstalarCuriosidad(); qrCrearAjustes();
+    const re = () => { frInstalar(); ciInstalar(); cuInstalarCuriosidad(); qrCrearAjustes(); };
+    let pend = false; new MutationObserver(() => { if (!pend) { pend = true; setTimeout(() => { pend = false; re(); }, 200); } }).observe(document.body, { childList: true, subtree: true });
+  }
+  window.MiServicioV27655 = { frAnalizar, qrFramesDe, qrRecibirTexto, qrTerminarRecepcion, crc32, cuObservaciones, ciAbrir, ciCerrar, qrEnviar, qrRecibir, qtCerrar };
 
   /* 27 · V27636 · Objetivo de cada mes: los meses pasados se comparan con el objetivo que tenían entonces */
   const OM_BASE = "0000-00";

@@ -10,7 +10,7 @@
   "use strict";
   const $ = id => document.getElementById(id);
   const K_LIQ = "miServicio.globoLiquidoV267", K_INC = "miServicio.globoInclinaV267";
-  const K_LOGROS = "miServicio.logrosVistosV267", K_WRAP = "miServicio.wrappedVistoV267", K_WRAPS = "miServicio.wrappedSemanaVistoV269";
+  const K_LOGROS = "miServicio.logrosVistosV267", K_WRAP = "miServicio.wrappedVistoV267", K_WRAPS = "miServicio.wrappedSemanaVistoV269", K_WRAPA = "miServicio.wrappedAnioVistoV27655";
   const COLORES = { ministerio: "#3478f6", ldc: "#ed8abb", asambleas: "#f5a623", otras: "#9a80e8" };
   const TIPOS = ["ministerio", "ldc", "asambleas", "otras"];
   const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
@@ -368,7 +368,51 @@
       '<div class="acciones-w"><button type="button" data-w="compartir" class="boton-guardar">↗ Compartir imagen</button><button type="button" data-w="cerrar" class="boton-secundario">Cerrar</button></div><p class="estado-w" role="status"></p>' });
     return { s, slides };
   }
+  /* ---- Año de servicio (septiembre–agosto) con clave "A:AAAA" = año en que termina ---- */
+  const esAnio = c => String(c).startsWith("A:");
+  function anioServicioDe(d) { return d.getMonth() >= 8 ? d.getFullYear() + 1 : d.getFullYear(); }
+  function nombreAnio(a) { return "Sep " + (a - 1) + " – Ago " + a; }
+  function statsAnio(anio, regs) {
+    regs = regs || registros();
+    const ini = (anio - 1) + "-09-01", fin = anio + "-08-31", del = regs.filter(r => { const f = String(r.fecha).slice(0, 10); return f >= ini && f <= fin; });
+    const dias = porDia(del), tipos = {}; TIPOS.forEach(t => tipos[t] = 0);
+    del.forEach(r => { const t = TIPOS.includes(r.tipo) ? r.tipo : "otras"; tipos[t] += Math.max(0, Number(r.minutos) || 0); });
+    const total = TIPOS.reduce((a, t) => a + tipos[t], 0), meses = [];
+    for (let i = 0; i < 12; i++) { const b = new Date(anio - 1, 8 + i, 1, 12), cl = claveMes(b), rm = del.filter(r => String(r.fecha).startsWith(cl + "-")); meses.push({ clave: cl, m: b.getMonth(), min: rm.reduce((a, r) => a + Math.max(0, Number(r.minutos) || 0), 0), comp: computable(rm) }); }
+    const computableTotal = meses.reduce((a, x) => a + x.comp, 0);
+    let mejorMes = null; meses.forEach(x => { if (x.min > 0 && (!mejorMes || x.min > mejorMes.min)) mejorMes = x; });
+    let mejor = null; dias.forEach((d, f) => { if (d.min > 0 && (!mejor || d.min > mejor.min)) mejor = { fecha: f, min: d.min }; });
+    const activos = Array.from(dias.entries()).filter(([, d]) => d.min > 0).map(([f]) => f).sort();
+    let racha = 0, cur = 0, prev = null;
+    activos.forEach(f => { const d = deISO(f); cur = (prev && Math.round((d - prev) / 86400000) === 1) ? cur + 1 : 1; racha = Math.max(racha, cur); prev = d; });
+    const sem = [0, 0, 0, 0, 0, 0, 0]; dias.forEach((d, f) => { sem[deISO(f).getDay()] += d.min; });
+    let dfuerte = -1; sem.forEach((m, i) => { if (m > 0 && (dfuerte < 0 || m > sem[dfuerte])) dfuerte = i; });
+    const antTotal = statsAnioTotal(anio - 1, regs);
+    return { clave: "A:" + anio, anio, total, tipos, computable: computableTotal, meses, mejorMes, mejor, diasActivos: activos.length, racha, promedio: activos.length ? Math.round(total / activos.length) : 0, diaFuerte: dfuerte, anterior: antTotal, registros: del.length, dias };
+  }
+  function statsAnioTotal(anio, regs) { const ini = (anio - 1) + "-09-01", fin = anio + "-08-31"; return regs.filter(r => { const f = String(r.fecha).slice(0, 10); return f >= ini && f <= fin; }).reduce((a, r) => a + Math.max(0, Number(r.minutos) || 0), 0); }
+  function construirSlidesAnio(clave) {
+    const anio = Number(clave.slice(2)), s = statsAnio(anio), slides = [];
+    slides.push({ cls: "intro", html: '<small>Tu año de servicio</small><h2>' + anio + '</h2><p>' + nombreAnio(anio) + '</p><span class="pista">Toca para continuar ›</span>' });
+    if (!s.registros) { slides.push({ cls: "vacio", html: '<h2>Sin actividad registrada</h2><p>En este año de servicio no hay registros.</p>' }); return { s, slides }; }
+    const dif = s.anterior > 0 ? s.total - s.anterior : null;
+    slides.push({ cls: "total", html: '<small>Total del año</small><div class="globo-wrap"><div class="globo-w"><div class="liquido-w" style="--nivel:.78"><div class="nivel-v267"><i class="ola-v267 ola-a"></i><i class="ola-v267 ola-b"></i></div></div><strong data-cuenta="' + s.total + '">' + fmt(s.total) + '</strong></div></div><p>' + s.registros + (s.registros === 1 ? " registro" : " registros") + ' en ' + s.meses.filter(x => x.min > 0).length + ' meses</p>' +
+      (dif !== null ? '<p class="dif ' + (dif >= 0 ? "sube" : "baja") + '">' + (dif >= 0 ? "▲ " : "▼ ") + fmt(Math.abs(dif)) + ' respecto al año anterior</p>' : '') });
+    const mx = Math.max(1, ...s.meses.map(x => x.min)), ini = ["E", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"];
+    const cols = s.meses.map(x => '<div class="col-dia-w' + (s.mejorMes && x.clave === s.mejorMes.clave ? " mejor-w" : "") + '"><div class="pista-col"><i style="--h:' + (x.min ? Math.max(8, Math.round(x.min / mx * 100)) : 0) + '%"></i></div><b>' + ini[x.m] + '</b><span>' + (x.min ? Math.round(x.min / 60) : "—") + '</span></div>').join("");
+    slides.push({ cls: "semana-dias anio-meses", html: '<small>Mes a mes (horas)</small><div class="cols-dias-w cols-meses-w">' + cols + '</div><p>' + (s.mejorMes ? 'Tu mejor mes: ' + mayus(MESES[s.mejorMes.m]) + ' · ' + fmt(s.mejorMes.min) : '') + '</p>' });
+    const mejorTxt = s.mejor ? (function () { const d = deISO(s.mejor.fecha); return DIAS[d.getDay()] + " " + d.getDate() + " de " + MESES[d.getMonth()] + " · " + fmt(s.mejor.min); })() : "—";
+    slides.push({ cls: "dias", html: '<small>Tu constancia</small><div class="datos-w"><div><strong data-cuenta="' + s.diasActivos + '">' + s.diasActivos + '</strong><span>días activos</span></div><div><strong data-cuenta="' + s.racha + '">' + s.racha + '</strong><span>racha más larga (días)</span></div><div><strong>' + fmt(s.promedio) + '</strong><span>por día activo</span></div></div><p>' + (s.diaFuerte >= 0 ? 'Tu día fuerte: los ' + DIAS[s.diaFuerte] + 's. ' : '') + 'Tu mejor día: ' + mejorTxt + '</p>' });
+    const filas = TIPOS.filter(t => s.tipos[t] > 0).map(t => '<div class="fila-barra"><span>' + nombreTipo(t) + '</span><div class="pista-barra"><i style="--w:' + Math.round(s.tipos[t] / s.total * 100) + '%;background:' + COLORES[t] + '"></i></div><b>' + fmt(s.tipos[t]) + '</b></div>').join("");
+    slides.push({ cls: "reparto", html: '<small>¿En qué dedicaste tu tiempo?</small><div class="barras-w">' + filas + '</div>' });
+    const info = calcularLogros(), ini2 = (anio - 1) + "-09-01", fin2 = anio + "-08-31", delAnio = DEF_LOGROS.filter(d => info.ganados[d.id] && info.ganados[d.id] >= ini2 && info.ganados[d.id] <= fin2);
+    slides.push({ cls: "cierre", html: '<small>Para cerrar</small><h2>Un año de servicio ✨</h2>' +
+      (delAnio.length ? '<div class="medallas-w">' + delAnio.map(d => medallaHTML(d, true)).join("") + '</div><p>' + delAnio.length + (delAnio.length === 1 ? " logro conseguido este año" : " logros conseguidos este año") + '</p>' : '<p>Cada rato cuenta. Gracias por tu constancia.</p>') +
+      '<div class="acciones-w"><button type="button" data-w="compartir" class="boton-guardar">↗ Compartir imagen</button><button type="button" data-w="cerrar" class="boton-secundario">Cerrar</button></div><p class="estado-w" role="status"></p>' });
+    return { s, slides };
+  }
   function construirSlides(clave) {
+    if (esAnio(clave)) return construirSlidesAnio(clave);
     if (esSemana(clave)) return construirSlidesSemana(clave);
     const s = statsMes(clave), obj = (typeof window.omObjetivoDeV27636 === "function" ? window.omObjetivoDeV27636(clave) : objetivoMensual()), nombre = mayus(MESES[Number(clave.slice(5)) - 1]);
     const slides = [];
@@ -407,7 +451,7 @@
     const sl = wrap.slides[wrap.i], cont = o.querySelector(".slide-v267");
     cont.className = "slide-v267 " + sl.cls; cont.innerHTML = sl.html; cont.classList.remove("entra"); void cont.offsetWidth; cont.classList.add("entra");
     o.querySelectorAll(".segmentos-w i").forEach((el, i) => el.classList.toggle("hecho", i <= wrap.i));
-    o.querySelector(".mes-w").textContent = esSemana(wrap.clave) ? rangoSemana(wrap.clave.slice(2)) : mayus(nombreMes(wrap.clave));
+    o.querySelector(".mes-w").textContent = esAnio(wrap.clave) ? "Año " + nombreAnio(Number(wrap.clave.slice(2))) : esSemana(wrap.clave) ? rangoSemana(wrap.clave.slice(2)) : mayus(nombreMes(wrap.clave));
     o.querySelector('[data-w="ant"]').disabled = false;
     cuentaArriba(cont);
   }
@@ -429,9 +473,10 @@
       if (a === "cerrar") cerrarWrapped();
       else if (a === "adelante") { if (wrap.i < wrap.slides.length - 1) { wrap.i++; mostrarSlide(); } }
       else if (a === "atras") { if (wrap.i > 0) { wrap.i--; mostrarSlide(); } }
-      else if (a === "ant") cargarMes(esSemana(wrap.clave) ? "S:" + sumarDiasISO(wrap.clave.slice(2), -7) : sumarMeses(wrap.clave, -1));
+      else if (a === "ant") cargarMes(esAnio(wrap.clave) ? "A:" + (Number(wrap.clave.slice(2)) - 1) : esSemana(wrap.clave) ? "S:" + sumarDiasISO(wrap.clave.slice(2), -7) : sumarMeses(wrap.clave, -1));
       else if (a === "sig") {
-        if (esSemana(wrap.clave)) { const sg = sumarDiasISO(wrap.clave.slice(2), 7); if (sg <= lunesISO(new Date())) cargarMes("S:" + sg); }
+        if (esAnio(wrap.clave)) { const ns = Number(wrap.clave.slice(2)) + 1; if (ns <= anioServicioDe(new Date())) cargarMes("A:" + ns); }
+        else if (esSemana(wrap.clave)) { const sg = sumarDiasISO(wrap.clave.slice(2), 7); if (sg <= lunesISO(new Date())) cargarMes("S:" + sg); }
         else if (wrap.clave < claveMes(new Date())) cargarMes(sumarMeses(wrap.clave, 1));
       }
       else if (a === "compartir") compartirImagen(b);
@@ -441,7 +486,9 @@
     o.addEventListener("touchend", e => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) > 50) o.querySelector('[data-w="' + (dx < 0 ? "adelante" : "atras") + '"]').click(); }, { passive: true });
     o.tabIndex = -1; o.focus();
     // Marcar como visto el mes anterior si es el que se ofrecía
-    if (esSemana(clave)) {
+    if (esAnio(clave)) {
+      if (clave === "A:" + (anioServicioDe(new Date()) - 1)) { lsSet(K_WRAPA, clave); const av = $("avisoWrappedV267"); if (av && av.dataset.periodo === "anio") av.remove(); }
+    } else if (esSemana(clave)) {
       const prevS = sumarDiasISO(lunesISO(new Date()), -7);
       if (clave === "S:" + prevS) { lsSet(K_WRAPS, prevS); const av = $("avisoWrappedV267"); if (av && av.dataset.periodo === "semana") av.remove(); }
     } else {
@@ -453,7 +500,31 @@
 
   /* Imagen para compartir (1080×1920) */
   function rr(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+  function crearImagenAnio(clave) {
+    const anio = Number(clave.slice(2)), s = statsAnio(anio), cv = document.createElement("canvas"); cv.width = 1080; cv.height = 1920;
+    const c = cv.getContext("2d"), fam = '-apple-system, "SF Pro Display", "Segoe UI", Roboto, system-ui, sans-serif';
+    const g = c.createLinearGradient(0, 0, 1080, 1920); g.addColorStop(0, "#0b1d4a"); g.addColorStop(0.55, "#17408f"); g.addColorStop(1, "#0a1330");
+    c.fillStyle = g; c.fillRect(0, 0, 1080, 1920);
+    const rg = c.createRadialGradient(850, 260, 20, 850, 260, 620); rg.addColorStop(0, "rgba(130,180,255,.45)"); rg.addColorStop(1, "rgba(130,180,255,0)"); c.fillStyle = rg; c.fillRect(0, 0, 1080, 1100);
+    c.textAlign = "center"; c.fillStyle = "rgba(255,255,255,.7)"; c.font = "600 40px " + fam; c.fillText("TU AÑO DE SERVICIO", 540, 170);
+    c.fillStyle = "#fff"; c.font = "800 150px " + fam; c.fillText(String(anio), 540, 320);
+    c.fillStyle = "rgba(255,255,255,.6)"; c.font = "500 44px " + fam; c.fillText(nombreAnio(anio), 540, 385);
+    const cx = 540, cy = 760, R = 270;
+    c.save(); c.beginPath(); c.arc(cx, cy, R, 0, Math.PI * 2); c.clip(); c.fillStyle = "rgba(255,255,255,.12)"; c.fillRect(cx - R, cy - R, R * 2, R * 2);
+    const top = cy + R - 0.78 * R * 2, lg = c.createLinearGradient(0, top, 0, cy + R); lg.addColorStop(0, "#8fc0ff"); lg.addColorStop(1, "#2f6fe0");
+    c.fillStyle = lg; c.beginPath(); c.moveTo(cx - R, cy + R); c.lineTo(cx - R, top); for (let x = -R; x <= R; x += 8) c.lineTo(cx + x, top + Math.sin(x / 38) * 11); c.lineTo(cx + R, cy + R); c.closePath(); c.fill(); c.restore();
+    c.lineWidth = 8; c.strokeStyle = "rgba(255,255,255,.55)"; c.beginPath(); c.arc(cx, cy, R, 0, Math.PI * 2); c.stroke();
+    c.fillStyle = "#fff"; c.font = "800 84px " + fam; c.shadowColor = "rgba(0,0,0,.35)"; c.shadowBlur = 16; c.fillText(fmt(s.total), cx, cy + 26); c.shadowBlur = 0;
+    c.font = "600 38px " + fam; c.fillStyle = "rgba(255,255,255,.85)"; c.fillText("en el año", cx, cy + 90);
+    const mx = Math.max(1, ...s.meses.map(x => x.min)), ini = ["E", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"];
+    s.meses.forEach((x, i) => { const bx = 90 + i * 76, h = x.min ? Math.max(14, 330 * x.min / mx) : 6; c.fillStyle = s.mejorMes && x.clave === s.mejorMes.clave ? "#ffd166" : "rgba(143,192,255,.85)"; rr(c, bx, 1450 - h, 52, h, 12); c.fill(); c.fillStyle = "rgba(255,255,255,.75)"; c.font = "600 32px " + fam; c.fillText(ini[x.m], bx + 26, 1500); });
+    const datos = [[String(s.diasActivos), "días activos"], [String(s.racha), "racha máx."], [s.mejorMes ? mayus(MESES[s.mejorMes.m]).slice(0, 3) : "—", "mejor mes"]];
+    datos.forEach((d, i) => { const x = 210 + i * 330; c.fillStyle = "#fff"; c.font = "800 66px " + fam; c.fillText(d[0], x, 1690); c.fillStyle = "rgba(255,255,255,.65)"; c.font = "500 34px " + fam; c.fillText(d[1], x, 1740); });
+    c.fillStyle = "rgba(255,255,255,.45)"; c.font = "600 34px " + fam; c.fillText("Mi Servicio", 540, 1860);
+    return cv;
+  }
   function crearImagen(clave) {
+    if (esAnio(clave)) return crearImagenAnio(clave);
     const sem = esSemana(clave), s = sem ? statsSemana(clave.slice(2)) : statsMes(clave), obj = sem ? objetivoSemanal() : objetivoMensual(), cv = document.createElement("canvas"); cv.width = 1080; cv.height = 1920;
     const c = cv.getContext("2d"), fam = '-apple-system, "SF Pro Display", "Segoe UI", Roboto, system-ui, sans-serif';
     const g = c.createLinearGradient(0, 0, 1080, 1920); g.addColorStop(0, "#0b1d4a"); g.addColorStop(0.55, "#17408f"); g.addColorStop(1, "#0a1330");
@@ -493,9 +564,9 @@
     try {
       const cv = crearImagen(clave);
       const blob = await new Promise((res, rej) => cv.toBlob(b => b ? res(b) : rej(new Error("sin imagen")), "image/png"));
-      const nombre = "MiServicio-" + clave.replace("S:", "semana-") + ".png", file = new File([blob], nombre, { type: "image/png" });
+      const nombre = "MiServicio-" + clave.replace("S:", "semana-").replace("A:", "anio-") + ".png", file = new File([blob], nombre, { type: "image/png" });
       if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
-        try { await navigator.share({ files: [file], title: esSemana(clave) ? "Mi semana en Mi Servicio" : "Mi mes en Mi Servicio" }); estadoEl.textContent = "Imagen compartida ✓"; return; }
+        try { await navigator.share({ files: [file], title: esAnio(clave) ? "Mi año de servicio" : esSemana(clave) ? "Mi semana en Mi Servicio" : "Mi mes en Mi Servicio" }); estadoEl.textContent = "Imagen compartida ✓"; return; }
         catch (e) { if (e && e.name === "AbortError") return; }
       }
       const url = URL.createObjectURL(blob), a = document.createElement("a"); a.href = url; a.download = nombre; document.body.appendChild(a); a.click(); a.remove();
@@ -510,6 +581,20 @@
     const w = document.createElement("button"); w.id = "wrappedSemanaBotonV269"; w.type = "button"; w.className = "boton-secundario boton-wrapped-v267"; w.textContent = "✨ Resumen de la semana";
     w.addEventListener("click", () => abrirWrapped("S:" + lunesISO(new Date())));
     cont.insertBefore(w, b.nextSibling);
+    const y = document.createElement("button"); y.id = "wrappedAnioBotonV27655"; y.type = "button"; y.className = "boton-secundario boton-wrapped-v267"; y.textContent = "✨ Tu año de servicio";
+    y.addEventListener("click", () => abrirWrapped("A:" + anioServicioDe(new Date())));
+    cont.insertBefore(y, w.nextSibling);
+  }
+  function instalarAvisoAnio() {
+    if ($("avisoWrappedV267")) return false;
+    const hoy = new Date(); if (hoy.getMonth() !== 8) return false; // septiembre: acaba de terminar el año de servicio
+    const prev = anioServicioDe(hoy) - 1; if (ls(K_WRAPA) === "A:" + prev) return false;
+    if (!statsAnioTotal(prev, registros())) return false;
+    const ancla = $("recordatorioCopiaInicio") || document.querySelector("#vista-inicio .seccion"); if (!ancla) return false;
+    const s = document.createElement("section"); s.id = "avisoWrappedV267"; s.className = "aviso-wrapped-v267"; s.dataset.periodo = "anio";
+    s.innerHTML = '<button type="button" class="abrir" data-a="abrir"><span class="chispa">🎆</span><span><strong>Tu año de servicio está listo</strong><small>Toca para ver tu año ' + nombreAnio(prev) + '</small></span></button><button type="button" class="cerrar" data-a="cerrar" aria-label="Descartar">✕</button>';
+    s.addEventListener("click", e => { const a = e.target.closest("[data-a]"); if (!a) return; if (a.dataset.a === "abrir") abrirWrapped("A:" + prev); else { lsSet(K_WRAPA, "A:" + prev); s.remove(); } });
+    ancla.insertAdjacentElement("beforebegin", s); return true;
   }
   function instalarAvisoSemana() {
     if ($("avisoWrappedV267")) return;
@@ -525,6 +610,7 @@
   }
   function instalarAvisoInicio() {
     if ($("avisoWrappedV267")) return;
+    if (instalarAvisoAnio()) return;
     const hoy = new Date(); if (hoy.getDate() > 6) { instalarAvisoSemana(); return; }
     const prev = sumarMeses(claveMes(hoy), -1); if (ls(K_WRAP) === prev) { instalarAvisoSemana(); return; }
     if (!registros().some(r => String(r.fecha).startsWith(prev + "-"))) { instalarAvisoSemana(); return; }
@@ -543,7 +629,7 @@
     revisarLogrosNuevos(true);
     window.addEventListener("miServicio:registroGuardadoV188", () => { setTimeout(() => { refrescarEstadisticas(); revisarLogrosNuevos(false); }, 400); });
     document.addEventListener("click", e => { if (e.target.closest && e.target.closest(".nav-item")) setTimeout(refrescarEstadisticas, 120); });
-    window.MiServicioV267 = { abrirWrapped, calcularLogros, statsMes, statsSemana, crearImagen, pintarLiquido };
+    window.MiServicioV267 = { abrirWrapped, calcularLogros, statsMes, statsSemana, statsAnio, crearImagen, pintarLiquido };
   }
   if (document.readyState === "complete") setTimeout(arrancar, 0);
   else window.addEventListener("load", () => setTimeout(arrancar, 0), { once: true });
