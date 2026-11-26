@@ -319,3 +319,6 @@ V27658 · El «Camino del año de servicio» ya no es una tarjeta aparte: aparec
 V27659 · Modo Visita (pantalla grande de hoy con globos, aro de ritmo, racha y mes; fondo según la hora; mantiene la pantalla encendida) y Vista rápida (tarjeta compacta). Se abren desde Ajustes → «Modo visita y vista rápida» o con los enlaces ?accion=visita / ?accion=widget (para la app Atajos; misma salvedad de Safari que los demás atajos).
 · Medallas con volumen: se inclinan al acercar el dedo, giran al tocarlas y se animan al ganar una nueva (solo se guarda un registro local de niveles vistos: miServicio.medallasVistasV27659, no entra en copias).
 · «Tu año en cifras» tiene un botón para compartir una imagen del año completo en mapa de calor. (El calendario de calor ya existía.)
+
+V27660 · «Escríbelo o díctalo» es opcional: Ajustes → Secciones → Registrar (25 secciones).
+· Escena de fondo en Historial y Estadísticas (Ajustes → junto a la escena de Registrar; desactivada por defecto): tu personaje elegido con un gráfico de barras y trofeo (Estadísticas) o calendario y marca de hecho (Historial). Preferencia local miServicio.escenaDatosV27660, no entra en las copias.
