@@ -14948,3 +14948,58 @@ html body:has(#vista-registrar.activa) #vista-registrar #formRegistro.registro-v
 @media (prefers-reduced-motion:reduce){.eg-prop,html body .escena-gen-v27657 img.eg-pj{animation:none!important}}
 
 .cu-sinsitio-v27657{display:none!important}
+
+/* ===== V27658 · el camino del año dentro de «Tu año en cifras» ===== */
+html body:not(#bta):not(#btb) .anio-v276 #caminoAnioV27657{margin:14px 0 10px;padding:0;background:none;box-shadow:none;border:0;border-radius:0}
+html body:not(#bta):not(#btb) .anio-v276 #caminoAnioV27657 > summary{padding:6px 2px}
+
+/* ===== V27659 · modo visita, vista rápida, medallas con volumen, mapa de calor ===== */
+#visitaV27659{position:fixed;inset:0;z-index:100000;display:grid;place-items:center;padding:max(18px,env(safe-area-inset-top)) 18px max(18px,env(safe-area-inset-bottom));color:#fff;font-family:-apple-system,"SF Pro Display",system-ui,sans-serif;background:linear-gradient(165deg,#1e6fd9,#59b0f0 70%,#ffd27a);animation:vsEntra27659 .35s ease both;overflow:hidden}
+#visitaV27659[data-franja=tarde]{background:linear-gradient(165deg,#1b56b8,#2f9bd6 75%,#8fd6e8)}
+#visitaV27659[data-franja=atardecer]{background:linear-gradient(165deg,#6b3598,#d9594a 62%,#ffb15c)}
+#visitaV27659[data-franja=noche]{background:linear-gradient(165deg,#070d26,#1b2a6b 80%,#31408f)}
+#visitaV27659.vs-sale{animation:vsSale27659 .26s ease both}
+@keyframes vsEntra27659{from{opacity:0;transform:scale(1.03)}to{opacity:1;transform:none}}
+@keyframes vsSale27659{to{opacity:0;transform:scale(.98)}}
+#visitaV27659 .vs-cerrar{position:absolute;top:max(14px,env(safe-area-inset-top));right:16px;width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.2);color:#fff;font-size:20px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+#visitaV27659 .vs-caja{width:100%;max-width:760px;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;text-shadow:0 2px 10px rgba(0,0,0,.28)}
+#visitaV27659 .vs-fecha{margin:0;font-size:clamp(16px,2.6vw,24px);font-weight:600;opacity:.9}
+#visitaV27659 .vs-centro{position:relative;width:clamp(210px,46vmin,380px);aspect-ratio:1}
+#visitaV27659 .vs-aro{width:100%;height:100%;filter:drop-shadow(0 8px 18px rgba(0,0,0,.25))}
+#visitaV27659 .vs-pista{fill:rgba(255,255,255,.12);stroke:rgba(255,255,255,.22);stroke-width:9}
+#visitaV27659 .vs-arco{fill:none;stroke:#fff;stroke-width:9;stroke-linecap:round;transition:stroke-dasharray 1s cubic-bezier(.2,.8,.2,1)}
+#visitaV27659 .vs-num{position:absolute;inset:0;display:grid;place-content:center;gap:4px}
+#visitaV27659 .vs-total{font-size:clamp(28px,7.2vmin,58px);font-weight:800;letter-spacing:-.02em;line-height:1}
+#visitaV27659 .vs-sub{font-size:clamp(13px,2.2vmin,19px);opacity:.88;max-width:70%;margin:0 auto}
+#visitaV27659 .vs-aro-txt{margin:0;font-size:clamp(14px,2.4vmin,20px);font-weight:600;min-height:1.2em}
+#visitaV27659 .vs-globos{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:14px;min-height:20px}
+#visitaV27659 .vs-g{display:flex;flex-direction:column;justify-content:center;align-items:center;border-radius:50%;background:radial-gradient(circle at 32% 26%,rgba(255,255,255,.85),var(--c1) 38%,var(--c2));box-shadow:inset 0 -8px 14px rgba(0,0,0,.25),inset 0 4px 8px rgba(255,255,255,.5),0 12px 22px rgba(0,0,0,.28);animation:vsFlota27659 5.5s ease-in-out infinite;animation-delay:calc(var(--i)*-1.3s);text-shadow:0 1px 3px rgba(0,0,0,.45)}
+#visitaV27659 .vs-g strong{font-size:clamp(15px,2.6vmin,22px);font-weight:800}
+#visitaV27659 .vs-g small{font-size:clamp(11px,1.8vmin,15px);opacity:.95}
+@keyframes vsFlota27659{50%{transform:translateY(-9px)}}
+#visitaV27659 .vs-pie{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 26px;font-size:clamp(15px,2.4vmin,21px);font-weight:700}
+#visitaV27659 .vs-barra{width:min(440px,80%);height:10px;border-radius:99px;background:rgba(255,255,255,.2);overflow:hidden}
+#visitaV27659 .vs-barra i{display:block;height:100%;border-radius:99px;background:#fff;transition:width 1s ease}
+/* vista rápida: tarjeta compacta de cristal */
+#visitaV27659[data-modo=widget]{background:rgba(10,16,40,.55);backdrop-filter:blur(22px) saturate(1.4);-webkit-backdrop-filter:blur(22px) saturate(1.4)}
+#visitaV27659[data-modo=widget] .vs-caja{max-width:340px;padding:22px 18px 20px;border-radius:30px;background:linear-gradient(165deg,#2a6fd6,#4aa3e8);box-shadow:0 24px 60px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.4);gap:10px}
+#visitaV27659[data-modo=widget][data-franja=noche] .vs-caja{background:linear-gradient(165deg,#16245c,#2c3f94)}
+#visitaV27659[data-modo=widget] .vs-centro{width:170px}
+#visitaV27659[data-modo=widget] .vs-total{font-size:26px}
+#visitaV27659[data-modo=widget] .vs-g{width:auto;height:auto;border-radius:999px;padding:6px 14px;flex-direction:row;gap:7px;animation:none}
+#visitaV27659[data-modo=widget] .vs-globos{gap:8px}
+#visitaV27659[data-modo=widget] .vs-cerrar{top:10px;right:10px;width:36px;height:36px;font-size:16px}
+@media (prefers-reduced-motion:reduce){#visitaV27659,#visitaV27659 .vs-g{animation:none}#visitaV27659 .vs-arco,#visitaV27659 .vs-barra i{transition:none}}
+.at-aj-v27657 .at-fila{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+/* medallas con volumen */
+html body:not(#bta):not(#btb) :is(.vitrina-v27631,.logros-rejilla-v267) .medalla-v267:not(.bloqueada){transform:perspective(260px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .16s ease-out;will-change:transform;box-shadow:0 1px 0 var(--c3),0 2px 0 var(--c3),0 3px 0 var(--c3),0 9px 12px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.55);cursor:pointer;touch-action:manipulation}
+html body:not(#bta):not(#btb) :is(.vitrina-v27631,.logros-rejilla-v267) .medalla-v267.md-inclinada .brillo{background:radial-gradient(circle at var(--lx,30%) var(--ly,25%),rgba(255,255,255,.9) 0,rgba(255,255,255,0) 52%)}
+html body:not(#bta):not(#btb) .medalla-v267.md-gira{animation:mdGira27659 1s cubic-bezier(.2,.8,.2,1) both}
+@keyframes mdGira27659{0%{transform:perspective(260px) rotateY(0)}55%{transform:perspective(260px) rotateY(540deg) scale(1.18)}100%{transform:perspective(260px) rotateY(720deg) scale(1)}}
+html body:not(#bta):not(#btb) .medalla-v267.md-nueva{animation:mdNueva27659 1.6s cubic-bezier(.2,.9,.25,1.1) both;z-index:2}
+@keyframes mdNueva27659{0%{transform:scale(.2) rotate(-200deg);opacity:0;filter:brightness(2)}55%{transform:scale(1.35) rotate(12deg);opacity:1;filter:brightness(1.5) drop-shadow(0 0 16px #ffe08a)}100%{transform:none;filter:none}}
+@media (prefers-reduced-motion:reduce){html body:not(#bta):not(#btb) .medalla-v267.md-gira,html body:not(#bta):not(#btb) .medalla-v267.md-nueva{animation:none}}
+.anio-calor-compartir-v27659{margin-top:8px;width:100%}
+#visitaV27659{overflow-y:auto;align-content:safe center}
+#visitaV27659 .vs-centro{width:clamp(150px,min(46vmin,34vh),380px)}
+@media (max-height:680px){#visitaV27659 .vs-caja{gap:8px}#visitaV27659 .vs-globos{gap:2px;margin:-6px 0}#visitaV27659 .vs-total{font-size:clamp(26px,8vmin,60px)}}

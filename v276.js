@@ -1669,6 +1669,7 @@
       c.querySelector("small").textContent = l.futuro ? "—" : ob ? l.pct + " %" : "—";
       rej.appendChild(c);
     });
+    try { mdDesbloqueos(lista, rej); } catch (e) {}
     const dat = s.querySelector(".vt-datos"); dat.textContent = "";
     [[oros + "/12", "meses de oro"]].forEach(p => { const e = document.createElement("div"); const b = document.createElement("strong"); b.textContent = p[0]; const sm = document.createElement("small"); sm.textContent = p[1]; e.append(b, sm); dat.appendChild(e); });
   }
@@ -2325,13 +2326,13 @@
   }
   function ajxBloques() {
     const g = id => $(id), l = a => a.filter(Boolean);
-    return [l([g("perfilCabV27629"), ajxPerfilDet()]), l([g("aparienciaV201")]), l([g("copiaFilaV27633"), g("seguridadDatosV260")]), l([g("etiquetasAjV27654")]), l([g("transferenciaAjV27655")]), l([g("atajosAjV27657")]), l([g("sincronizacionDetalleV260")]), l([g("oneDriveSeccionV260")]), l([g("ayudaBreveV260")]), l([g("acercaV27649")])].filter(b => b.length);
+    return [l([g("perfilCabV27629"), ajxPerfilDet()]), l([g("aparienciaV201")]), l([g("copiaFilaV27633"), g("seguridadDatosV260")]), l([g("etiquetasAjV27654")]), l([g("transferenciaAjV27655")]), l([g("atajosAjV27657")]), l([g("visitaAjV27659")]), l([g("sincronizacionDetalleV260")]), l([g("oneDriveSeccionV260")]), l([g("ayudaBreveV260")]), l([g("acercaV27649")])].filter(b => b.length);
   }
   function ajxOrdenar() {
     const v = $("vista-ajustes"); if (!v) return; ajxCrear();
     const G = id => $("ajGrupo" + id + "V27649"), B = ajxBloques();
     const por = e => B.find(b => b.includes(e)), pick = (...ids) => ids.map(i => $(i));
-    const esp = [$("volverAjustesV260"), $("buscarAjustesV27649") && $("buscarAjustesV27649").parentNode, G("cuenta"), $("perfilCabV27629"), ajxPerfilDet(), G("aspecto"), $("aparienciaV201"), G("datos"), $("copiaFilaV27633"), $("seguridadDatosV260"), $("etiquetasAjV27654"), $("transferenciaAjV27655"), $("atajosAjV27657"), $("sincronizacionDetalleV260"), $("oneDriveSeccionV260"), G("ayuda"), $("ayudaBreveV260"), $("acercaV27649"), $("ajSinResultadosV27649")].filter(e => e && e.parentNode === v);
+    const esp = [$("volverAjustesV260"), $("buscarAjustesV27649") && $("buscarAjustesV27649").parentNode, G("cuenta"), $("perfilCabV27629"), ajxPerfilDet(), G("aspecto"), $("aparienciaV201"), G("datos"), $("copiaFilaV27633"), $("seguridadDatosV260"), $("etiquetasAjV27654"), $("transferenciaAjV27655"), $("atajosAjV27657"), $("visitaAjV27659"), $("sincronizacionDetalleV260"), $("oneDriveSeccionV260"), G("ayuda"), $("ayudaBreveV260"), $("acercaV27649"), $("ajSinResultadosV27649")].filter(e => e && e.parentNode === v);
     const actual = [...v.children].filter(e => esp.includes(e));
     if (esp.every((e, i) => actual[i] === e)) return;
     esp.forEach(e => v.appendChild(e));
@@ -3397,8 +3398,8 @@
   function navMedir() { const n = document.querySelector("nav.barra-navegacion"); if (n) { const h = Math.round(n.getBoundingClientRect().height); if (h > 30) document.documentElement.style.setProperty("--nav-real-v27656", h + "px"); } }
   function wowInstalar() {
     escInstalar(); atCrearAjustes(); caInstalar(); esgInstalar(); setTimeout(atEjecutar, 900); navMedir(); window.addEventListener("resize", navMedir); window.addEventListener("orientationchange", () => setTimeout(navMedir, 300));
-    frInstalar(); ciInstalar(); cuInstalarCuriosidad(); qrCrearAjustes();
-    const re = () => { frInstalar(); ciInstalar(); cuInstalarCuriosidad(); qrCrearAjustes(); atCrearAjustes(); caInstalar(); };
+    frInstalar(); ciInstalar(); cuInstalarCuriosidad(); qrCrearAjustes(); vsCrearAjustes(); mdInstalar(); mcInstalar();
+    const re = () => { frInstalar(); ciInstalar(); cuInstalarCuriosidad(); qrCrearAjustes(); atCrearAjustes(); caInstalar(); vsCrearAjustes(); mcInstalar(); };
     let pend = false; new MutationObserver(() => { if (!pend) { pend = true; setTimeout(() => { pend = false; re(); }, 200); } }).observe(document.body, { childList: true, subtree: true });
   }
   window.MiServicioV27655 = { atAnalizar, atEjecutar, caDatos, caSvg, esgPintar, frAnalizar, qrFramesDe, qrRecibirTexto, qrTerminarRecepcion, crc32, cuObservaciones, ciAbrir, ciCerrar, qrEnviar, qrRecibir, qtCerrar };
@@ -3437,6 +3438,7 @@
     let p; try { p = new URLSearchParams(location.search); } catch (e) { return false; }
     const accion = (p.get("accion") || "").toLowerCase(); if (!accion) return false;
     try { history.replaceState(null, "", location.pathname + location.hash); } catch (e) {}
+    if (accion === "visita" || accion === "widget") { atIr("inicio"); setTimeout(() => vsAbrir(accion), 400); return true; }
     if (accion === "cronometro") { atIr("registrar"); setTimeout(() => { if (!ciEstado()) { const b = $("cronIniciarV264"); if (b) b.click(); } if (p.get("pantalla") === "1") setTimeout(ciAbrir, 250); }, 500); return true; }
     if (["inicio", "historial", "estadisticas", "registrar"].includes(accion) && !p.get("min") && !p.get("h")) { atIr(accion); return true; }
     const r = atAnalizar(p, ahora); if (!r.ok) { atIr("registrar"); avisoV202("El enlace no traía un tiempo válido."); return true; }
@@ -3503,7 +3505,8 @@
     const ref = $("anioServicioV276") || $("calorAnualV267"); if (!ref || $("caminoAnioV27657")) return;
     const d = document.createElement("details"); d.id = "caminoAnioV27657"; d.className = "stats-accordion-v183 ca-v27657"; d.open = true;
     d.innerHTML = '<summary><span class="stats-accordion-icono-v183">🗺️</span><span>Camino del año de servicio</span><span class="stats-accordion-flecha-v183">›</span></summary><div class="stats-accordion-cuerpo-v183"><article class="ca-cuerpo"></article></div>';
-    ref.insertAdjacentElement("afterend", d);
+    /* V27658: el camino vive dentro de «Tu año en cifras», antes del boton de compartir */
+    { const bc = ref.id === "anioServicioV276" ? ref.querySelector(".anio-compartir-v276") : null; if (bc) ref.insertBefore(d, bc); else ref.insertAdjacentElement("afterend", d); }
     const mostrar = (g) => { const D = JSON.parse(d.dataset.datos || "[]"), x = D[Number(g.dataset.ca)]; if (!x) return; d.querySelector(".ca-detalle").textContent = x[0].charAt(0).toUpperCase() + x[0].slice(1) + ": " + (x[3] ? "todavía no ha llegado." : formatearTiempo(x[1]) + (x[2] > 0 ? " de " + formatearTiempo(x[2]) + " (" + Math.min(999, Math.round(x[1] / x[2] * 100)) + " %)" : "")); };
     d.addEventListener("click", (e) => { const g = e.target.closest(".ca-parada"); if (g) mostrar(g); });
     d.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { const g = e.target.closest(".ca-parada"); if (g) { e.preventDefault(); mostrar(g); } } });
@@ -3545,6 +3548,128 @@
     const g = $("galeriaPersonajes"); if (g) g.addEventListener("click", () => setTimeout(esgPintar, 250));
     window.addEventListener("storage", () => setTimeout(esgPintar, 100));
   }
+  /* 48 · V27659 · Modo Visita, vista rápida («widget»), medallas con volumen e imagen del mapa de calor del año */
+  const VS_TONO = { ministerio: ["#7cc0ff", "#2468dc"], ldc: ["#86efb4", "#1c9d5b"], asambleas: ["#d2b8ff", "#7a4de0"], otras: ["#ffd09a", "#e4741f"] };
+  const VS = { t: 0, modo: "" };
+  function vsFranja(h) { return h < 6 ? "noche" : h < 12 ? "manana" : h < 18 ? "tarde" : h < 21 ? "atardecer" : "noche"; }
+  function vsDatos(ahora) {
+    ahora = ahora || new Date(); const f = fechaISO(ahora), tipos = {}; TIPOS.forEach((t) => { tipos[t] = 0; }); let total = 0;
+    registros().forEach((r) => { if (String(r.fecha).slice(0, 10) !== f) return; const m = Math.max(0, Number(r.minutos) || 0); if (m <= 0) return; total += m; if (tipos[r.tipo] !== undefined) tipos[r.tipo] += m; });
+    const ob = objetivo(), mes = mesTotalCompu(); let plan = null; try { plan = dnPlan(total); } catch (e) {}
+    return { f, total, tipos, racha: srRacha(), ob, comp: mes.comp, pctMes: ob ? Math.min(100, Math.round(mes.comp / ob * 100)) : 0, plan, franja: vsFranja(ahora.getHours()) };
+  }
+  function vsPintar() {
+    const o = $("visitaV27659"); if (!o) return; const D = vsDatos(), w = o.dataset.modo === "widget";
+    o.dataset.franja = D.franja;
+    const fh = new Date(); { const tf = fh.toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" }); o.querySelector(".vs-fecha").textContent = tf.charAt(0).toUpperCase() + tf.slice(1); }
+    const tot = o.querySelector(".vs-total"); tot.textContent = D.total ? fmt(D.total) : "0 min";
+    o.querySelector(".vs-sub").textContent = D.total ? "de actividad hoy" : "Hoy aún no hay actividad";
+    const frac = D.plan && !D.plan.mes ? Math.min(1, D.plan.pct / 100) : D.plan && D.plan.mes ? 1 : D.total ? 1 : 0, C = 2 * Math.PI * 52;
+    const arco = o.querySelector(".vs-arco"); arco.style.strokeDasharray = (C * frac).toFixed(1) + " " + C.toFixed(1);
+    o.querySelector(".vs-aro-txt").textContent = D.plan ? (D.plan.mes ? "Objetivo del mes cumplido ✓" : D.plan.falta > 0 ? "Faltan " + fmt(D.plan.falta) + " para el ritmo de hoy" : "Ritmo de hoy cumplido ✓") : "";
+    const gl = o.querySelector(".vs-globos"); gl.textContent = "";
+    const mx = Math.max(1, ...TIPOS.map((t) => D.tipos[t]));
+    TIPOS.filter((t) => D.tipos[t] > 0).forEach((t, i) => {
+      const g = document.createElement("div"); g.className = "vs-g"; g.style.setProperty("--c1", VS_TONO[t][0]); g.style.setProperty("--c2", VS_TONO[t][1]); g.style.setProperty("--i", String(i));
+      if (!w) { const d = Math.round((78 + 82 * Math.sqrt(D.tipos[t] / mx)) * (innerHeight < 680 ? .68 : 1)); g.style.width = g.style.height = d + "px"; }
+      const n = document.createElement("small"), v = document.createElement("strong"); n.textContent = nombreTipo(t); v.textContent = fmt(D.tipos[t]); g.append(v, n); gl.appendChild(g);
+    });
+    o.querySelector(".vs-racha").textContent = "🔥 " + D.racha + (D.racha === 1 ? " día seguido" : " días seguidos");
+    o.querySelector(".vs-mes").textContent = D.ob ? "Mes: " + D.pctMes + " % del objetivo" : "Mes: " + fmt(D.comp);
+    const barra = o.querySelector(".vs-barra i"); barra.style.width = (D.ob ? D.pctMes : 0) + "%"; o.querySelector(".vs-barra").hidden = !D.ob;
+  }
+  function vsCerrar() { const o = $("visitaV27659"); if (!o) return; clearInterval(VS.t); if (VS.modo === "visita") wlSoltar(); VS.modo = ""; o.classList.add("vs-sale"); setTimeout(() => o.remove(), 260); document.removeEventListener("keydown", vsTecla); }
+  function vsTecla(e) { if (e.key === "Escape") vsCerrar(); }
+  function vsAbrir(modo) {
+    modo = modo === "widget" ? "widget" : "visita"; const viejo = $("visitaV27659"); if (viejo) viejo.remove(); clearInterval(VS.t);
+    const o = document.createElement("div"); o.id = "visitaV27659"; o.dataset.modo = modo; o.setAttribute("role", "dialog"); o.setAttribute("aria-modal", "true"); o.setAttribute("aria-label", modo === "widget" ? "Vista rápida de hoy" : "Modo visita");
+    o.innerHTML = '<button type="button" class="vs-cerrar" aria-label="Cerrar">✕</button><div class="vs-caja"><p class="vs-fecha"></p><div class="vs-centro"><svg class="vs-aro" viewBox="0 0 120 120" aria-hidden="true"><circle class="vs-pista" cx="60" cy="60" r="52"/><circle class="vs-arco" cx="60" cy="60" r="52" transform="rotate(-90 60 60)"/></svg><div class="vs-num"><strong class="vs-total"></strong><small class="vs-sub"></small></div></div><p class="vs-aro-txt"></p><div class="vs-globos"></div><div class="vs-pie"><span class="vs-racha"></span><span class="vs-mes"></span></div><div class="vs-barra" hidden><i></i></div></div>';
+    document.body.appendChild(o); VS.modo = modo; vsPintar();
+    o.querySelector(".vs-cerrar").addEventListener("click", vsCerrar); document.addEventListener("keydown", vsTecla);
+    if (modo === "visita") { o.addEventListener("dblclick", vsCerrar); wlPedir(); }
+    VS.t = setInterval(() => { if (!document.hidden) vsPintar(); }, 30000);
+    setTimeout(() => { const b = o.querySelector(".vs-cerrar"); if (b) b.focus(); }, 60);
+  }
+  function vsCrearAjustes() {
+    const v = $("vista-ajustes"); if (!v || $("visitaAjV27659")) return;
+    const base = AT_BASE(), ej = [["Abrir el modo Visita", base + "?accion=visita"], ["Abrir la vista rápida de hoy", base + "?accion=widget"]];
+    const d = document.createElement("details"); d.id = "visitaAjV27659"; d.className = "ajustes-acordeon-v179 at-aj-v27657";
+    d.innerHTML = '<summary><span class="ajustes-acordeon-icono" aria-hidden="true">🖥️</span><span class="ajustes-acordeon-titulo">Modo visita y vista rápida</span><small class="aj-resumen-v27629">pantallas</small><span class="ajustes-acordeon-flecha" aria-hidden="true">›</span></summary><div class="at-cuerpo"><p class="ayuda-fondo-clima-v260"><b>Modo visita</b>: pantalla grande y limpia con tu actividad de hoy, globos y racha; mantiene la pantalla encendida. Ideal para dejar el iPad en la mesa. <b>Vista rápida</b>: una tarjeta compacta con lo esencial. Se cierra con ✕ o con doble toque.</p><div class="at-fila"><button type="button" class="boton-guardar" data-vs="visita">Abrir modo visita</button><button type="button" class="boton-secundario" data-vs="widget">Abrir vista rápida</button></div><div class="at-lista"></div><p class="ayuda-fondo-clima-v260">Los enlaces sirven para la app Atajos. Igual que con los demás atajos, si iOS los abre en Safari verás los datos de Safari, no los de la app instalada.</p></div>';
+    d.querySelectorAll("[data-vs]").forEach((b) => b.addEventListener("click", () => vsAbrir(b.dataset.vs)));
+    const L = d.querySelector(".at-lista");
+    ej.forEach(([t, u]) => { const f = document.createElement("div"); f.className = "at-item"; f.innerHTML = "<b></b><code></code><button type=\"button\" class=\"boton-secundario\">Copiar enlace</button>"; f.querySelector("b").textContent = t; f.querySelector("code").textContent = u; f.querySelector("button").addEventListener("click", async (ev) => { try { await navigator.clipboard.writeText(u); ev.target.textContent = "Copiado ✓"; } catch (e) { ev.target.textContent = "Mantén pulsado el enlace"; } setTimeout(() => { ev.target.textContent = "Copiar enlace"; }, 1800); }); L.appendChild(f); });
+    v.appendChild(d);
+  }
+
+  /* Medallas con volumen: se inclinan con el dedo o el cursor, giran al tocarlas y brillan al ganar una nueva */
+  function mdInstalar() {
+    if (window.__mdV27659) return; window.__mdV27659 = 1;
+    const sel = ".medalla-v267:not(.bloqueada)", med = (e) => { const t = e.target && e.target.closest ? e.target.closest(sel) : null; return t && t.closest(".vitrina-v27631,.logros-rejilla-v267") ? t : null; };
+    const limpiar = (x) => { x.classList.remove("md-inclinada"); ["--rx", "--ry", "--lx", "--ly"].forEach((k) => x.style.removeProperty(k)); };
+    document.addEventListener("pointermove", (e) => {
+      const m = med(e); document.querySelectorAll(".medalla-v267.md-inclinada").forEach((x) => { if (x !== m) limpiar(x); }); if (!m) return;
+      const r = m.getBoundingClientRect(), px = Math.max(-.5, Math.min(.5, (e.clientX - r.left) / r.width - .5)), py = Math.max(-.5, Math.min(.5, (e.clientY - r.top) / r.height - .5));
+      m.classList.add("md-inclinada"); m.style.setProperty("--ry", (px * 42).toFixed(1) + "deg"); m.style.setProperty("--rx", (-py * 42).toFixed(1) + "deg"); m.style.setProperty("--lx", (50 + px * 70).toFixed(0) + "%"); m.style.setProperty("--ly", (50 + py * 70).toFixed(0) + "%");
+    }, { passive: true });
+    const fin = () => setTimeout(() => document.querySelectorAll(".medalla-v267.md-inclinada").forEach(limpiar), 260);
+    document.addEventListener("pointerup", fin); document.addEventListener("pointercancel", fin);
+    document.addEventListener("click", (e) => { const m = med(e); if (!m || m.classList.contains("md-gira")) return; m.classList.add("md-gira"); setTimeout(() => m.classList.remove("md-gira"), 1100); });
+  }
+  const MD_K = "miServicio.medallasVistasV27659";
+  function mdDesbloqueos(lista, rej) {
+    let g = null; try { g = JSON.parse(localStorage.getItem(MD_K) || "null"); } catch (e) {} const primera = !g || typeof g !== "object"; if (primera) g = {};
+    const nuevas = []; lista.forEach((l, i) => { const k = l.x.y + "-" + (l.x.m + 1), ant = g[k] || 0; if (l.nivel > ant && !primera) nuevas.push(i); g[k] = l.nivel; });
+    try { localStorage.setItem(MD_K, JSON.stringify(g)); } catch (e) {}
+    nuevas.forEach((i) => { const m = rej.children[i] && rej.children[i].querySelector(".medalla-v267"); if (m) { m.classList.add("md-nueva"); setTimeout(() => m.classList.remove("md-nueva"), 1800); } });
+    if (nuevas.length) { const l = lista[nuevas[nuevas.length - 1]]; try { avisoV202("🏅 Medalla nueva: " + ["", "bronce", "plata", "oro"][l.nivel] + " de " + MESES_L[l.x.m]); } catch (e) {} }
+    return nuevas;
+  }
+
+  /* Imagen del año completo (mapa de calor) para compartir */
+  function mcNivel(min) { return min <= 0 ? 0 : min < 60 ? 1 : min < 120 ? 2 : min < 180 ? 3 : 4; }
+  function mcImagen(anio) {
+    const cv = document.createElement("canvas"); cv.width = 1080; cv.height = 1920; const c = cv.getContext("2d"), fam = '-apple-system, "SF Pro Display", system-ui, sans-serif';
+    const g = c.createLinearGradient(0, 0, 0, 1920); g.addColorStop(0, "#0e1a3d"); g.addColorStop(1, "#1d3f8f"); c.fillStyle = g; c.fillRect(0, 0, 1080, 1920);
+    const dias = new Map(); registros().forEach((r) => { const f = String(r.fecha).slice(0, 10), m = Math.max(0, Number(r.minutos) || 0); if (m > 0) dias.set(f, (dias.get(f) || 0) + m); });
+    c.textAlign = "center"; c.fillStyle = "rgba(255,255,255,.72)"; c.font = "600 38px " + fam; c.fillText("MI AÑO DE SERVICIO", 540, 140);
+    c.fillStyle = "#fff"; c.font = "800 130px " + fam; c.fillText(String(anio), 540, 270);
+    const COL = ["rgba(255,255,255,.12)", "#8cc4ff", "#4f9bff", "#2f6fe0", "#ffd35c"], hoy = fechaISO(new Date()); let total = 0, activos = 0;
+    const cel = 38, sep = 6, paso = cel + sep, ancho = 6 * paso - sep, mx0 = (1080 - 3 * ancho) / 4;
+    for (let i = 0; i < 12; i++) {
+      const b = new Date(anio - 1, 8 + i, 1, 12), y = b.getFullYear(), m = b.getMonth(), col = i % 3, fila = Math.floor(i / 3);
+      const x0 = mx0 + col * (ancho + mx0), y0 = 400 + fila * 340, prim = (b.getDay() + 6) % 7, nd = new Date(y, m + 1, 0).getDate();
+      c.fillStyle = "rgba(255,255,255,.8)"; c.font = "700 32px " + fam; c.textAlign = "left"; c.fillText(MESES_L[m].charAt(0).toUpperCase() + MESES_L[m].slice(1, 3), x0, y0 - 14);
+      for (let d = 1; d <= nd; d++) {
+        const f = y + "-" + String(m + 1).padStart(2, "0") + "-" + String(d).padStart(2, "0"), min = dias.get(f) || 0, k = prim + d - 1, cx = x0 + Math.floor(k / 7) * paso, cy = y0 + (k % 7) * paso;
+        if (min > 0) { total += min; activos++; }
+        c.fillStyle = f > hoy ? "rgba(255,255,255,.06)" : COL[mcNivel(min)]; rrect(c, cx, cy, cel, cel, 10); c.fill();
+      }
+    }
+    c.textAlign = "center"; c.fillStyle = "#fff"; c.font = "800 84px " + fam; c.fillText(fmt(total), 540, 1700);
+    c.fillStyle = "rgba(255,255,255,.7)"; c.font = "500 38px " + fam; c.fillText(activos + (activos === 1 ? " día activo" : " días activos") + " · septiembre " + (anio - 1) + " – agosto " + anio, 540, 1760);
+    const lx = 540 - 5 * 46 / 2 - 90; c.font = "500 28px " + fam; c.fillStyle = "rgba(255,255,255,.6)"; c.textAlign = "right"; c.fillText("Menos", lx + 70, 1820);
+    for (let k = 0; k < 5; k++) { c.fillStyle = COL[k]; rrect(c, lx + 90 + k * 46, 1795, 34, 34, 9); c.fill(); }
+    c.textAlign = "left"; c.fillStyle = "rgba(255,255,255,.6)"; c.fillText("Más", lx + 90 + 5 * 46 + 10, 1820);
+    c.textAlign = "center"; c.fillStyle = "rgba(255,255,255,.4)"; c.font = "600 30px " + fam; c.fillText("Mi Servicio", 540, 1890);
+    return cv;
+  }
+  async function mcCompartir(btn) {
+    const msg = $("anioServicioV276") && $("anioServicioV276").querySelector(".anio-estado-v276"), anio = anioV276 === null ? anioServicioHoy() : anioV276;
+    try {
+      const cv = mcImagen(anio), blob = await new Promise((res, rej) => cv.toBlob((b) => b ? res(b) : rej(new Error("sin imagen")), "image/png"));
+      const nombre = "MiServicio-calor-" + anio + ".png", file = new File([blob], nombre, { type: "image/png" });
+      if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) { try { await navigator.share({ files: [file], title: "Mi año de servicio " + anio }); if (msg) msg.textContent = "Imagen compartida ✓"; return; } catch (e) { if (e && e.name === "AbortError") return; } }
+      const url = URL.createObjectURL(blob), a = document.createElement("a"); a.href = url; a.download = nombre; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 4000); if (msg) msg.textContent = "Imagen descargada ✓";
+    } catch (e) { if (msg) msg.textContent = "No se pudo crear la imagen."; }
+  }
+  function mcInstalar() {
+    const host = $("anioServicioV276"); if (!host || host.querySelector(".anio-calor-compartir-v27659")) return;
+    const ref = host.querySelector(".anio-compartir-v276:not(.anio-calor-compartir-v27659)"); if (!ref) return;
+    const b = document.createElement("button"); b.type = "button"; b.className = "boton-secundario anio-compartir-v276 anio-calor-compartir-v27659"; b.textContent = "🗓️ Compartir mapa de calor del año";
+    b.addEventListener("click", () => mcCompartir(b)); ref.insertAdjacentElement("afterend", b);
+  }
+  window.MiServicioV27659 = { vsDatos, vsAbrir, vsCerrar, vsFranja, mcImagen, mcNivel, mdDesbloqueos };
+
   /* 27 · V27636 · Objetivo de cada mes: los meses pasados se comparan con el objetivo que tenían entonces */
   const OM_BASE = "0000-00";
   function omClave(d) { return fechaISO(d || new Date()).slice(0, 7); }
