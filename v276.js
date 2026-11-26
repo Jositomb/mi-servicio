@@ -1576,8 +1576,15 @@
     s.classList.remove("sr-oculta-v27631");
     setTimeout(() => {
       if (encaja()) return;
-      s.classList.add("sr-oculta-v27631"); try { programarEncajeV260(true); } catch (e) {}
-      setTimeout(() => { if (!encaja()) { s.classList.remove("sr-oculta-v27631"); try { programarEncajeV260(true); } catch (e) {} } }, 1500);
+      const cu = $("curiosidadV27655"), ocultarSemana = () => {
+        s.classList.add("sr-oculta-v27631"); try { programarEncajeV260(true); } catch (e) {}
+        setTimeout(() => { if (!encaja()) { s.classList.remove("sr-oculta-v27631"); try { programarEncajeV260(true); } catch (e) {} } }, 1500);
+      };
+      /* La curiosidad es un extra: cede primero su sitio; la semana solo se oculta si aun asi no cabe */
+      if (cu && !cu.classList.contains("cu-sinsitio-v27657")) {
+        cu.classList.add("cu-sinsitio-v27657"); try { programarEncajeV260(true); } catch (e) {}
+        setTimeout(() => { if (encaja()) { cu.classList.remove("cu-sinsitio-v27657"); try { programarEncajeV260(true); } catch (e) {} setTimeout(() => { if (!encaja()) { cu.classList.add("cu-sinsitio-v27657"); } }, 900); } else { cu.classList.remove("cu-sinsitio-v27657"); ocultarSemana(); } }, 900);
+      } else ocultarSemana();
     }, 1200);
   }
   let srT = 0; function srProgramar(ms) { clearTimeout(srT); srT = setTimeout(srAjustar, ms); }
@@ -2318,13 +2325,13 @@
   }
   function ajxBloques() {
     const g = id => $(id), l = a => a.filter(Boolean);
-    return [l([g("perfilCabV27629"), ajxPerfilDet()]), l([g("aparienciaV201")]), l([g("copiaFilaV27633"), g("seguridadDatosV260")]), l([g("etiquetasAjV27654")]), l([g("transferenciaAjV27655")]), l([g("sincronizacionDetalleV260")]), l([g("oneDriveSeccionV260")]), l([g("ayudaBreveV260")]), l([g("acercaV27649")])].filter(b => b.length);
+    return [l([g("perfilCabV27629"), ajxPerfilDet()]), l([g("aparienciaV201")]), l([g("copiaFilaV27633"), g("seguridadDatosV260")]), l([g("etiquetasAjV27654")]), l([g("transferenciaAjV27655")]), l([g("atajosAjV27657")]), l([g("sincronizacionDetalleV260")]), l([g("oneDriveSeccionV260")]), l([g("ayudaBreveV260")]), l([g("acercaV27649")])].filter(b => b.length);
   }
   function ajxOrdenar() {
     const v = $("vista-ajustes"); if (!v) return; ajxCrear();
     const G = id => $("ajGrupo" + id + "V27649"), B = ajxBloques();
     const por = e => B.find(b => b.includes(e)), pick = (...ids) => ids.map(i => $(i));
-    const esp = [$("volverAjustesV260"), $("buscarAjustesV27649") && $("buscarAjustesV27649").parentNode, G("cuenta"), $("perfilCabV27629"), ajxPerfilDet(), G("aspecto"), $("aparienciaV201"), G("datos"), $("copiaFilaV27633"), $("seguridadDatosV260"), $("etiquetasAjV27654"), $("transferenciaAjV27655"), $("sincronizacionDetalleV260"), $("oneDriveSeccionV260"), G("ayuda"), $("ayudaBreveV260"), $("acercaV27649"), $("ajSinResultadosV27649")].filter(e => e && e.parentNode === v);
+    const esp = [$("volverAjustesV260"), $("buscarAjustesV27649") && $("buscarAjustesV27649").parentNode, G("cuenta"), $("perfilCabV27629"), ajxPerfilDet(), G("aspecto"), $("aparienciaV201"), G("datos"), $("copiaFilaV27633"), $("seguridadDatosV260"), $("etiquetasAjV27654"), $("transferenciaAjV27655"), $("atajosAjV27657"), $("sincronizacionDetalleV260"), $("oneDriveSeccionV260"), G("ayuda"), $("ayudaBreveV260"), $("acercaV27649"), $("ajSinResultadosV27649")].filter(e => e && e.parentNode === v);
     const actual = [...v.children].filter(e => esp.includes(e));
     if (esp.every((e, i) => actual[i] === e)) return;
     esp.forEach(e => v.appendChild(e));
@@ -3138,8 +3145,8 @@
     if (r.nota) h += fila("Nota", r.nota, true);
     vista.querySelector("ul").innerHTML = h; btn.disabled = !r.ok;
   }
-  function frRellenar() {
-    const r = FR_ULTIMO; if (!r || !r.ok) return;
+  function frRellenar(rr) {
+    const r = rr || FR_ULTIMO; if (!r || !r.ok) return;
     const tipo = r.tipo || ($("tipoRegistro") && $("tipoRegistro").value) || "ministerio";
     const b = document.querySelector('#formRegistro .actividad-boton[data-tipo="' + tipo + '"]'); if (b) b.click();
     const hoy = fechaISO(new Date()), ayer = (() => { const x = new Date(); x.setDate(x.getDate() - 1); return fechaISO(x); })(), f = fechaISO(r.fecha);
@@ -3162,7 +3169,7 @@
     ref.insertAdjacentElement("afterend", s);
     $("fraseCampoV27655").addEventListener("input", frPintar);
     $("fraseCampoV27655").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); if (FR_ULTIMO && FR_ULTIMO.ok) frRellenar(); } });
-    $("fraseRellenarV27655").addEventListener("click", frRellenar);
+    $("fraseRellenarV27655").addEventListener("click", () => frRellenar());
   }
 
   /* --- Pantalla pegada (wake lock) --- */
@@ -3250,12 +3257,22 @@
     const o = CU.lista[CU.i] || ["✨", ""]; const tx = c.querySelector(".cu-texto");
     c.classList.remove("cu-entra"); void c.offsetWidth; c.querySelector(".cu-ico").textContent = o[0]; tx.textContent = o[1]; c.classList.add("cu-entra");
   }
+  const CU_PRUEBA = {};
+  function cuEncaje() {
+    const c = $("curiosidadV27655"), ini = $("vista-inicio"); if (!c || !ini || !ini.classList.contains("activa")) return;
+    const clave = Math.round(innerWidth) + "x" + Math.round(innerHeight);
+    if (document.body.classList.contains("inicio-encajado-v260")) return;
+    if (typeof bloqueoEncajeV260 === "undefined" || bloqueoEncajeV260 !== clave || CU_PRUEBA[clave]) return;
+    CU_PRUEBA[clave] = 1; c.classList.add("cu-sinsitio-v27657"); programarEncajeV260(true);
+    setTimeout(() => { if (!document.body.classList.contains("inicio-encajado-v260")) { c.classList.remove("cu-sinsitio-v27657"); } }, 900);
+  }
   function cuInstalarCuriosidad() {
     const ref = $("seccionObjetivoInicioV260"); if (!ref || $("curiosidadV27655")) return;
     const s = document.createElement("section"); s.id = "curiosidadV27655"; s.className = "seccion curiosidad-v27655"; s.setAttribute("aria-label", "Curiosidad sobre tu servicio");
     s.innerHTML = '<button type="button" class="cu-boton" aria-label="Otra curiosidad"><span class="cu-ico" aria-hidden="true"></span><span class="cu-texto" aria-live="off"></span></button>';
     ref.insertAdjacentElement("afterend", s);
     s.querySelector(".cu-boton").addEventListener("click", () => { cuPintar(true); clearInterval(CU.t); CU.t = setInterval(() => { if (!document.hidden) cuPintar(true); }, 9000); });
+    { let p = 0; const q = () => { if (!p) { p = 1; setTimeout(() => { p = 0; cuEncaje(); }, 450); } }; new MutationObserver(q).observe(document.body, { attributes: true, attributeFilter: ["class"] }); window.addEventListener("resize", q); }
     cuPintar("recalcular"); CU.t = setInterval(() => { if (!document.hidden) cuPintar(true); }, 9000);
     window.addEventListener("miServicio:registroGuardadoV188", () => setTimeout(() => cuPintar("recalcular"), 500));
     document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") cuPintar("recalcular"); });
@@ -3372,13 +3389,162 @@
     $("qrEnviarV27655").addEventListener("click", qrEnviar); $("qrRecibirV27655").addEventListener("click", qrRecibir);
   }
 
+  function escInstalar() {
+    const K = "miServicio.escenaTamanoV27656", sel = $("escenaTamanoV27656"); let v = "fondo"; try { v = localStorage.getItem(K) === "pequena" ? "pequena" : "fondo"; } catch (e) {}
+    document.documentElement.dataset.escenaTamV27656 = v; if (!sel) return; sel.value = v;
+    sel.addEventListener("change", () => { const n = sel.value === "pequena" ? "pequena" : "fondo"; document.documentElement.dataset.escenaTamV27656 = n; try { localStorage.setItem(K, n); } catch (e) {} });
+  }
+  function navMedir() { const n = document.querySelector("nav.barra-navegacion"); if (n) { const h = Math.round(n.getBoundingClientRect().height); if (h > 30) document.documentElement.style.setProperty("--nav-real-v27656", h + "px"); } }
   function wowInstalar() {
+    escInstalar(); atCrearAjustes(); caInstalar(); esgInstalar(); setTimeout(atEjecutar, 900); navMedir(); window.addEventListener("resize", navMedir); window.addEventListener("orientationchange", () => setTimeout(navMedir, 300));
     frInstalar(); ciInstalar(); cuInstalarCuriosidad(); qrCrearAjustes();
-    const re = () => { frInstalar(); ciInstalar(); cuInstalarCuriosidad(); qrCrearAjustes(); };
+    const re = () => { frInstalar(); ciInstalar(); cuInstalarCuriosidad(); qrCrearAjustes(); atCrearAjustes(); caInstalar(); };
     let pend = false; new MutationObserver(() => { if (!pend) { pend = true; setTimeout(() => { pend = false; re(); }, 200); } }).observe(document.body, { childList: true, subtree: true });
   }
-  window.MiServicioV27655 = { frAnalizar, qrFramesDe, qrRecibirTexto, qrTerminarRecepcion, crc32, cuObservaciones, ciAbrir, ciCerrar, qrEnviar, qrRecibir, qtCerrar };
+  window.MiServicioV27655 = { atAnalizar, atEjecutar, caDatos, caSvg, esgPintar, frAnalizar, qrFramesDe, qrRecibirTexto, qrTerminarRecepcion, crc32, cuObservaciones, ciAbrir, ciCerrar, qrEnviar, qrRecibir, qtCerrar };
 
+  /* 47 · V27657 · Atajos de iPhone/Siri por enlace · camino del año de servicio · escena grande para cada personaje */
+  const AT_BASE = () => location.origin + location.pathname;
+  function atIr(vista) { const b = document.querySelector('.nav-item[data-vista="' + vista + '"]'); if (b) b.click(); }
+  function atFecha(txt, ahora) {
+    const hoy = ahora || new Date(), d = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 12); txt = String(txt || "hoy").toLowerCase();
+    if (txt === "ayer") d.setDate(d.getDate() - 1); else if (txt === "anteayer") d.setDate(d.getDate() - 2);
+    else if (/^\d{4}-\d{2}-\d{2}$/.test(txt)) { const x = new Date(txt + "T12:00:00"); if (!isNaN(x)) return x; }
+    return d;
+  }
+  /* Convierte los parámetros del enlace en un registro propuesto; nunca guarda por sí solo. */
+  function atAnalizar(qs, ahora) {
+    const p = qs instanceof URLSearchParams ? qs : new URLSearchParams(qs), accion = (p.get("accion") || "").toLowerCase();
+    if (accion === "frase") { const r = frAnalizar(p.get("texto") || "", ahora); r.accion = accion; r.guardar = p.get("guardar") === "1"; return r; }
+    if (accion !== "registrar") return { accion, ok: false };
+    let min = Number(p.get("min")); if (!(min > 0)) min = (Number(p.get("h")) || 0) * 60 + (Number(p.get("m")) || 0);
+    min = Math.min(24 * 60, Math.round(min));
+    const tipos = ["ministerio", "ldc", "asambleas", "otras"], tp = (p.get("tipo") || "").toLowerCase(), f = atFecha(p.get("fecha"), ahora), hoy = ahora || new Date();
+    const r = { accion, ok: false, minutos: min, tipo: tipos.includes(tp) ? tp : null, fecha: f, companero: String(p.get("con") || "").slice(0, 80), nota: String(p.get("nota") || "").slice(0, 400), etiquetas: [], futura: f > new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 12), guardar: p.get("guardar") === "1", entendido: [] };
+    r.ok = min > 0 && !r.futura; return r;
+  }
+  function atResumen(r) { return formatearTiempo(r.minutos) + " de " + frNombreTipo(r.tipo || ($("tipoRegistro") && $("tipoRegistro").value) || "ministerio") + " · " + frFechaTxt(r.fecha) + (r.companero ? " · con " + r.companero : ""); }
+  function atHoja(r) {
+    const old = $("atajoV27657"); if (old) old.remove();
+    const o = document.createElement("div"); o.id = "atajoV27657"; o.setAttribute("role", "dialog"); o.setAttribute("aria-modal", "true"); o.setAttribute("aria-label", "Confirmar registro del atajo");
+    o.innerHTML = '<div class="at-caja"><h3>¿Guardar este registro?</h3><p class="at-res"></p><div class="at-fila"><button type="button" data-at="guardar" class="boton-guardar">Guardar</button><button type="button" data-at="revisar" class="boton-secundario">Revisar</button><button type="button" data-at="cancelar" class="boton-secundario">Cancelar</button></div></div>';
+    o.querySelector(".at-res").textContent = atResumen(r); document.body.appendChild(o);
+    const cerrar = () => o.remove();
+    o.addEventListener("click", (e) => { const b = e.target.closest("[data-at]"); if (!b) return; const a = b.dataset.at; cerrar(); if (a === "guardar") { frRellenar(r); setTimeout(() => { const g = $("guardarRegistroV203"); if (g) g.click(); }, 350); } else if (a === "revisar") frRellenar(r); });
+    setTimeout(() => { const g = o.querySelector('[data-at="guardar"]'); if (g) g.focus(); }, 50);
+  }
+  function atEjecutar(ahora) {
+    let p; try { p = new URLSearchParams(location.search); } catch (e) { return false; }
+    const accion = (p.get("accion") || "").toLowerCase(); if (!accion) return false;
+    try { history.replaceState(null, "", location.pathname + location.hash); } catch (e) {}
+    if (accion === "cronometro") { atIr("registrar"); setTimeout(() => { if (!ciEstado()) { const b = $("cronIniciarV264"); if (b) b.click(); } if (p.get("pantalla") === "1") setTimeout(ciAbrir, 250); }, 500); return true; }
+    if (["inicio", "historial", "estadisticas", "registrar"].includes(accion) && !p.get("min") && !p.get("h")) { atIr(accion); return true; }
+    const r = atAnalizar(p, ahora); if (!r.ok) { atIr("registrar"); avisoV202("El enlace no traía un tiempo válido."); return true; }
+    atIr("registrar");
+    setTimeout(() => { if (r.guardar) atHoja(r); else frRellenar(r); }, 450); return true;
+  }
+  function atCrearAjustes() {
+    const v = $("vista-ajustes"); if (!v || $("atajosAjV27657")) return;
+    const base = AT_BASE(), ej = [["Registrar 1 hora de ministerio (pide confirmar)", base + "?accion=registrar&tipo=ministerio&min=60&guardar=1"], ["Registrar con una frase", base + "?accion=frase&guardar=1&texto=ayer%201%20h%2030%20ministerio"], ["Empezar el cronómetro a pantalla completa", base + "?accion=cronometro&pantalla=1"]];
+    const d = document.createElement("details"); d.id = "atajosAjV27657"; d.className = "ajustes-acordeon-v179 at-aj-v27657";
+    d.innerHTML = '<summary><span class="ajustes-acordeon-icono" aria-hidden="true">⚡️</span><span class="ajustes-acordeon-titulo">Atajos de iPhone y Siri</span><small class="aj-resumen-v27629">enlaces</small><span class="ajustes-acordeon-flecha" aria-hidden="true">›</span></summary><div class="at-cuerpo"><p class="ayuda-fondo-clima-v260">Con la app Atajos puedes crear un botón (o una orden para Siri) que abra Mi Servicio con un registro preparado. Siempre te pide confirmar o lo deja listo para revisar: nunca guarda sin que lo veas.</p><ol class="at-pasos"><li>Abre la app <b>Atajos</b> y crea un atajo nuevo.</li><li>Añade la acción <b>Abrir URL</b> y pega uno de estos enlaces.</li><li>Ponle un nombre (por ejemplo «Registrar una hora»): ese será lo que digas a Siri.</li></ol><div class="at-lista"></div><p class="ayuda-fondo-clima-v260 at-aviso"><b>Importante:</b> iOS puede abrir estos enlaces en Safari en vez de en el icono de la pantalla de inicio. Como Safari guarda sus datos aparte, tus registros no estarían ahí. Prueba el atajo una vez antes de fiarte; si abre Safari, no lo uses.</p></div>';
+    const L = d.querySelector(".at-lista");
+    ej.forEach(([t, u]) => { const f = document.createElement("div"); f.className = "at-item"; f.innerHTML = "<b></b><code></code><button type=\"button\" class=\"boton-secundario\">Copiar enlace</button>"; f.querySelector("b").textContent = t; f.querySelector("code").textContent = u; f.querySelector("button").addEventListener("click", async (ev) => { try { await navigator.clipboard.writeText(u); ev.target.textContent = "✓ Copiado"; } catch (e) { ev.target.textContent = "Mantén pulsado el enlace para copiarlo"; } setTimeout(() => { ev.target.textContent = "Copiar enlace"; }, 2500); }); L.appendChild(f); });
+    v.appendChild(d);
+  }
+
+  /* --- Camino del año de servicio --- */
+  const CA_X = [60, 170, 280];
+  function caPos(i) { const fila = Math.floor(i / 3), c = i % 3; return [fila % 2 === 0 ? CA_X[c] : CA_X[2 - c], 78 + fila * 100]; }
+  function caSeg(i) { // tramo del mes i al i+1 como curva cúbica
+    const a = caPos(i), b = caPos(i + 1);
+    if (Math.floor(i / 3) === Math.floor((i + 1) / 3)) return [a, [a[0] + (b[0] - a[0]) / 3, a[1]], [a[0] + 2 * (b[0] - a[0]) / 3, b[1]], b];
+    const lado = Math.floor(i / 3) % 2 === 0 ? 1 : -1; return [a, [a[0] + 62 * lado, a[1]], [b[0] + 62 * lado, b[1]], b];
+  }
+  function caBez(S, t) { const u = 1 - t; return [0, 1].map((k) => u * u * u * S[0][k] + 3 * u * u * t * S[1][k] + 3 * u * t * t * S[2][k] + t * t * t * S[3][k]); }
+  function caDatos(hoy) {
+    hoy = hoy || new Date(); const fin = hoy.getMonth() >= 8 ? hoy.getFullYear() + 1 : hoy.getFullYear(), out = [];
+    for (let i = 0; i < 12; i++) {
+      const ref = new Date(fin - 1, 8 + i, 1, 12); let min = 0, obj = 0;
+      try { const r = resumenMesV143(ref); min = Number(r.computable != null ? r.computable : r.total) || 0; } catch (e) {}
+      try { obj = Number(omObjetivoDe(fechaISO(ref).slice(0, 7))) || 0; } catch (e) { obj = objetivo(); }
+      const futuro = ref > new Date(hoy.getFullYear(), hoy.getMonth(), 1, 23), actual = ref.getFullYear() === hoy.getFullYear() && ref.getMonth() === hoy.getMonth();
+      out.push({ ref, min, obj, futuro, actual, mes: ref.getMonth() });
+    }
+    return { fin, meses: out };
+  }
+  function caPersonajeSrc() { const i = document.querySelector("#progresoPersonaje img.personaje-cuerpo-img"); return i ? i.getAttribute("src") : ""; }
+  function caSvg(D, hoy) {
+    hoy = hoy || new Date(); const idxAct = D.meses.findIndex((m) => m.actual);
+    const frac = idxAct < 0 ? (D.meses[0].futuro ? 0 : 11) : idxAct + (hoy.getDate() - 1) / new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate();
+    const bandas = [["🍂", "#f2c48d", "#e8a35a"], ["❄️", "#cfe6fb", "#9cc4ee"], ["🌷", "#f9d3e3", "#f0a3c2"], ["☀️", "#fde9a6", "#f6cf55"]];
+    let s = '<svg class="ca-svg" viewBox="0 0 340 450" role="img" aria-label="Camino del año de servicio">';
+    bandas.forEach((b, f) => { s += '<rect x="0" y="' + (28 + f * 100) + '" width="340" height="100" fill="' + b[1] + '" class="ca-banda ca-b' + f + '"/><text x="' + (f % 2 === 0 ? 316 : 24) + '" y="' + (50 + f * 100) + '" class="ca-est" text-anchor="middle">' + b[0] + "</text>"; });
+    for (let i = 0; i < 11; i++) { const S = caSeg(i), d = "M" + S[0] + " C" + S[1] + " " + S[2] + " " + S[3]; const hecho = i < Math.floor(frac) || (D.meses[i].min > 0 && !D.meses[i + 1].futuro); s += '<path d="' + d + '" pathLength="1" class="ca-seg ' + (i + 1 <= frac || hecho && i < Math.floor(frac) ? "ca-hecho" : "ca-fut") + '" style="--i:' + i + '"/>'; }
+    D.meses.forEach((m, i) => {
+      const p = caPos(i), r = m.obj > 0 ? Math.min(1, m.min / m.obj) : (m.min > 0 ? 1 : 0), C = 2 * Math.PI * 19, ok = r >= 1 && !m.futuro;
+      s += '<g class="ca-parada' + (m.actual ? " ca-actual" : "") + (m.futuro ? " ca-futura" : "") + (ok ? " ca-ok" : "") + '" data-ca="' + i + '" tabindex="0" role="button" aria-label="' + MESES_L[m.mes] + '"><circle cx="' + p[0] + '" cy="' + p[1] + '" r="24" class="ca-disco"/><circle cx="' + p[0] + '" cy="' + p[1] + '" r="19" class="ca-pista" fill="none"/>';
+      if (!m.futuro) s += '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="19" class="ca-arco" fill="none" transform="rotate(-90 ' + p[0] + " " + p[1] + ')" style="stroke-dasharray:' + (C * r).toFixed(1) + " " + C.toFixed(1) + '"/>';
+      s += '<text x="' + p[0] + '" y="' + (p[1] + 5) + '" text-anchor="middle" class="ca-mes">' + (ok ? "✓" : MESES_L[m.mes].slice(0, 3)) + '</text><text x="' + p[0] + '" y="' + (p[1] + 42) + '" text-anchor="middle" class="ca-h">' + (m.futuro ? "" : formatearTiempo(m.min)) + "</text></g>";
+    });
+    const fin = caPos(11); s += '<text x="' + (fin[0] - 44) + '" y="' + (fin[1] + 8) + '" class="ca-bandera" text-anchor="middle">🏁</text>';
+    const ini = caPos(0); s += '<text x="' + (ini[0] - 44) + '" y="' + (ini[1] + 8) + '" class="ca-bandera" text-anchor="middle">🚩</text>';
+    const i0 = Math.min(10, Math.floor(frac)), pt = caBez(caSeg(i0), Math.min(1, frac - i0)), src = caPersonajeSrc();
+    s += '<g class="ca-pj" transform="translate(' + (pt[0] - 21).toFixed(1) + " " + (pt[1] - 74).toFixed(1) + ')"><g class="ca-pj-bob">' + (src ? '<image href="' + src.replace(/"/g, "") + '" width="42" height="60" preserveAspectRatio="xMidYMax meet"/>' : '<text x="21" y="46" font-size="40" text-anchor="middle">🚶</text>') + "</g></g></svg>";
+    return { svg: s, frac };
+  }
+  function caPintar() {
+    const c = $("caminoAnioV27657"); if (!c) return; const D = caDatos(), R = caSvg(D), cuerpo = c.querySelector(".ca-cuerpo");
+    const cumplidos = D.meses.filter((m) => !m.futuro && m.obj > 0 && m.min >= m.obj).length, total = D.meses.reduce((a, m) => a + m.min, 0), pasados = D.meses.filter((m) => !m.futuro).length;
+    cuerpo.innerHTML = '<p class="ca-tit">Septiembre ' + (D.fin - 1) + " → Agosto " + D.fin + '</p><div class="ca-lienzo">' + R.svg + '</div><p class="ca-detalle" role="status">' + cumplidos + " de " + pasados + (pasados === 1 ? " mes" : " meses") + " con el objetivo cumplido · " + formatearTiempo(total) + " en el año. Toca un mes para ver su detalle.</p>";
+    c.dataset.datos = JSON.stringify(D.meses.map((m) => [MESES_L[m.mes], m.min, m.obj, m.futuro ? 1 : 0]));
+  }
+  function caInstalar() {
+    const ref = $("anioServicioV276") || $("calorAnualV267"); if (!ref || $("caminoAnioV27657")) return;
+    const d = document.createElement("details"); d.id = "caminoAnioV27657"; d.className = "stats-accordion-v183 ca-v27657"; d.open = true;
+    d.innerHTML = '<summary><span class="stats-accordion-icono-v183">🗺️</span><span>Camino del año de servicio</span><span class="stats-accordion-flecha-v183">›</span></summary><div class="stats-accordion-cuerpo-v183"><article class="ca-cuerpo"></article></div>';
+    ref.insertAdjacentElement("afterend", d);
+    const mostrar = (g) => { const D = JSON.parse(d.dataset.datos || "[]"), x = D[Number(g.dataset.ca)]; if (!x) return; d.querySelector(".ca-detalle").textContent = x[0].charAt(0).toUpperCase() + x[0].slice(1) + ": " + (x[3] ? "todavía no ha llegado." : formatearTiempo(x[1]) + (x[2] > 0 ? " de " + formatearTiempo(x[2]) + " (" + Math.min(999, Math.round(x[1] / x[2] * 100)) + " %)" : "")); };
+    d.addEventListener("click", (e) => { const g = e.target.closest(".ca-parada"); if (g) mostrar(g); });
+    d.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { const g = e.target.closest(".ca-parada"); if (g) { e.preventDefault(); mostrar(g); } } });
+    caPintar();
+    let pend = false; const re = () => { if (!pend) { pend = true; setTimeout(() => { pend = false; if (!d.contains(document.activeElement)) caPintar(); }, 300); } };
+    const v = $("vista-estadisticas"); if (v) new MutationObserver((m) => { if (m.some((x) => x.type === "attributes" && x.attributeName === "data-seg-v264")) re(); }).observe(v, { attributes: true, attributeFilter: ["data-seg-v264"] });
+    const rm = $("resumenMensualV143"); if (rm) new MutationObserver(re).observe(rm, { childList: true, subtree: true, characterData: true });
+    document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") re(); });
+    window.addEventListener("miServicio:interfazListaV201", re);
+  }
+
+  /* --- Escena grande para cada personaje (pantera y corazón conservan su ilustración) --- */
+  const ESG = {
+    hombre: { cielo: ["#bfe3ff", "#eaf6ff"], suelo: ["#7cc576", "#4f9f58"], props: [["🌳", 4, 10, 74], ["🌼", 70, 6, 30], ["☀️", 82, 66, 44]] },
+    mujer: { cielo: ["#ffd9ec", "#fff0f7"], suelo: ["#8fd18a", "#5fae63"], props: [["🌸", 4, 12, 62], ["🌳", 76, 10, 70], ["☀️", 80, 66, 44]] },
+    koala: { cielo: ["#d6efe0", "#f0faf4"], suelo: ["#86bf86", "#5a9a68"], props: [["🌿", 70, 8, 52], ["🌳", 3, 12, 88], ["🌙", 82, 66, 38]] },
+    mariposa: { cielo: ["#e0d6ff", "#f7f1ff"], suelo: ["#9ad59b", "#68b574"], props: [["🌷", 6, 6, 40], ["🌻", 74, 6, 54], ["🌼", 60, 4, 30], ["🦋", 62, 52, 28]] },
+    tortuga: { cielo: ["#c7ecff", "#eefaff"], suelo: ["#f3dca5", "#e2c071"], props: [["🌴", 76, 12, 80], ["🐚", 6, 5, 30], ["🌊", 52, 4, 40], ["☀️", 12, 68, 44]] },
+    liebre: { cielo: ["#d2ecff", "#f2f9ff"], suelo: ["#9bd38d", "#6bb164"], props: [["🥕", 74, 6, 40], ["🌾", 4, 8, 52], ["🌳", 82, 14, 62], ["☁️", 54, 70, 40]] },
+    pajarito: { cielo: ["#cfeaff", "#f4fbff"], suelo: ["#a4d9a0", "#74b86e"], props: [["🍃", 70, 12, 46], ["🌸", 6, 10, 46], ["☁️", 60, 70, 44], ["☁️", 14, 74, 32]] },
+    gatito: { cielo: ["#ffe7d1", "#fff6ec"], suelo: ["#f1c6a2", "#dba579"], props: [["🧶", 70, 6, 38], ["🪴", 4, 8, 64], ["🌙", 80, 68, 38]] }
+  };
+  function esgSrc(p) { const i = document.querySelector('#galeriaPersonajes [data-personaje="' + p + '"] img'); return i ? i.getAttribute("src") : ""; }
+  function esgPintar() {
+    const e = $("escenaRegistrarV260"); if (!e) return; const p = estado.preferencias && estado.preferencias.personajeProgreso, T = ESG[p];
+    let g = e.querySelector(".escena-gen-v27657");
+    if (!T) { if (g) g.remove(); delete e.dataset.genV27657; return; }
+    const src = esgSrc(p); if (!src) { if (g) g.remove(); delete e.dataset.genV27657; return; }
+    const firma = p + "|" + src; if (g && g.dataset.firma === firma) { e.dataset.genV27657 = "1"; return; }
+    if (g) g.remove(); g = document.createElement("div"); g.className = "escena-gen-v27657"; g.dataset.firma = firma; g.setAttribute("aria-hidden", "true");
+    g.style.setProperty("--eg-c1", T.cielo[0]); g.style.setProperty("--eg-c2", T.cielo[1]); g.style.setProperty("--eg-s1", T.suelo[0]); g.style.setProperty("--eg-s2", T.suelo[1]);
+    g.innerHTML = '<svg class="eg-colinas" viewBox="0 0 400 140" preserveAspectRatio="none"><path d="M0 70 C80 20 160 30 230 62 C300 94 350 40 400 50 L400 140 L0 140Z" class="eg-c-a"/><path d="M0 100 C90 60 190 110 270 84 C330 66 370 84 400 76 L400 140 L0 140Z" class="eg-c-b"/></svg>' +
+      T.props.map((q, i) => '<span class="eg-prop" style="left:' + q[1] + '%;bottom:' + q[2] + "%;font-size:" + q[3] + 'px;animation-delay:' + (i * 0.4) + 's">' + q[0] + "</span>").join("") + '<i class="eg-sombra"></i><img class="eg-pj" alt="" decoding="async" draggable="false">';
+    g.querySelector(".eg-pj").src = src; e.appendChild(g); e.dataset.genV27657 = "1";
+  }
+  function esgInstalar() {
+    esgPintar(); window.addEventListener("miServicio:interfazListaV201", esgPintar);
+    const s = $("personajeProgreso"); if (s) s.addEventListener("change", () => setTimeout(esgPintar, 120));
+    const g = $("galeriaPersonajes"); if (g) g.addEventListener("click", () => setTimeout(esgPintar, 250));
+    window.addEventListener("storage", () => setTimeout(esgPintar, 100));
+  }
   /* 27 · V27636 · Objetivo de cada mes: los meses pasados se comparan con el objetivo que tenían entonces */
   const OM_BASE = "0000-00";
   function omClave(d) { return fechaISO(d || new Date()).slice(0, 7); }

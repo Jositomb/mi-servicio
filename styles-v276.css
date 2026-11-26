@@ -14816,10 +14816,10 @@ html body:not(#bta):not(#btb) .frase-v27655{margin:0 0 12px;padding:12px 14px;bo
 .fr-ayuda{display:block;margin-top:8px;font-size:12px;opacity:.7;line-height:1.35}
 @media (prefers-color-scheme:dark){:root:not([data-modo-v276=claro]) .frase-v27655 input{background:rgba(44,44,46,.9);color:#f5f5f7}}
 
-html body:not(#bta):not(#btb) .curiosidad-v27655{margin:8px 16px;padding:0;border-radius:16px;background:rgba(var(--firma-rgb,40,100,215),.1);box-shadow:0 0 0 .5px rgba(var(--firma-rgb,40,100,215),.22) inset}
-.cu-boton{all:unset;box-sizing:border-box;width:100%;display:flex;align-items:center;gap:10px;padding:10px 14px;min-height:44px;cursor:pointer;font-size:13.5px;line-height:1.35}
-.cu-ico{font-size:20px;flex:0 0 26px;text-align:center}
-.cu-texto{flex:1;min-width:0}
+html body:not(#bta):not(#btb) .curiosidad-v27655{margin:4px 16px;padding:0;border-radius:16px;background:rgba(var(--firma-rgb,40,100,215),.1);box-shadow:0 0 0 .5px rgba(var(--firma-rgb,40,100,215),.22) inset}
+.cu-boton{all:unset;box-sizing:border-box;width:100%;display:flex;align-items:center;gap:8px;padding:6px 12px;min-height:32px;cursor:pointer;font-size:13px;line-height:1.25}
+.cu-ico{font-size:17px;flex:0 0 22px;text-align:center}
+.cu-texto{flex:1;min-width:0;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .curiosidad-v27655.cu-entra .cu-boton{animation:cuIn27655 .5s ease both}
 @keyframes cuIn27655{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.curiosidad-v27655.cu-entra .cu-boton{animation:none}}
@@ -14875,3 +14875,76 @@ body.ci-abierto-v27655{overflow:hidden}
 body.qt-abierto-v27655{overflow:hidden}
 @media (prefers-color-scheme:dark){:root:not([data-modo-v276=claro]) .qt-caja{background:#2c2c2e;color:#f5f5f7}:root:not([data-modo-v276=claro]) .qt-aviso{color:#ffb454}}
 :root[data-modo-v276=oscuro] .qt-caja{background:#2c2c2e;color:#f5f5f7}:root[data-modo-v276=oscuro] .frase-v27655 input{background:rgba(44,44,46,.9);color:#f5f5f7}
+
+/* ===== V27656 · La escena de Registrar pasa a ser un fondo grande ===== */
+html:not([data-escena-tam-v27656=pequena]) body:has(#vista-registrar.activa):not(.registro-editando-v260) #vista-registrar #formRegistro.registro-v203:not(:has(#detallesRegistroV203[open])) > .escena-registrar-v260:not([hidden]){
+  position:fixed!important;left:0!important;right:0!important;bottom:calc(var(--nav-real-v27656,66px) + env(safe-area-inset-bottom,0px) - 6px)!important;top:auto!important;
+  height:min(42dvh,320px)!important;width:auto!important;max-width:none!important;flex:none!important;min-height:0!important;margin:0!important;z-index:0!important;overflow:visible!important;display:block!important;pointer-events:none!important;
+}
+html:not([data-escena-tam-v27656=pequena]) body:has(#vista-registrar.activa):not(.registro-editando-v260) #vista-registrar #formRegistro.registro-v203 > .escena-registrar-v260:not([hidden]) img{
+  position:absolute!important;left:-3%!important;bottom:0!important;height:100%!important;width:auto!important;max-width:112%!important;object-fit:contain!important;object-position:left bottom!important;
+  filter:drop-shadow(0 10px 18px rgba(0,0,0,.18));animation:escenaEntra27656 .7s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes escenaEntra27656{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){html body .escena-registrar-v260 img{animation:none!important}}
+/* El formulario va por delante de la escena; la escena asoma por los huecos y por debajo. */
+html:not([data-escena-tam-v27656=pequena]) body:has(#vista-registrar.activa):not(.registro-editando-v260) #vista-registrar #formRegistro.registro-v203 > :not(.escena-registrar-v260){position:relative;z-index:1}
+@media(max-height:650px){html body:has(#vista-registrar.activa) #vista-registrar #formRegistro.registro-v203 > .escena-registrar-v260{display:none!important}}
+/* Tarjetas del formulario en cristal para que la escena se intuya detrás (solo con la escena visible y en modo fondo). */
+html:not([data-escena-tam-v27656=pequena]) body:has(#vista-registrar.activa):not(.registro-editando-v260):has(#escenaRegistrarV260:not([hidden])) #vista-registrar #formRegistro.registro-v203:not(:has(#detallesRegistroV203[open])) > .grupo-formulario:not(#bta):not(#btb):not(#btc){
+  background:rgba(255,255,255,.8)!important;-webkit-backdrop-filter:blur(12px) saturate(1.3);backdrop-filter:blur(12px) saturate(1.3)}
+@media (prefers-color-scheme:dark){html:not([data-escena-tam-v27656=pequena]):not([data-modo-v276=claro]) body:has(#vista-registrar.activa):not(.registro-editando-v260):has(#escenaRegistrarV260:not([hidden])) #vista-registrar #formRegistro.registro-v203:not(:has(#detallesRegistroV203[open])) > .grupo-formulario:not(#bta):not(#btb):not(#btc){background:rgba(34,34,38,.78)!important}}
+html[data-modo-v276=oscuro]:not([data-escena-tam-v27656=pequena]) body:has(#vista-registrar.activa):not(.registro-editando-v260):has(#escenaRegistrarV260:not([hidden])) #vista-registrar #formRegistro.registro-v203:not(:has(#detallesRegistroV203[open])) > .grupo-formulario:not(#bta):not(#btb):not(#btc){background:rgba(34,34,38,.78)!important}
+
+/* ===== V27657 · atajos, camino del año, escena por personaje ===== */
+#atajoV27657{position:fixed;inset:0;z-index:10070;display:grid;place-items:end center;background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);padding:14px max(14px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}
+.at-caja{width:min(100%,440px);box-sizing:border-box;padding:18px;border-radius:24px;background:#fff;color:#1c1c1e;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.4);animation:atIn27657 .3s cubic-bezier(.2,.8,.2,1)}
+.at-caja h3{margin:0 0 6px;font:700 19px/1.2 -apple-system,system-ui,sans-serif}.at-res{margin:0 0 14px;font-size:15px;line-height:1.4}
+.at-fila{display:flex;gap:8px}.at-fila button{flex:1;min-height:48px}
+@keyframes atIn27657{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-color-scheme:dark){:root:not([data-modo-v276=claro]) .at-caja{background:#2c2c2e;color:#f5f5f7}}
+:root[data-modo-v276=oscuro] .at-caja{background:#2c2c2e;color:#f5f5f7}
+.at-pasos{margin:8px 0 10px;padding-left:20px;font-size:13.5px;line-height:1.5}
+.at-item{display:grid;gap:6px;margin:0 0 10px;padding:10px;border-radius:14px;background:rgba(128,128,128,.12)}
+.at-item b{font-size:13.5px}.at-item code{font-size:11.5px;word-break:break-all;opacity:.85;user-select:all}.at-item button{min-height:40px}
+.at-aviso{margin-top:8px}
+
+#vista-estadisticas:not([data-seg-v264="anio"]) #caminoAnioV27657{display:none!important}
+.ca-lienzo{width:100%;max-width:440px;margin:0 auto}.ca-svg{display:block;width:100%;height:auto;border-radius:20px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.12)}
+.ca-tit{margin:0 0 8px;font-weight:700;font-size:14px;text-align:center}
+.ca-banda{opacity:.85}.ca-est{font-size:40px;opacity:.5}
+.ca-seg{fill:none;stroke-width:9;stroke-linecap:round}
+.ca-seg.ca-hecho{stroke:var(--primary,#2864d7);stroke-dasharray:1;stroke-dashoffset:1;animation:caDib27657 .55s ease forwards;animation-delay:calc(var(--i)*90ms)}
+.ca-seg.ca-fut{stroke:rgba(255,255,255,.85);stroke-dasharray:.012 .028}
+@keyframes caDib27657{to{stroke-dashoffset:0}}
+.ca-disco{fill:#fff;stroke:rgba(0,0,0,.12);stroke-width:1.5;filter:drop-shadow(0 3px 4px rgba(0,0,0,.2))}
+.ca-pista{stroke:rgba(0,0,0,.1);stroke-width:5}.ca-arco{stroke:var(--primary,#2864d7);stroke-width:5;stroke-linecap:round}
+.ca-ok .ca-disco{fill:var(--primary,#2864d7)}.ca-ok .ca-mes{fill:#fff}.ca-ok .ca-arco,.ca-ok .ca-pista{stroke:rgba(255,255,255,.6)}
+.ca-futura .ca-disco{fill:rgba(255,255,255,.65)}.ca-futura .ca-mes{opacity:.55}
+.ca-mes{font:700 12px -apple-system,system-ui,sans-serif;fill:#1c1c1e;text-transform:capitalize}
+.ca-h{font:600 10.5px -apple-system,system-ui,sans-serif;fill:#1c1c1e;paint-order:stroke;stroke:rgba(255,255,255,.85);stroke-width:3px}
+.ca-parada{cursor:pointer;outline:none}.ca-parada:focus-visible .ca-disco{stroke:var(--primary,#2864d7);stroke-width:3}
+.ca-actual .ca-disco{animation:caPulso27657 1.8s ease-in-out infinite}
+@keyframes caPulso27657{50%{stroke:var(--primary,#2864d7);stroke-width:4}}
+.ca-bandera{font-size:26px}
+.ca-pj-bob{animation:caBob27657 2.2s ease-in-out infinite;transform-box:fill-box}
+@keyframes caBob27657{50%{transform:translateY(-4px)}}
+.ca-detalle{margin:10px 4px 0;font-size:13px;line-height:1.4;text-align:center;opacity:.85}
+@media (prefers-color-scheme:dark){:root:not([data-modo-v276=claro]) .ca-banda{opacity:.32}:root:not([data-modo-v276=claro]) .ca-seg.ca-fut{stroke:rgba(255,255,255,.4)}}
+:root[data-modo-v276=oscuro] .ca-banda{opacity:.32}:root[data-modo-v276=oscuro] .ca-seg.ca-fut{stroke:rgba(255,255,255,.4)}
+@media (prefers-reduced-motion:reduce){.ca-seg.ca-hecho{animation:none;stroke-dashoffset:0}.ca-actual .ca-disco,.ca-pj-bob{animation:none}}
+
+/* Escena genérica por personaje: el contenedor sigue siendo #escenaRegistrarV260 (fijo/grande o en el hueco, según el ajuste) */
+#escenaRegistrarV260[data-gen-v27657] > img{display:none!important}
+.escena-gen-v27657{position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:0}
+.escena-gen-v27657::before{content:"";position:absolute;inset:0;background:linear-gradient(var(--eg-c1),var(--eg-c2) 70%,transparent);opacity:.0}
+.eg-colinas{position:absolute;left:0;right:0;bottom:0;width:100%;height:56%}
+.eg-c-a{fill:var(--eg-s1);opacity:.95}.eg-c-b{fill:var(--eg-s2)}
+.eg-prop{position:absolute;line-height:1;filter:drop-shadow(0 4px 5px rgba(0,0,0,.2));animation:egProp27657 4s ease-in-out infinite}
+@keyframes egProp27657{50%{transform:translateY(-4px) rotate(2deg)}}
+.eg-sombra{position:absolute;left:10%;bottom:4%;width:32%;height:5%;border-radius:50%;background:rgba(0,0,0,.22);filter:blur(5px)}
+html body:has(#vista-registrar.activa) #vista-registrar #formRegistro.registro-v203 > .escena-registrar-v260:not([hidden]) .escena-gen-v27657 img.eg-pj:not(#bta):not(#btb):not(#btc){position:absolute!important;left:9%!important;bottom:6%!important;height:78%!important;width:auto!important;max-width:58%!important;object-fit:contain!important;object-position:left bottom!important;filter:drop-shadow(0 8px 10px rgba(0,0,0,.22));animation:egPj27657 3.2s ease-in-out infinite}
+@keyframes egPj27657{50%{transform:translateY(-5px)}}
+@media (prefers-reduced-motion:reduce){.eg-prop,html body .escena-gen-v27657 img.eg-pj{animation:none!important}}
+
+.cu-sinsitio-v27657{display:none!important}
