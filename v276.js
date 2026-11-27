@@ -1574,7 +1574,8 @@
     const clave = innerWidth + "x" + innerHeight; if (clave === srClave) return; srClave = clave;
     const encaja = () => document.body.classList.contains("inicio-encajado-v260") || document.documentElement.scrollHeight <= innerHeight + 2;
     s.classList.remove("sr-oculta-v27631");
-    setTimeout(() => {
+    setTimeout(() => { try { programarEncajeV260(true); } catch (e) {} setTimeout(decidir, 800); }, 1200);
+    const decidir = () => {
       if (encaja()) return;
       const cu = $("curiosidadV27655"), ocultarSemana = () => {
         s.classList.add("sr-oculta-v27631"); try { programarEncajeV260(true); } catch (e) {}
@@ -1583,9 +1584,9 @@
       /* La curiosidad es un extra: cede primero su sitio; la semana solo se oculta si aun asi no cabe */
       if (cu && !cu.classList.contains("cu-sinsitio-v27657")) {
         cu.classList.add("cu-sinsitio-v27657"); try { programarEncajeV260(true); } catch (e) {}
-        setTimeout(() => { if (encaja()) { cu.classList.remove("cu-sinsitio-v27657"); try { programarEncajeV260(true); } catch (e) {} setTimeout(() => { if (!encaja()) { cu.classList.add("cu-sinsitio-v27657"); } }, 900); } else { cu.classList.remove("cu-sinsitio-v27657"); ocultarSemana(); } }, 900);
+        setTimeout(() => { if (!encaja()) { cu.classList.remove("cu-sinsitio-v27657"); ocultarSemana(); } }, 1800);
       } else ocultarSemana();
-    }, 1200);
+    };
   }
   let srT = 0; function srProgramar(ms) { clearTimeout(srT); srT = setTimeout(srAjustar, ms); }
 
@@ -3686,12 +3687,12 @@
   }
   function edPintar() {
     let e = $("escenaDatosV27660"); const v = edVista(), p = estado.preferencias && estado.preferencias.personajeProgreso, T = ESG[p] || ED_EXTRA[p], src = T ? esgSrc(p) : "";
-    if (!edActiva() || !v || !T || !src) { if (e) e.hidden = true; document.documentElement.removeAttribute("data-escena-datos-v27660"); return; }
+    if (!edActiva() || !v || !T || !src) { if (e) e.hidden = true; document.documentElement.removeAttribute("data-escena-datos-v27660"); document.documentElement.removeAttribute("data-escena-datos-tam"); return; }
     if (!e) { e = document.createElement("div"); e.id = "escenaDatosV27660"; e.setAttribute("aria-hidden", "true"); document.body.appendChild(e); }
     e.dataset.tam = edTam();
     const firma = p + "|" + src + "|" + v;
     if (e.dataset.firma !== firma) { e.dataset.firma = firma; e.dataset.vista = v; e.style.setProperty("--ed-s1", T.suelo[0]); e.style.setProperty("--ed-s2", T.suelo[1]); e.innerHTML = edHtml(T, v, src); }
-    e.hidden = false; document.documentElement.dataset.escenaDatosV27660 = "1"; navMedir();
+    e.hidden = false; document.documentElement.dataset.escenaDatosV27660 = "1"; document.documentElement.dataset.escenaDatosTam = e.dataset.tam; navMedir();
   }
   function edInstalar() {
     const z = $("escenaTamanoDatosV27660"); if (z && !z.dataset.edListo) { z.dataset.edListo = "1"; z.value = edTam(); z.addEventListener("change", () => { try { localStorage.setItem(ED_TK, z.value === "pequena" ? "pequena" : "fondo"); } catch (e) {} edPintar(); }); }

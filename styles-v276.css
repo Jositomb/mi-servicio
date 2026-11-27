@@ -15021,10 +15021,12 @@ html[data-escena-datos-v27660] #vista-historial.activa,html[data-escena-datos-v2
 html[data-modo-v276=oscuro] #escenaDatosV27660{opacity:.8;filter:brightness(.85)}
 @media (max-height:600px){#escenaDatosV27660{display:none}}
 @media (prefers-reduced-motion:reduce){#escenaDatosV27660 *{animation:none!important}}
-/* V27660 · tamaño pequeño de la escena de Historial y Estadísticas */
-#escenaDatosV27660[data-tam=pequena]{height:112px;-webkit-mask-image:none;mask-image:none}
+/* V27660 · tamaño pequeño de la escena de Historial y Estadísticas (más generoso desde 27660b) */
+#escenaDatosV27660[data-tam=pequena]{height:min(25dvh,215px);-webkit-mask-image:none;mask-image:none}
 #escenaDatosV27660[data-tam=pequena] .ed-suelo{display:none}
-#escenaDatosV27660[data-tam=pequena] .ed-pj{right:8px;height:100%;max-width:120px}
-#escenaDatosV27660[data-tam=pequena] .ed-barras{left:12px;bottom:10px;width:62px}
-#escenaDatosV27660[data-tam=pequena] .ed-prop{font-size:20px!important;left:84px!important;bottom:12px}
-#escenaDatosV27660[data-tam=pequena] .ed-prop + .ed-prop{left:116px!important}
+#escenaDatosV27660[data-tam=pequena] .ed-pj{right:6px;height:100%;max-width:200px}
+#escenaDatosV27660[data-tam=pequena] .ed-barras{left:14px;bottom:12px;width:104px}
+#escenaDatosV27660[data-tam=pequena] .ed-prop{font-size:32px!important;left:134px!important;bottom:14px}
+#escenaDatosV27660[data-tam=pequena] .ed-prop + .ed-prop{left:134px!important;bottom:62px}
+/* con la escena pequeña se reserva su hueco al final de la lista, para que se vea entera al llegar abajo */
+html[data-escena-datos-tam=pequena] #vista-historial.activa,html[data-escena-datos-tam=pequena] #vista-estadisticas.activa{padding-bottom:calc(min(25dvh,215px) + 24px)!important}
