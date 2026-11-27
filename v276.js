@@ -3673,6 +3673,7 @@
 
   /* 49 · V27660 · Escena de fondo en Historial y Estadísticas (tu personaje con elementos de estadísticas) */
   const ED_K = "miServicio.escenaDatosV27660";
+  const ED_EXTRA = { pantera: { suelo: ["#f4b0cd", "#d9779f"] }, corazon: { suelo: ["#ffb8c4", "#ff7a93"] } };
   function edActiva() { try { return localStorage.getItem(ED_K) === "si"; } catch (e) { return false; } }
   function edVista() { return document.querySelector("#vista-estadisticas.activa") ? "estadisticas" : document.querySelector("#vista-historial.activa") ? "historial" : ""; }
   function edHtml(T, v, src) {
@@ -3683,7 +3684,7 @@
     return '<div class="ed-suelo"></div>' + barras + props.map((q, i) => '<span class="ed-prop" style="font-size:' + q[1] + 'px;left:' + q[2] + 'px;animation-delay:' + (i * .5) + 's">' + q[0] + "</span>").join("") + '<img class="ed-pj" alt="" decoding="async" draggable="false" src="' + src.replace(/"/g, "") + '">';
   }
   function edPintar() {
-    let e = $("escenaDatosV27660"); const v = edVista(), p = estado.preferencias && estado.preferencias.personajeProgreso, T = ESG[p], src = T ? esgSrc(p) : "";
+    let e = $("escenaDatosV27660"); const v = edVista(), p = estado.preferencias && estado.preferencias.personajeProgreso, T = ESG[p] || ED_EXTRA[p], src = T ? esgSrc(p) : "";
     if (!edActiva() || !v || !T || !src) { if (e) e.hidden = true; document.documentElement.removeAttribute("data-escena-datos-v27660"); return; }
     if (!e) { e = document.createElement("div"); e.id = "escenaDatosV27660"; e.setAttribute("aria-hidden", "true"); document.body.appendChild(e); }
     const firma = p + "|" + src + "|" + v;
