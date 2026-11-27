@@ -3672,7 +3672,8 @@
   window.MiServicioV27659 = { vsDatos, vsAbrir, vsCerrar, vsFranja, mcImagen, mcNivel, mdDesbloqueos };
 
   /* 49 · V27660 · Escena de fondo en Historial y Estadísticas (tu personaje con elementos de estadísticas) */
-  const ED_K = "miServicio.escenaDatosV27660";
+  const ED_K = "miServicio.escenaDatosV27660", ED_TK = "miServicio.escenaTamanoDatosV27660";
+  function edTam() { try { return localStorage.getItem(ED_TK) === "pequena" ? "pequena" : "fondo"; } catch (e) { return "fondo"; } }
   const ED_EXTRA = { pantera: { suelo: ["#f4b0cd", "#d9779f"] }, corazon: { suelo: ["#ffb8c4", "#ff7a93"] } };
   function edActiva() { try { return localStorage.getItem(ED_K) === "si"; } catch (e) { return false; } }
   function edVista() { return document.querySelector("#vista-estadisticas.activa") ? "estadisticas" : document.querySelector("#vista-historial.activa") ? "historial" : ""; }
@@ -3687,11 +3688,13 @@
     let e = $("escenaDatosV27660"); const v = edVista(), p = estado.preferencias && estado.preferencias.personajeProgreso, T = ESG[p] || ED_EXTRA[p], src = T ? esgSrc(p) : "";
     if (!edActiva() || !v || !T || !src) { if (e) e.hidden = true; document.documentElement.removeAttribute("data-escena-datos-v27660"); return; }
     if (!e) { e = document.createElement("div"); e.id = "escenaDatosV27660"; e.setAttribute("aria-hidden", "true"); document.body.appendChild(e); }
+    e.dataset.tam = edTam();
     const firma = p + "|" + src + "|" + v;
     if (e.dataset.firma !== firma) { e.dataset.firma = firma; e.dataset.vista = v; e.style.setProperty("--ed-s1", T.suelo[0]); e.style.setProperty("--ed-s2", T.suelo[1]); e.innerHTML = edHtml(T, v, src); }
     e.hidden = false; document.documentElement.dataset.escenaDatosV27660 = "1"; navMedir();
   }
   function edInstalar() {
+    const z = $("escenaTamanoDatosV27660"); if (z && !z.dataset.edListo) { z.dataset.edListo = "1"; z.value = edTam(); z.addEventListener("change", () => { try { localStorage.setItem(ED_TK, z.value === "pequena" ? "pequena" : "fondo"); } catch (e) {} edPintar(); }); }
     const c = $("activarEscenaDatosV27660"); if (c && !c.dataset.edListo) { c.dataset.edListo = "1"; c.checked = edActiva(); c.addEventListener("change", () => { try { localStorage.setItem(ED_K, c.checked ? "si" : "no"); } catch (e) {} edPintar(); }); }
     if (window.__edV27660) return; window.__edV27660 = 1;
     const o = new MutationObserver(() => edPintar()); ["vista-historial", "vista-estadisticas"].forEach((id) => { const n = $(id); if (n) o.observe(n, { attributes: true, attributeFilter: ["class"] }); });

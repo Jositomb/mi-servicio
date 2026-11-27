@@ -322,3 +322,4 @@ V27659 · Modo Visita (pantalla grande de hoy con globos, aro de ritmo, racha y 
 
 V27660 · «Escríbelo o díctalo» es opcional: Ajustes → Secciones → Registrar (25 secciones).
 · Escena de fondo en Historial y Estadísticas (Ajustes → junto a la escena de Registrar; desactivada por defecto): tu personaje elegido con un gráfico de barras y trofeo (Estadísticas) o calendario y marca de hecho (Historial). Preferencia local miServicio.escenaDatosV27660, no entra en las copias.
+· V27660: la escena de Historial y Estadísticas tiene tamaño «Grande, como fondo» o «Pequeña, en la esquina» (miServicio.escenaTamanoDatosV27660). La pequeña deja el personaje y los iconos en una esquina inferior de ~110 px.
