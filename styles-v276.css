@@ -15030,3 +15030,12 @@ html[data-modo-v276=oscuro] #escenaDatosV27660{opacity:.8;filter:brightness(.85)
 #escenaDatosV27660[data-tam=pequena] .ed-prop + .ed-prop{left:134px!important;bottom:62px}
 /* con la escena pequeña se reserva su hueco al final de la lista, para que se vea entera al llegar abajo */
 html[data-escena-datos-tam=pequena] #vista-historial.activa,html[data-escena-datos-tam=pequena] #vista-estadisticas.activa{padding-bottom:calc(min(25dvh,215px) + 24px)!important}
+
+/* ===== V27660 · tarjetas de cristal sobre la escena de Historial y Estadísticas (translúcidas, con texto siempre legible) ===== */
+html[data-escena-datos-v27660] #vista-historial.activa :is(details.historial-mes-desplegable-v260,#calHistorialV27628),
+html[data-escena-datos-v27660] #vista-estadisticas.activa :is(section#seccionAnillosV269,#historialResumenV153,#semanaVisualV193,#anioServicioV276,.seccion:not(#seccionAnillosV269)){background-color:rgba(255,255,255,.76)!important;-webkit-backdrop-filter:blur(18px) saturate(1.35);backdrop-filter:blur(18px) saturate(1.35)}
+html[data-escena-datos-v27660] #vista-estadisticas.activa article.anillos-tarjeta-v269{background-color:transparent!important;box-shadow:none!important}
+@media (prefers-color-scheme:dark){html[data-escena-datos-v27660]:not([data-modo-v276=claro]) #vista-historial.activa :is(details.historial-mes-desplegable-v260,#calHistorialV27628),html[data-escena-datos-v27660]:not([data-modo-v276=claro]) #vista-estadisticas.activa :is(section#seccionAnillosV269,#historialResumenV153,#semanaVisualV193,#anioServicioV276,.seccion:not(#seccionAnillosV269)){background-color:rgba(28,30,38,.8)!important}}
+html[data-escena-datos-v27660][data-modo-v276=oscuro] #vista-historial.activa :is(details.historial-mes-desplegable-v260,#calHistorialV27628),html[data-escena-datos-v27660][data-modo-v276=oscuro] #vista-estadisticas.activa :is(section#seccionAnillosV269,#historialResumenV153,#semanaVisualV193,#anioServicioV276,.seccion:not(#seccionAnillosV269)){background-color:rgba(28,30,38,.8)!important}
+#escenaDatosV27660:not([data-tam=pequena]) .ed-prop{left:calc(5% + min(34vw,170px) + 10px)!important;bottom:10%}
+#escenaDatosV27660:not([data-tam=pequena]) .ed-prop + .ed-prop{bottom:34%}

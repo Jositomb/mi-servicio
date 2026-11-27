@@ -3682,7 +3682,7 @@
     const barras = v === "estadisticas"
       ? '<svg class="ed-barras" viewBox="0 0 120 90" aria-hidden="true"><defs><linearGradient id="edG27660" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd35c"/><stop offset="1" stop-color="#f0922b"/></linearGradient><linearGradient id="edB27660" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8cc4ff"/><stop offset="1" stop-color="#2f6fe0"/></linearGradient></defs><rect class="ed-b b1" x="8" y="52" width="24" height="38" rx="6" fill="url(#edB27660)"/><rect class="ed-b b2" x="40" y="30" width="24" height="60" rx="6" fill="url(#edB27660)"/><rect class="ed-b b3" x="72" y="8" width="24" height="82" rx="6" fill="url(#edG27660)"/></svg>'
       : '<svg class="ed-barras ed-cal" viewBox="0 0 120 90" aria-hidden="true"><rect x="10" y="12" width="100" height="72" rx="14" fill="#fff" opacity=".92"/><rect x="10" y="12" width="100" height="22" rx="14" fill="#e5534b"/>' + [0, 1, 2, 3, 4, 5].map((i) => '<rect x="' + (20 + (i % 3) * 30) + '" y="' + (44 + Math.floor(i / 3) * 18) + '" width="20" height="12" rx="4" fill="' + (i === 1 || i === 4 || i === 5 ? "#34c759" : "#cfd6e4") + '"/>').join("") + "</svg>";
-    const props = v === "estadisticas" ? [["🏆", 36, 70], ["📈", 8, 120]] : [["✅", 40, 66], ["📖", 8, 118]];
+    const props = v === "estadisticas" ? [["🏆", 40, 70], ["📈", 32, 120]] : [["✅", 40, 66], ["📖", 32, 118]];
     return '<div class="ed-suelo"></div>' + barras + props.map((q, i) => '<span class="ed-prop" style="font-size:' + q[1] + 'px;left:' + q[2] + 'px;animation-delay:' + (i * .5) + 's">' + q[0] + "</span>").join("") + '<img class="ed-pj" alt="" decoding="async" draggable="false" src="' + src.replace(/"/g, "") + '">';
   }
   function edPintar() {
