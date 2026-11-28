@@ -15022,9 +15022,9 @@ html[data-modo-v276=oscuro] #escenaDatosV27660{opacity:.8;filter:brightness(.85)
 @media (max-height:600px){#escenaDatosV27660{display:none}}
 @media (prefers-reduced-motion:reduce){#escenaDatosV27660 *{animation:none!important}}
 /* V27660 · tamaño pequeño de la escena de Historial y Estadísticas (más generoso desde 27660b) */
-#escenaDatosV27660[data-tam=pequena]{height:min(25dvh,215px);-webkit-mask-image:none;mask-image:none}
+#escenaDatosV27660[data-tam=pequena]{-webkit-mask-image:none;mask-image:none}
 #escenaDatosV27660[data-tam=pequena] .ed-suelo{display:none}
-#escenaDatosV27660[data-tam=pequena] .ed-pj{right:6px;height:100%;max-width:200px}
+#escenaDatosV27660[data-tam=pequena] .ed-pj{right:6px;height:min(25dvh,215px);max-width:200px}
 #escenaDatosV27660[data-tam=pequena] .ed-barras{left:14px;bottom:12px;width:104px}
 #escenaDatosV27660[data-tam=pequena] .ed-prop{font-size:32px!important;left:134px!important;bottom:14px}
 #escenaDatosV27660[data-tam=pequena] .ed-prop + .ed-prop{left:134px!important;bottom:62px}
@@ -15048,4 +15048,4 @@ html[data-escena-datos-v27660] body:not(#bta):not(#btb):not(#btc):not(#btd) :is(
 @media (prefers-color-scheme:dark){html[data-escena-datos-v27660]:not([data-modo-v276=claro]) body:not(#bta):not(#btb):not(#btc):not(#btd) :is(#vista-historial,#vista-estadisticas).activa:not(#bte):not(#btf):not(#btg):not(#bth) :is(.registro-card,.resumen-actividad-v198,#historialResumenV153 .boton-secundario){background-color:rgba(255,255,255,.1)!important}}
 html[data-escena-datos-v27660][data-modo-v276=oscuro] body:not(#bta):not(#btb):not(#btc):not(#btd) :is(#vista-historial,#vista-estadisticas).activa:not(#bte):not(#btf):not(#btg):not(#bth) :is(.registro-card,.resumen-actividad-v198,#historialResumenV153 .boton-secundario){background-color:rgba(255,255,255,.1)!important}
 /* manchas de color suaves por toda la pantalla: así el cristal de las tarjetas se aprecia también arriba */
-#escenaDatosV27660:not([data-tam=pequena])::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(62% 26% at 12% 20%,color-mix(in srgb,#5aa9ff 34%,transparent),transparent 72%),radial-gradient(58% 26% at 92% 42%,color-mix(in srgb,var(--ed-s2) 42%,transparent),transparent 72%),radial-gradient(60% 24% at 8% 66%,color-mix(in srgb,#ffd27a 34%,transparent),transparent 72%),linear-gradient(180deg,transparent 40%,color-mix(in srgb,var(--ed-s1) 42%,transparent))}
+#escenaDatosV27660::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(62% 26% at 12% 20%,color-mix(in srgb,#5aa9ff 34%,transparent),transparent 72%),radial-gradient(58% 26% at 92% 42%,color-mix(in srgb,var(--ed-s2) 42%,transparent),transparent 72%),radial-gradient(60% 24% at 8% 66%,color-mix(in srgb,#ffd27a 34%,transparent),transparent 72%),linear-gradient(180deg,transparent 40%,color-mix(in srgb,var(--ed-s1) 42%,transparent))}
