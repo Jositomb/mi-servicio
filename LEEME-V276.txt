@@ -326,3 +326,5 @@ V27660 · «Escríbelo o díctalo» es opcional: Ajustes → Secciones → Regis
 · V27660: con la escena activa, las tarjetas de Historial y Estadísticas son de cristal translúcido (blanco 76 % / oscuro 80 % con desenfoque) para que la escena se intuya sin perder legibilidad. Sin la escena activa no cambia nada.
 · V27660 (ajuste final): con la escena grande activa, el fondo cubre toda la pantalla con manchas de color suaves y las tarjetas (y sus cajas interiores) son de cristal más transparente (50 % claro / 56 % oscuro) para que se aprecie el efecto también en la parte de arriba.
 · V27660 (corrección): la escena pequeña volvía a quedar arriba por un error de posición; ahora queda abajo, sobre la barra. Las manchas de color de fondo y el cristal se aplican en los dos tamaños.
+
+V27661 · Misma funcionalidad que la V27660, pero con número de versión nuevo (27661) para que iPhone/iPad detecten la actualización: las entregas anteriores de la escena de Historial/Estadísticas reutilizaron el número 27660 y los dispositivos que ya lo tenían podían no actualizarse.
